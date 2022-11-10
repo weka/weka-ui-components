@@ -1,0 +1,15 @@
+{
+  "name": "weka-ui-components",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/weka/weka-ui-components",
+  "license": "MIT",
+  "dependencies": {
+    "@mui/material": "^5.2.2",
+    "@mui/styles": "^5.2.2",
+    "classnames": "^2.3.1",
+    "luxon": "^3.1.0",
+    "prop-types": "^15.7.2",
+    "react": "^18.2.0"
+  }
+}

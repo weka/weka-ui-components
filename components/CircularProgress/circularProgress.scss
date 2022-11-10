@@ -1,0 +1,43 @@
+
+.circular-progress-wrapper {
+  position: relative;
+
+  .circular-progress {
+    transform: rotate(-90deg);
+
+    &-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+
+      &__progress {
+        font-size: 40%;
+        font-weight: bold;
+        color: var(--text-color);
+        display: block;
+        opacity: 0.8;
+
+      }
+    }
+
+    &-indicator {
+      transition: all 4s ease-in-out;
+      &-shiny {
+        animation: dash 2s linear infinite;
+      }
+    }
+  }
+
+}
+
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: var(--dasharray);
+  }
+  to {
+    stroke-dashoffset: var(--dashoffset);
+  }
+}
