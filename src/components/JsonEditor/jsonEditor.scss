@@ -1,0 +1,40 @@
+.json-editor-wrapper {
+  position: relative;
+  flex: 1;
+  padding-top: 16px;
+
+  &.read-only {
+    background: var(--ironhide-t3);
+    .ace_cursor {
+      color: transparent !important;
+    }
+  }
+
+  .ace_editor {
+    background-color: transparent;
+    color: var(--text-color);
+
+    .ace_variable {
+      color: var(--optimus-s2);
+    }
+
+    .ace_string, .ace_constant, .ace_numeric {
+      color: var(--complement-key) !important;
+    }
+    .ace_paren,.ace_punctuation,.ace_operator,.ace_cursor{
+      color: var(--text-color);
+    }
+
+    .ace_gutter {
+      background: none;
+
+      &-cell {
+        color: var(--ironhide-key);
+      }
+
+      &-active-line {
+        background-color: transparent;
+      }
+    }
+  }
+}

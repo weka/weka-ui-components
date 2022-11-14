@@ -1,0 +1,44 @@
+.loader-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  flex: 1;
+
+  .loading-bar {
+    width: 130px;
+    height: 4px;
+    margin: 0 auto;
+    border-radius: 4px;
+    background-color: var(--ironhide-key);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transform: rotateY(0);
+    transition: transform .3s ease-in;
+
+    .fill-bar {
+      height: 100%;
+      width: 68px;
+      position: absolute;
+      transform: translate(-34px);
+      background-color: var(--main-color);
+      border-radius: 2px;
+      animation: loading 1.5s ease infinite;
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translate(-34px);
+  }
+  50% {
+    transform: translate(96px);
+  }
+  100% {
+    transform: translate(-34px);
+  }
+}
