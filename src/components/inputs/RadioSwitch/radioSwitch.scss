@@ -1,0 +1,29 @@
+.radio-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  .radio-btn {
+    color: var(--main-color) !important;
+  }
+
+  &.disabled {
+    .radio-btn {
+      color: var(--ironhide-s1) !important;
+    }
+    span {
+      color: var(--ironhide-s1);
+    }
+  }
+
+  .radio-label {
+    position: relative;
+    svg {
+      height: 12px;
+      position: absolute;
+      right: -16px;
+      path {
+        fill: currentColor;
+      }
+    }
+  }
+}

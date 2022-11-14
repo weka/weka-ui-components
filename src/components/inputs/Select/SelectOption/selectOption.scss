@@ -1,0 +1,36 @@
+.react-select__option {
+  display: flex !important;
+  align-items: center;
+  &.has-icon {
+    padding: 0 12px !important;
+  }
+
+  svg {
+    margin-right: 8px;
+    height: 40px;
+    width: 40px;
+  }
+
+  &--is-selected{
+    background: var(--accent-key);
+  }
+  &--is-focused{
+    background: var(--ironhide-t2);
+  }
+}
+
+.MuiTooltip-popper {
+  z-index: 10000;
+}
+
+.dark-mode {
+  .react-select__option {
+    &.has-icon {
+        svg {
+          path, rect {
+            fill: #FFFFFF;
+          }
+      }
+    }
+  }
+}

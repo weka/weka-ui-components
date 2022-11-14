@@ -1,0 +1,21 @@
+.Toastify__close-button {
+  opacity: 1 !important;
+  width: 26px;
+  height: 26px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  &:hover {
+    background-color: #0000000a;
+  }
+  svg {
+    path {
+      fill: var(--toast-text);
+    }
+  }
+}
+
+.Toastify__close-button > svg {
+  height: 12px !important;
+  width: 12px !important;
+}
