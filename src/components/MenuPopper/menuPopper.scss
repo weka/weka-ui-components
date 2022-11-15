@@ -1,0 +1,92 @@
+.popper-wrapper {
+  .MuiPaper-root {
+    background-color: var(--neutral-t4);
+  }
+  .menu-popper {
+    border-radius: 8px;
+    border: 1px solid var(--main-color) !important;
+    border-bottom: 1px solid;
+    margin: 0 var(--spread);
+    .menu-popper-item-wrapper {
+      .menu-popper-item {
+        display: flex;
+        flex-direction: column;
+        padding: 8px 16px;
+        align-items: flex-start;
+        min-width: 150px;
+      }
+
+      .separator {
+        border-bottom: 1px solid var(--ironhide-t1);
+        margin: 0 var(--spread);
+        box-sizing: border-box;
+      }
+
+      &:only-child {
+        border-radius: 8px !important;
+      }
+
+      &:first-child {
+        border-radius: 8px 8px 0px 0px;
+      }
+
+      &:last-child {
+        border-radius: 0px 0px 8px 8px;
+        .separator {
+          border: none;
+        }
+      }
+      &:not(.submenu-header) {
+        &:hover {
+          background-color: var(--ironhide-t3);
+        }
+      }
+    }
+
+    .submenu-header {
+      .menu-popper-item {
+        padding: 8px 16px 4px 16px;
+        cursor: default;
+        &:hover {
+          background-color: transparent;
+        }
+      }
+      .separator {
+          border: none;
+      }
+    }
+    .submenu-content {
+      &:hover {
+          background-color: transparent !important;
+        }
+      .menu-popper-item {
+        padding-top: 3px;
+        padding-bottom: 4px;
+        &:hover {
+          background-color: var(--ironhide-t3);
+        }
+        .locator-content {
+            padding-left: 20px;
+            color: var(--ironhide-s3);
+            display: flex;
+            justify-content: space-between;
+            .locator-path {
+              max-width: 100px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+      }
+    }
+    .no-border {
+      .separator {
+          border: none;
+      }
+    }
+    &-calendar {
+      margin-top: 2px;
+      border-radius: 4px;
+      width: 298px;
+    }
+  }
+}

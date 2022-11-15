@@ -1,6 +1,6 @@
 {
   "name": "weka-ui-components",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "type": "module",
@@ -16,7 +16,12 @@
     "build": "rollup -c",
     "dev": "rollup -c -w"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.13",
+    "react": "^18.2.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@babel/plugin-transform-runtime": "^7.19.6",
@@ -30,7 +35,6 @@
     "rollup": "^3.2.5",
     "rollup-plugin-react-svg": "^3.0.3",
     "rollup-plugin-scss": "^3.0.0",
-    "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2"
   },
   "files": [
@@ -43,6 +47,7 @@
     "node-sass": "^8.0.0",
     "prop-types": "^15.8.1",
     "react-ace": "^10.1.0",
-    "react-select": "^5.6.0"
+    "react-select": "^5.6.0",
+    "react-toastify": "^8.1.1"
   }
 }
