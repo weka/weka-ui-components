@@ -1,7 +1,7 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import classNames from 'classnames'
-import { EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_STRING } from '../../consts'
 
 import './tab.scss'
 

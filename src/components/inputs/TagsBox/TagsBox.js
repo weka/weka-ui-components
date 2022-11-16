@@ -3,9 +3,9 @@ import propTypes from 'prop-types'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'
-import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, TAG_SEPARATOR } from '../../../consts'
 import Utils from '../../../utils'
+import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
 
 import './tagsBox.scss'
@@ -13,7 +13,7 @@ import './tagsBox.scss'
 function TagsBox(props) {
   const {
     label, onChange, value, error, placeholder, wrapperClass, tagsValidation,
-    warning, isRequired, info, invalidTagText, disabled, ...rest
+    warning, isRequired, info, invalidTagText, disabled, isClearable, ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [editValueError, setEditErrorValue] = useState(false)
@@ -83,7 +83,7 @@ function TagsBox(props) {
       <CreatableSelect
         components={{ DropdownIndicator: null }}
         inputValue={editValue}
-        isClearable
+        isClearable={isClearable}
         isMulti
         isDisabled={disabled}
         onChange={onChangeWrapper}
@@ -125,7 +125,8 @@ TagsBox.defaultProps = {
   tagsValidation: (tags) => tags,
   info: EMPTY_STRING,
   invalidTagText: EMPTY_STRING,
-  disabled: false
+  disabled: false,
+  isClearable: true
 
 }
 
@@ -141,7 +142,8 @@ TagsBox.propTypes = {
   error: propTypes.any,
   info: propTypes.any,
   invalidTagText: propTypes.string,
-  disabled: propTypes.bool
+  disabled: propTypes.bool,
+  isClearable: propTypes.bool
 }
 
 export default TagsBox

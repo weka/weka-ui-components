@@ -4,7 +4,6 @@ import { FormControl } from '@mui/material'
 import ReactSelect from 'react-select'
 import propTypes from 'prop-types'
 import classNames from 'classnames'
-import Tooltip from '../../Tooltip'
 import { EMPTY_STRING } from '../../../consts'
 import SelectOption from './SelectOption'
 import SingleValue from './SingleValue'
@@ -12,6 +11,7 @@ import MultiValue from './MultiValue'
 import ClearIndicator from './ClearIndicator'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
+import Tooltip from '../../Tooltip'
 
 import './select.scss'
 
@@ -84,7 +84,7 @@ function Select(props) {
       if (value) {
         const valuesInOptions = value.filter((val) => options.find((option) => option.value === val))
         if (Utils.isEmpty(valuesInOptions)) {
-          onChange(EMPTY_STRING)
+          onChange([])
         } else if (valuesInOptions.length !== value.length) {
           onChange(valuesInOptions)
         }

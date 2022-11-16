@@ -44,7 +44,19 @@ const utils = {
             .reduce((bitMaskCounter, shiftingIndex) => (bitMaskCounter + ((byte >> shiftingIndex) & 1)),
               globalBitMaskCounter)), 0)
       : EMPTY_STRING),
-   formatOption: (label, value) => (value !== undefined ? { label, value } : { label, value: label }),
+  formatOption: (label, value) => (value !== undefined ? { label, value } : { label, value: label }),
+  isEmpty: (val) => (
+    val === null // null
+    || val === undefined // undefined
+    || val === EMPTY_STRING // empty string
+    || (Array.isArray(val) && !val.length) // empty array
+    || (Object.prototype.toString.call(val) === '[object Number]' && isNaN(val)) /* eslint-disable-line */ // NaN
+    || (typeof val === 'object'
+      && !Object.keys(val).length // empty object
+      && Object.prototype.toString.call(val) !== '[object Date]') // Date
+  ),
+  isString: (value) => (typeof value === 'string' || value instanceof String),
+  isObject: (value) => (typeof value === 'object' && (value !== null && !Array.isArray(value))),
 }
 
 export default utils

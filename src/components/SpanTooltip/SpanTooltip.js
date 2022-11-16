@@ -7,7 +7,7 @@ import Utils from '../../utils'
 
 import './spanTooltip.scss'
 
-function SpanTooltip({ children, extraClasses }) {
+function SpanTooltip({ children, extraClasses, style }) {
   const ref = useRef(null)
   const [tooltip, setTooltip] = useState(EMPTY_STRING)
 
@@ -32,15 +32,19 @@ function SpanTooltip({ children, extraClasses }) {
   })
   return (
     <Tooltip data={tooltip}>
-      <span className={classes} ref={ref}>
+      <span className={classes} ref={ref} style={style}>
         {children}
       </span>
     </Tooltip>
   )
 }
 
-SpanTooltip.defaultProps = { extraClasses: EMPTY_STRING, children: EMPTY_STRING }
+SpanTooltip.defaultProps = { extraClasses: EMPTY_STRING, children: EMPTY_STRING, style: {} }
 
-SpanTooltip.propTypes = { children: propTypes.oneOfType([propTypes.string, propTypes.number]), extraClasses: propTypes.string }
+SpanTooltip.propTypes = {
+  children: propTypes.oneOfType([propTypes.string, propTypes.number]),
+  extraClasses: propTypes.string,
+  style: propTypes.object
+}
 
 export default SpanTooltip

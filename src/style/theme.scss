@@ -6,6 +6,18 @@
   --input-width: 300px;
 }
 
+body {
+  --main-color: var(--prime-key);
+  --main-light-color: var(--prime-t1);
+  --main-dark-color: var(--prime-s1);
+  --main-light2-color: var(--prime-t2);
+  --main-light3-color: var(--prime-t3);
+
+  --submit-btn-hover: var(--prime-s1);
+  --cancel-btn-hover: var(--prime-t3);
+  --active-tab-bg: var(--prime-t4);
+}
+
 body, .login-wrapper * {
   --prime-s1: #5307AB;
   --prime-key: #773DBE;

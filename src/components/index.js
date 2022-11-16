@@ -14,5 +14,7 @@ export { default as ErrorPage } from './ErrorPage'
 export { default as Info } from './Info'
 export { default as Switch } from './Switch'
 export { default as NewPasswordTooltip } from './NewPasswordTooltip'
+export { default as Tab } from './Tab'
+export { default as MenuPopper } from './MenuPopper'
 
 

@@ -6,12 +6,12 @@ import Tooltip from '../../../Tooltip'
 import './multiValue.scss'
 
 function MultiValue(props) {
-  const { data: { label } } = props
+  const { data: { chipLabel, chipTooltip, label } } = props
   return (
     <components.MultiValue {...props}>
-      <Tooltip data={label} placement='left'>
+      <Tooltip data={chipTooltip || label} placement='left'>
         <span>
-          {label}
+          {chipLabel || label}
         </span>
       </Tooltip>
     </components.MultiValue>

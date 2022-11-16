@@ -5,22 +5,21 @@ import svgr from '@svgr/rollup'
 import url from '@rollup/plugin-url'
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
-import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default [
   {
-    external: ['react', 'react/jsx-runtime', 'react-dom'],
+    external: ['react', 'react/jsx-runtime', 'react-dom', '@mui/material'],
     input: './src/index.js',
     output: [
       {
         file: 'dist/index.js',
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: 'inline',
       },
       {
         file: 'dist/index.es.js',
         format: 'es',
-        sourcemap: true,
+        sourcemap: 'inline',
         exports: 'named',
       },
     ],
@@ -33,11 +32,12 @@ export default [
       resolve(),
       commonjs({ include: ['node_modules/**'] }),
       url(),
-      svgr(),
+      svgr({ ref: true }),
       scss({
         output: "./dist/style/theme.scss",
         failOnError: true,
       }),
+      terser()
     ]
   }
 ];

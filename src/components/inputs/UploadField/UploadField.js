@@ -4,13 +4,12 @@ import propTypes from 'prop-types'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
 import { EMPTY_STRING } from '../../../consts'
-import Utils from '../../../utils'
 import { Close } from '../../../svgs'
 
 import './uploadField.scss'
 
 function UploadField(props) {
-  const { label, onChange, disabled, wrapperClass, placeholder, error, ...rest } = props
+  const { label, onChange, disabled, wrapperClass, placeholder, error, onReadError, ...rest } = props
   const id = useId()
   const [fileName, setFileName] = useState(EMPTY_STRING)
   const uploadWrapperClasses = classNames({
@@ -28,7 +27,7 @@ function UploadField(props) {
       }
       reader.readAsText(file)
     } catch (e) {
-      Utils.toastError('Failed to read file')
+      onReadError()
     }
   }
 
@@ -67,6 +66,7 @@ function UploadField(props) {
 
 UploadField.defaultProps = {
   onChange: () => {},
+  onReadError: () => {},
   placeholder: EMPTY_STRING,
   wrapperClass: EMPTY_STRING,
   label: EMPTY_STRING,
@@ -76,6 +76,7 @@ UploadField.defaultProps = {
 
 UploadField.propTypes = {
   onChange: propTypes.func,
+  onReadError: propTypes.func,
   wrapperClass: propTypes.string,
   placeholder: propTypes.string,
   label: propTypes.string,

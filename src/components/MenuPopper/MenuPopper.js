@@ -1,9 +1,9 @@
 import React from 'react'
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper, Divider } from '@mui/material'
 import propTypes from 'prop-types'
-import { Tooltip } from 'weka-ui-components'
-import Utils from '../../utils/utils'
-import { EMPTY_STRING } from '../../utils/consts'
+import Tooltip from '../Tooltip'
+import Utils from '../../utils'
+import { EMPTY_STRING } from '../../consts'
 
 import './menuPopper.scss'
 
