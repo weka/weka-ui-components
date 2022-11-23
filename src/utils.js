@@ -82,6 +82,8 @@ const utils = {
     .map(() => [...Array(8).keys()]
       .reduce((rst) => (rst * 2 + (val-- > 0)), 0))
     .join('.'),
+  formatStringOption: (option) => ({ label: option, value: option }),
+
 }
 
 export default utils
