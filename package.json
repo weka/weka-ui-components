@@ -1,6 +1,6 @@
 {
   "name": "weka-ui-components",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "type": "module",
@@ -19,6 +19,9 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
+  "files": [
+    "dist"
+  ],
   "eslintConfig": {
     "extends": [
       "react-app"
