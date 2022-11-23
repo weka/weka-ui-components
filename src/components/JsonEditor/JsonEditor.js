@@ -8,7 +8,12 @@ import 'ace-builds/src-noconflict/mode-json'
 import './jsonEditor.scss'
 
 function JsonEditor(props) {
-  const { readOnly, ...rest } = props
+  const {
+    readOnly,
+    value,
+    onChange,
+    onValidate,
+    ...rest } = props
   const id = useId()
   const classes = classNames({
     'json-editor-wrapper': true,
@@ -26,14 +31,23 @@ function JsonEditor(props) {
         name={id}
         editorProps={{ $blockScrolling: true }}
         readOnly={readOnly}
+        value={value}
+        onChange={onChange}
+        onValidate={onValidate}
         {...rest}
       />
     </div>
   )
 }
 
-JsonEditor.defaultProps = { readOnly: false }
+JsonEditor.defaultProps = { readOnly: false, onValidate: () => {} }
 
-JsonEditor.propTypes = { onChange: propTypes.func.isRequired, readOnly: propTypes.bool }
+JsonEditor.propTypes = {
+  onChange: propTypes.func.isRequired,
+  readOnly: propTypes.bool,
+  value: propTypes.string.isRequired,
+  onValidate: propTypes.func
+
+}
 
 export default JsonEditor

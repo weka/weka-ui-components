@@ -1,11 +1,10 @@
 import React, { useRef, useEffect } from 'react'
 import propTypes from 'prop-types'
-import classNames from 'classnames'
 
 import './capacityBar.scss'
 
 function CapacityBar(props) {
-  const { firstUsage, firstClass, secondUsage, secondClass } = props
+  const { firstUsage, firstColor, secondUsage, secondColor } = props
   const firstRef = useRef(null)
   const secondRef = useRef(null)
 
@@ -16,28 +15,19 @@ function CapacityBar(props) {
     }
   }, [firstUsage, secondUsage])
 
-  const firstUsageClasses = classNames({
-    usage: true,
-    [firstClass]: true
-  })
-
-  const secondUsageClasses = classNames({
-    usage: true,
-    [secondClass]: true
-  })
   return (
     <div className='capacity-bar'>
-      <div className={firstUsageClasses} ref={firstRef} />
-      <div className={secondUsageClasses} ref={secondRef} />
+      <div className='usage' ref={firstRef} style={{ backgroundColor: firstColor }} />
+      <div className='usage' ref={secondRef} style={{ backgroundColor: secondColor }}/>
     </div>
   )
 }
 
 CapacityBar.defaultProps = {
   firstUsage: 0,
-  firstClass: 'total-usage',
+  firstColor: 'var(--accent-s3)',
   secondUsage: 0,
-  secondClass: ''
+  secondColor: 'var(--main-color)'
 }
 
 CapacityBar.propTypes = {

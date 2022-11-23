@@ -6,6 +6,7 @@ import url from '@rollup/plugin-url'
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 
+
 export default [
   {
     external: ['react', 'react/jsx-runtime', 'react-dom', '@mui/material'],

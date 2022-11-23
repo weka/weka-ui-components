@@ -1,16 +1,16 @@
-import  { default as EmptyPageMessageComponent } from "./EmptyPageMessage.js"
+import  { default as ErrorPageComponent } from "./ErrorPage.js"
 
 export default {
-  title: "Components/EmptyPageMessage",
-  component: EmptyPageMessageComponent,
+  title: "Components/ErrorPage",
+  component: ErrorPageComponent,
   argTypes: {
-        children: { description: 'Content of the empty page', type: { name: 'any', required: true }, },
+        error: { description: 'Error to show', type: { name: 'string', required: true }, },
   },
 }
 
-const Template = args => <EmptyPageMessageComponent {...args} />
+const Template = args => <ErrorPageComponent {...args} />
 
-export const EmptyPageMessage = Template.bind({})
-EmptyPageMessage.args = {
-  children: 'Some empty message'
+export const ErrorPage = Template.bind({})
+ErrorPage.args = {
+  error: 'Some error'
 }

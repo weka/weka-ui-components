@@ -1,23 +1,26 @@
-import  { default as ButtonComponent } from "./Button"
+import CapacityBar from "./CapacityBar.js"
 
 export default {
-  title: "Components/Button",
-  component: ButtonComponent,
+  title: "Components/CapacityBar",
+  component: CapacityBar,
   argTypes: {
-    children: { description: 'Content of the button', type: { name: 'any', required: true }, },
-    onClick: { description: 'Action on click', action: 'clicked', type: { name: 'function', required: true } },
-    disable: { description: 'Is disabled', defaultValue: false, type: { name: 'boolean' }},
-    extraClass: { description: 'Extra css class to attach', defaultValue: '', type: { name: 'string' } },
-    isLoading: { description: 'Is Loading button', defaultValue: false, type: { name: 'boolean'} },
-    empty: { description: 'Is empty button', defaultValue: false, type: { name: 'boolean'} },
-    fullWidth: { description: 'Full width button', defaultValue: false, type: { name: 'boolean'}},
-    small: { description: 'Small button', defaultValue: false, type: { name: 'boolean'}  }
+    firstUsage: { description: 'Value of the first usage, range: 0 - 1', control: { type: 'number', min: 0, max: 1, step: 0.01 } },
+    secondUsage: { description: 'Value of the second usage, must be bigger then firstValue, range 0 - 1', control: { type: 'number', min: 0, max: 1, step: 0.01 } },
+    firstColor: { description: 'Color of the first usage', type: { name: 'string' } },
+    secondColor: { description: 'Color of the second usage', type: { name: 'string' } },
   },
 }
 
-const Template = args => <ButtonComponent {...args} />
+const Template = args => <CapacityBar {...args} />
 
-export const Button = Template.bind({})
-Button.args = {
-  children: 'Primary'
+export const OneUsageCapacity = Template.bind({})
+OneUsageCapacity.args = {
+  firstUsage: 0.5
 }
+
+export const TwoUsageCapacity = Template.bind({})
+TwoUsageCapacity.args = {
+  firstUsage: 0.4,
+  secondUsage: 0.8
+}
+

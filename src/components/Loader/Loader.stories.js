@@ -1,16 +1,11 @@
-import  { default as InfoComponent } from './Info.js'
+import  { default as LoaderComponent } from './Loader.js'
 
 export default {
-  title: "Components/Info",
-  component: InfoComponent,
-  argTypes: {
-        data: { description: 'Tooltip of the info', type: { name: 'string', required: true }, }
-  },
+  title: "Components/Loader",
+  component: LoaderComponent,
 }
 
-const Template = args => <InfoComponent {...args} />
+const Template = args => <LoaderComponent {...args} />
 
-export const Info = Template.bind({})
-Info.args = {
-  data: 'Info to show',
-}
+export const Loader = Template.bind({})
+

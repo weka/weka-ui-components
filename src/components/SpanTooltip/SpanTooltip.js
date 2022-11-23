@@ -11,21 +11,20 @@ function SpanTooltip({ children, extraClasses, style }) {
   const ref = useRef(null)
   const [tooltip, setTooltip] = useState(EMPTY_STRING)
 
-  const compareSize = () => {
-    if (Utils.isEllipsisActive(ref.current)) {
-      setTooltip(children)
-    } else {
-      setTooltip(EMPTY_STRING)
-    }
-  }
-
   useEffect(() => {
+    const compareSize = () => {
+      if (Utils.isEllipsisActive(ref.current)) {
+        setTooltip(children)
+      } else {
+        setTooltip(EMPTY_STRING)
+      }
+    }
     compareSize()
     window.addEventListener('resize', compareSize)
     return () => {
       window.removeEventListener('resize', compareSize)
     }
-  }, [children?.length])
+  }, [children])
   const classes = classNames({
     [extraClasses]: true,
     'span-tooltip': true

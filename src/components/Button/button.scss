@@ -20,7 +20,6 @@
   &.disable {
     pointer-events: none;
     background: var(--ironhide-key);
-
   }
 
   &:hover:not(.disable) {

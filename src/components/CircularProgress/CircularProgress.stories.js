@@ -1,23 +1,21 @@
-import  { default as ButtonComponent } from "./Button"
+import  { default as CircularProgressComponent } from "./CircularProgress.js"
 
 export default {
-  title: "Components/Button",
-  component: ButtonComponent,
+  title: "Components/CircularProgress",
+  component: CircularProgressComponent,
   argTypes: {
-    children: { description: 'Content of the button', type: { name: 'any', required: true }, },
-    onClick: { description: 'Action on click', action: 'clicked', type: { name: 'function', required: true } },
-    disable: { description: 'Is disabled', defaultValue: false, type: { name: 'boolean' }},
-    extraClass: { description: 'Extra css class to attach', defaultValue: '', type: { name: 'string' } },
-    isLoading: { description: 'Is Loading button', defaultValue: false, type: { name: 'boolean'} },
-    empty: { description: 'Is empty button', defaultValue: false, type: { name: 'boolean'} },
-    fullWidth: { description: 'Full width button', defaultValue: false, type: { name: 'boolean'}},
-    small: { description: 'Small button', defaultValue: false, type: { name: 'boolean'}  }
+    size: { description: 'Size of the circle', control: { type: 'number', min: 0, step: 1 }, defaultValue: 30 },
+    progress: { description: 'Progress, range: 0 - 100', control: { type: 'number', min: 0,max: 100, step: 1 }, defaultValue: 0 },
+    trackColor: { description: 'Color of the track', type: { name: 'string' }, defaultValue: 'var(--ironhide-key)' },
+    indicatorColor: { description: 'Color of the track', type: { name: 'string' }, defaultValue: 'var(--accent-s1)' },
+    indicatorWidth: { description: 'Width of the indicator', control: { type: 'number' }, defaultValue: 3 },
   },
 }
 
-const Template = args => <ButtonComponent {...args} />
+const Template = args => <CircularProgressComponent {...args} />
 
-export const Button = Template.bind({})
-Button.args = {
-  children: 'Primary'
+export const CircularProgress = Template.bind({})
+CircularProgress.args = {
+  size: 50,
+  progress: 50
 }

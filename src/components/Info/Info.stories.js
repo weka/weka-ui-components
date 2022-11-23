@@ -1,16 +1,16 @@
-import  { default as ErrorPageComponent } from "./ErrorPage.js"
+import  { default as InfoComponent } from './Info.js'
 
 export default {
-  title: "Components/ErrorPage",
-  component: ErrorPageComponent,
+  title: "Components/Info",
+  component: InfoComponent,
   argTypes: {
-        error: { description: 'Error to show', type: { name: 'string', required: true }, },
+        data: { description: 'Tooltip of the info', type: { name: 'string', required: true }, }
   },
 }
 
-const Template = args => <ErrorPageComponent {...args} />
+const Template = args => <InfoComponent {...args} />
 
-export const ErrorPage = Template.bind({})
-ErrorPage.args = {
-  error: 'Some error'
+export const Info = Template.bind({})
+Info.args = {
+  data: 'Info to show',
 }

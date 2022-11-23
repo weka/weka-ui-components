@@ -1,6 +1,5 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import Tooltip from '../Tooltip'
 import { passwordStrength } from 'check-password-strength'
 import { EMPTY_STRING } from '../../consts'
 
@@ -9,7 +8,7 @@ import './newPasswordTooltip.scss'
 function NewPasswordTooltip({ passValue }) {
   const passStrength = passwordStrength(passValue)
 
-  const tooltipData = (
+  return (
     <div className='password-min-demand'>
       <span className='demand-headline'>Password must contain:</span>
       <span className={passStrength.length >= 8 ? 'valid' : EMPTY_STRING}>● At least 8 characters</span>
@@ -19,12 +18,6 @@ function NewPasswordTooltip({ passValue }) {
         ● Number or special character
       </span>
     </div>
-  )
-  return (
-    <Tooltip placement='right'>
-      {tooltipData}
-    </Tooltip>
-
   )
 }
 

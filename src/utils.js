@@ -57,6 +57,31 @@ const utils = {
   ),
   isString: (value) => (typeof value === 'string' || value instanceof String),
   isObject: (value) => (typeof value === 'object' && (value !== null && !Array.isArray(value))),
+  insensitiveSort(array, key) {
+    const newArray = [...array]
+    return newArray.sort((objA, objB) => {
+      if (key) {
+        return objA[key].toLowerCase().localeCompare(objB[key].toLowerCase())
+      }
+      return objA.toLowerCase().localeCompare(objB.toLowerCase())
+    })
+  },
+  range: (startOrEnd, end, step = 1) => {
+    let newStartOrEnd = startOrEnd
+    if (!end) {
+      end = newStartOrEnd
+      newStartOrEnd = 0
+    }
+    const result = []
+    for (let i = newStartOrEnd; i < end; i += step) {
+      result.push(i)
+    }
+    return result
+  },
+  mask2SubnetOp: (val) => [255, 255, 255, 255]
+    .map(() => [...Array(8).keys()]
+      .reduce((rst) => (rst * 2 + (val-- > 0)), 0))
+    .join('.'),
 }
 
 export default utils
