@@ -1,6 +1,7 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import { components } from 'react-select'
+import SpanTooltip from '../../../SpanTooltip'
 
 import './singleValue.scss'
 
@@ -9,7 +10,7 @@ function SingleValue(props) {
   return (
     <components.SingleValue {...props}>
       {icon}
-      <span className='react-select__single-value-label'>{label}</span>
+      <SpanTooltip extraClasses='react-select__single-value-label'>{label}</SpanTooltip>
     </components.SingleValue>
   )
 }

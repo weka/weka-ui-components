@@ -8,7 +8,7 @@
   width: var(--input-width);
   background-color: var(--input-background);
 
-  .text-select-label{
+  .text-select-label {
     position: absolute;
     left: 12px;
     top: 4px;
@@ -27,8 +27,8 @@
   }
 
   .field__input, .field__input:focus, .react-select__control {
-    border: none;
-    box-shadow: none;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   &:focus-within {
@@ -55,8 +55,8 @@
   }
 
   &.has-error {
-     border: 1px solid var(--focus-key);
-     box-shadow: 0 0 0 1px var(--focus-key);
+    border: 1px solid var(--focus-key);
+    box-shadow: 0 0 0 1px var(--focus-key);
   }
 
   .text-select-error {
