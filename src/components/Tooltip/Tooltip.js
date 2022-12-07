@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tooltip as MuiTooltip } from '@mui/material'
 import propTypes from 'prop-types'
-import classNames from 'classnames'
+import classNames from 'classnames';
 import { EMPTY_STRING } from '../../consts'
 
 import './tooltip.scss'
