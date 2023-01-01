@@ -24,7 +24,7 @@ interface TextBoxProps {
 }
 
 const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
-  const { label, onChange, value, error, placeholder, wrapperClass, tooltip, Icon, type, info, isRequired, allowDecimal, ...rest } = props
+  const { label, onChange, value, error, placeholder, wrapperClass ='', tooltip, Icon, type, info, isRequired, allowDecimal, ...rest } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
 
   function onTextChange(event) {
@@ -67,7 +67,8 @@ const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
           ref={ref}
           type={showPassword && type === 'password' ? 'text' : type}
           {...rest}
-        />
+        >
+        </input>
         {type === 'password'
           && (
             <span className='password-icon'>

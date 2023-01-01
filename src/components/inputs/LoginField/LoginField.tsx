@@ -1,6 +1,5 @@
 import React, {ReactElement} from 'react'
 import classNames from 'classnames'
-import { EMPTY_STRING } from '../../../consts'
 import useToggle from '../../../hooks/useToggle'
 import Utils from '../../../utils'
 import Info from '../../Info/Info'

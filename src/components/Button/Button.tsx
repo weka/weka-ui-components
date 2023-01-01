@@ -16,7 +16,7 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
-  const { children, onClick, extraClass = '', disable, isLoading, empty, fullWidth, small, ...rest } = props
+  const { children, onClick, extraClass = '', disable, isLoading = false, empty, fullWidth, small, ...rest } = props
   const { type = 'button' } = rest
   const classes = classNames({
     button: true,
