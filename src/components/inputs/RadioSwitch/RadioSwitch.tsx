@@ -1,0 +1,44 @@
+import React, {ChangeEvent} from 'react'
+import { Radio } from '@mui/material'
+import classNames from 'classnames'
+import Tooltip from '../../Tooltip'
+import { Info } from '../../../svgs'
+
+import './radioSwitch.scss'
+
+interface RadioSwitchProps {
+  label: string,
+  value: string,
+  checked: boolean,
+  onChange: (newVal: any) => void,
+  disabled?: boolean,
+  info?: string
+}
+function RadioSwitch({ label, checked, onChange, value, disabled, info }: RadioSwitchProps) {
+  function onRadioChange(event: ChangeEvent<HTMLInputElement>) {
+    onChange(event.target.value)
+  }
+
+  const cls = classNames({
+    disabled,
+    'radio-switch': true
+  })
+
+  return (
+    <div className={cls}>
+      <Radio
+        classes={{ root: 'radio-btn' }}
+        checked={checked}
+        disabled={disabled}
+        onChange={onRadioChange}
+        value={value}
+      />
+      <span className='radio-label'>
+        {label}
+        {!!info && <Tooltip data={info}><Info /></Tooltip>}
+      </span>
+    </div>
+  )
+}
+
+export default RadioSwitch

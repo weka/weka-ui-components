@@ -1,27 +1,28 @@
 import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
-import scss from 'rollup-plugin-scss'
+import sass from 'rollup-plugin-sass';
 import svgr from '@svgr/rollup'
 import url from '@rollup/plugin-url'
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
+import typescript from "@rollup/plugin-typescript";
+import dts from "rollup-plugin-dts";
 
+const packageJson = require("./package.json");
 
 export default [
   {
-    external: ['react', 'react/jsx-runtime', 'react-dom', '@mui/material'],
-    input: './src/index.js',
+    input: "src/index.ts",
     output: [
       {
-        file: 'dist/index.js',
-        format: 'cjs',
-        sourcemap: 'inline',
+        file: packageJson.main,
+        format: "cjs",
+        sourcemap: true,
       },
       {
-        file: 'dist/index.es.js',
-        format: 'es',
-        sourcemap: 'inline',
-        exports: 'named',
+        file: packageJson.module,
+        format: "esm",
+        sourcemap: true,
       },
     ],
     plugins: [
@@ -32,13 +33,22 @@ export default [
       }),
       resolve(),
       commonjs({ include: ['node_modules/**'] }),
+      typescript({ tsconfig: "./tsconfig.json" }),
       url(),
       svgr({ ref: true }),
-      scss({
-        output: "./dist/style/theme.scss",
-        failOnError: true,
+      sass({
+        output: 'dist/style/theme.scss',
+        options: {
+          includePaths: ['src/scss']
+        }
       }),
       terser()
-    ]
+    ],
+  },
+  {
+    input: "dist/esm/types/index.d.ts",
+    output: [{ file: "dist/index.d.ts", format: "esm" }],
+    plugins: [dts()],
+    external: [/\.(css|less|scss)$/],
   }
 ];
