@@ -25,6 +25,7 @@ export default [
         sourcemap: true,
       },
     ],
+    external: ['@mui/material', 'react', 'react-dom'],
     plugins: [
       babel({
         babelHelpers: 'runtime',
