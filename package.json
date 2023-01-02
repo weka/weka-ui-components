@@ -17,7 +17,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -c .storybook",
     "predeploy-storybook": "yarn run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static"
+    "deploy-storybook": "gh-pages -d storybook-static",
+    "prepublish": "yarn run build"
   },
   "files": [
     "dist"
@@ -66,7 +67,6 @@
     "@storybook/manager-webpack5": "^6.5.15",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^6.5.15",
-    "@storybook/storybook-deployer": "^2.8.16",
     "@svgr/rollup": "^6.5.1",
     "@svgr/webpack": "^6.5.1",
     "@testing-library/react": "^13.3.0",
