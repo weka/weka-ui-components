@@ -1,5 +1,8 @@
 # WEKA UI Components
 
+## Storybook
+https://weka.github.io/weka-ui-components
+
 ## Available Scripts
 
 ### Build the library
@@ -31,3 +34,12 @@ yarn run storybook
 ```
 yarn run build-storybook
 ```
+
+### Deploy storybook
+
+```
+yarn run deploy-storybook
+```
+
+
+
