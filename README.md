@@ -23,11 +23,11 @@ yarn dev
 ### Run storybook locally
 
 ```
-npm run storybook
+yarn run storybook
 ```
 
 ### Build storybook
 
 ```
-npm run build-storybook
+yarn run build-storybook
 ```
