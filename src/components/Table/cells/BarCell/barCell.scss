@@ -1,0 +1,16 @@
+.bar-cell{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  justify-content: center;
+  .table-count-cell {
+    align-self: flex-start;
+    padding-bottom: 2px;
+  }
+
+  .capacity-bar {
+    width: 90%;
+  }
+}
