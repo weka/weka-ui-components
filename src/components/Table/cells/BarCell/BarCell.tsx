@@ -1,10 +1,10 @@
 import React from 'react'
-import propTypes from 'prop-types'
-import { CapacityBar } from '@weka.io/weka-ui-components'
+import CapacityBar from '../../../CapacityBar'
+import { CustomCellProps } from '../../Table'
 
 import './barCell.scss'
 
-function BarCell({ cell }) {
+function BarCell({ cell }: CustomCellProps) {
   const { value } = cell
   return (
     <div className='bar-cell'>
@@ -13,7 +13,5 @@ function BarCell({ cell }) {
     </div>
   )
 }
-
-BarCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default BarCell

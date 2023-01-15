@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
-import propTypes from 'prop-types'
-import { Select } from '@weka.io/weka-ui-components'
-import Utils from '../../../../utils/utils'
+import Select from '../../../inputs/Select'
+import Utils from '../../../../utils'
 import FilterWrapper from '../FilterWrapper/FilterWrapper'
+import { UseFiltersColumnProps } from 'react-table'
+import { EMPTY_STRING } from '../../../../consts'
 
 import './selectFilter.scss'
 
-function SelectFilter({ column: { filterValue, setFilter, preFilteredRows, id, Header } }) {
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+  Header: string
+  id?: string
+  [key: string]: any
+}
+
+function SelectFilter({ column }: {[key: string]: any}) {
+  const { filterValue, setFilter, preFilteredRows, id = EMPTY_STRING, Header } = column as ExtendedFiltersColumn<object>
   const [value, setValue] = useState(Utils.isEmpty(filterValue) ? [] : filterValue)
 
   const options = React.useMemo(() => {
@@ -17,7 +25,7 @@ function SelectFilter({ column: { filterValue, setFilter, preFilteredRows, id, H
     return [...optionsSet.values()]
   }, [id, preFilteredRows])
 
-  const formatOptions = options.map((option) => Utils.formatOption(option))
+  const formatOptions = options.map((option) => Utils.formatOption(option as string))
 
   return (
     <FilterWrapper setFilter={setFilter} value={value} columnTitle={Header}>
@@ -27,7 +35,5 @@ function SelectFilter({ column: { filterValue, setFilter, preFilteredRows, id, H
     </FilterWrapper>
   )
 }
-
-SelectFilter.propTypes = { column: propTypes.object.isRequired }
 
 export default SelectFilter

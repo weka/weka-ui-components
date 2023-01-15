@@ -1,17 +1,21 @@
 import React from 'react'
-import propTypes from 'prop-types'
+import { ColumnInstance } from 'react-table'
+import { CustomCellProps } from '../../Table'
 
 import './encryptedCell.scss'
 
-function IconCell({ cell }) {
-  const { value, column: { Icon } } = cell
+interface ExtendedColumn extends ColumnInstance {
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+}
+
+function IconCell({ cell }: CustomCellProps) {
+  const { value, column } = cell
+  const { Icon } = column as ExtendedColumn
   return (
     <div className='encrypted-cell'>
       {value && <Icon />}
     </div>
   )
 }
-
-IconCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default IconCell

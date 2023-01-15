@@ -1,39 +1,46 @@
 import React from 'react'
-import propTypes from 'prop-types'
-import { Tooltip } from '@weka.io/weka-ui-components'
-import SVGS from '../../../../static/svgs'
-import { DRIVES_STATUES, STATUS } from '../../../../utils/consts'
+import { StatusOk, Propeller, Ellipses, FullWarning, StatusError } from '../../../../svgs'
+import { DRIVES_STATUSES, STATUS } from '../../../../consts'
+import { ColumnInstance } from 'react-table'
+import { CustomCellProps } from '../../Table'
+import Tooltip from '../../../Tooltip'
 
 import './statusCell.scss'
 
-function getIcon(status) {
+interface ExtendedColumn extends ColumnInstance {
+  getTooltip?: (original: object) => string
+  showString?: boolean
+}
+
+function getIcon(status: string) {
   switch (status) {
     case STATUS.OK:
     case STATUS.UP:
     case STATUS.READY:
     case STATUS.ACTIVE:
     case STATUS.ENABLED:
-      return <SVGS.StatusOk className='up' />
+      return <StatusOk className='up' />
     case STATUS.UPDATING:
-      return <SVGS.Ellipses className='updating' />
+      return <Ellipses className='updating' />
     case STATUS.CREATING:
-      return <SVGS.Propeller className='working' />
+      return <Propeller className='working' />
     case STATUS.REMOVING:
-      return <SVGS.Propeller className='working' />
+      return <Propeller className='working' />
     case STATUS.DEGRADED:
-      return <SVGS.FullWarning className='degraded-status' />
+      return <FullWarning className='degraded-status' />
     case STATUS.DOWNLOADING:
     case STATUS.DEACTIVATING:
-    case DRIVES_STATUES.PHASING_IN:
-    case DRIVES_STATUES.PHASING_OUT:
-      return <SVGS.Propeller className='working' />
+    case DRIVES_STATUSES.PHASING_IN:
+    case DRIVES_STATUSES.PHASING_OUT:
+      return <Propeller className='working' />
     default:
-      return <SVGS.StatusError className='down' />
+      return <StatusError className='down' />
   }
 }
 
-function StatusCell({ cell }) {
-  const { value, column: { getTooltip, showString }, row } = cell
+function StatusCell({ cell }: CustomCellProps) {
+  const { value, column, row } = cell
+  const { getTooltip, showString } = column as ExtendedColumn
   const noUnderscoreValue = value?.replaceAll('_', ' ')
   const tooltip = getTooltip ? getTooltip(row.original) : noUnderscoreValue
 
@@ -46,7 +53,5 @@ function StatusCell({ cell }) {
     </Tooltip>
   )
 }
-
-StatusCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default StatusCell

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import propTypes from 'prop-types'
-import { Tooltip } from '@weka.io/weka-ui-components'
-import Utils from '../../../../utils/utils'
+import Tooltip from '../../../Tooltip'
+import Utils from '../../../../utils'
+import { CustomCellProps } from '../../Table'
 
-import './uptimeCell.scss'
-
-function getMinTimeDiff(value) {
+function getMinTimeDiff(value: string) {
   const fullTime = Utils.getTimeDiffString(value)
   const splitTime = fullTime.split(' ')
   if (splitTime[0] !== '0d') {
@@ -17,7 +15,7 @@ function getMinTimeDiff(value) {
   return { value: splitTime[2], exactValue: splitTime[2] }
 }
 
-function UptimeCell({ cell }) {
+function UptimeCell({ cell }: CustomCellProps) {
   const { value } = cell
   const [uptime, setUptime] = useState(getMinTimeDiff(value).value)
   const [exactUptime, setExactUptime] = useState(getMinTimeDiff(value).exactValue)
@@ -32,14 +30,12 @@ function UptimeCell({ cell }) {
   }, [value])
   return (
     <Tooltip data={exactUptime}>
-      <div className='uptime-cell'>
+      <div>
         {uptime}
       </div>
     </Tooltip>
 
   )
 }
-
-UptimeCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default UptimeCell

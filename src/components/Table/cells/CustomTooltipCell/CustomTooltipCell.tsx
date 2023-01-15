@@ -1,11 +1,14 @@
 import React from 'react'
-import propTypes from 'prop-types'
-import { Tooltip } from '@weka.io/weka-ui-components'
-import { EMPTY_STRING } from '../../../../utils/consts'
+import Tooltip from '../../../Tooltip'
+import { CellValue } from 'react-table'
+import { EMPTY_STRING } from '../../../../consts'
 
-import './customTooltipCell.scss'
+interface CustomTooltipProps {
+  value: CellValue
+  tooltipData?: string
+}
 
-function CustomTooltipCell({ value, tooltipData }) {
+function CustomTooltipCell({ value, tooltipData = EMPTY_STRING }: CustomTooltipProps) {
   return (
     <Tooltip data={tooltipData}>
       <span>
@@ -13,13 +16,6 @@ function CustomTooltipCell({ value, tooltipData }) {
       </span>
     </Tooltip>
   )
-}
-
-CustomTooltipCell.defaultProps = { tooltipData: EMPTY_STRING }
-
-CustomTooltipCell.propTypes = {
-  value: propTypes.string.isRequired,
-  tooltipData: propTypes.string
 }
 
 export default CustomTooltipCell

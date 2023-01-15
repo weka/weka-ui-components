@@ -6,7 +6,7 @@ import { EMPTY_STRING } from '../../consts'
 
 import './menuPopper.scss'
 
-type  menuItem = {
+export type menuItem = {
   hideMenu?: boolean
   key?: string
   text?: string
@@ -21,7 +21,7 @@ interface MenuPopperProps {
   open: boolean,
   onClickAway: () => void,
   items: menuItem[],
-  anchorEl: HTMLElement,
+  anchorEl: HTMLElement | null,
   disablePortal?: boolean
 }
 function MenuPopper(props: MenuPopperProps) {

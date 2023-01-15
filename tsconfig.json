@@ -2,6 +2,7 @@
   "compilerOptions": {
     // Default
     "target": "es5",
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -19,7 +20,6 @@
     "emitDeclarationOnly": true
   },
   "include": [
-    "src",
-    "custom.d.ts"
+    "src"
   ]
 }

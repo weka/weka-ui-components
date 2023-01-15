@@ -1,15 +1,27 @@
-import React, { useRef } from 'react'
-import { IconButton } from '@mui/material'
-import propTypes from 'prop-types'
-import { MenuPopper } from '@weka.io/weka-ui-components'
-import SVGS from '../../../../static/svgs'
+import React, { useRef, forwardRef } from 'react'
+import {IconButton, IconButtonProps} from '@mui/material'
+import MenuPopper from '../../../MenuPopper'
+import { MenuDots } from '../../../../svgs'
 import useToggle from '../../../../hooks/useToggle'
+import { ExtendedRow, RowAction } from '../../Table'
+import { menuItem } from '../../../MenuPopper/MenuPopper'
 
 import './actionsCell.scss'
 
-function ActionsCell({ actions, row, disablePortal }) {
+interface ActionsCellProps {
+  actions: Array<RowAction>
+  row: ExtendedRow<object>
+  disablePortal?: boolean
+}
+
+type CastedForwardRefButtonType = <C extends React.ElementType>(
+  props: IconButtonProps<C, { component?: C }>,
+  ref?: React.Ref<HTMLButtonElement>
+) => React.ReactElement | null
+
+function ActionsCell({ actions, row, disablePortal }: ActionsCellProps) {
   const [isPopperOpen, togglePopper] = useToggle(false)
-  const anchorRef = useRef(null)
+  const anchorRef = useRef<HTMLDivElement | null>(null)
   const formatActions = actions
     .filter(({ hideAction }) => {
       if (hideAction instanceof Function) {
@@ -33,33 +45,38 @@ function ActionsCell({ actions, row, disablePortal }) {
       <MenuPopper
         disablePortal={disablePortal}
         anchorEl={anchorRef.current}
-        open={isPopperOpen}
+        open={isPopperOpen as boolean}
         onClickAway={togglePopper}
-        items={formatActions}
+        items={formatActions as menuItem[]}
       />
     )
   }
+
+  const CastedForwardRefButtonFnc: CastedForwardRefButtonType = (props, ref) => {
+    const {children, ...rest} = props
+    return (
+      <IconButton ref={ref} {...rest}>
+        {children}
+      </IconButton>
+    )
+  }
+
+  const CastedForwardRefButton = forwardRef(
+    CastedForwardRefButtonFnc
+  ) as CastedForwardRefButtonType
+
   return formatActions.length ? (
-    <div className='table-row-actions'>
-      <IconButton
+    <div className='table-row-actions' ref={anchorRef}>
+      <CastedForwardRefButton
         className='actions-btn'
-        ref={anchorRef}
         onClick={togglePopper}
       >
-        <SVGS.MenuDots />
-      </IconButton>
+        <MenuDots />
+      </CastedForwardRefButton>
       {isPopperOpen && getPopper()}
     </div>
   )
     : <div className='table-row-actions-empty' />
-}
-
-ActionsCell.defaultProps = { disablePortal: false }
-
-ActionsCell.propTypes = {
-  actions: propTypes.array.isRequired,
-  row: propTypes.object.isRequired,
-  disablePortal: propTypes.bool
 }
 
 export default ActionsCell

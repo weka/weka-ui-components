@@ -1,18 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react'
-import propTypes from 'prop-types'
-import { Tooltip } from '@weka.io/weka-ui-components'
-import { EMPTY_STRING } from '../../../../utils/consts'
-import Utils from '../../../../utils/utils'
+import Tooltip from '../../../Tooltip'
+import { EMPTY_STRING } from '../../../../consts'
+import Utils from '../../../../utils'
+import { CustomCellProps } from '../../Table'
 
 import './defaultCell.scss'
 
-function DefaultCell({ cell }) {
+function DefaultCell({ cell }: CustomCellProps) {
   const { value } = cell
-  const ref = useRef(null)
+  const ref = useRef<null | HTMLDivElement>(null)
   const [tooltip, setTooltip] = useState(EMPTY_STRING)
 
   const compareSize = () => {
-    if (Utils.isEllipsisActive(ref.current)) {
+    if (ref.current && Utils.isEllipsisActive(ref.current)) {
       setTooltip(value)
     } else {
       setTooltip(EMPTY_STRING)
@@ -35,7 +35,5 @@ function DefaultCell({ cell }) {
     </Tooltip>
   )
 }
-
-DefaultCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default DefaultCell

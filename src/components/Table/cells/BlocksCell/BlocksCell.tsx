@@ -1,19 +1,20 @@
 import React from 'react'
-import propTypes from 'prop-types'
 import classNames from 'classnames'
-import { DRIVES_STATUES, NODES_STATUES } from '../../../../utils/consts'
+import { CustomCellProps } from '../../Table'
+import { DRIVES_STATUSES, NODES_STATUSES } from '../../../../consts'
+import { CellValue } from 'react-table'
 
 import './blocksCell.scss'
 
-function BlocksCell({ cell }) {
+function BlocksCell({ cell }: CustomCellProps) {
   const { value } = cell
-  const upBlocks = value.filter(({ status }) => status === NODES_STATUES.UP || status === DRIVES_STATUES.ACTIVE
-    || status === DRIVES_STATUES.PHASING_OUT || status === DRIVES_STATUES.PHASING_IN)
+  const upBlocks = value.filter(({ status }: CellValue) => status === NODES_STATUSES.UP || status === DRIVES_STATUSES.ACTIVE
+    || status === DRIVES_STATUSES.PHASING_OUT || status === DRIVES_STATUSES.PHASING_IN)
   return (
     <div className='blocks-cell'>
       <span className='table-count-cell'>{`${upBlocks.length}/${value.length}`}</span>
       <div className='blocks-wrapper'>
-        {value.map(({ uid, status }) => {
+        {value.map(({ uid, status }: CellValue) => {
           const classes = classNames({
             block: true,
             [status]: true
@@ -24,7 +25,5 @@ function BlocksCell({ cell }) {
     </div>
   )
 }
-
-BlocksCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default BlocksCell

@@ -3,8 +3,10 @@ import classNames from 'classnames'
 
 import './spinner.scss'
 
-// eslint-disable-next-line react/prop-types
-function Spinner({ light }) {
+interface SpinnerProps {
+  light?: string
+}
+function Spinner({ light }: SpinnerProps) {
   const cls = classNames({
     light,
     spinner: true,

@@ -79,17 +79,18 @@ interface SelectProps {
   info?: any,
   wrapperClass?: string,
   error?: any,
-  label: string | ReactElement,
+  label?: string | ReactElement,
   options: any[],
   redInfo?: any,
   placeholder?: string,
   isClearable?: boolean
+  autoFocus?: boolean
 }
 
 function Select(props: SelectProps) {
   const {
     onChange = NOP, options, value, wrapperClass, isMulti, label,
-    disabled, sortOptions, error, placeholder, info, isRequired, redInfo = NOP, isClearable = true, ...rest
+    disabled, sortOptions, error, placeholder, info, isRequired, redInfo = NOP, isClearable = true, autoFocus = false, ...rest
   } = props
   const [saveOptions, setSaveOptions] = useState(null)
 
@@ -138,6 +139,7 @@ function Select(props: SelectProps) {
         menuPosition='fixed'
         isDisabled={disabled}
         styles={getStyle(!!error, !!label)}
+        autoFocus={autoFocus}
         /* eslint-disable-next-line no-nested-ternary */
         value={isMulti
           ? (value ? value.map((val) => options.find((option) => option.value === val)) : EMPTY_STRING)

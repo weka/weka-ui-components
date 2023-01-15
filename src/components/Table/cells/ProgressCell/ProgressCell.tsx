@@ -1,19 +1,15 @@
 import React from 'react'
-import propTypes from 'prop-types'
+import {CustomCellProps} from '../../Table'
 
-import './progressCell.scss'
-
-function ProgressCell({ cell }) {
+function ProgressCell({ cell }: CustomCellProps) {
   const { value } = cell
   const { status, progress } = value
   const stringToShow = progress !== 'N/A' ? `${status} - ${progress}` : status
   return (
-    <div className='progress-cell'>
+    <div>
       {stringToShow}
     </div>
   )
 }
-
-ProgressCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default ProgressCell

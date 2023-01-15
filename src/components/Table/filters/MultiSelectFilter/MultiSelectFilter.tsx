@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import propTypes from 'prop-types'
-import { Select } from '@weka.io/weka-ui-components'
+import Select from '../../../inputs/Select'
 import FilterWrapper from '../FilterWrapper'
-import Utils from '../../../../utils/utils'
-import SVGS from '../../../../static/svgs'
+import Utils from '../../../../utils'
+import { Close } from '../../../../svgs'
+import { EMPTY_STRING } from '../../../../consts'
+import { UseFiltersColumnProps } from 'react-table'
 
 import './multiSelectFilter.scss'
 
-function MultiSelectFilter({ column: { filterValue, setFilter, preFilteredRows, id, fixedOptions, Header } }) {
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+  fixedOptions: Array<any>
+  Header: string
+  id?: string
+  [key: string]: any
+}
+
+function MultiSelectFilter({ column }: {[key: string]: any}) {
+  const { filterValue, setFilter, preFilteredRows, id = EMPTY_STRING, fixedOptions, Header } = column as ExtendedFiltersColumn<object>
   // eslint-disable-next-line no-nested-ternary
   const formatValue = filterValue === undefined ? [] : Array.isArray(filterValue) ? filterValue : [filterValue]
   const [value, setValue] = useState(formatValue)
@@ -27,18 +36,18 @@ function MultiSelectFilter({ column: { filterValue, setFilter, preFilteredRows, 
     setValue(formatValue)
   }, [JSON.stringify(formatValue)])
 
-  const onSelectOne = (optionSelected) => {
+  const onSelectOne = (optionSelected: any) => {
     setValue([...value, optionSelected].sort())
   }
 
-  const onUnselectOne = (optionUnselected) => {
+  const onUnselectOne = (optionUnselected: any) => {
     const filterSelect = value.filter((option) => option !== optionUnselected)
     setValue(filterSelect)
   }
 
-  const getSelectedOption = (selectOption) => (
+  const getSelectedOption = (selectOption: any) => (
     <div key={selectOption} className='selected-option'>
-      <SVGS.Close onClick={() => onUnselectOne(selectOption)} />
+      <Close onClick={() => onUnselectOne(selectOption)} />
       <span className='dropdown-lines-1'>
         {selectOption}
       </span>
@@ -56,7 +65,5 @@ function MultiSelectFilter({ column: { filterValue, setFilter, preFilteredRows, 
     </FilterWrapper>
   )
 }
-
-MultiSelectFilter.propTypes = { column: propTypes.object.isRequired }
 
 export default MultiSelectFilter

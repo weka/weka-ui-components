@@ -1,36 +1,41 @@
 import React from 'react'
-import propTypes from 'prop-types'
-import { useTranslation } from 'react-i18next'
-import { CircularProgress, Tooltip } from '@weka.io/weka-ui-components'
-import { NAMESPACES, OBS_IS_DETACHING, OBS_MODES } from '../../../../utils/consts'
-import SVGS from '../../../../static/svgs'
+import CircularProgress from '../../../CircularProgress'
+import Tooltip from '../../../Tooltip'
+import { OBS_IS_DETACHING, OBS_MODES } from '../../../../consts'
+import { RemoteTiering, Tiering } from '../../../../svgs'
+import { CustomCellProps } from '../../Table'
 
 import './tieringCell.scss'
 
-function getSVG({ mode, name, state, detachProgress }, t) {
+type TieringValue = {
+  mode: string
+  name: string
+  state: string
+  detachProgress: number | null
+  [key: string]: any
+}
+
+function getSVG({ mode, name, state, detachProgress = 0 }: TieringValue) {
   if (state === OBS_IS_DETACHING) {
     return (
-      <Tooltip data={t(`${NAMESPACES.FILESYSTEMS}:FS_OBS_BUCKET_IS_DETACHED`)} key={name}>
+      <Tooltip data='Object Store Bucket is being detached' key={name}>
         <div>
-          <CircularProgress progress={detachProgress} />
+          <CircularProgress progress={typeof detachProgress === 'number' ? detachProgress : undefined} />
         </div>
       </Tooltip>
     )
   }
-  const Icon = mode === OBS_MODES.REMOTE ? SVGS.RemoteTiering : SVGS.Tiering
+  const Icon = mode === OBS_MODES.REMOTE ? RemoteTiering : Tiering
   return <Icon key={name} className={mode.toLowerCase()} />
 }
 
-function TieringCell({ cell }) {
-  const { t } = useTranslation([NAMESPACES.FILESYSTEMS])
+function TieringCell({ cell }: CustomCellProps) {
   const { value } = cell
   return (
     <div className='tiering-cell'>
-      {value.map((val) => getSVG(val, t))}
+      {value.map((val: TieringValue) => getSVG(val))}
     </div>
   )
 }
-
-TieringCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default TieringCell

@@ -1,12 +1,12 @@
 import React from 'react'
-import propTypes from 'prop-types'
 import { DateTime } from 'luxon'
-import { Tooltip } from '@weka.io/weka-ui-components'
-import Utils from '../../../utils/utils'
+import Tooltip from '../../../Tooltip'
+import Utils from '../../../../utils'
+import { CellProps } from 'react-table'
 
 import './dateCell.scss'
 
-function DateCell({ cell, column }) {
+function DateCell({ cell, column }: { cell: CellProps<object>, column: { [key: string]: any }}) {
   const { value } = cell
   const { showMili } = column
   return (
@@ -16,11 +16,6 @@ function DateCell({ cell, column }) {
       </div>
     </Tooltip>
   )
-}
-
-DateCell.propTypes = {
-  cell: propTypes.object.isRequired,
-  column: propTypes.object.isRequired
 }
 
 export default DateCell

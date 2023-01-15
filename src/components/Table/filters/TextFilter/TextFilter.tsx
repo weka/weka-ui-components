@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import propTypes from 'prop-types'
-import { EMPTY_STRING } from '../../../../utils/consts'
+import { EMPTY_STRING } from '../../../../consts'
 import FilterWrapper from '../FilterWrapper'
+import { UseFiltersColumnProps } from 'react-table'
 
 import './textFilter.scss'
 
-function TextFilter({ column: { filterValue, setFilter, Header } }) {
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+  Header: string
+  [key: string]: any
+}
+
+function TextFilter({ column }: {[key: string]: any}) {
+  const { filterValue, setFilter, Header } = column as ExtendedFiltersColumn<object>
   const [value, setValue] = useState(filterValue)
   useEffect(() => {
     setValue(filterValue)
@@ -24,7 +30,5 @@ function TextFilter({ column: { filterValue, setFilter, Header } }) {
     </FilterWrapper>
   )
 }
-
-TextFilter.propTypes = { column: propTypes.object.isRequired }
 
 export default TextFilter

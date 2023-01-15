@@ -1,19 +1,17 @@
 import React from 'react'
-import propTypes from 'prop-types'
 import { Duration } from 'luxon'
-import { Tooltip } from '@weka.io/weka-ui-components'
-import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from '../../../../utils/consts'
+import Tooltip from '../../../Tooltip'
+import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from '../../../../consts'
+import { CustomCellProps } from '../../Table'
 
-import './timeCell.scss'
-
-function TimeCell({ cell }) {
+function TimeCell({ cell }: CustomCellProps) {
   const { value } = cell
 
   const durationObj = Duration.fromMillis(value * 1000)
     .shiftTo('months', 'weeks', 'days', 'hours', 'minutes', 'seconds').toObject()
   let wholeStringToShow = EMPTY_STRING
   let partStringToShow = EMPTY_STRING
-  const durationObjWithValues = {}
+  const durationObjWithValues: { [key: string]: any } = {}
   Object.entries(durationObj).forEach(([key, val]) => {
     if (val) {
       durationObjWithValues[key] = val
@@ -34,7 +32,5 @@ function TimeCell({ cell }) {
     </Tooltip>
   )
 }
-
-TimeCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default TimeCell

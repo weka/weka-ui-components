@@ -1,13 +1,17 @@
 import React from 'react'
-import propTypes from 'prop-types'
-import { useTranslation } from 'react-i18next'
-import { Tooltip, CapacityBar } from '@weka.io/weka-ui-components'
-import Utils from '../../../../utils/utils'
-import { NAMESPACES } from '../../../../utils/consts'
+import Tooltip from '../../../Tooltip'
+import CapacityBar from '../../../CapacityBar'
+import Utils from '../../../../utils'
+import { CustomCellProps } from '../../Table'
+import { ColumnInstance } from 'react-table'
 
 import './capacityCell.scss'
 
-function getBarColor(used, total, caution = false) {
+interface ExtendedColumn extends ColumnInstance {
+  noDataLabel: string
+}
+
+function getBarColor(used: number, total: number, caution = false) {
   try {
     const percent = used / total
     if (caution) {
@@ -25,9 +29,9 @@ function getBarColor(used, total, caution = false) {
   }
 }
 
-function CapacityCell({ cell }) {
-  const { t } = useTranslation([NAMESPACES.GENERAL, NAMESPACES.FILESYSTEMS])
-  const { value, column: { noDataLabel = t(`${NAMESPACES.GENERAL}:UNKNOWN`) } } = cell
+function CapacityCell({ cell }: CustomCellProps) {
+  const { value, column } = cell
+  const { noDataLabel = 'Unknown' } = column as ExtendedColumn
   const { used, total, isThin, maxThin, minThin, caution } = value
   const formatTotal = Utils.formatBytes(total, 2)
   const formatUsed = Utils.formatBytes(used, 2)
@@ -37,11 +41,11 @@ function CapacityCell({ cell }) {
       <div className='capacity-cell-headline'>
         <span className='label-4'>
           {total
-            ? t(`${NAMESPACES.FILESYSTEMS}:FS_USED_OUT_OF_TOTAL`, { used: `${formatUsed.value} ${formatUsed.text}`, total: `${formatTotal.value} ${formatTotal.text}`, percentage: ((used / total) * 100).toFixed(1) })
+            ? `${formatUsed.value} ${formatUsed.text} out of ${formatTotal.value} ${formatTotal.text} (${((used / total) * 100).toFixed(1)}%)`
             : noDataLabel}
         </span>
         { isThin && (
-          <Tooltip data={t(`${NAMESPACES.FILESYSTEMS}:THINLY_PROVISIONED_FS`, { maxThin: Utils.formatBytesToString(maxThin), minThin: Utils.formatBytesToString(minThin) })}>
+          <Tooltip data={`Thinly Provisioned Filesystem\nMax SSD: ${Utils.formatBytesToString(maxThin)}\nMin SSD: ${Utils.formatBytesToString(minThin)}`}>
             <div className='thin-provision' />
           </Tooltip>
         )}
@@ -52,7 +56,5 @@ function CapacityCell({ cell }) {
     </div>
   )
 }
-
-CapacityCell.propTypes = { cell: propTypes.object.isRequired }
 
 export default CapacityCell
