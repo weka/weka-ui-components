@@ -1,0 +1,44 @@
+.box-filter-container {
+  display: inline-flex;
+  flex-direction: column;
+  border: 1px solid var(--ironhide-s2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+
+  .filter-headline {
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    color: var(--ironhide-s2);
+    font-size: 10px;
+    white-space:nowrap;
+
+    svg {
+      height: 8px;
+      width: 8px;
+      margin-left: 8px;
+      cursor: pointer;
+      &:hover {
+        path {
+          fill: var(--main-color);
+        }
+      }
+
+      path {
+        fill: var(--ironhide-s3);
+      }
+    }
+
+  }
+
+  .filter-data {
+    color: var(--ironhide-s3);
+    font-weight: bold;
+font-family: var(--bold-font);
+    font-size: 12px;
+    word-break: break-word;
+    max-height: 20px;
+    overflow-y: auto;
+  }
+}

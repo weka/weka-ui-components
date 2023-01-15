@@ -8,7 +8,7 @@ interface CircularProgressProps {
   trackColor?: string,
   indicatorWidth?: number,
   indicatorColor?: string,
-  indicatorCap: "round" | "inherit" | "butt" | "square" | undefined
+  indicatorCap?: "round" | "inherit" | "butt" | "square"
 }
 function CircularProgress(props: CircularProgressProps) {
   const {

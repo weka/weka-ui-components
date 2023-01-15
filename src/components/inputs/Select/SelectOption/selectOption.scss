@@ -17,6 +17,11 @@
   &--is-focused{
     background: var(--ironhide-t2);
   }
+
+  .option-wrapper {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .MuiTooltip-popper {

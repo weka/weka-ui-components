@@ -1,0 +1,9 @@
+.encrypted-cell{
+  svg {
+    height: 24px;
+    width: 24px;
+    path {
+      fill: var(--accent-key);
+    }
+  }
+}

@@ -14,7 +14,7 @@ function SelectOption(props: SelectOptionProps) {
   return (
     <components.Option {...props} className={icon ? 'has-icon' : EMPTY_STRING}>
       <Tooltip extraClass='option-tooltip' data={tooltip}>
-        <div>
+        <div className='option-wrapper'>
           {icon}
           {label}
         </div>

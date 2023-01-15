@@ -1,6 +1,6 @@
 {
   "name": "@weka.io/weka-ui-components",
-  "version": "0.0.15",
+  "version": "0.0.19",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -8,8 +8,11 @@
     "check-password-strength": "^2.0.7",
     "classnames": "^2.3.2",
     "copy-to-clipboard": "^3.3.3",
+    "lodash": "^4.17.21",
+    "luxon": "^3.2.1",
     "react-ace": "^10.1.0",
-    "react-select": "^5.7.0"
+    "react-select": "^5.7.0",
+    "react-table": "^7.8.0"
   },
   "scripts": {
     "build": "rollup -c",
@@ -43,7 +46,8 @@
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.11.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -71,7 +75,9 @@
     "@svgr/webpack": "^6.5.1",
     "@testing-library/react": "^13.3.0",
     "@types/jest": "^28.1.6",
+    "@types/luxon": "^3.2.0",
     "@types/react": "^18.0.15",
+    "@types/react-table": "^7.7.14",
     "babel-jest": "^27.3.1",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
