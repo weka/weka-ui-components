@@ -5,6 +5,8 @@ import { Checkbox } from '../../inputs'
 import { ClickAwayListener, Grow, IconButton, Paper, Popper  } from '@mui/material'
 import { Show } from '../../../svgs'
 
+import './showColumns.scss'
+
 interface ExtendedColumn extends ColumnInstance {[key: string]: any}
 
 interface ShowColumnsProps {
