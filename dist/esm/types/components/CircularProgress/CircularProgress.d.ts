@@ -1,0 +1,12 @@
+/// <reference types="react" />
+import './circularProgress.scss';
+interface CircularProgressProps {
+    size?: number;
+    progress?: number;
+    trackColor?: string;
+    indicatorWidth?: number;
+    indicatorColor?: string;
+    indicatorCap: "round" | "inherit" | "butt" | "square" | undefined;
+}
+declare function CircularProgress(props: CircularProgressProps): JSX.Element;
+export default CircularProgress;
