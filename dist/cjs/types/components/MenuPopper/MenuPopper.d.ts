@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import './menuPopper.scss';
-declare type menuItem = {
+export declare type menuItem = {
     hideMenu?: boolean;
     key?: string;
     text?: string;
@@ -14,7 +14,7 @@ interface MenuPopperProps {
     open: boolean;
     onClickAway: () => void;
     items: menuItem[];
-    anchorEl: HTMLElement;
+    anchorEl: HTMLElement | null;
     disablePortal?: boolean;
 }
 declare function MenuPopper(props: MenuPopperProps): JSX.Element;

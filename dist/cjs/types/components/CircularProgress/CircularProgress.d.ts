@@ -6,7 +6,7 @@ interface CircularProgressProps {
     trackColor?: string;
     indicatorWidth?: number;
     indicatorColor?: string;
-    indicatorCap: "round" | "inherit" | "butt" | "square" | undefined;
+    indicatorCap?: "round" | "inherit" | "butt" | "square";
 }
 declare function CircularProgress(props: CircularProgressProps): JSX.Element;
 export default CircularProgress;

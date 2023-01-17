@@ -10,11 +10,12 @@ interface SelectProps {
     info?: any;
     wrapperClass?: string;
     error?: any;
-    label: string | ReactElement;
+    label?: string | ReactElement;
     options: any[];
     redInfo?: any;
     placeholder?: string;
     isClearable?: boolean;
+    autoFocus?: boolean;
 }
 declare function Select(props: SelectProps): JSX.Element;
 export default Select;

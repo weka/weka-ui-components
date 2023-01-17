@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement } from 'react';
+import { CellProps, Row, Column, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 
 interface ButtonProps {
     children: any;
@@ -28,7 +29,7 @@ interface CircularProgressProps {
     trackColor?: string;
     indicatorWidth?: number;
     indicatorColor?: string;
-    indicatorCap: "round" | "inherit" | "butt" | "square" | undefined;
+    indicatorCap?: "round" | "inherit" | "butt" | "square";
 }
 declare function CircularProgress(props: CircularProgressProps): JSX.Element;
 
@@ -154,11 +155,12 @@ interface SelectProps {
     info?: any;
     wrapperClass?: string;
     error?: any;
-    label: string | ReactElement;
+    label?: string | ReactElement;
     options: any[];
     redInfo?: any;
     placeholder?: string;
     isClearable?: boolean;
+    autoFocus?: boolean;
 }
 declare function Select(props: SelectProps): JSX.Element;
 
@@ -267,7 +269,7 @@ interface MenuPopperProps {
     open: boolean;
     onClickAway: () => void;
     items: menuItem[];
-    anchorEl: HTMLElement;
+    anchorEl: HTMLElement | null;
     disablePortal?: boolean;
 }
 declare function MenuPopper(props: MenuPopperProps): JSX.Element;
@@ -285,7 +287,7 @@ declare function NewPasswordTooltip({ passValue }: NewPasswordTooltipProps): JSX
 
 interface SpanTooltipProps {
     children: number | string;
-    extraClasses: string;
+    extraClasses?: string;
     style?: object;
 }
 declare function SpanTooltip({ children, extraClasses, style }: SpanTooltipProps): JSX.Element;
@@ -339,4 +341,104 @@ interface TooltipProps {
 }
 declare function Tooltip({ children, clear, data, extraClass, ...rest }: TooltipProps): JSX.Element;
 
-export { Button, CapacityBar, Checkbox, CircularProgress, CloseButton, DataInfo, EmptyPageMessage, ErrorPage, FormSwitch, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, NewPasswordTooltip, RadioSwitch, Select, SpanTooltip, Switch, Tab, TagsBox, TextArea, TextBox, TextField, TextSelectBox, Toast, ToggleButton, Tooltip, UploadField };
+interface RowAction {
+    hideAction: boolean | ((original: object) => boolean);
+    action?: ((original: object) => void) | (() => void);
+    content?: string | ((original: object) => HTMLElement);
+    disabled?: boolean | ((original: object) => boolean);
+    text?: string;
+}
+interface CustomCellProps {
+    cell: CellProps<object>;
+}
+declare type ExtendedColumn = Column & {
+    defaultHidden?: boolean;
+};
+interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
+    subRows: Array<Row<any>>;
+}
+interface TableProps {
+    columns: ExtendedColumn[];
+    data: Array<any>;
+    filterCategory: string;
+    title?: string;
+    maxRows?: number;
+    rowActions?: RowAction[];
+    emptyMessage?: string;
+    tableActions?: Array<ReactNode>;
+    defaultSort?: string;
+    globalFilter?: string | ((rows: Array<Row>) => Row[]);
+    defaultGlobalFilter?: string;
+    checkRowSelected?: (row: object) => boolean;
+    getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
+    addFilterToUrl?: boolean;
+    RowSubComponent?: React.FC<{
+        row: any;
+    }>;
+    listenerPrefix?: string;
+    onRowClick?: (uid: string) => void;
+    miniTable?: boolean;
+    fixedPageSize?: number;
+    disableActionsPortal?: boolean;
+}
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage }: TableProps): JSX.Element;
+
+declare function MultiSelectFilter({ column }: {
+    [key: string]: any;
+}): JSX.Element;
+
+declare function SelectFilter({ column }: {
+    [key: string]: any;
+}): JSX.Element;
+
+declare function TextFilter({ column }: {
+    [key: string]: any;
+}): JSX.Element;
+
+interface ActionsCellProps {
+    actions: Array<RowAction>;
+    row: ExtendedRow<object>;
+    disablePortal?: boolean;
+}
+declare function ActionsCell({ actions, row, disablePortal }: ActionsCellProps): JSX.Element;
+
+interface ExtendedCellProps<T extends object> extends CellProps<T>, UseRowStateCellProps<T> {
+    state: UseRowStateLocalState<T>;
+}
+interface ApiCallCellProps {
+    cell: ExtendedCellProps<object>;
+}
+declare function ApiCallCell({ cell }: ApiCallCellProps): JSX.Element;
+
+declare function BarCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function BlocksCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function CapacityCell({ cell }: CustomCellProps): JSX.Element;
+
+interface CustomTooltipProps {
+    value: CellValue;
+    tooltipData?: string;
+}
+declare function CustomTooltipCell({ value, tooltipData }: CustomTooltipProps): JSX.Element;
+
+declare function IconCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function StatusCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function ProgressCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function TieringCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function TimeCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function UptimeCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function DateCell({ cell, column }: {
+    cell: CellProps<object>;
+    column: {
+        [key: string]: any;
+    };
+}): JSX.Element;
+
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, ProgressCell, RadioSwitch, Select, SelectFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };

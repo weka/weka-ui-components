@@ -19,5 +19,31 @@ declare const utils: {
         label: string;
         value: string;
     };
+    parseParamsToQuery: (params: {
+        [key: string]: any;
+    }) => {};
+    dispatchCustomEvent: (id: string, data: any) => void;
+    isNumber: (value: any) => boolean;
+    stringSort: (rowA: {
+        values: {
+            [key: string]: any;
+        };
+    }, rowB: {
+        values: {
+            [key: string]: any;
+        };
+    }, columnId: string) => number;
+    isIp: (string: any) => any;
+    formatBytes: (bytes: number, decimals?: number) => {
+        value: number;
+        text: string;
+    } | {
+        value: string;
+        text: string;
+    };
+    formatBytesToString: (bytes: number, decimals?: number) => string | null;
+    getTimeDiffObject: (time: string) => import("luxon").DurationObjectUnits;
+    getTimeDiffString: (time: string, largest?: boolean) => string;
+    formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean) => string;
 };
 export default utils;
