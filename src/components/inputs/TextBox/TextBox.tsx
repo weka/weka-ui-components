@@ -9,11 +9,11 @@ import { Info } from '../../../svgs'
 import './textBox.scss'
 
 interface TextBoxProps {
-   onChange: (newVal: any) => void,
+  onChange: (newVal: any) => void,
   value: string | number
   wrapperClass?: string
   placeholder?: string | number
-  label: string | ReactElement
+  label?: string | ReactElement
   tooltip?: string | ReactElement
   error?: any,
   Icon?: ReactElement,
@@ -24,7 +24,7 @@ interface TextBoxProps {
 }
 
 const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
-  const { label, onChange, value, error, placeholder, wrapperClass ='', tooltip, Icon, type, info, isRequired, allowDecimal, ...rest } = props
+  const { label = EMPTY_STRING, onChange, value, error, placeholder, wrapperClass ='', tooltip, Icon, type, info, isRequired, allowDecimal, ...rest } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
 
   function onTextChange(event) {

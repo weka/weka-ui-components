@@ -229,17 +229,23 @@ const utils = {
   })
   return ans.trim() || '0m'
   },
-  formatISODate: (isoDate: string, showMili = true, showSeconds = true) => `${DateTime.fromISO(isoDate).toLocaleString({
+  formatISODate: (isoDate: string, showMili = true, showSeconds = true, showTime = true) => `${DateTime.fromISO(isoDate).toLocaleString({
   year: '2-digit',
   month: '2-digit',
   day: '2-digit'
-})} ${DateTime.fromISO(isoDate).toLocaleString({
+})} ${showTime ? DateTime.fromISO(isoDate).toLocaleString({
   hour: '2-digit',
   minute: '2-digit',
   ...(showSeconds && { second: '2-digit' }),
   ...(showMili && showSeconds && { fractionalSecondDigits: 3 }),
   hourCycle: 'h23'
-})}`,
+}) : EMPTY_STRING}`,
+  formatDate: (dateIn: DateTime, showSeconds = true, showMili = true, showTime = true) => {
+    if (!(dateIn instanceof DateTime) && !(Object.getPrototypeOf(dateIn).constructor.name === 'DateTime')) {
+      return 'Not Valid DateTime Object'
+    }
+    return utils.formatISODate(dateIn.toISO(), showMili, showSeconds, showTime)
+  },
 }
 
 export default utils

@@ -49,7 +49,9 @@ export const FILTERBOXES: FilterBoxes = {
     POSIXGID: 'Posix GID',
     S3POLICY: 'S3 Policy',
     SUPPORTEDVERSIONS: 'Supported Versions',
-    OWNER: 'Owner'
+    OWNER: 'Owner',
+    CUSTOMERID: 'Customer Name',
+    VERSION: 'Version'
 }
 
 export const NODES_STATUSES = {
@@ -90,6 +92,8 @@ export const OBS_MODES = {
   READ_ONLY: 'READ_ONLY'
 }
 
+// TIMES
+
 interface TimeShortenings {
   [key: string]: any
 }
@@ -101,4 +105,27 @@ export const TIME_PARTS_SHORTENINGS: TimeShortenings = {
   hours: 'h',
   minutes: 'min',
   seconds: 'sec'
+}
+
+export const SHORT_DAY_OF_WEEK = 'Mon Tue Wed Thu Fri Sat Sun'.split(' ')
+
+export const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
+export const TIME_PARTS = {
+  HOUR: 'hour',
+  MINUTE: 'minute',
+  SECOND: 'second'
 }

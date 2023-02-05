@@ -17,3 +17,4 @@ export { ReactComponent as StatusError } from './icn-status-disconnected.svg';
 export { ReactComponent as Tiering } from './082-tiered-24.svg';
 export { ReactComponent as RemoteTiering } from './080-tiered-remote-24.svg';
 export { ReactComponent as Filter } from './038-filter-16.svg';
+export { ReactComponent as EmptyCalendar } from './empty-calendar.svg';

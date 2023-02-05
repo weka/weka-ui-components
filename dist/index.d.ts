@@ -1,6 +1,7 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement } from 'react';
 import { CellProps, Row, Column, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import { DateTime } from 'luxon';
 
 interface ButtonProps {
     children: any;
@@ -161,6 +162,7 @@ interface SelectProps {
     placeholder?: string;
     isClearable?: boolean;
     autoFocus?: boolean;
+    groupedOptions?: boolean;
 }
 declare function Select(props: SelectProps): JSX.Element;
 
@@ -198,7 +200,7 @@ interface TextBoxProps {
     value: string | number;
     wrapperClass?: string;
     placeholder?: string | number;
-    label: string | ReactElement;
+    label?: string | ReactElement;
     tooltip?: string | ReactElement;
     error?: any;
     Icon?: ReactElement;
@@ -441,4 +443,37 @@ declare function DateCell({ cell, column }: {
     };
 }): JSX.Element;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, ProgressCell, RadioSwitch, Select, SelectFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
+interface DateTimePickerProps {
+    onChange: (val?: any) => void;
+    value?: any;
+    label?: string;
+    minDate?: DateTime;
+    maxDate?: DateTime;
+    showSeconds?: boolean;
+    isRequired?: boolean;
+    error?: any;
+    disablePortal?: boolean;
+    showCalendarIcon?: boolean;
+    showTime?: boolean;
+    disabled?: boolean;
+}
+declare function DateTimePicker(props: DateTimePickerProps): JSX.Element;
+
+interface NumInputProps {
+    max: number;
+    value: number;
+    onChange?: (val?: number) => void;
+    numTitle?: string;
+    numFocus?: {
+        [key: string]: any;
+    };
+    setNumFocus?: (state: {
+        [key: string]: any;
+    }) => void;
+    initialNumState?: {
+        [key: string]: any;
+    };
+}
+declare function NumInput(props: NumInputProps): JSX.Element;
+
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
