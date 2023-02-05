@@ -1,4 +1,5 @@
 import React from 'react';
+import { DateTime } from 'luxon';
 declare const utils: {
     isEllipsisActive(element: HTMLElement): boolean;
     getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement;
@@ -44,6 +45,7 @@ declare const utils: {
     formatBytesToString: (bytes: number, decimals?: number) => string | null;
     getTimeDiffObject: (time: string) => import("luxon").DurationObjectUnits;
     getTimeDiffString: (time: string, largest?: boolean) => string;
-    formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean) => string;
+    formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean, showTime?: boolean) => string;
+    formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
 };
 export default utils;

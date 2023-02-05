@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useState} from 'react'
+import React, {ReactElement, useEffect, useState, useMemo} from 'react'
 import { FormControl } from '@mui/material'
 import ReactSelect from 'react-select'
 import classNames from 'classnames'
@@ -85,14 +85,26 @@ interface SelectProps {
   placeholder?: string,
   isClearable?: boolean
   autoFocus?: boolean
+  groupedOptions?: boolean
 }
 
 function Select(props: SelectProps) {
   const {
     onChange = NOP, options, value, wrapperClass, isMulti, label,
-    disabled, sortOptions, error, placeholder, info, isRequired, redInfo = NOP, isClearable = true, autoFocus = false, ...rest
+    disabled, sortOptions, error, placeholder, info, isRequired, redInfo = NOP, isClearable = true, autoFocus = false, groupedOptions = false, ...rest
   } = props
   const [saveOptions, setSaveOptions] = useState(null)
+
+  const formattedGroupedOptions = useMemo(() => {
+    if (groupedOptions) {
+      return options.reduce((acc, {options}) => {
+        options.forEach(({label, value}) => acc.push(Utils.formatOption(label, value)))
+        return acc
+      }, [])
+    }
+    return []
+
+  }, [JSON.stringify(options)])
 
   useEffect(() => { // this is for a case that the options change while modal open
     setSaveOptions(sortOptions ? Utils.insensitiveSort(options, 'label') : options)
@@ -143,7 +155,7 @@ function Select(props: SelectProps) {
         /* eslint-disable-next-line no-nested-ternary */
         value={isMulti
           ? (value ? value.map((val) => options.find((option) => option.value === val)) : EMPTY_STRING)
-          : options.find((option) => option.value === value) || EMPTY_STRING}
+          : (groupedOptions ? formattedGroupedOptions.find((option) => option.value === value) : options.find((option) => option.value === value) || EMPTY_STRING)}
         options={saveOptions}
         autosize
         isMulti={isMulti}

@@ -5,7 +5,7 @@ interface TextBoxProps {
     value: string | number;
     wrapperClass?: string;
     placeholder?: string | number;
-    label: string | ReactElement;
+    label?: string | ReactElement;
     tooltip?: string | ReactElement;
     error?: any;
     Icon?: ReactElement;

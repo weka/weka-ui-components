@@ -246,7 +246,6 @@ function Table({
         return acc
       }, {})
       const queryParams = Utils.parseParamsToQuery(formatFilters)
-      // setSearchParams(queryParams.toString())
       navigate({ search: queryParams.toString() }, { replace: true })
       localStorageService.updateFilters(filterCategory, formatFilters)
     }
@@ -266,9 +265,15 @@ function Table({
     }
   }, [rows.length])
 
+  useEffect(() => {
+    if (fixedPageSize) {
+      setPageSize(fixedPageSize)
+    }
+  }, [fixedPageSize])
+
   const calcNumberOfRows = useCallback(_.debounce(() => {
     const tableHeight = tableRef.current?.clientHeight
-    if (tableHeight && !miniTable) {
+    if (tableHeight && !miniTable && !fixedPageSize) {
       setPageSize(tableHeight / 35)
     }
   }, 350), [])
@@ -280,6 +285,7 @@ function Table({
       window.removeEventListener('resize', calcNumberOfRows)
     }
   }, [])
+
   return (
     <div className='react-table-wrapper'>
       {!miniTable && (

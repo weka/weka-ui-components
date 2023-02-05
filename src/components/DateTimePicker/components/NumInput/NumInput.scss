@@ -1,0 +1,39 @@
+.num-input-controller {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--ironhide-s1);
+  height: 20px;
+  padding: 7px;
+  border-radius: 4px;
+  svg path {
+    fill: var(--ironhide-s2);
+  }
+  svg{
+    cursor: pointer;
+    width: 8px;
+    height:8px
+  }
+
+  input {
+    border: none;
+    background-color: var(--ironhide-t4);
+    margin-right: 5px;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  .arrow-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  &-active {
+    border: 1px solid var(--main-color);
+    svg path {
+      fill: var(--main-color);
+    }
+  }
+}

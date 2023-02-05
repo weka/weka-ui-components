@@ -47,4 +47,11 @@ interface TimeShortenings {
     [key: string]: any;
 }
 export declare const TIME_PARTS_SHORTENINGS: TimeShortenings;
+export declare const SHORT_DAY_OF_WEEK: string[];
+export declare const MONTHS: string[];
+export declare const TIME_PARTS: {
+    HOUR: string;
+    MINUTE: string;
+    SECOND: string;
+};
 export {};

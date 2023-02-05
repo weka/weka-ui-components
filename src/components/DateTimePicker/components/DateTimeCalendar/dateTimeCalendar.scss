@@ -1,0 +1,22 @@
+.calendar-wrapper {
+  background-color: var(--ironhide-t4);
+  border-radius: 4px;
+  padding: 8px;
+  box-sizing: border-box;
+  width: 298px;
+
+  .calendar-actions {
+    padding: 0 12px 10px 12px;
+    box-sizing: border-box;
+
+    &-sub {
+      padding-top: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      .full-size {
+        flex: 1;
+      }
+    }
+  }
+}

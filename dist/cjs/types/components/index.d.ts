@@ -33,3 +33,5 @@ export { default as TieringCell } from "./Table/cells/TieringCell";
 export { default as TimeCell } from "./Table/cells/TimeCell";
 export { default as UptimeCell } from "./Table/cells/UptimeCell";
 export { default as DateCell } from "./Table/cells/DateCell";
+export { default as DateTimePicker } from "./DateTimePicker";
+export { default as NumInput } from "./DateTimePicker/components/NumInput";
