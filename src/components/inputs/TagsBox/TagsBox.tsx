@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useState} from 'react'
+import React, {ReactElement, MouseEvent, KeyboardEvent, useEffect, useState} from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'
@@ -8,6 +8,7 @@ import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
 
 import './tagsBox.scss'
+
 interface TagsBoxProps {
   onChange: (newVal: any) => void,
   value: any,
@@ -23,6 +24,7 @@ interface TagsBoxProps {
   disabled?: boolean,
   isClearable?: boolean
 }
+
 function TagsBox(props: TagsBoxProps) {
   const {
     label, onChange, value = [], error, placeholder, wrapperClass = '', tagsValidation = (val) => val,
@@ -33,7 +35,7 @@ function TagsBox(props: TagsBoxProps) {
   const [displayValue, setDisplayValue] = useState([])
   useEffect(() => {
     setDisplayValue(value?.map(Utils.formatOption))
-  }, [value])
+  }, [JSON.stringify(value)])
 
   useEffect(() => {
     if (editValueError) {
@@ -47,7 +49,7 @@ function TagsBox(props: TagsBoxProps) {
     'has-error': !!error
   })
 
-  function onKeyDown(event) {
+  function onKeyDown(event: KeyboardEvent) {
     const triggerKey = new Set([TAG_SEPARATOR, 'Enter'])
     if (triggerKey.has(event.key)) {
       if (editValue) {
@@ -67,7 +69,7 @@ function TagsBox(props: TagsBoxProps) {
     }
   }
 
-  function onMouseClick(event) {
+  function onMouseClick(event: MouseEvent) {
     event.stopPropagation()
     const deDuplicateValues = Array.from(new Set(
       `${value}${TAG_SEPARATOR}${editValue}`
