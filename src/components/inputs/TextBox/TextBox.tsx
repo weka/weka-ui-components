@@ -1,4 +1,4 @@
-import React, {ReactElement} from 'react'
+import React, { ReactElement, ChangeEvent } from 'react'
 import classNames from 'classnames'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING } from '../../../consts'
@@ -24,10 +24,10 @@ interface TextBoxProps {
 }
 
 const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
-  const { label = EMPTY_STRING, onChange, value, error, placeholder, wrapperClass ='', tooltip, Icon, type, info, isRequired, allowDecimal, ...rest } = props
+  const { label = EMPTY_STRING, onChange, value = EMPTY_STRING, error, placeholder, wrapperClass ='', tooltip, Icon, type, info, isRequired, allowDecimal, ...rest } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
 
-  function onTextChange(event) {
+  function onTextChange(event: ChangeEvent<HTMLInputElement>) {
     if (!Number.isNaN(event.target.valueAsNumber)) {
       onChange(event.target.valueAsNumber >= 0 ? event.target.valueAsNumber : 0)
     } else {
