@@ -2,6 +2,7 @@ import React from 'react'
 import { DateTime } from 'luxon'
 import Utils from '../../../../utils'
 import { EMPTY_STRING } from '../../../../consts'
+import classNames from 'classnames'
 
 import './DateTimeLabel.scss'
 
@@ -9,10 +10,16 @@ interface DateTimeLabelProps {
   date?: DateTime | null
   showSeconds?: boolean
   showTime?: boolean
+  disabled?: boolean
 }
 
 function DateTimeLabel(props: DateTimeLabelProps) {
-  const { date = null, showSeconds = true, showTime = true } = props
+  const { date = null, showSeconds = true, showTime = true, disabled } = props
+
+  const labelClasses = classNames({
+    'datetime-label': true,
+    'datetime-label-disabled': disabled
+  })
 
   const getTime = () => {
     if (date) {
@@ -22,7 +29,7 @@ function DateTimeLabel(props: DateTimeLabelProps) {
   }
 
   return (
-    <span className='datetime-label'>
+    <span className={labelClasses}>
       {getTime()}
     </span>
   )

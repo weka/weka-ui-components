@@ -36,10 +36,11 @@ interface TableProps {
         row: any;
     }>;
     listenerPrefix?: string;
-    onRowClick?: (uid: string) => void;
+    onRowClick?: (row?: Row) => void;
     miniTable?: boolean;
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
+    colPropForShowColumns?: string;
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns }: TableProps): JSX.Element;
 export default Table;

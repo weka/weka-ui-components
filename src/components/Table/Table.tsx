@@ -110,15 +110,16 @@ interface TableProps {
   addFilterToUrl?: boolean
   RowSubComponent?: React.FC<{row: any}>
   listenerPrefix?: string
-  onRowClick?: (uid: string) => void
+  onRowClick?: (row?: Row) => void
   miniTable?: boolean
   fixedPageSize?: number
   disableActionsPortal?: boolean
+  colPropForShowColumns?: string
 }
 
 function Table({
   columns, data, rowActions = [], tableActions, title, defaultSort = EMPTY_STRING, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId,
-  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage
+  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick = NOP, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns
 }: TableProps) {
   const LSFilters = localStorageService.getItem(SAVED_FILTERS)
   const filtersInLocalStorage = (LSFilters && JSON.parse(LSFilters)[filterCategory]) || EMPTY_STRING
@@ -166,7 +167,7 @@ function Table({
       globalFilter,
       initialState: {
         pageSize: fixedPageSize || 50,
-        sortBy: [{ id: defaultSort, desc: false }],
+        ...(defaultSort && { sortBy: [{ id: defaultSort, desc: false }] }),
         filters: formatParsedFilters(urlFilters),
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage
@@ -293,7 +294,7 @@ function Table({
           <div>
             <span className='heading-4'>{title}</span>
             <span className='sub-title'>{`${rows.length} ${maxRows ? `(max ${maxRows})` : EMPTY_STRING}`}</span>
-            {allColumns.length > 2 && <ShowColumns columns={allColumns} colProperty='Header' />}
+            {allColumns.length > 2 && <ShowColumns columns={allColumns} colProperty={colPropForShowColumns || 'Header'} />}
           </div>
           {!Utils.isEmpty(cleanFilters) && (
             <div className='table-filters'>

@@ -22,10 +22,13 @@ interface DateTimePickerProps {
   showCalendarIcon?: boolean
   showTime?: boolean
   disabled?: boolean
+  canClear?: boolean
+  showNow?: boolean
 }
 
 function DateTimePicker(props: DateTimePickerProps) {
-  const { onChange, value, label = EMPTY_STRING, minDate, maxDate, showSeconds, isRequired, error, disablePortal, showTime, showCalendarIcon = false, disabled = false } = props
+  const { onChange, value, label = EMPTY_STRING, minDate, maxDate, showSeconds, isRequired, error,
+    disablePortal, showTime, showCalendarIcon = false, disabled = false, canClear = true, showNow } = props
   const [isOpen, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -61,7 +64,7 @@ function DateTimePicker(props: DateTimePickerProps) {
             className={classNames({rotate180: isOpen})}
           />}
         <div className='picker-label-text'>
-          <DateTimeLabel date={value} showSeconds={showSeconds} showTime={showTime} />
+          <DateTimeLabel date={value} showSeconds={showSeconds} showTime={showTime} disabled={disabled} />
         </div>
         <span className='datetime-picker-error'>{error}</span>
       </div>
@@ -84,6 +87,8 @@ function DateTimePicker(props: DateTimePickerProps) {
                     }}
                     showSeconds={showSeconds}
                     showTime={showTime}
+                    canClear={canClear}
+                    showNow={showNow}
                   />
                 </div>
               </ClickAwayListener>

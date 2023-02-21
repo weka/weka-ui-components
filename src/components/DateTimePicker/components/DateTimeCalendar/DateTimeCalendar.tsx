@@ -13,9 +13,11 @@ interface DateTimeCalendarProps {
   maxDate?: DateTime | null
   showSeconds?: boolean
   showTime?: boolean
+  canClear?: boolean
+  showNow?: boolean
 }
 
-function DateTimeCalendar({ onSubmit, initValue = DateTime.now(), minDate = null, maxDate = null, showSeconds = true, showTime = true }: DateTimeCalendarProps) {
+function DateTimeCalendar({ onSubmit, initValue = DateTime.now(), minDate = null, maxDate = null, showSeconds = true, showTime = true, canClear = true, showNow }: DateTimeCalendarProps) {
   const [dateTime, setDateTime] = useState(initValue)
   return (
     <div className='calendar-wrapper'>
@@ -36,11 +38,12 @@ function DateTimeCalendar({ onSubmit, initValue = DateTime.now(), minDate = null
                 onSubmit={setDateTime}
                 showSeconds={showSeconds}
                 onNowSubmit={onSubmit}
+                showNow={showNow}
               />
             </div>
             <div className='calendar-actions'>
               <div className='calendar-actions-sub'>
-                <Button empty onClick={() => onSubmit(undefined)}>Clear</Button>
+                {canClear && <Button empty onClick={() => onSubmit(undefined)}>Clear</Button>}
                 <Button onClick={() => onSubmit(dateTime)}>OK</Button>
               </div>
             </div>

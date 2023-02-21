@@ -2,6 +2,7 @@ import React, { MouseEventHandler } from "react"
 import classNames from 'classnames'
 import { CircularProgress } from '@mui/material'
 import "./button.scss";
+import { EMPTY_STRING } from '../../consts'
 
 export interface ButtonProps {
     children: any,
@@ -16,7 +17,7 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
-  const { children, onClick, extraClass = '', disable, isLoading = false, empty, fullWidth, small, ...rest } = props
+  const { children, onClick, extraClass = EMPTY_STRING, disable, isLoading = false, empty, fullWidth, small, ...rest } = props
   const { type = 'button' } = rest
   const classes = classNames({
     button: true,

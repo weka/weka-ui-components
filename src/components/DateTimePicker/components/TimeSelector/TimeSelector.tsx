@@ -12,10 +12,11 @@ interface TimeSelectorProps {
   onSubmit: (val?: any) => void
   onNowSubmit: (val?: any) => void
   showSeconds?: boolean
+  showNow?: boolean
 }
 
 function TimeSelector(props: TimeSelectorProps) {
-  const { time, onSubmit, showSeconds = true, onNowSubmit } = props
+  const { time, onSubmit, showSeconds = true, onNowSubmit, showNow = true } = props
   const initialNumState = {
     hour: false,
     minute: false,
@@ -37,10 +38,15 @@ function TimeSelector(props: TimeSelectorProps) {
     'datetime-time-hour-min-only': !showSeconds
   })
 
+  const timeSelectorClasses = classNames({
+    'time-selector': true,
+    'time-selector-no-now': !showNow
+  })
+
   return (
     <div className={dateTimeClasses}>
-      <div className='time-selector'>
-        <Button extraClass='time-selector-now-btn' onClick={() => onNowSubmit(DateTime.now())}>Now</Button>
+      <div className={timeSelectorClasses}>
+        {showNow && <Button extraClass='time-selector-now-btn' onClick={() => onNowSubmit(DateTime.now())}>Now</Button>}
         <NumInput
           value={hours}
           max={23}
