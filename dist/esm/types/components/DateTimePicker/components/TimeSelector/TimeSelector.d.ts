@@ -6,6 +6,7 @@ interface TimeSelectorProps {
     onSubmit: (val?: any) => void;
     onNowSubmit: (val?: any) => void;
     showSeconds?: boolean;
+    showNow?: boolean;
 }
 declare function TimeSelector(props: TimeSelectorProps): JSX.Element;
 export default TimeSelector;

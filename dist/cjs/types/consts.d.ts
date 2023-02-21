@@ -54,4 +54,8 @@ export declare const TIME_PARTS: {
     MINUTE: string;
     SECOND: string;
 };
+interface SeverityIcons {
+    [key: string]: any;
+}
+export declare const SEVERITIES_ICONS: SeverityIcons;
 export {};

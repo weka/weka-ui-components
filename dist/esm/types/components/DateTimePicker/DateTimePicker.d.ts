@@ -14,6 +14,8 @@ interface DateTimePickerProps {
     showCalendarIcon?: boolean;
     showTime?: boolean;
     disabled?: boolean;
+    canClear?: boolean;
+    showNow?: boolean;
 }
 declare function DateTimePicker(props: DateTimePickerProps): JSX.Element;
 export default DateTimePicker;

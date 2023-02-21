@@ -58,7 +58,7 @@
     }
 
     &__single-value--is-disabled {
-      color: var(--ironhide-s1);
+      color: var(--ironhide-s1) !important;
     }
 
     &__dropdown-indicator {

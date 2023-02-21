@@ -378,12 +378,13 @@ interface TableProps {
         row: any;
     }>;
     listenerPrefix?: string;
-    onRowClick?: (uid: string) => void;
+    onRowClick?: (row?: Row) => void;
     miniTable?: boolean;
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
+    colPropForShowColumns?: string;
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns }: TableProps): JSX.Element;
 
 declare function MultiSelectFilter({ column }: {
     [key: string]: any;
@@ -436,6 +437,8 @@ declare function TimeCell({ cell }: CustomCellProps): JSX.Element;
 
 declare function UptimeCell({ cell }: CustomCellProps): JSX.Element;
 
+declare function SeverityCell({ cell }: CustomCellProps): JSX.Element;
+
 declare function DateCell({ cell, column }: {
     cell: CellProps<object>;
     column: {
@@ -456,6 +459,8 @@ interface DateTimePickerProps {
     showCalendarIcon?: boolean;
     showTime?: boolean;
     disabled?: boolean;
+    canClear?: boolean;
+    showNow?: boolean;
 }
 declare function DateTimePicker(props: DateTimePickerProps): JSX.Element;
 
@@ -476,4 +481,4 @@ interface NumInputProps {
 }
 declare function NumInput(props: NumInputProps): JSX.Element;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };

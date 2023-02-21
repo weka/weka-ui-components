@@ -1,3 +1,5 @@
+import { EventInfo, Warning, DebugWarning, AccidentMinor, AccidentMajor, AccidentCritical } from './svgs'
+
 export const EMPTY_STRING = ''
 export const NOP = () => {}
 export const TAG_SEPARATOR = ','
@@ -128,4 +130,17 @@ export const TIME_PARTS = {
   HOUR: 'hour',
   MINUTE: 'minute',
   SECOND: 'second'
+}
+
+interface SeverityIcons {
+  [key: string]: any
+}
+
+export const SEVERITIES_ICONS: SeverityIcons = {
+  INFO: EventInfo,
+  WARNING: Warning,
+  DEBUG: DebugWarning,
+  MINOR: AccidentMinor,
+  MAJOR: AccidentMajor,
+  CRITICAL: AccidentCritical
 }

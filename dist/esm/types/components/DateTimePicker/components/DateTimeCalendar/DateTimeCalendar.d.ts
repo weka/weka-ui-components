@@ -8,6 +8,8 @@ interface DateTimeCalendarProps {
     maxDate?: DateTime | null;
     showSeconds?: boolean;
     showTime?: boolean;
+    canClear?: boolean;
+    showNow?: boolean;
 }
-declare function DateTimeCalendar({ onSubmit, initValue, minDate, maxDate, showSeconds, showTime }: DateTimeCalendarProps): JSX.Element;
+declare function DateTimeCalendar({ onSubmit, initValue, minDate, maxDate, showSeconds, showTime, canClear, showNow }: DateTimeCalendarProps): JSX.Element;
 export default DateTimeCalendar;
