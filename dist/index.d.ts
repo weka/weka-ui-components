@@ -124,8 +124,8 @@ interface JsonBoxProps {
 declare function JsonBox(props: JsonBoxProps): JSX.Element;
 
 interface LoginFieldProps {
-    onChange: (newVal: any) => void;
-    value?: any;
+    onChange: (newVal: string | number) => void;
+    value?: string | number;
     isRequired?: boolean;
     wrapperClass?: string;
     placeholder?: string;
