@@ -1,5 +1,6 @@
-import classNames from 'classnames'
 import React, { ReactElement } from 'react'
+import classNames from 'classnames'
+
 import { EMPTY_STRING } from '../../../consts'
 import useToggle from '../../../hooks/useToggle'
 import Utils from '../../../utils'
@@ -8,18 +9,18 @@ import Info from '../../Info/Info'
 import './loginField.scss'
 
 interface LoginFieldProps {
-  onChange: (newVal: string | number) => void,
-  value?: string | number,
-  isRequired?: boolean,
-  wrapperClass?: string,
-  placeholder?: string,
-  label: string | ReactElement,
-  type?: string,
-  tooltip?: any,
-  error?: any,
+  onChange: (newVal: string | number) => void
+  value?: string | number
+  isRequired?: boolean
+  wrapperClass?: string
+  placeholder?: string
+  label: string | ReactElement
+  type?: string
+  tooltip?: any
+  error?: any
 }
 function LoginField(props: LoginFieldProps) {
-  const { label, onChange, value = EMPTY_STRING, error, placeholder, type, wrapperClass = '', tooltip, isRequired, ...rest } = props
+  const { label, onChange, value = EMPTY_STRING, error, placeholder, type, wrapperClass = EMPTY_STRING, tooltip, isRequired, ...rest } = props
 
   const [showPassword, toggleShowPassword] = useToggle(false)
 
@@ -34,12 +35,12 @@ function LoginField(props: LoginFieldProps) {
   const wrapperClasses = classNames({
     [wrapperClass]: true,
     'login-text-field': true,
-    'has-error': !!error,
+    'has-error': !!error
   })
 
   const inputClasses = classNames({
     'login-field-input': true,
-    'is-type-password-login': type === 'password',
+    'is-type-password-login': type === 'password'
   })
 
   return (
