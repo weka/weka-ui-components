@@ -22,11 +22,12 @@
       "version": "detect"
     }
   },
-  "plugins": ["babel", "react", "promise", "unused-imports"],
+  "plugins": ["babel", "react", "promise", "unused-imports", "prettier"],
   "env": {
     "browser": true
   },
   "rules": {
+    "prettier/prettier": "warn",
     "key-spacing": [
       "error",
       {
@@ -99,35 +100,20 @@
     "jsx-a11y/mouse-events-have-key-events": [0],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off",
-		"unused-imports/no-unused-imports": "error",
-		"unused-imports/no-unused-vars": [
-			"error",
-			{
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
         "vars": "all",
         "args": "after-used",
         "ignoreRestSiblings": false
       }
-		],
+    ],
     "max-params": [2, 4],
     "object-curly-newline": [
       "error",
       {
         "multiline": true
-      }
-    ],
-    "operator-linebreak": [
-      "error",
-      "after",
-      {
-        "overrides": {
-          "?": "before",
-          ":": "before",
-          "||": "before",
-          "&&": "before",
-          "!": "before",
-          "delete": "before",
-          "instanceof": "before"
-        }
       }
     ],
     "no-trailing-spaces": [
