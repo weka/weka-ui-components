@@ -25,6 +25,8 @@ declare const utils: {
     }) => {};
     dispatchCustomEvent: (id: string, data: any) => void;
     isNumber: (value: any) => boolean;
+    multiSelectFilterFunc: (rows: Row[], columnIds: string[], filterValue: string[]) => Row[];
+    severityFilterFunc: (rows: Row[], columnIds: string[], filterValue: Severities) => Row[];
     stringSort: (rowA: {
         values: {
             [key: string]: any;
@@ -34,6 +36,7 @@ declare const utils: {
             [key: string]: any;
         };
     }, columnId: string) => number;
+    severitySort: (rowA: Row, rowB: Row, columnId: string) => number;
     isIp: (string: any) => any;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;
