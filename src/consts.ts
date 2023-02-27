@@ -136,6 +136,16 @@ interface SeverityIcons {
   [key: string]: any
 }
 
+export const SEVERITY_DEBUG = 'DEBUG'
+export const SEVERITY_INFO = 'INFO'
+export const SEVERITY_WARNING = 'WARNING'
+export const SEVERITY_MINOR = 'MINOR'
+export const SEVERITY_MAJOR = 'MAJOR'
+export const SEVERITY_CRITICAL = 'CRITICAL'
+
+export const SEVERITIES = [SEVERITY_DEBUG, SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_MINOR, SEVERITY_MAJOR, SEVERITY_CRITICAL] as const
+export type Severities = typeof SEVERITIES[number]
+
 export const SEVERITIES_ICONS: SeverityIcons = {
   INFO: EventInfo,
   WARNING: Warning,

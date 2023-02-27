@@ -20,6 +20,8 @@ export { default as Table} from "./Table"
 export { default as MultiSelectFilter } from "./Table/filters/MultiSelectFilter"
 export { default as SelectFilter} from "./Table/filters/SelectFilter"
 export { default as TextFilter} from "./Table/filters/TextFilter"
+export { default as SeverityFilter } from './Table/filters/SeverityFilter'
+export { default as FilterHeader } from './Table/filters/FilterHeader'
 export { default as ActionsCell} from "./Table/cells/ActionsCell"
 export { default as ApiCallCell} from "./Table/cells/ApiCallCell"
 export { default as BarCell} from "./Table/cells/BarCell"
