@@ -28,7 +28,12 @@
     padding-bottom: 8px;
     border-bottom: 1px solid var(--ironhide-t1);
     margin-bottom: 12px;
-    max-height: 250px;
+    max-height: 310px;
     overflow: auto;
+  }
+
+  &-no-filter-button {
+    border-bottom: none;
+    margin-bottom: 0;
   }
 }

@@ -76,7 +76,6 @@ export interface CustomCellProps {
   cell: CellProps<object>
 }
 
-
 type ExtendedColumn = Column & {
   defaultHidden?: boolean
 }
@@ -108,7 +107,7 @@ interface TableProps {
   checkRowSelected?: (row: object) => boolean
   getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string)
   addFilterToUrl?: boolean
-  RowSubComponent?: React.FC<{row: any}>
+  RowSubComponent?: React.FC<{ row: any }>
   listenerPrefix?: string
   onRowClick?: (row?: Row) => void
   miniTable?: boolean
@@ -316,41 +315,72 @@ function Table({
       <div className={wrapperClasses} ref={tableRef}>
         <table {...getTableProps()} className={tableClass}>
           <thead className='sticky-header'>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                {isExpandable ? <th className='table-header header-cell-for-expandable' /> : null}
-                {headerGroup.headers.map((column: ExtendedHeaderGroup) => (
-                  <th {...column.getHeaderProps()} className='table-header'>
-                    <Tooltip data={column.tooltip}>
-                      <span
-                        className={`table-headline ${column.disableSort ? 'disable-sort' : EMPTY_STRING}`}
-                        onClick={() => {
-                          if (!column.disableSort) {
-                            toggleSortBy(column.id, column.isSortedDesc === undefined ? false : !column.isSortedDesc)
-                          }
-                        }}
-                      >
-                        {column.render('Header')}
-                      </span>
-                    </Tooltip>
-                    {column.Filter ? column.render('Filter') : null}
-                    {column.isSorted
-                    && (
-                      <div
-                        className='table-sort'
-                        onClick={() => toggleSortBy(column.id, !column.isSortedDesc)}
-                      >
-                        {column.isSortedDesc ? <LongArrow className='rotate180' /> : <LongArrow />}
-                      </div>
-                    )}
-                  </th>
-                ))}
-                {!Utils.isEmpty(rowActions) && (
-                  <th className='table-header table-header-actions'>{EMPTY_STRING}</th>
-                )}
-              </tr>
-            ))}
+            {headerGroups.map((headerGroup) => {
+              const { key, ...headerGroupProps } =
+                headerGroup.getHeaderGroupProps()
+              return (
+                <tr {...headerGroupProps} key={key}>
+                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                  {isExpandable ? (
+                    <th className='table-header header-cell-for-expandable' />
+                  ) : null}
+                  {headerGroup.headers.map((column: ExtendedHeaderGroup) => {
+                    const { key, ...headerProps } = column.getHeaderProps()
+                    return (
+                      <th {...headerProps} key={key} className='table-header'>
+                        <Tooltip data={column.tooltip}>
+                          <span
+                            className={`table-headline ${
+                              column.disableSort ? 'disable-sort' : EMPTY_STRING
+                            }`}
+                            onClick={() => {
+                              if (!column.disableSort) {
+                                toggleSortBy(
+                                  column.id,
+                                  column.isSortedDesc === undefined
+                                    ? false
+                                    : !column.isSortedDesc
+                                )
+                              }
+                            }}
+                          >
+                            {column.render('Header')}
+                          </span>
+                        </Tooltip>
+                        {column.Filter ? column.render('Filter') : null}
+
+                        {!column.disableSort &&
+                          (column.isSorted ||
+                            (!column.isSorted && !column.Header)) && (
+                            <div
+                              className={classNames(
+                                'table-sort',
+                                !column.isSorted &&
+                                  !column.Header &&
+                                  'table-sort-no-title'
+                              )}
+                              onClick={() =>
+                                toggleSortBy(column.id, !column.isSortedDesc)
+                              }
+                            >
+                              {column.isSortedDesc ? (
+                                <LongArrow className='rotate180' />
+                              ) : (
+                                <LongArrow />
+                              )}
+                            </div>
+                          )}
+                      </th>
+                    )
+                  })}
+                  {!Utils.isEmpty(rowActions) && (
+                    <th className='table-header table-header-actions'>
+                      {EMPTY_STRING}
+                    </th>
+                  )}
+                </tr>
+              )
+            })}
           </thead>
           <tbody {...getTableBodyProps()} className='table-body' emptymessage={emptyMessage || (title ? `No ${title}` : `No ${rows}`)}>
             {page.map((row) => {

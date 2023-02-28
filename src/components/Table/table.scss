@@ -160,6 +160,7 @@
       background-color: var(--neutral-t4);
       z-index: 1;
       display: flex;
+      user-select: none;
 
 
       .table-headline {
@@ -185,6 +186,10 @@
           path {
             fill: var(--ironhide-s2);
           }
+        }
+
+        &.table-sort-no-title {
+          opacity: 0.35;
         }
       }
       &-actions {

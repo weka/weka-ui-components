@@ -15,12 +15,14 @@ interface FilterBoxes {
 }
 
 export const FILTERBOXES: FilterBoxes = {
-    MINSEVERITY: 'Min Severity',
+  SEVERITY: 'Min Severity',
+  MINSEVERITY: 'Min Severity',
     NAME: 'Name',
     GROUP_NAME: 'Group Name',
     TIMESTAMP: 'Timestamp',
     CATEGORY: 'Category',
     EVENT: 'Event',
+  EVENT_TYPE: 'Event Type',
     ACCESSPOINT: 'Access Point',
     FSNAME: 'Filesystem',
     FS: 'Filesystem',
