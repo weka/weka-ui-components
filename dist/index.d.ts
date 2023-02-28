@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement } from 'react';
-import { CellProps, Row, Column, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import { CellProps, Row, Column, UseExpandedRowProps, UseRowStateRowProps, UseFiltersColumnProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import { DateTime } from 'luxon';
 
 interface ButtonProps {
@@ -398,6 +398,31 @@ declare function TextFilter({ column }: {
     [key: string]: any;
 }): JSX.Element;
 
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    fixedOptions: Array<any>;
+    Header: string;
+    id?: string;
+    [key: string]: any;
+}
+declare function SeverityFilter({ column: { filterValue, setFilter, Header } }: {
+    column: ExtendedFiltersColumn<object>;
+}): JSX.Element;
+
+declare const _default$1: React.MemoExoticComponent<typeof SeverityFilter>;
+
+interface FilterHeaderProps {
+    title?: string;
+    filterKey?: string | null;
+    Filter: React.FC<Record<string, unknown> & {
+        setFilter: (filter: any) => void;
+    }>;
+    dataForFilter?: Record<string, unknown>;
+    setFilter: (filter: any) => void;
+}
+declare function FilterHeader({ title, setFilter, Filter, dataForFilter, filterKey }: FilterHeaderProps): JSX.Element;
+
+declare const _default: React.MemoExoticComponent<typeof FilterHeader>;
+
 interface ActionsCellProps {
     actions: Array<RowAction>;
     row: ExtendedRow<object>;
@@ -481,4 +506,4 @@ interface NumInputProps {
 }
 declare function NumInput(props: NumInputProps): JSX.Element;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, _default as FilterHeader, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, _default$1 as SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
