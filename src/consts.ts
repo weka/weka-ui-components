@@ -15,7 +15,6 @@ interface FilterBoxes {
 }
 
 export const FILTERBOXES: FilterBoxes = {
-  SEVERITY: 'Min Severity',
   MINSEVERITY: 'Min Severity',
     NAME: 'Name',
     GROUP_NAME: 'Group Name',

@@ -15,8 +15,8 @@ interface FilterWrapperProps {
   setFilter: (value: any) => void
   children: ReactElement
   value?: any
-  columnTitle?: string
-  showFilterButton?: boolean
+  columnTitle: string
+  hideWrapper?: boolean
   isPopperOpen?: boolean
   onTogglePopper?: () => void
 }
@@ -26,7 +26,7 @@ function FilterWrapper({
   value,
   children,
   columnTitle = EMPTY_STRING,
-  showFilterButton = true,
+  hideWrapper = false,
   isPopperOpen: isPopperOpenOuter,
   onTogglePopper: onTogglePopperOuter
 }: FilterWrapperProps) {
@@ -62,7 +62,11 @@ function FilterWrapper({
           .charAt(0)
           .toUpperCase()}${columnTitle.slice(1)}`}
       >
-        <span onClick={togglePopper} ref={anchor}>
+        <span
+          onClick={togglePopper}
+          ref={anchor}
+          className='filter-table-wrapper-icon'
+        >
           <Filter />
         </span>
       </Tooltip>
@@ -84,25 +88,26 @@ function FilterWrapper({
             >
               <Paper>
                 <ClickAwayListener onClickAway={togglePopper}>
-                  <div className='filter-table-wrapper-data'>
-                    <div
-                      className={classNames(
-                        'filter-table-wrapper-inside-filter',
-                        !showFilterButton &&
-                          'filter-table-wrapper-no-filter-button'
-                      )}
-                      ref={ref}
-                    >
-                      {children}
-                    </div>
-                    {showFilterButton && (
+                  {hideWrapper ? (
+                    children
+                  ) : (
+                    <div className='filter-table-wrapper-data'>
+                      <div
+                        className={classNames(
+                          'filter-table-wrapper-inside-filter'
+                        )}
+                        ref={ref}
+                      >
+                        {children}
+                      </div>
+
                       <div className='filter-table-wrapper-btn'>
                         <Button disable={isDisable} onClick={onClick}>
                           Filter
                         </Button>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </ClickAwayListener>
               </Paper>
             </Grow>

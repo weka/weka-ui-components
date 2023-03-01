@@ -101,11 +101,20 @@ interface TableProps {
   rowActions?: RowAction[]
   emptyMessage?: string
   tableActions?: Array<ReactNode>
-  defaultSort?: string
+  defaultSort?:
+    | string
+    | {
+        id: string
+        desc: boolean
+      }
   globalFilter?: string | ((rows: Array<Row>) => Row[])
   defaultGlobalFilter?: string
   checkRowSelected?: (row: object) => boolean
-  getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string)
+  getRowId?: (
+    originalRow: object,
+    relativeIndex: number,
+    parent?: Row<object> | undefined
+  ) => string
   addFilterToUrl?: boolean
   RowSubComponent?: React.FC<{ row: any }>
   listenerPrefix?: string
@@ -166,7 +175,13 @@ function Table({
       globalFilter,
       initialState: {
         pageSize: fixedPageSize || 50,
-        ...(defaultSort && { sortBy: [{ id: defaultSort, desc: false }] }),
+        ...(defaultSort && {
+          sortBy: [
+            typeof defaultSort === 'string'
+              ? { id: defaultSort, desc: false }
+              : defaultSort
+          ]
+        }),
         filters: formatParsedFilters(urlFilters),
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage

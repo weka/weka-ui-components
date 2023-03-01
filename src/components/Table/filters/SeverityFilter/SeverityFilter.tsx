@@ -18,7 +18,7 @@ interface ExtendedFiltersColumn<T extends object>
 }
 
 function SeverityFilter({
-  column: { filterValue, setFilter, Header }
+  column: { filterValue, setFilter, Header, columnName }
 }: {
   column: ExtendedFiltersColumn<object>
 }) {
@@ -28,8 +28,14 @@ function SeverityFilter({
     <FilterWrapper
       setFilter={setFilter}
       value={filterValue}
-      columnTitle={Header || 'Min. Severity'}
-      showFilterButton={false}
+      columnTitle={
+        columnName
+          ? columnName
+          : typeof Header === 'string' && Header
+          ? Header
+          : 'Min. Severity'
+      }
+      hideWrapper
       isPopperOpen={isPopperOpen}
       onTogglePopper={togglePopper}
     >
