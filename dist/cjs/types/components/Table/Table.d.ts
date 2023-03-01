@@ -26,11 +26,14 @@ interface TableProps {
     rowActions?: RowAction[];
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
-    defaultSort?: string;
+    defaultSort?: string | {
+        id: string;
+        desc: boolean;
+    };
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
-    getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
+    getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
         row: any;

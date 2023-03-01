@@ -1,6 +1,7 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement } from 'react';
-import { CellProps, Row, Column, UseExpandedRowProps, UseRowStateRowProps, UseFiltersColumnProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import { CellProps, Row as Row$1, Column, UseExpandedRowProps, UseRowStateRowProps, UseFiltersColumnProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
 
 interface ButtonProps {
@@ -356,8 +357,8 @@ interface CustomCellProps {
 declare type ExtendedColumn = Column & {
     defaultHidden?: boolean;
 };
-interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
-    subRows: Array<Row<any>>;
+interface ExtendedRow<T extends object> extends Row$1, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
+    subRows: Array<Row$1<any>>;
 }
 interface TableProps {
     columns: ExtendedColumn[];
@@ -368,17 +369,20 @@ interface TableProps {
     rowActions?: RowAction[];
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
-    defaultSort?: string;
-    globalFilter?: string | ((rows: Array<Row>) => Row[]);
+    defaultSort?: string | {
+        id: string;
+        desc: boolean;
+    };
+    globalFilter?: string | ((rows: Array<Row$1>) => Row$1[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
-    getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
+    getRowId?: (originalRow: object, relativeIndex: number, parent?: Row$1<object> | undefined) => string;
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
         row: any;
     }>;
     listenerPrefix?: string;
-    onRowClick?: (row?: Row) => void;
+    onRowClick?: (row?: Row$1) => void;
     miniTable?: boolean;
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
@@ -404,24 +408,11 @@ interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<
     id?: string;
     [key: string]: any;
 }
-declare function SeverityFilter({ column: { filterValue, setFilter, Header } }: {
+declare function SeverityFilter({ column: { filterValue, setFilter, Header, columnName } }: {
     column: ExtendedFiltersColumn<object>;
 }): JSX.Element;
 
-declare const _default$1: React.MemoExoticComponent<typeof SeverityFilter>;
-
-interface FilterHeaderProps {
-    title?: string;
-    filterKey?: string | null;
-    Filter: React.FC<Record<string, unknown> & {
-        setFilter: (filter: any) => void;
-    }>;
-    dataForFilter?: Record<string, unknown>;
-    setFilter: (filter: any) => void;
-}
-declare function FilterHeader({ title, setFilter, Filter, dataForFilter, filterKey }: FilterHeaderProps): JSX.Element;
-
-declare const _default: React.MemoExoticComponent<typeof FilterHeader>;
+declare const _default: React.MemoExoticComponent<typeof SeverityFilter>;
 
 interface ActionsCellProps {
     actions: Array<RowAction>;
@@ -506,4 +497,56 @@ interface NumInputProps {
 }
 declare function NumInput(props: NumInputProps): JSX.Element;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, _default as FilterHeader, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, _default$1 as SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
+declare const utils: {
+    isEllipsisActive(element: HTMLElement): boolean;
+    getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement;
+    goToNextInput(): void;
+    goToPreviousInput(): void;
+    subnet2MaskOp(subnet: string): string;
+    formatOption(label: string, value?: any): {
+        label: string;
+        value: any;
+    };
+    isEmpty(val: any): boolean;
+    isString: (value: any) => boolean;
+    isObject: (value: any) => boolean;
+    insensitiveSort(array: any[], key: string): any[];
+    range(startOrEnd: number, end?: number, step?: number): number[];
+    mask2SubnetOp(val: number): string;
+    formatStringOption: (option: string) => {
+        label: string;
+        value: string;
+    };
+    parseParamsToQuery: (params: {
+        [key: string]: any;
+    }) => {};
+    dispatchCustomEvent: (id: string, data: any) => void;
+    isNumber: (value: any) => boolean;
+    multiSelectFilterFunc: (rows: Row[], columnIds: string[], filterValue: string[]) => Row[];
+    severityFilterFunc: (rows: Row[], columnIds: string[], filterValue: Severities) => Row[];
+    stringSort: (rowA: {
+        values: {
+            [key: string]: any;
+        };
+    }, rowB: {
+        values: {
+            [key: string]: any;
+        };
+    }, columnId: string) => number;
+    severitySort: (rowA: Row, rowB: Row, columnId: string) => number;
+    isIp: (string: any) => any;
+    formatBytes: (bytes: number, decimals?: number) => {
+        value: number;
+        text: string;
+    } | {
+        value: string;
+        text: string;
+    };
+    formatBytesToString: (bytes: number, decimals?: number) => string | null;
+    getTimeDiffObject: (time: string) => luxon.DurationObjectUnits;
+    getTimeDiffString: (time: string, largest?: boolean) => string;
+    formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean, showTime?: boolean) => string;
+    formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
+};
+
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, _default as SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils };

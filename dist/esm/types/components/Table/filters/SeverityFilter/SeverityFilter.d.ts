@@ -7,7 +7,7 @@ interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<
     id?: string;
     [key: string]: any;
 }
-declare function SeverityFilter({ column: { filterValue, setFilter, Header } }: {
+declare function SeverityFilter({ column: { filterValue, setFilter, Header, columnName } }: {
     column: ExtendedFiltersColumn<object>;
 }): JSX.Element;
 export default SeverityFilter;
