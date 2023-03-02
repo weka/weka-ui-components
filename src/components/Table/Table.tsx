@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useMemo, useRef, useCallback } from 'react
 import _ from 'lodash'
 import { EMPTY_STRING, SAVED_FILTERS, SAVED_HIDDEN, FILTER_CHANGE_LISTENER, FILTER_LISTENER, NOP } from '../../consts'
 import Tooltip from '../Tooltip'
-import { Arrow, LastArrow, LongArrow, ClearFilters } from '../../svgs'
+import { Arrow, LastArrow, LongArrow, ClearFilters, ThinArrow } from '../../svgs'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 import {
@@ -106,6 +106,7 @@ interface TableProps {
   globalFilter?: string | ((rows: Array<Row>) => Row[])
   defaultGlobalFilter?: string
   checkRowSelected?: (row: object) => boolean
+  checkRowHighlighted?: (row: object) => boolean
   getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string)
   addFilterToUrl?: boolean
   RowSubComponent?: React.FC<{row: any}>
@@ -115,11 +116,15 @@ interface TableProps {
   fixedPageSize?: number
   disableActionsPortal?: boolean
   colPropForShowColumns?: string
+  manualPagination?: boolean
+  itemsAmount?: number
+  canExpandAll?: boolean
 }
 
 function Table({
-  columns, data, rowActions = [], tableActions, title, defaultSort = EMPTY_STRING, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId,
-  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick = NOP, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns
+  columns, data, rowActions = [], tableActions, title, defaultSort = EMPTY_STRING, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId,
+  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick = NOP, miniTable, filterCategory, fixedPageSize, disableActionsPortal,
+  maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll = false
 }: TableProps) {
   const LSFilters = localStorageService.getItem(SAVED_FILTERS)
   const filtersInLocalStorage = (LSFilters && JSON.parse(LSFilters)[filterCategory]) || EMPTY_STRING
@@ -158,11 +163,14 @@ function Table({
     setFilter,
     setAllFilters,
     visibleColumns,
-    setHiddenColumns
+    setHiddenColumns,
+    getToggleAllRowsExpandedProps,
+    isAllRowsExpanded
   } = useTable(
     {
       columns,
       data,
+      manualPagination,
       defaultColumn,
       globalFilter,
       initialState: {
@@ -293,8 +301,17 @@ function Table({
         <div className='table-top'>
           <div>
             <span className='heading-4'>{title}</span>
-            <span className='sub-title'>{`${rows.length} ${maxRows ? `(max ${maxRows})` : EMPTY_STRING}`}</span>
+            <span className='sub-title'>{`${itemsAmount || rows.length} ${maxRows ? `(max ${maxRows})` : EMPTY_STRING}`}</span>
             {allColumns.length > 2 && <ShowColumns columns={allColumns} colProperty={colPropForShowColumns || 'Header'} />}
+            {canExpandAll && isExpandable && (
+              <span { ...getToggleAllRowsExpandedProps() } className='expand-all-icon'>
+                <Tooltip data={isAllRowsExpanded ? 'Collapse all' : 'Expand all'}>
+                  <IconButton>
+                    <ThinArrow className={`${isAllRowsExpanded ? 'rotate180' : EMPTY_STRING}`} />
+                  </IconButton>
+                </Tooltip>
+              </span>
+            )}
           </div>
           {!Utils.isEmpty(cleanFilters) && (
             <div className='table-filters'>
@@ -360,7 +377,8 @@ function Table({
                 'table-line': true,
                 clickable: onRowClick !== NOP || isExpandable,
                 'is-expand': extendedRow.isExpanded,
-                'is-selected': checkRowSelected?.(extendedRow.original)
+                'is-selected': checkRowSelected?.(extendedRow.original),
+                'is-highlighted': checkRowHighlighted?.(extendedRow.original)
               })
               return (
                 <React.Fragment key={extendedRow.getRowProps().key}>
@@ -409,7 +427,7 @@ function Table({
           </tbody>
         </table>
       </div>
-      {(!miniTable || fixedPageSize) && (
+      {(!miniTable || fixedPageSize) && !manualPagination && (
         <div className='footer'>
           <div className='pagination-wrapper'>
             <div className='pagination'>

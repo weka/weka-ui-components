@@ -30,6 +30,7 @@ interface TableProps {
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
+    checkRowHighlighted?: (row: object) => boolean;
     getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
@@ -41,6 +42,9 @@ interface TableProps {
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
     colPropForShowColumns?: string;
+    manualPagination?: boolean;
+    itemsAmount?: number;
+    canExpandAll?: boolean;
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll }: TableProps): JSX.Element;
 export default Table;

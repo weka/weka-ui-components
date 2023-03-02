@@ -1,0 +1,40 @@
+.pagination-footer {
+    flex: 1;
+    align-items: flex-end;
+    display: flex;
+    justify-content: center;
+    //border-top: 1px solid var(--ironhide-t1);
+
+
+    .pagination-wrapper {
+      //border-top: 1px solid var(--ironhide-t1);
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      align-items: center;
+
+      .pagination {
+        display: flex;
+        align-items: center;
+        width: 120px;
+        justify-content: space-between;
+
+        svg {
+          height: 10px;
+          width: 10px;
+          cursor: pointer;
+
+          path {
+            fill: var(--main-color);
+          }
+
+          &[disabled] {
+            path {
+              fill: var(--ironhide-key);
+            }
+          }
+        }
+      }
+    }
+  }

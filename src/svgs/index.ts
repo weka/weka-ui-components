@@ -24,4 +24,5 @@ export { ReactComponent as AccidentMinor } from './034-accident-minor-24.svg'
 export { ReactComponent as AccidentMajor } from './035-accident-major-24.svg'
 export { ReactComponent as AccidentCritical } from './036-accident-critical-24.svg'
 export { ReactComponent as Warning } from './031-warning-24.svg'
+export { ReactComponent as ThinArrow } from './079-arrow-12.svg'
 

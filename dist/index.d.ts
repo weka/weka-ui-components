@@ -372,6 +372,7 @@ interface TableProps {
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
+    checkRowHighlighted?: (row: object) => boolean;
     getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
@@ -383,8 +384,11 @@ interface TableProps {
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
     colPropForShowColumns?: string;
+    manualPagination?: boolean;
+    itemsAmount?: number;
+    canExpandAll?: boolean;
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll }: TableProps): JSX.Element;
 
 declare function MultiSelectFilter({ column }: {
     [key: string]: any;
@@ -446,6 +450,8 @@ declare function DateCell({ cell, column }: {
     };
 }): JSX.Element;
 
+declare function NodeCell({ cell }: CustomCellProps): JSX.Element;
+
 interface DateTimePickerProps {
     onChange: (val?: any) => void;
     value?: any;
@@ -481,4 +487,11 @@ interface NumInputProps {
 }
 declare function NumInput(props: NumInputProps): JSX.Element;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NumInput, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
+interface PaginationProps {
+    onPageChange: (page: number) => void;
+    totalRows: number;
+    rowsPerPage: number;
+}
+declare function Pagination({ onPageChange, totalRows, rowsPerPage }: PaginationProps): JSX.Element | null;
+
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateTimePicker, EmptyPageMessage, ErrorPage, FormSwitch, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NodeCell, NumInput, Pagination, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell };
