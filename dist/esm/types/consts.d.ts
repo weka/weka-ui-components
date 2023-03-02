@@ -58,4 +58,8 @@ interface SeverityIcons {
     [key: string]: any;
 }
 export declare const SEVERITIES_ICONS: SeverityIcons;
+interface ShortRoles {
+    [key: string]: any;
+}
+export declare const SHORT_ROLES: ShortRoles;
 export {};

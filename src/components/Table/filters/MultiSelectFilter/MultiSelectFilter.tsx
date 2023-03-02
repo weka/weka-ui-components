@@ -16,7 +16,7 @@ interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<
 }
 
 function MultiSelectFilter({ column }: {[key: string]: any}) {
-  const { filterValue, setFilter, preFilteredRows, id = EMPTY_STRING, fixedOptions, Header } = column as ExtendedFiltersColumn<object>
+  const { filterValue, setFilter, customSetFilter, preFilteredRows, id = EMPTY_STRING, fixedOptions, Header } = column as ExtendedFiltersColumn<object>
   // eslint-disable-next-line no-nested-ternary
   const formatValue = filterValue === undefined ? [] : Array.isArray(filterValue) ? filterValue : [filterValue]
   const [value, setValue] = useState(formatValue)
@@ -55,7 +55,7 @@ function MultiSelectFilter({ column }: {[key: string]: any}) {
   )
 
   return (
-    <FilterWrapper setFilter={setFilter} value={value} columnTitle={Header}>
+    <FilterWrapper setFilter={customSetFilter || setFilter} value={value} columnTitle={Header}>
       <div className='table-multi-select-filter'>
         <Select options={formatOptions} onChange={onSelectOne} value={null} autoFocus sortOptions />
         <div className='selected-options-wrapper'>

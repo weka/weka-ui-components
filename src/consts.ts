@@ -144,3 +144,13 @@ export const SEVERITIES_ICONS: SeverityIcons = {
   MAJOR: AccidentMajor,
   CRITICAL: AccidentCritical
 }
+
+interface ShortRoles {
+  [key: string]: any
+}
+
+export const SHORT_ROLES: ShortRoles = {
+  FRONTEND: 'FE',
+  DRIVES: 'SSD',
+  MANAGEMENT: 'MGMT'
+}

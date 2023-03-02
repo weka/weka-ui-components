@@ -1,5 +1,5 @@
 import React from 'react'
-import {CustomCellProps} from '../../Table'
+import { CustomCellProps } from '../../Table'
 
 function ProgressCell({ cell }: CustomCellProps) {
   const { value } = cell
