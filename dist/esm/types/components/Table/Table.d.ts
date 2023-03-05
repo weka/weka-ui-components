@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps } from 'react-table';
+import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps, Filters } from 'react-table';
 import './table.scss';
 export interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
@@ -26,7 +26,10 @@ interface TableProps {
     rowActions?: RowAction[];
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
-    defaultSort?: string;
+    defaultSort?: string | {
+        id: string;
+        desc: boolean;
+    };
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
@@ -45,6 +48,9 @@ interface TableProps {
     manualPagination?: boolean;
     itemsAmount?: number;
     canExpandAll?: boolean;
+    loading?: boolean;
+    onFiltersChanged?: (newFilters: Filters<object>) => void;
+    onFiltersCleared?: () => void;
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, onFiltersCleared, }: TableProps): JSX.Element;
 export default Table;
