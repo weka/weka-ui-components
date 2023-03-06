@@ -1,5 +1,6 @@
 import '../src/style/theme.scss'
 import '../src/style/app.scss'
+import { BrowserRouter as Router } from 'react-router-dom';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -10,3 +11,11 @@ export const parameters = {
     },
   },
 }
+
+export const decorators = [
+  (Story) => (
+    <Router>
+      <Story />
+    </Router>
+  ),
+];
