@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import React, { MouseEventHandler, ReactNode, ReactElement } from 'react';
+import React, { MouseEventHandler, ReactNode, ReactElement, InputHTMLAttributes } from 'react';
 import { CellProps, Row, Column, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import { DateTime } from 'luxon';
 
@@ -51,7 +51,7 @@ interface InfoProps {
 }
 declare function Info({ data }: InfoProps): JSX.Element;
 
-declare function Checkbox(props: any): JSX.Element;
+declare function Checkbox(props: InputHTMLAttributes<HTMLInputElement>): JSX.Element;
 
 interface DataInfoProps {
     label: string;

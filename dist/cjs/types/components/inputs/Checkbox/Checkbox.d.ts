@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import { InputHTMLAttributes } from 'react';
 import './checkbox.scss';
-declare function Checkbox(props: any): JSX.Element;
+declare function Checkbox(props: InputHTMLAttributes<HTMLInputElement>): JSX.Element;
 export default Checkbox;
