@@ -57,7 +57,10 @@ export const FILTERBOXES: FilterBoxes = {
   VERSION: 'Version',
   NID: 'Process ID',
   RELATED_NODE_IDS: 'Related Processes',
-  IS_BACKEND: 'Is Backend'
+  IS_BACKEND: 'Is Backend',
+  TIERED: 'Tiered',
+  HAS_READ_ONLY_BUCKET: 'Has Read Only Bucket',
+  HAS_REMOTE_BUCKET: 'Has Remote Bucket'
 }
 
 export const NODES_STATUSES = {
