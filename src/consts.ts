@@ -53,7 +53,10 @@ export const FILTERBOXES: FilterBoxes = {
     SUPPORTEDVERSIONS: 'Supported Versions',
     OWNER: 'Owner',
     CUSTOMERID: 'Customer Name',
-    VERSION: 'Version'
+    VERSION: 'Version',
+  TIERED: 'Tiered',
+  HAS_READ_ONLY_BUCKET: 'Has Read Only Bucket',
+  HAS_REMOTE_BUCKET: 'Has Remote Bucket'
 }
 
 export const NODES_STATUSES = {

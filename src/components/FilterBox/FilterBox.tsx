@@ -3,6 +3,7 @@ import { Close } from '../../svgs'
 import { FILTERBOXES } from '../../consts'
 
 import './filterBox.scss'
+import { startCase } from 'lodash'
 
 interface FilterBoxProps {
   name: string
@@ -11,7 +12,6 @@ interface FilterBoxProps {
 }
 
 function FilterBox({ name, text, onDelete }: FilterBoxProps) {
-
   return (
     <div className='box-filter-container' key={name}>
       <span className='filter-headline'>
@@ -19,7 +19,9 @@ function FilterBox({ name, text, onDelete }: FilterBoxProps) {
         <Close onClick={onDelete} />
       </span>
       <span className='filter-data'>
-        {Array.isArray(text) ? text.join(', ') : text}
+        {Array.isArray(text)
+          ? text.map((t) => startCase(t)).join(', ')
+          : startCase(text)}
       </span>
     </div>
   )
