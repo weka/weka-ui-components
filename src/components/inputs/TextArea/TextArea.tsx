@@ -6,7 +6,7 @@ import { Info } from '../../../svgs'
 
 import './textArea.scss'
 
-interface TextAreaProps {
+export interface TextAreaProps {
   onChange?: (newVal: any) => void,
   value?: any,
   wrapperClass?: string,

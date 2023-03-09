@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 import './textArea.scss';
-interface TextAreaProps {
+export interface TextAreaProps {
     onChange?: (newVal: any) => void;
     value?: any;
     wrapperClass?: string;
