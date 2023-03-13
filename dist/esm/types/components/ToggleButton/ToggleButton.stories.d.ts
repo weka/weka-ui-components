@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { default as ToggleButtonComponent } from './ToggleButton';
 declare const _default: {
     title: string;
