@@ -36,22 +36,33 @@ function CapacityCell({ cell }: CustomCellProps) {
   const formatTotal = Utils.formatBytes(total, 2)
   const formatUsed = Utils.formatBytes(used, 2)
 
+  const text = total
+    ? `${formatUsed.value} ${formatUsed.text} out of ${formatTotal.value} ${
+        formatTotal.text
+      } (${((used / total) * 100).toFixed(1)}%)`
+    : noDataLabel
+
   return (
     <div className='capacity-cell'>
       <div className='capacity-cell-headline'>
-        <span className='label-4'>
-          {total
-            ? `${formatUsed.value} ${formatUsed.text} out of ${formatTotal.value} ${formatTotal.text} (${((used / total) * 100).toFixed(1)}%)`
-            : noDataLabel}
+        <span className='label-4' title={text}>
+          {text}
         </span>
-        { isThin && (
-          <Tooltip data={`Thinly Provisioned Filesystem\nMax SSD: ${Utils.formatBytesToString(maxThin)}\nMin SSD: ${Utils.formatBytesToString(minThin)}`}>
+        {isThin && (
+          <Tooltip
+            data={`Thinly Provisioned Filesystem\nMax SSD: ${Utils.formatBytesToString(
+              maxThin
+            )}\nMin SSD: ${Utils.formatBytesToString(minThin)}`}
+          >
             <div className='thin-provision' />
           </Tooltip>
         )}
       </div>
       <div className='capacity-cell-data'>
-        <CapacityBar firstUsage={total ? used / total : 0} firstColor={getBarColor(used, total, caution)} />
+        <CapacityBar
+          firstUsage={total ? used / total : 0}
+          firstColor={getBarColor(used, total, caution)}
+        />
       </div>
     </div>
   )
