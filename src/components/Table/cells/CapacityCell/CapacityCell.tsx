@@ -6,6 +6,7 @@ import { CustomCellProps } from '../../Table'
 import { ColumnInstance } from 'react-table'
 
 import './capacityCell.scss'
+import SpanTooltip from '../../../SpanTooltip'
 
 interface ExtendedColumn extends ColumnInstance {
   noDataLabel: string
@@ -45,9 +46,7 @@ function CapacityCell({ cell }: CustomCellProps) {
   return (
     <div className='capacity-cell'>
       <div className='capacity-cell-headline'>
-        <span className='label-4' title={text}>
-          {text}
-        </span>
+        <SpanTooltip extraClasses='label-4'>{text}</SpanTooltip>
         {isThin && (
           <Tooltip
             data={`Thinly Provisioned Filesystem\nMax SSD: ${Utils.formatBytesToString(
