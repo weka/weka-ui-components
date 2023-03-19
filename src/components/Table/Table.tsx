@@ -138,6 +138,7 @@ interface TableProps {
   customRowActions?: CustomRowAction[]
   manualFilters?: boolean
   initialFilters?: Filter[]
+  extraClass?: string
 }
 
 function Table({
@@ -385,7 +386,7 @@ function Table({
   }, [])
 
   return (
-    <div className='react-table-wrapper'>
+    <div className={classNames('react-table-wrapper', extraClass)}>
       {!miniTable && (
         <div className='table-top'>
           <div>
