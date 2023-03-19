@@ -115,11 +115,12 @@ interface TableProps {
   fixedPageSize?: number
   disableActionsPortal?: boolean
   colPropForShowColumns?: string
+  extraClass?: string
 }
 
 function Table({
   columns, data, rowActions = [], tableActions, title, defaultSort = EMPTY_STRING, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId,
-  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick = NOP, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns
+  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick = NOP, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, extraClass
 }: TableProps) {
   const LSFilters = localStorageService.getItem(SAVED_FILTERS)
   const filtersInLocalStorage = (LSFilters && JSON.parse(LSFilters)[filterCategory]) || EMPTY_STRING
@@ -288,7 +289,7 @@ function Table({
   }, [])
 
   return (
-    <div className='react-table-wrapper'>
+    <div className={classNames('react-table-wrapper', extraClass)}>
       {!miniTable && (
         <div className='table-top'>
           <div>

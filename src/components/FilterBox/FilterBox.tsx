@@ -11,6 +11,7 @@ interface FilterBoxProps {
 }
 
 function FilterBox({ name, text, onDelete }: FilterBoxProps) {
+  
   return (
     <div className='box-filter-container' key={name}>
       <span className='filter-headline'>
