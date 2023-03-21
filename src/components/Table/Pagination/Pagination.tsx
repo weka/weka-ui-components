@@ -8,10 +8,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void
   totalRows: number
   rowsPerPage: number
+  defaultCurrentPage: number
 }
 
-function Pagination({ onPageChange, totalRows, rowsPerPage }: PaginationProps) {
-  const [currentPage, setCurrentPage] = useState(1)
+function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage }: PaginationProps) {
+  const [currentPage, setCurrentPage] = useState(defaultCurrentPage)
   const [canPreviousPage, setCanPreviousPage] = useState(false)
   const [canNextPage, setCanNextPage] = useState(true)
 

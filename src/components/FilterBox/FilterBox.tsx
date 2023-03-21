@@ -15,7 +15,9 @@ function FilterBox({ name, text, onDelete }: FilterBoxProps) {
   return (
     <div className='box-filter-container' key={name}>
       <span className='filter-headline'>
-        {FILTERBOXES[`${name.toUpperCase().replace(/\s/g, '')}`]}
+        {name.toLowerCase() === 'severity'
+          ? 'Min Severity'
+          : FILTERBOXES[`${name.toUpperCase().replace(/\s/g, '')}`]}
         <Close onClick={onDelete} />
       </span>
       <span className='filter-data'>

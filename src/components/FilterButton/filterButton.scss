@@ -1,0 +1,17 @@
+.filter-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.filter-btn {
+  min-width: 40px !important;
+  svg {
+    margin-right: 0 !important;
+  }
+}

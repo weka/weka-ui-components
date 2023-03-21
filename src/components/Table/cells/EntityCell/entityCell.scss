@@ -1,0 +1,25 @@
+.events-entity-cell{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-right: 16px;
+  &-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spread);
+  }
+  &-name {
+    max-width: 55px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  svg {
+    padding-left: 6px;
+    height: 16px;
+    width: 16px;
+    path {
+      fill: var(--main-color);
+    }
+  }
+}

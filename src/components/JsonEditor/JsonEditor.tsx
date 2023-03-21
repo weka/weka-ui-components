@@ -1,6 +1,7 @@
 import React, { useId } from 'react'
 import AceEditor from 'react-ace'
 import classNames from 'classnames'
+import { EMPTY_STRING } from '../../consts'
 
 import 'ace-builds/src-noconflict/mode-json'
 
@@ -10,7 +11,8 @@ interface JsonEditorProps {
   onChange?: () => void,
   readOnly?: boolean,
   value?: string,
-  onValidate?: () => void
+  onValidate?: () => void,
+  extraClass?: string,
   [key: string]: any
 }
 function JsonEditor(props:JsonEditorProps) {
@@ -19,12 +21,14 @@ function JsonEditor(props:JsonEditorProps) {
     value,
     onChange,
     onValidate,
+    extraClass = EMPTY_STRING,
     ...rest
   } = props
   const id = useId()
   const classes = classNames({
     'json-editor-wrapper': true,
-    'read-only': readOnly
+    'read-only': readOnly,
+    [extraClass]: true
   })
   return (
     <div className={classes}>
@@ -41,6 +45,7 @@ function JsonEditor(props:JsonEditorProps) {
         value={value}
         onChange={onChange}
         onValidate={onValidate}
+        maxLines={Infinity}
         {...rest}
       />
     </div>

@@ -70,4 +70,12 @@ interface ShortRoles {
     [key: string]: any;
 }
 export declare const SHORT_ROLES: ShortRoles;
+export declare const PER_PAGE_OPTIONS: {
+    value: number;
+    label: string;
+}[];
+export declare const ORIGIN_OPTIONS: {
+    USER: string;
+    WEKA: string;
+};
 export {};

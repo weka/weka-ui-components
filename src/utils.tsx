@@ -1,12 +1,12 @@
 import React from 'react'
 import Tooltip from './components/Tooltip'
 import { Hide, Show } from './svgs'
-import { EMPTY_STRING, SEVERITIES } from './consts'
+import { EMPTY_STRING } from './consts'
 import { DateTime } from 'luxon'
 
 const utils = {
  isEllipsisActive(element: HTMLElement): boolean {
-   return element.offsetWidth < element.scrollWidth;
+   return element.offsetWidth < element.scrollWidth
  },
   getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement {
     if (showPassword) {
@@ -120,33 +120,6 @@ const utils = {
       return false
     }
   },
-  multiSelectFilterFunc: (
-    rows: Row[],
-    columnIds: string[],
-    filterValue: string[]
-  ) => {
-    const field = columnIds[0]
-
-    if (!filterValue || !field) {
-      return rows
-    }
-    if (Array.isArray(filterValue)) {
-      return rows.filter((row) => filterValue.includes(row.values[field]))
-    }
-    return rows.filter((row) => filterValue === row.values[field])
-  },
-  severityFilterFunc: (
-    rows: Row[],
-    columnIds: string[],
-    filterValue: Severities
-  ) =>
-    rows.filter(({ values }) => {
-      const severity = values[columnIds[0]]
-      const rowSeverityIndex = SEVERITIES.indexOf(severity)
-      const selectedSeverityIndex = SEVERITIES.indexOf(filterValue)
-
-      return rowSeverityIndex >= selectedSeverityIndex
-    }),
     stringSort: (rowA: { values: { [key: string]: any } }, rowB: { values: { [key: string]: any } }, columnId: string): number=> {
       const _getRowValuesByColumn4 = [rowA.values[columnId], rowB.values[columnId]]
     let a = _getRowValuesByColumn4[0] || EMPTY_STRING
@@ -205,12 +178,6 @@ const utils = {
 
     const collator = Intl.Collator(undefined, { numeric: true })
     return collator.compare(a, b)
-  },
-  severitySort: (rowA: Row, rowB: Row, columnId: string) => {
-    const rowASeverityIndex = SEVERITIES.indexOf(rowA.values[columnId])
-    const rowBSeverityIndex = SEVERITIES.indexOf(rowB.values[columnId])
-
-    return rowASeverityIndex - rowBSeverityIndex
   },
   isIp: (string: any) => {
     if (!utils.isString(string)) return false

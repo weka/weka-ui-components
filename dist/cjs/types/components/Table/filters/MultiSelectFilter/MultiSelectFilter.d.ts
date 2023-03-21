@@ -1,6 +1,11 @@
 /// <reference types="react" />
+import { UseFiltersColumnProps } from 'react-table';
 import './multiSelectFilter.scss';
-declare function MultiSelectFilter({ column }: {
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    fixedOptions: Array<any>;
+    Header: string;
+    id?: string;
     [key: string]: any;
-}): JSX.Element;
+}
+declare function MultiSelectFilter({ column }: ExtendedFiltersColumn<object>): JSX.Element;
 export default MultiSelectFilter;

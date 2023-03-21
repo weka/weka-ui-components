@@ -1,40 +1,28 @@
-import classNames from 'classnames'
 import React from 'react'
+import classNames from 'classnames'
 import FilterWrapper from '../FilterWrapper'
-
 import { SEVERITIES, SEVERITIES_ICONS } from '../../../../consts'
-
 import { UseFiltersColumnProps } from 'react-table'
+import useToggle from '../../../../hooks/useToggle'
 
 import './severityFilter.scss'
-import useToggle from '../../../../hooks/useToggle'
 
 interface ExtendedFiltersColumn<T extends object>
   extends UseFiltersColumnProps<T> {
-  fixedOptions: Array<any>
   Header: string
-  id?: string
   [key: string]: any
+  byMinSeverity?: boolean
 }
 
-function SeverityFilter({
-  column: { filterValue, setFilter, Header, columnName }
-}: {
-  column: ExtendedFiltersColumn<object>
-}) {
+function SeverityFilter({ column }: ExtendedFiltersColumn<object>) {
+  const { filterValue, setFilter, byMinSeverity = true } = column
   const [isPopperOpen, togglePopper] = useToggle(false)
 
   return (
     <FilterWrapper
       setFilter={setFilter}
       value={filterValue}
-      columnTitle={
-        columnName
-          ? columnName
-          : typeof Header === 'string' && Header
-          ? Header
-          : 'Min. Severity'
-      }
+      columnTitle={byMinSeverity ? 'Min. Severity' : 'Severity'}
       hideWrapper
       isPopperOpen={isPopperOpen}
       onTogglePopper={togglePopper}

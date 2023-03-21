@@ -7,9 +7,9 @@ import useKeyEvent from '../../../../hooks/useKeyEvent'
 import useToggle from '../../../../hooks/useToggle'
 import Utils from '../../../../utils'
 import { EMPTY_STRING } from '../../../../consts'
+import classNames from 'classnames'
 
 import './filterWrapper.scss'
-import classNames from 'classnames'
 
 interface FilterWrapperProps {
   setFilter: (value: any) => void

@@ -47,10 +47,11 @@ import localStorageService from '../../localStorageService'
 import ShowColumns from './ShowColumns'
 import ActionsCell from './cells/ActionsCell'
 import DefaultCell from './cells/DefaultCell'
+import IconButtonCell from './cells/IconButtonCell'
 import FilterBox from '../FilterBox'
+import Loader from '../Loader'
 
 import './table.scss'
-import Loader from '../Loader'
 
 const sortTypes = {
   length: (rowA: Row, rowB: Row, colId: string) => {
@@ -91,6 +92,14 @@ export interface RowAction {
   content?: string | ((original: object) => HTMLElement)
   disabled?: boolean | ((original: object) => boolean)
   text?: string
+}
+
+export interface CustomRowAction {
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  disabled?: boolean | ((original: object) => boolean)
+  onClick: ((original: object) => void) | (() => void)
+  tooltipText?: any
+  extraClass?: string
 }
 
 export interface CustomCellProps {
@@ -147,6 +156,11 @@ interface TableProps {
   loading?: boolean
   onFiltersChanged?: (newFilters: Filters<object>) => void
   onFiltersCleared?: () => void
+  defaultDescendingSort?: boolean,
+  customRowActions?: CustomRowAction[],
+  customFilterBoxes?: Array<ReactNode>,
+  customFilters?: ParsedFilter[]
+  onFilterRemove?: (id: string) => void
 }
 
 function Table({
@@ -178,6 +192,11 @@ function Table({
   loading,
   onFiltersChanged,
   onFiltersCleared,
+  defaultDescendingSort = false,
+  customRowActions,
+  customFilterBoxes,
+  customFilters,
+  onFilterRemove
 }: TableProps) {
   const LSFilters = localStorageService.getItem(SAVED_FILTERS)
   const filtersInLocalStorage = (LSFilters && JSON.parse(LSFilters)[filterCategory]) || EMPTY_STRING
@@ -238,14 +257,8 @@ function Table({
       globalFilter,
       initialState: {
         pageSize: fixedPageSize || 50,
-        ...(defaultSort && {
-          sortBy: [
-            typeof defaultSort === 'string'
-              ? { id: defaultSort, desc: false }
-              : defaultSort
-          ]
-        }),
-        filters: formatParsedFilters(urlFilters),
+        ...(defaultSort && { sortBy: [{ id: defaultSort, desc: defaultDescendingSort }] }),
+        filters: customFilters || formatParsedFilters(urlFilters),
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage
       },
@@ -258,7 +271,7 @@ function Table({
       autoResetHiddenColumns: false,
       getRowId,
       sortTypes,
-      manualFilters: !!onFiltersChanged
+      manualFilters: !!customFilters
     },
     useRowState,
     useFilters,
@@ -411,16 +424,22 @@ function Table({
               </span>
             )}
           </div>
-          {!Utils.isEmpty(cleanFilters) && (
+          {(!Utils.isEmpty(cleanFilters) ||
+            !Utils.isEmpty(customFilterBoxes)) && (
             <div className='table-filters'>
-              {cleanFilters.map(({ id, value }) => (
-                <FilterBox
-                  key={id}
-                  name={id}
-                  text={value}
-                  onDelete={() => setFilter(id, undefined)}
-                />
-              ))}
+              {!Utils.isEmpty(cleanFilters) &&
+                cleanFilters.map(({ id, value }) => (
+                  <FilterBox
+                    key={id}
+                    name={id}
+                    text={value}
+                    onDelete={() => {
+                      setFilter(id, undefined)
+                      onFilterRemove?.(id)
+                    }}
+                  />
+                ))}
+              {!Utils.isEmpty(customFilterBoxes) && customFilterBoxes}
               <div className='table-filters-clear'>
                 <Tooltip data='Clear Filters'>
                   <IconButton
@@ -438,77 +457,88 @@ function Table({
           <div className='table-actions'>{tableActions}</div>
         </div>
       )}
-      <div className={wrapperClasses} ref={tableRef}>
-        <table {...getTableProps()} className={tableClass}>
-          <thead className='sticky-header'>
-            {headerGroups.map((headerGroup) => {
-              const { key, ...headerGroupProps } =
-                headerGroup.getHeaderGroupProps()
-              return (
-                <tr {...headerGroupProps} key={key}>
-                  {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                  {isExpandable ? (
-                    <th className='table-header header-cell-for-expandable' />
-                  ) : null}
-                  {headerGroup.headers.map((column: ExtendedHeaderGroup) => {
-                    const { key, ...headerProps } = column.getHeaderProps()
-                    return (
-                      <th {...headerProps} key={key} className='table-header'>
-                        <Tooltip data={column.tooltip}>
-                          <span
-                            className={`table-headline ${
-                              column.disableSort ? 'disable-sort' : EMPTY_STRING
-                            }`}
-                            onClick={() => {
-                              if (!column.disableSort) {
-                                toggleSortBy(
-                                  column.id,
-                                  column.isSortedDesc === undefined
-                                    ? false
-                                    : !column.isSortedDesc
-                                )
-                              }
-                            }}
-                          >
-                            {column.render('Header')}
-                          </span>
-                        </Tooltip>
-                        {column.Filter ? column.render('Filter') : null}
-
-                        {!column.disableSort &&
-                          (column.isSorted ||
-                            (!column.isSorted && !column.Header)) && (
-                            <div
-                              className={classNames(
-                                'table-sort',
-                                !column.isSorted &&
-                                  !column.Header &&
-                                  'table-sort-no-title'
-                              )}
-                              onClick={() =>
-                                toggleSortBy(column.id, !column.isSortedDesc)
-                              }
+      {!loading ? (
+        <div className={wrapperClasses} ref={tableRef}>
+          <table {...getTableProps()} className={tableClass}>
+            <thead className='sticky-header'>
+              {headerGroups.map((headerGroup) => {
+                const { key, ...headerGroupProps } =
+                  headerGroup.getHeaderGroupProps()
+                return (
+                  <tr {...headerGroupProps} key={key}>
+                    {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                    {isExpandable ? (
+                      <th className='table-header header-cell-for-expandable' />
+                    ) : null}
+                    {headerGroup.headers.map((column: ExtendedHeaderGroup) => {
+                      const { key, ...headerProps } = column.getHeaderProps()
+                      return (
+                        <th {...headerProps} key={key} className='table-header'>
+                          <Tooltip data={column.tooltip}>
+                            <span
+                              className={`table-headline ${
+                                column.disableSort
+                                  ? 'disable-sort'
+                                  : EMPTY_STRING
+                              }`}
+                              onClick={() => {
+                                if (!column.disableSort) {
+                                  toggleSortBy(
+                                    column.id,
+                                    column.isSortedDesc === undefined
+                                      ? false
+                                      : !column.isSortedDesc
+                                  )
+                                }
+                              }}
                             >
-                              {column.isSortedDesc ? (
-                                <LongArrow className='rotate180' />
-                              ) : (
-                                <LongArrow />
-                              )}
-                            </div>
-                          )}
+                              {column.render('Header')}
+                            </span>
+                          </Tooltip>
+                          {column.Filter ? column.render('Filter') : null}
+
+                          {!column.disableSort &&
+                            (column.isSorted ||
+                              (!column.isSorted && !column.Header)) && (
+                              <div
+                                className={classNames(
+                                  'table-sort',
+                                  !column.isSorted &&
+                                    !column.Header &&
+                                    'table-sort-no-title'
+                                )}
+                                onClick={() =>
+                                  toggleSortBy(column.id, !column.isSortedDesc)
+                                }
+                              >
+                                {column.isSortedDesc ? (
+                                  <LongArrow className='rotate180' />
+                                ) : (
+                                  <LongArrow />
+                                )}
+                              </div>
+                            )}
+                        </th>
+                      )
+                    })}
+                    {!Utils.isEmpty(customRowActions) &&
+                      customRowActions.map(({ tooltipText }) => (
+                        <th
+                          className='table-header table-header-actions'
+                          key={tooltipText}
+                        >
+                          {EMPTY_STRING}
+                        </th>
+                      ))}
+                    {!Utils.isEmpty(rowActions) && (
+                      <th className='table-header table-header-actions'>
+                        {EMPTY_STRING}
                       </th>
-                    )
-                  })}
-                  {!Utils.isEmpty(rowActions) && (
-                    <th className='table-header table-header-actions'>
-                      {EMPTY_STRING}
-                    </th>
-                  )}
-                </tr>
-              )
-            })}
-          </thead>
-          {!loading && (
+                    )}
+                  </tr>
+                )
+              })}
+            </thead>
             <tbody
               {...getTableBodyProps()}
               className='table-body'
@@ -558,6 +588,12 @@ function Table({
                           {cell.render('Cell')}
                         </td>
                       ))}
+                      {!Utils.isEmpty(customRowActions) &&
+                        customRowActions.map((action) => (
+                          <td className='td-actions' key={action.tooltipText}>
+                            <IconButtonCell row={extendedRow} action={action} />
+                          </td>
+                        ))}
                       {!Utils.isEmpty(rowActions) && (
                         <td className='td-actions'>
                           <ActionsCell
@@ -579,14 +615,12 @@ function Table({
                 )
               })}
             </tbody>
-          )}
-        </table>
-        {loading && (
-          <div className='table-loader'>
-            <Loader />
-          </div>
-        )}
-      </div>
+          </table>
+        </div>
+      ) : (
+        <Loader />
+      )}
+
       {(!miniTable || fixedPageSize) && !manualPagination && (
         <div className='footer'>
           <div className='pagination-wrapper'>

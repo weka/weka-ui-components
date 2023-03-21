@@ -1,0 +1,17 @@
+.per-page {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &-select {
+    width: 92px !important;
+
+    .react-select {
+      &__dropdown-indicator {
+        .indicatorContainer {
+          padding: 4px !important;
+        }
+      }
+    }
+  }
+}
