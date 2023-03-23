@@ -172,6 +172,7 @@ function Table({
   defaultDescendingSort = false,
   customRowActions,
   manualFilters,
+  extraClass,
   initialFilters: initialUserFilters
 }: TableProps) {
   const LSHidden = localStorageService.getItem(SAVED_HIDDEN)
