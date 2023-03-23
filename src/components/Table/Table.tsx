@@ -8,7 +8,6 @@ import React, {
 import _ from 'lodash'
 import {
   EMPTY_STRING,
-  SAVED_FILTERS,
   SAVED_HIDDEN,
   FILTER_CHANGE_LISTENER,
   FILTER_LISTENER,
@@ -22,7 +21,6 @@ import {
   ClearFilters,
   ThinArrow
 } from '../../svgs'
-import { useSearchParams, useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 import {
   Row,
@@ -52,6 +50,7 @@ import FilterBox from '../FilterBox'
 import Loader from '../Loader'
 
 import './table.scss'
+import { useUrlFilters } from './hooks'
 
 const sortTypes = {
   length: (rowA: Row, rowB: Row, colId: string) => {
@@ -64,26 +63,9 @@ const sortTypes = {
   }
 }
 
-function parseURLFilters(search: any) {
-  const params = new URLSearchParams(search)
-  return [...params.entries()].map(([id, value]) => ({ id, value }))
-}
-
 interface ParsedFilter {
   id: any
   value: any
-}
-
-function formatParsedFilters(parsedFilters: ParsedFilter[]) {
-  return parsedFilters.reduce((acc, { id, value }) => {
-    const foundFilter: { [key: string]: any } | undefined = acc.find((filter: { [key: string]: any }) => filter.id === id)
-    if (!foundFilter) {
-      acc.push({ id, value: [value] })
-    } else {
-      foundFilter.value.push(value)
-    }
-    return acc
-  }, [])
 }
 
 export interface RowAction {
@@ -110,7 +92,10 @@ type ExtendedColumn = Column & {
   defaultHidden?: boolean
 }
 
-export interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
+export interface ExtendedRow<T extends object>
+  extends Row,
+    UseExpandedRowProps<T>,
+    UseRowStateRowProps<T> {
   subRows: Array<Row<any>>
 }
 
@@ -141,7 +126,11 @@ interface TableProps {
   defaultGlobalFilter?: string
   checkRowSelected?: (row: object) => boolean
   checkRowHighlighted?: (row: object) => boolean
-  getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string)
+  getRowId?: (
+    originalRow: object,
+    relativeIndex: number,
+    parent?: Row<object> | undefined
+  ) => string
   addFilterToUrl?: boolean
   RowSubComponent?: React.FC<{ row: any }>
   listenerPrefix?: string
@@ -156,11 +145,9 @@ interface TableProps {
   loading?: boolean
   onFiltersChanged?: (newFilters: Filters<object>) => void
   onFiltersCleared?: () => void
-  defaultDescendingSort?: boolean,
-  customRowActions?: CustomRowAction[],
-  customFilterBoxes?: Array<ReactNode>,
-  customFilters?: ParsedFilter[]
-  onFilterRemove?: (id: string) => void
+  defaultDescendingSort?: boolean
+  customRowActions?: CustomRowAction[]
+  manualFilters?: boolean
 }
 
 function Table({
@@ -194,37 +181,44 @@ function Table({
   onFiltersCleared,
   defaultDescendingSort = false,
   customRowActions,
-  customFilterBoxes,
-  customFilters,
-  onFilterRemove
+  manualFilters
 }: TableProps) {
-  const LSFilters = localStorageService.getItem(SAVED_FILTERS)
-  const filtersInLocalStorage = (LSFilters && JSON.parse(LSFilters)[filterCategory]) || EMPTY_STRING
-
-  const [searchParams] = useSearchParams()
-
   const LSHidden = localStorageService.getItem(SAVED_HIDDEN)
-  const hiddenInLocalStorage = (LSHidden && JSON.parse(LSHidden)[filterCategory])
-    || columns.filter(({ defaultHidden }) => defaultHidden).map(({ Header, accessor }) => (Utils.isString(accessor) ? accessor : Header))
-
-  const defaultColumn = React.useMemo(() => ({
-    Cell: DefaultCell,
-    width: 100,
-    sortType: Utils.stringSort
-  }), [])
-
-  const navigate = useNavigate()
-  const urlFilters = addFilterToUrl
-    ? useMemo(
-        () =>
-          parseURLFilters(
-            window.location.search
-              ? searchParams
-              : Utils.parseParamsToQuery(filtersInLocalStorage)
-          ),
-        []
+  const hiddenInLocalStorage =
+    (LSHidden && JSON.parse(LSHidden)[filterCategory]) ||
+    columns
+      .filter(({ defaultHidden }) => defaultHidden)
+      .map(({ Header, accessor }) =>
+        Utils.isString(accessor) ? accessor : Header
       )
-    : []
+
+  const defaultColumn = React.useMemo(
+    () => ({
+      Cell: DefaultCell,
+      width: 100,
+      sortType: Utils.stringSort
+    }),
+    []
+  )
+
+  const columnIds = useMemo(
+    () =>
+      columns.flatMap((col) => {
+        const id = col.id ?? col.accessor
+
+        return typeof id === 'string' ? id : []
+      }),
+    [columns]
+  )
+
+  const [urlFilters, setUrlFilters] = useUrlFilters({
+    enabled: addFilterToUrl,
+    filterIds: columnIds,
+    filterCategory
+  })
+
+  const { current: initialUrlFilters = [] } = useRef(urlFilters)
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -257,8 +251,10 @@ function Table({
       globalFilter,
       initialState: {
         pageSize: fixedPageSize || 50,
-        ...(defaultSort && { sortBy: [{ id: defaultSort, desc: defaultDescendingSort }] }),
-        filters: customFilters || formatParsedFilters(urlFilters),
+        ...(defaultSort && {
+          sortBy: [{ id: defaultSort, desc: defaultDescendingSort }]
+        }),
+        filters: initialUrlFilters,
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage
       },
@@ -271,7 +267,7 @@ function Table({
       autoResetHiddenColumns: false,
       getRowId,
       sortTypes,
-      manualFilters: !!customFilters
+      manualFilters
     },
     useRowState,
     useFilters,
@@ -293,7 +289,11 @@ function Table({
   const tableRef = useRef<null | HTMLDivElement>(null)
   const isExpandable = !!RowSubComponent
 
-  const cleanFilters = useMemo(() => filters.filter(({ id }) => allColumns.find((column) => id === column.id)), [filters])
+  const cleanFilters = useMemo(
+    () =>
+      filters.filter(({ id }) => allColumns.find((column) => id === column.id)),
+    [filters]
+  )
 
   interface ExtendedEvent extends Event {
     detail: {
@@ -315,7 +315,8 @@ function Table({
 
   useEffect(() => {
     onFiltersChanged?.(filters)
-  }, [filters])
+    if (addFilterToUrl) setUrlFilters(filters)
+  }, [filters, addFilterToUrl])
 
   useEffect(() => {
     setHiddenColumns((hiddenColumns) => {
@@ -342,18 +343,6 @@ function Table({
   }, [filters])
 
   useEffect(() => {
-    if (addFilterToUrl) {
-      const formatFilters = cleanFilters.reduce((acc: {[key: string]: any}, { id, value }) => {
-        acc[id] = value
-        return acc
-      }, {})
-      const queryParams = Utils.parseParamsToQuery(formatFilters)
-      navigate({ search: queryParams.toString() }, { replace: true })
-      localStorageService.updateFilters(filterCategory, formatFilters)
-    }
-  }, [cleanFilters])
-
-  useEffect(() => {
     gotoPage(0)
   }, [pageCount])
 
@@ -373,12 +362,15 @@ function Table({
     }
   }, [fixedPageSize])
 
-  const calcNumberOfRows = useCallback(_.debounce(() => {
-    const tableHeight = tableRef.current?.clientHeight
-    if (tableHeight && !miniTable && !fixedPageSize) {
-      setPageSize(tableHeight / 35)
-    }
-  }, 350), [])
+  const calcNumberOfRows = useCallback(
+    _.debounce(() => {
+      const tableHeight = tableRef.current?.clientHeight
+      if (tableHeight && !miniTable && !fixedPageSize) {
+        setPageSize(tableHeight / 35)
+      }
+    }, 350),
+    []
+  )
 
   useEffect(() => {
     calcNumberOfRows()
@@ -424,22 +416,19 @@ function Table({
               </span>
             )}
           </div>
-          {(!Utils.isEmpty(cleanFilters) ||
-            !Utils.isEmpty(customFilterBoxes)) && (
+          {!Utils.isEmpty(cleanFilters) && (
             <div className='table-filters'>
               {!Utils.isEmpty(cleanFilters) &&
                 cleanFilters.map(({ id, value }) => (
                   <FilterBox
                     key={id}
                     name={id}
-                    text={value}
+                    value={value}
                     onDelete={() => {
                       setFilter(id, undefined)
-                      onFilterRemove?.(id)
                     }}
                   />
                 ))}
-              {!Utils.isEmpty(customFilterBoxes) && customFilterBoxes}
               <div className='table-filters-clear'>
                 <Tooltip data='Clear Filters'>
                   <IconButton
