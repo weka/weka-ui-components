@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { DateTime } from 'luxon'
 import DateTimePicker from '../../../DateTimePicker'
-
-import './dateFilter.scss'
 import FilterWrapper from '../FilterWrapper'
 import { UseFiltersColumnProps } from 'react-table'
 import { EMPTY_STRING } from '../../../../consts'
+import utils from '../../../../utils'
+
+import './dateFilter.scss'
 
 interface ExtendedFiltersColumn<T extends object>
   extends UseFiltersColumnProps<T> {
@@ -21,6 +22,9 @@ export interface DateFilterValue {
   start_time?: string
   end_time?: string
 }
+
+export const isDateFilterValue = (obj: unknown): obj is DateFilterValue =>
+  !!(utils.isObject(obj) && ('start_time' in obj || 'end_time' in obj))
 
 function DateFilter({ column }: DateFilterProps) {
   const { filterValue, setFilter, id = EMPTY_STRING, Header } = column

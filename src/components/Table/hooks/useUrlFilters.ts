@@ -17,7 +17,6 @@ const parseSearchParams = (searchParams: URLSearchParams) =>
         acc[objName][objKey].push(value)
       } else if (!acc[key] || Array.isArray(acc[key])) {
         if (!acc[key]) acc[key] = []
-        console.log('acc[key]', acc[key])
         acc[key].push(value)
       }
 

@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Close } from '../../svgs'
 import { FILTERBOXES } from '../../consts'
+import { DateFilterValue, isDateFilterValue } from '../Table/filters/DateFilter/DateFilter'
+import utils from '../../utils'
 
 import './filterBox.scss'
-import { DateFilterValue } from '../Table/filters/DateFilter/DateFilter'
-import utils from '../../utils'
 
 const filterFormatters = {
   dateFilter: ({ start_time, end_time }: DateFilterValue) => {
@@ -16,9 +16,6 @@ const filterFormatters = {
     } → ${end_time ? utils.formatISODate(end_time, false) : 'Anytime'}`
   }
 } as const
-
-const isDateFilterValue = (obj: unknown): obj is DateFilterValue =>
-  !!(utils.isObject(obj) && ('start_time' in obj || 'end_time' in obj))
 
 interface FilterBoxProps {
   name: string

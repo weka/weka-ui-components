@@ -48,9 +48,9 @@ import DefaultCell from './cells/DefaultCell'
 import IconButtonCell from './cells/IconButtonCell'
 import FilterBox from '../FilterBox'
 import Loader from '../Loader'
+import { useUrlFilters } from './hooks'
 
 import './table.scss'
-import { useUrlFilters } from './hooks'
 
 const sortTypes = {
   length: (rowA: Row, rowB: Row, colId: string) => {
@@ -116,12 +116,7 @@ interface TableProps {
   rowActions?: RowAction[]
   emptyMessage?: string
   tableActions?: Array<ReactNode>
-  defaultSort?:
-    | string
-    | {
-        id: string
-        desc: boolean
-      }
+  defaultSort?: string
   globalFilter?: string | ((rows: Array<Row>) => Row[])
   defaultGlobalFilter?: string
   checkRowSelected?: (row: object) => boolean
@@ -144,7 +139,6 @@ interface TableProps {
   canExpandAll?: boolean
   loading?: boolean
   onFiltersChanged?: (newFilters: Filters<object>) => void
-  onFiltersCleared?: () => void
   defaultDescendingSort?: boolean
   customRowActions?: CustomRowAction[]
   manualFilters?: boolean
@@ -178,7 +172,6 @@ function Table({
   canExpandAll = false,
   loading,
   onFiltersChanged,
-  onFiltersCleared,
   defaultDescendingSort = false,
   customRowActions,
   manualFilters
@@ -434,7 +427,6 @@ function Table({
                   <IconButton
                     onClick={() => {
                       setAllFilters([])
-                      onFiltersCleared?.()
                     }}
                   >
                     <ClearFilters />
