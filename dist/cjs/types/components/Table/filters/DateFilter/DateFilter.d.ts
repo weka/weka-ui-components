@@ -1,16 +1,17 @@
 /// <reference types="react" />
+import { UseFiltersColumnProps } from 'react-table';
 import './dateFilter.scss';
-interface DateFilterDefault {
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    Header: string;
+    id?: string;
+}
+interface DateFilterProps {
+    column: ExtendedFiltersColumn<object>;
+}
+export interface DateFilterValue {
     startTime?: string;
     endTime?: string;
 }
-interface DateFilter {
-    start_time?: string;
-    end_time?: string;
-}
-interface DateFilterProps {
-    setFilter: (filter: DateFilter) => void;
-    defaultValue?: DateFilterDefault;
-}
-declare function DateFilter(props: DateFilterProps): JSX.Element;
+export declare const isDateFilterValue: (obj: unknown) => obj is DateFilterValue;
+declare function DateFilter({ column }: DateFilterProps): JSX.Element;
 export default DateFilter;

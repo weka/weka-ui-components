@@ -63,11 +63,6 @@ const sortTypes = {
   }
 }
 
-interface ParsedFilter {
-  id: any
-  value: any
-}
-
 export interface RowAction {
   hideAction: boolean | ((original: object) => boolean)
   action?: ((original: object) => void) | (() => void)
@@ -142,6 +137,7 @@ interface TableProps {
   defaultDescendingSort?: boolean
   customRowActions?: CustomRowAction[]
   manualFilters?: boolean
+  initialFilters?: Filter[]
 }
 
 function Table({
@@ -174,7 +170,8 @@ function Table({
   onFiltersChanged,
   defaultDescendingSort = false,
   customRowActions,
-  manualFilters
+  manualFilters,
+  initialFilters: initialUserFilters
 }: TableProps) {
   const LSHidden = localStorageService.getItem(SAVED_HIDDEN)
   const hiddenInLocalStorage =
@@ -212,6 +209,20 @@ function Table({
 
   const { current: initialUrlFilters = [] } = useRef(urlFilters)
 
+  const initialFilters = useMemo(
+    () =>
+      initialUserFilters
+        ? [...initialUserFilters]
+            .filter(
+              ({ id }) =>
+                !initialUrlFilters.find((urlFilter) => urlFilter.id === id)
+            )
+            .concat(initialUrlFilters)
+        : initialUrlFilters,
+
+    []
+  )
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -247,7 +258,7 @@ function Table({
         ...(defaultSort && {
           sortBy: [{ id: defaultSort, desc: defaultDescendingSort }]
         }),
-        filters: initialUrlFilters,
+        filters: initialFilters,
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage
       },

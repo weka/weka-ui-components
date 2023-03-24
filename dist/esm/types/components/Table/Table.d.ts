@@ -1,10 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps, Filters } from 'react-table';
 import './table.scss';
-interface ParsedFilter {
-    id: any;
-    value: any;
-}
 export interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
     action?: ((original: object) => void) | (() => void);
@@ -37,15 +33,12 @@ interface TableProps {
     rowActions?: RowAction[];
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
-    defaultSort?: string | {
-        id: string;
-        desc: boolean;
-    };
+    defaultSort?: string;
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
     checkRowHighlighted?: (row: object) => boolean;
-    getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
+    getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
         row: any;
@@ -61,12 +54,10 @@ interface TableProps {
     canExpandAll?: boolean;
     loading?: boolean;
     onFiltersChanged?: (newFilters: Filters<object>) => void;
-    onFiltersCleared?: () => void;
     defaultDescendingSort?: boolean;
     customRowActions?: CustomRowAction[];
-    customFilterBoxes?: Array<ReactNode>;
-    customFilters?: ParsedFilter[];
-    onFilterRemove?: (id: string) => void;
+    manualFilters?: boolean;
+    initialFilters?: Filter[];
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, onFiltersCleared, defaultDescendingSort, customRowActions, customFilterBoxes, customFilters, onFilterRemove }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, initialFilters: initialUserFilters }: TableProps): JSX.Element;
 export default Table;

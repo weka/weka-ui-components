@@ -57,29 +57,42 @@ export const useUrlFilters = ({
   })
 
   const setUrlFilters = (filters: Filter[]) => {
+    const currentSearchParams = new URLSearchParams(window.location.search)
+    const paramsArr = [...currentSearchParams]
+
     filterIds.forEach((column) => {
-      searchParams.delete(column)
+      currentSearchParams.delete(column)
+      paramsArr.forEach(([key]) => {
+        if (key.match(new RegExp(`${column}\\[.+\\]`))) {
+          currentSearchParams.delete(key)
+        }
+      })
     })
 
     filters.forEach(({ id, value }) => {
       if (Array.isArray(value)) {
         value.forEach((val) => {
           if (val) {
-            searchParams.append(id, val)
+            currentSearchParams.append(id, val.toString())
           }
         })
       } else if (utils.isObject(value)) {
         Object.entries(value).forEach(([innerKey, innerVal]) => {
-          searchParams.append(`${id}[${innerKey}]`, innerVal.toString())
+          if (innerVal) {
+            currentSearchParams.append(
+              `${id}[${innerKey}]`,
+              innerVal.toString()
+            )
+          }
         })
       } else if (!utils.isEmpty(value)) {
-        searchParams.append(id, value)
+        currentSearchParams.append(id, value.toString())
       }
     })
 
     setFilters(filters)
 
-    setSearchParams(parseSearchParams(searchParams))
+    setSearchParams(currentSearchParams.toString(), { replace: true })
 
     const filtersObj = filters.reduce(
       (acc: { [key: string]: any }, { id, value }) => {

@@ -5,6 +5,7 @@ import FilterWrapper from '../FilterWrapper'
 import { UseFiltersColumnProps } from 'react-table'
 import { EMPTY_STRING } from '../../../../consts'
 import utils from '../../../../utils'
+import Button from '../../../Button'
 
 import './dateFilter.scss'
 
@@ -19,12 +20,12 @@ interface DateFilterProps {
 }
 
 export interface DateFilterValue {
-  start_time?: string
-  end_time?: string
+  startTime?: string
+  endTime?: string
 }
 
 export const isDateFilterValue = (obj: unknown): obj is DateFilterValue =>
-  !!(utils.isObject(obj) && ('start_time' in obj || 'end_time' in obj))
+  !!(utils.isObject(obj) && ('startTime' in obj || 'endTime' in obj))
 
 function DateFilter({ column }: DateFilterProps) {
   const { filterValue, setFilter, id = EMPTY_STRING, Header } = column
@@ -36,17 +37,8 @@ function DateFilter({ column }: DateFilterProps) {
     filterValue?.endTime ? DateTime.fromISO(filterValue.endTime) : undefined
   )
 
-  const value = {
-    start_time: from?.toJSDate().toISOString() || undefined,
-    end_time: to?.toJSDate().toISOString() || undefined
-  }
-
   return (
-    <FilterWrapper
-      setFilter={setFilter}
-      value={value}
-      columnTitle={id || Header}
-    >
+    <FilterWrapper setFilter={setFilter} columnTitle={id || Header} hideWrapper>
       <div className='date-filter-wrapper'>
         <div>
           <DateTimePicker
@@ -66,7 +58,29 @@ function DateFilter({ column }: DateFilterProps) {
             showSeconds
           />
         </div>
-
+        <div className='date-filter-controller'>
+          <Button
+            disable={!from && !to}
+            empty
+            onClick={() => {
+              onFromChange(undefined)
+              onToChange(undefined)
+            }}
+          >
+            Clear
+          </Button>
+          <Button
+            disable={!from && !to}
+            onClick={() =>
+              setFilter({
+                startTime: from?.toJSDate().toISOString() || undefined,
+                endTime: to?.toJSDate().toISOString() || undefined
+              })
+            }
+          >
+            Filter
+          </Button>
+        </div>
       </div>
     </FilterWrapper>
   )

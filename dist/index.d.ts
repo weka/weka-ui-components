@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import React, { MouseEventHandler, ReactNode, ReactElement } from 'react';
+import React, { MouseEventHandler, ReactNode, ReactElement, InputHTMLAttributes } from 'react';
 import { CellProps, Row, Filters, Column, UseExpandedRowProps, UseRowStateRowProps, UseFiltersColumnProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
@@ -52,7 +52,7 @@ interface InfoProps {
 }
 declare function Info({ data }: InfoProps): JSX.Element;
 
-declare function Checkbox(props: any): JSX.Element;
+declare function Checkbox(props: InputHTMLAttributes<HTMLInputElement>): JSX.Element;
 
 interface DataInfoProps {
     label: string;
@@ -346,10 +346,6 @@ interface TooltipProps {
 }
 declare function Tooltip({ children, clear, data, extraClass, ...rest }: TooltipProps): JSX.Element;
 
-interface ParsedFilter {
-    id: any;
-    value: any;
-}
 interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
     action?: ((original: object) => void) | (() => void);
@@ -382,15 +378,12 @@ interface TableProps {
     rowActions?: RowAction[];
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
-    defaultSort?: string | {
-        id: string;
-        desc: boolean;
-    };
+    defaultSort?: string;
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
     checkRowHighlighted?: (row: object) => boolean;
-    getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
+    getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
         row: any;
@@ -406,14 +399,27 @@ interface TableProps {
     canExpandAll?: boolean;
     loading?: boolean;
     onFiltersChanged?: (newFilters: Filters<object>) => void;
-    onFiltersCleared?: () => void;
     defaultDescendingSort?: boolean;
     customRowActions?: CustomRowAction[];
-    customFilterBoxes?: Array<ReactNode>;
-    customFilters?: ParsedFilter[];
-    onFilterRemove?: (id: string) => void;
+    manualFilters?: boolean;
+    initialFilters?: Filter[];
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, onFiltersCleared, defaultDescendingSort, customRowActions, customFilterBoxes, customFilters, onFilterRemove }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, initialFilters: initialUserFilters }: TableProps): JSX.Element;
+
+declare const useUrlFilters: ({ enabled, filterIds, initial, filterCategory }: {
+    enabled?: boolean | undefined;
+    filterIds: string[];
+    initial?: Filter[] | undefined;
+    filterCategory: string;
+}) => readonly [Filter[], (filters: Filter[]) => void];
+
+interface ExtendedFiltersColumn$3<T extends object> extends UseFiltersColumnProps<T> {
+    fixedOptions: Array<any>;
+    Header: string;
+    id?: string;
+    [key: string]: any;
+}
+declare function MultiSelectFilter({ column }: ExtendedFiltersColumn$3<object>): JSX.Element;
 
 interface ExtendedFiltersColumn$2<T extends object> extends UseFiltersColumnProps<T> {
     fixedOptions: Array<any>;
@@ -421,26 +427,18 @@ interface ExtendedFiltersColumn$2<T extends object> extends UseFiltersColumnProp
     id?: string;
     [key: string]: any;
 }
-declare function MultiSelectFilter({ column }: ExtendedFiltersColumn$2<object>): JSX.Element;
-
-interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProps<T> {
-    fixedOptions: Array<any>;
-    Header: string;
-    id?: string;
-    [key: string]: any;
-}
-declare function SelectFilter({ column }: ExtendedFiltersColumn$1<object>): JSX.Element;
+declare function SelectFilter({ column }: ExtendedFiltersColumn$2<object>): JSX.Element;
 
 declare function TextFilter({ column }: {
     [key: string]: any;
 }): JSX.Element;
 
-interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProps<T> {
     Header: string;
     [key: string]: any;
     byMinSeverity?: boolean;
 }
-declare function SeverityFilter({ column }: ExtendedFiltersColumn<object>): JSX.Element;
+declare function SeverityFilter({ column }: ExtendedFiltersColumn$1<object>): JSX.Element;
 
 interface ActionsCellProps {
     actions: Array<RowAction>;
@@ -548,19 +546,14 @@ interface PerPageProps {
 }
 declare function PerPage({ value, onChange, options }: PerPageProps): JSX.Element;
 
-interface DateFilterDefault {
-    startTime?: string;
-    endTime?: string;
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    Header: string;
+    id?: string;
 }
 interface DateFilterProps {
-    setFilter: (filter: DateFilter) => void;
-    defaultValue?: DateFilterDefault;
+    column: ExtendedFiltersColumn<object>;
 }
-interface DateFilter {
-    start_time?: string;
-    end_time?: string;
-}
-declare function DateFilter(props: DateFilterProps): JSX.Element;
+declare function DateFilter({ column }: DateFilterProps): JSX.Element;
 
 interface FilterButtonProps {
     onClick: () => void;
@@ -583,10 +576,10 @@ declare function FilterHeader({ title, setFilter, Filter, dataForFilter, filterK
 
 interface FilterBoxProps {
     name: string;
-    text: string | Array<string>;
+    value: string | Array<string> | Record<string, unknown>;
     onDelete: () => void;
 }
-declare function FilterBox({ name, text, onDelete }: FilterBoxProps): JSX.Element;
+declare function FilterBox({ name, value: value, onDelete }: FilterBoxProps): JSX.Element;
 
 declare function EntityCell({ cell }: CustomCellProps): JSX.Element;
 
@@ -602,7 +595,7 @@ declare const utils: {
     };
     isEmpty(val: any): boolean;
     isString: (value: any) => boolean;
-    isObject: (value: any) => boolean;
+    isObject: (value: any) => value is Record<string, unknown>;
     insensitiveSort(array: any[], key: string): any[];
     range(startOrEnd: number, end?: number, step?: number): number[];
     mask2SubnetOp(val: number): string;
@@ -639,4 +632,4 @@ declare const utils: {
     formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
 };
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };

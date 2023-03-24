@@ -1,19 +1,22 @@
 import React, { useMemo } from 'react'
 import { Close } from '../../svgs'
 import { FILTERBOXES } from '../../consts'
-import { DateFilterValue, isDateFilterValue } from '../Table/filters/DateFilter/DateFilter'
+import {
+  DateFilterValue,
+  isDateFilterValue
+} from '../Table/filters/DateFilter/DateFilter'
 import utils from '../../utils'
 
 import './filterBox.scss'
 
 const filterFormatters = {
-  dateFilter: ({ start_time, end_time }: DateFilterValue) => {
-    if (!start_time && !end_time) {
+  dateFilter: ({ startTime, endTime }: DateFilterValue) => {
+    if (!startTime && !endTime) {
       return false
     }
     return `${
-      start_time ? utils.formatISODate(start_time, false) : 'Anytime'
-    } → ${end_time ? utils.formatISODate(end_time, false) : 'Anytime'}`
+      startTime ? utils.formatISODate(startTime, false) : 'Anytime'
+    } → ${endTime ? utils.formatISODate(endTime, false) : 'Anytime'}`
   }
 } as const
 

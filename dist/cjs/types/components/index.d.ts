@@ -16,7 +16,7 @@ export { default as Tab } from "./Tab";
 export { default as Toast } from "./Toast";
 export { default as ToggleButton } from "./ToggleButton";
 export { default as Tooltip } from "./Tooltip";
-export { default as Table } from "./Table";
+export { default as Table, useUrlFilters } from './Table';
 export { default as MultiSelectFilter } from "./Table/filters/MultiSelectFilter";
 export { default as SelectFilter } from "./Table/filters/SelectFilter";
 export { default as TextFilter } from "./Table/filters/TextFilter";
