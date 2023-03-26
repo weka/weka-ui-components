@@ -11,12 +11,16 @@ const parseSearchParams = (searchParams: URLSearchParams) =>
       if (matchedObj) {
         const [, objName, objKey] = matchedObj
 
-        if (!acc[objName]) acc[objName] = {}
-        if (!acc[objName][objKey]) acc[objName][objKey] = []
-
-        acc[objName][objKey].push(value)
+        if (!acc[objName]) {
+          acc[objName] = {}
+        }
+        if (!acc[objName][objKey]) {
+          acc[objName][objKey] = value
+        }
       } else if (!acc[key] || Array.isArray(acc[key])) {
-        if (!acc[key]) acc[key] = []
+        if (!acc[key]) {
+          acc[key] = []
+        }
         acc[key].push(value)
       }
 
