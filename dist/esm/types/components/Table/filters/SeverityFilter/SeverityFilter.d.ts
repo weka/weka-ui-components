@@ -1,8 +1,10 @@
 /// <reference types="react" />
-import { Severities } from "../../../../consts";
-import "./severityFilter.scss";
-interface SeverityFilterProps {
-    setFilter: (value: Severities) => void;
+import { UseFiltersColumnProps } from 'react-table';
+import './severityFilter.scss';
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    Header: string;
+    [key: string]: any;
+    byMinSeverity?: boolean;
 }
-declare function SeverityFilter({ setFilter }: SeverityFilterProps): JSX.Element;
+declare function SeverityFilter({ column }: ExtendedFiltersColumn<object>): JSX.Element;
 export default SeverityFilter;

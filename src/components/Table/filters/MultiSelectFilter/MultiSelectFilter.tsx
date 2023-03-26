@@ -4,7 +4,7 @@ import FilterWrapper from '../FilterWrapper'
 import Utils from '../../../../utils'
 import { Close } from '../../../../svgs'
 import { EMPTY_STRING } from '../../../../consts'
-import { UseFiltersColumnProps } from 'react-table'
+import { Row, UseFiltersColumnProps } from 'react-table'
 
 import './multiSelectFilter.scss'
 
@@ -15,22 +15,37 @@ interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<
   [key: string]: any
 }
 
-function MultiSelectFilter({ column }: {[key: string]: any}) {
-  const { filterValue, setFilter, preFilteredRows, id = EMPTY_STRING, fixedOptions, Header } = column as ExtendedFiltersColumn<object>
+function MultiSelectFilter({ column }: ExtendedFiltersColumn<object>) {
+  const { filterValue, setFilter, customSetFilter, preFilteredRows, id = EMPTY_STRING, fixedOptions, Header } = column
   // eslint-disable-next-line no-nested-ternary
   const formatValue = filterValue === undefined ? [] : Array.isArray(filterValue) ? filterValue : [filterValue]
   const [value, setValue] = useState(formatValue)
-  const options = fixedOptions || React.useMemo(() => {
-    const optionsSet = new Set()
-    preFilteredRows.forEach((row) => {
-      if (value && !value.includes(row.values[id])) {
-        optionsSet.add(row.values[id])
-      }
-    })
-    return [...optionsSet.values()]
-  }, [id, preFilteredRows, value])
 
-  const formatOptions = options.map((option) => Utils.formatOption(option))
+  const formattedFixedOptions =
+    fixedOptions &&
+    React.useMemo(() => {
+      const optionsSet = new Set()
+      fixedOptions.forEach((option: string) => {
+        if (value && !value.includes(option)) {
+          optionsSet.add(option)
+        }
+      })
+      return [...optionsSet.values()]
+    }, [id, fixedOptions, value])
+
+  const options =
+    formattedFixedOptions ||
+    React.useMemo(() => {
+      const optionsSet = new Set()
+      preFilteredRows?.forEach((row: Row) => {
+        if (value && !value.includes(row.values[id])) {
+          optionsSet.add(row.values[id])
+        }
+      })
+      return [...optionsSet.values()]
+    }, [id, preFilteredRows, value])
+
+  const formatOptions = options.map((option: string) => Utils.formatOption(option))
 
   useEffect(() => {
     setValue(formatValue)
@@ -55,7 +70,7 @@ function MultiSelectFilter({ column }: {[key: string]: any}) {
   )
 
   return (
-    <FilterWrapper setFilter={setFilter} value={value} columnTitle={Header}>
+    <FilterWrapper setFilter={customSetFilter || setFilter} value={value} columnTitle={Header}>
       <div className='table-multi-select-filter'>
         <Select options={formatOptions} onChange={onSelectOne} value={null} autoFocus sortOptions />
         <div className='selected-options-wrapper'>

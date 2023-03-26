@@ -8,7 +8,7 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'If you are using webpack you add add "import ace-builds/webpack-resolver"',
+        component: 'If you are using webpack you should add "import ace-builds/webpack-resolver"',
       },
     }
   }

@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 
 const utils = {
  isEllipsisActive(element: HTMLElement): boolean {
-   return element.offsetWidth < element.scrollWidth;
+   return element.offsetWidth < element.scrollWidth
  },
   getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement {
     if (showPassword) {
@@ -60,7 +60,7 @@ const utils = {
             && Object.prototype.toString.call(val) !== '[object Date]') // Date
   },
   isString: (value: any) => (typeof value === 'string' || value instanceof String),
-  isObject: (value: any) => (typeof value === 'object' && (value !== null && !Array.isArray(value))),
+  isObject: (value: any): value is Record<string, unknown> => (typeof value === 'object' && (value !== null && !Array.isArray(value))),
   insensitiveSort(array: any[], key:string) {
     const newArray = [...array]
     return newArray.sort((objA, objB) => {
@@ -120,8 +120,8 @@ const utils = {
       return false
     }
   },
-  stringSort: (rowA: { values: { [key: string]: any } }, rowB: { values: { [key: string]: any } }, columnId: string): number=> {
-    const _getRowValuesByColumn4 = [rowA.values[columnId], rowB.values[columnId]]
+    stringSort: (rowA: { values: { [key: string]: any } }, rowB: { values: { [key: string]: any } }, columnId: string): number=> {
+      const _getRowValuesByColumn4 = [rowA.values[columnId], rowB.values[columnId]]
     let a = _getRowValuesByColumn4[0] || EMPTY_STRING
     let b = _getRowValuesByColumn4[1] || EMPTY_STRING
     // eslint-disable-next-line no-restricted-globals
@@ -176,7 +176,7 @@ const utils = {
       return -1
     }
 
-    const collator = Intl.Collator(undefined, {numeric: true})
+    const collator = Intl.Collator(undefined, { numeric: true })
     return collator.compare(a, b)
   },
   isIp: (string: any) => {

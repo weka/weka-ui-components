@@ -1,6 +1,11 @@
 /// <reference types="react" />
+import { UseFiltersColumnProps } from 'react-table';
 import './selectFilter.scss';
-declare function SelectFilter({ column }: {
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    fixedOptions: Array<any>;
+    Header: string;
+    id?: string;
     [key: string]: any;
-}): JSX.Element;
+}
+declare function SelectFilter({ column }: ExtendedFiltersColumn<object>): JSX.Element;
 export default SelectFilter;

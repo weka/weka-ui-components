@@ -44,6 +44,7 @@
       font-weight: bold;
       font-family: var(--bold-font);
       line-height: 16px;
+      user-select: none;
     }
     &-show-calendar {
       svg {

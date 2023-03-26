@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps } from 'react-table';
+import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps, Filters } from 'react-table';
 import './table.scss';
 export interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
@@ -7,6 +7,13 @@ export interface RowAction {
     content?: string | ((original: object) => HTMLElement);
     disabled?: boolean | ((original: object) => boolean);
     text?: string;
+}
+export interface CustomRowAction {
+    Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    disabled?: boolean | ((original: object) => boolean);
+    onClick: ((original: object) => void) | (() => void);
+    tooltipText?: any;
+    extraClass?: string;
 }
 export interface CustomCellProps {
     cell: CellProps<object>;
@@ -30,7 +37,8 @@ interface TableProps {
     globalFilter?: string | ((rows: Array<Row>) => Row[]);
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
-    getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string);
+    checkRowHighlighted?: (row: object) => boolean;
+    getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
         row: any;
@@ -41,6 +49,15 @@ interface TableProps {
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
     colPropForShowColumns?: string;
+    manualPagination?: boolean;
+    itemsAmount?: number;
+    canExpandAll?: boolean;
+    loading?: boolean;
+    onFiltersChanged?: (newFilters: Filters<object>) => void;
+    defaultDescendingSort?: boolean;
+    customRowActions?: CustomRowAction[];
+    manualFilters?: boolean;
+    initialFilters?: Filter[];
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns }: TableProps): JSX.Element;
+declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, initialFilters: initialUserFilters }: TableProps): JSX.Element;
 export default Table;

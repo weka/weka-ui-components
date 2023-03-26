@@ -11,49 +11,53 @@ export const FILTER_LISTENER = 'table-filters'
 export const GENERAL_ERROR = 'Something went wrong. Please refresh the page and try again.'
 
 interface FilterBoxes {
-    [key: string]: string
+  [key: string]: string
 }
 
 export const FILTERBOXES: FilterBoxes = {
-    MINSEVERITY: 'Min Severity',
-    NAME: 'Name',
-    GROUP_NAME: 'Group Name',
-    TIMESTAMP: 'Timestamp',
-    CATEGORY: 'Category',
-    EVENT: 'Event',
-    ACCESSPOINT: 'Access Point',
-    FSNAME: 'Filesystem',
-    FS: 'Filesystem',
-    MOUNTOPTIONS: 'Mount Mode',
-    STATUS: 'Status',
-    PROTOCOL: 'Protocol',
-    REGION: 'Region',
-    OBS_NAME: 'OBS Name',
-    AUTH_METHOD: 'Auth Method',
-    LAST_ERRORS: 'Last Errors',
-    GROUP: 'Group',
-    FILESYSTEM: 'Filesystem',
-    PATH: 'Path',
-    PERMISSION_TYPE: 'Permission Type',
-    ANON_UID: 'Anon UID',
-    ANON_GID: 'Anon GID',
-    DESCRIPTION: 'Description',
-    INNERPATH: 'Inner Path',
-    SHARENAME: 'Share Name',
-    UID: 'UID',
-    PRIMARY_IP_ADDRESS: 'Primary IP Address',
-    USERNAME: 'Username',
-    ROLE: 'Role',
-    EXPIRY_DAYS: 'Expiration Days',
-    PREFIX: 'Prefix',
-    TAGS: 'Tags',
-    POSIXUID: 'Posix UID',
-    POSIXGID: 'Posix GID',
-    S3POLICY: 'S3 Policy',
-    SUPPORTEDVERSIONS: 'Supported Versions',
-    OWNER: 'Owner',
-    CUSTOMERID: 'Customer Name',
-    VERSION: 'Version'
+  MINSEVERITY: 'Min Severity',
+  NAME: 'Name',
+  GROUP_NAME: 'Group Name',
+  TIMESTAMP: 'Timestamp',
+  CATEGORY: 'Category',
+  EVENT: 'Event',
+  EVENT_TYPE: 'Event Type',
+  ACCESSPOINT: 'Access Point',
+  FSNAME: 'Filesystem',
+  FS: 'Filesystem',
+  MOUNTOPTIONS: 'Mount Mode',
+  STATUS: 'Status',
+  PROTOCOL: 'Protocol',
+  REGION: 'Region',
+  OBS_NAME: 'OBS Name',
+  AUTH_METHOD: 'Auth Method',
+  LAST_ERRORS: 'Last Errors',
+  GROUP: 'Group',
+  FILESYSTEM: 'Filesystem',
+  PATH: 'Path',
+  PERMISSION_TYPE: 'Permission Type',
+  ANON_UID: 'Anon UID',
+  ANON_GID: 'Anon GID',
+  DESCRIPTION: 'Description',
+  INNERPATH: 'Inner Path',
+  SHARENAME: 'Share Name',
+  UID: 'UID',
+  PRIMARY_IP_ADDRESS: 'Primary IP Address',
+  USERNAME: 'Username',
+  ROLE: 'Role',
+  EXPIRY_DAYS: 'Expiration Days',
+  PREFIX: 'Prefix',
+  TAGS: 'Tags',
+  POSIXUID: 'Posix UID',
+  POSIXGID: 'Posix GID',
+  S3POLICY: 'S3 Policy',
+  SUPPORTEDVERSIONS: 'Supported Versions',
+  OWNER: 'Owner',
+  CUSTOMERID: 'Customer Name',
+  VERSION: 'Version',
+  NID: 'Process ID',
+  RELATED_NODE_IDS: 'Related Processes',
+  IS_BACKEND: 'Is Backend'
 }
 
 export const NODES_STATUSES = {
@@ -136,6 +140,16 @@ interface SeverityIcons {
   [key: string]: any
 }
 
+export const SEVERITY_DEBUG = 'DEBUG'
+export const SEVERITY_INFO = 'INFO'
+export const SEVERITY_WARNING = 'WARNING'
+export const SEVERITY_MINOR = 'MINOR'
+export const SEVERITY_MAJOR = 'MAJOR'
+export const SEVERITY_CRITICAL = 'CRITICAL'
+
+export const SEVERITIES = [SEVERITY_DEBUG, SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_MINOR, SEVERITY_MAJOR, SEVERITY_CRITICAL] as const
+export type Severities = typeof SEVERITIES[number]
+
 export const SEVERITIES_ICONS: SeverityIcons = {
   INFO: EventInfo,
   WARNING: Warning,
@@ -144,3 +158,25 @@ export const SEVERITIES_ICONS: SeverityIcons = {
   MAJOR: AccidentMajor,
   CRITICAL: AccidentCritical
 }
+
+interface ShortRoles {
+  [key: string]: any
+}
+
+export const SHORT_ROLES: ShortRoles = {
+  FRONTEND: 'FE',
+  DRIVES: 'SSD',
+  MANAGEMENT: 'MGMT'
+}
+
+export const PER_PAGE_OPTIONS = [
+  { value: 25, label: '25' },
+  { value: 50, label: '50' },
+  { value: 100, label: '100' }
+]
+
+export const ORIGIN_OPTIONS = {
+  USER: 'USER',
+  WEKA: 'WEKA'
+}
+

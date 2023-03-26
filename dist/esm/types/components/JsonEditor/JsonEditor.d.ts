@@ -6,6 +6,7 @@ interface JsonEditorProps {
     readOnly?: boolean;
     value?: string;
     onValidate?: () => void;
+    extraClass?: string;
     [key: string]: any;
 }
 declare function JsonEditor(props: JsonEditorProps): JSX.Element;

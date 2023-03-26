@@ -17,6 +17,7 @@ interface SelectProps {
     isClearable?: boolean;
     autoFocus?: boolean;
     groupedOptions?: boolean;
+    isSingleClearable?: boolean;
 }
 declare function Select(props: SelectProps): JSX.Element;
 export default Select;

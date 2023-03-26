@@ -2,8 +2,8 @@
 import './filterBox.scss';
 interface FilterBoxProps {
     name: string;
-    text: string | Array<string>;
+    value: string | Array<string> | Record<string, unknown>;
     onDelete: () => void;
 }
-declare function FilterBox({ name, text, onDelete }: FilterBoxProps): JSX.Element;
+declare function FilterBox({ name, value: value, onDelete }: FilterBoxProps): JSX.Element;
 export default FilterBox;

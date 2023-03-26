@@ -1,9 +1,26 @@
-import React, { ReactNode, useEffect, useMemo, useRef, useCallback } from 'react'
+import React, {
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback
+} from 'react'
 import _ from 'lodash'
-import { EMPTY_STRING, SAVED_FILTERS, SAVED_HIDDEN, FILTER_CHANGE_LISTENER, FILTER_LISTENER, NOP } from '../../consts'
+import {
+  EMPTY_STRING,
+  SAVED_HIDDEN,
+  FILTER_CHANGE_LISTENER,
+  FILTER_LISTENER,
+  NOP
+} from '../../consts'
 import Tooltip from '../Tooltip'
-import { Arrow, LastArrow, LongArrow, ClearFilters } from '../../svgs'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import {
+  Arrow,
+  LastArrow,
+  LongArrow,
+  ClearFilters,
+  ThinArrow
+} from '../../svgs'
 import classNames from 'classnames'
 import {
   Row,
@@ -19,7 +36,8 @@ import {
   useSortBy,
   useExpanded,
   useGlobalFilter,
-  useRowState
+  useRowState,
+  Filters
 } from 'react-table'
 import { IconButton } from '@mui/material'
 import Utils from '../../utils'
@@ -27,7 +45,10 @@ import localStorageService from '../../localStorageService'
 import ShowColumns from './ShowColumns'
 import ActionsCell from './cells/ActionsCell'
 import DefaultCell from './cells/DefaultCell'
+import IconButtonCell from './cells/IconButtonCell'
 import FilterBox from '../FilterBox'
+import Loader from '../Loader'
+import { useUrlFilters } from './hooks'
 
 import './table.scss'
 
@@ -42,28 +63,6 @@ const sortTypes = {
   }
 }
 
-function parseURLFilters(search: any) {
-  const params = new URLSearchParams(search)
-  return [...params.entries()].map(([id, value]) => ({ id, value }))
-}
-
-interface ParsedFilter {
-  id: any
-  value: any
-}
-
-function formatParsedFilters(parsedFilters: ParsedFilter[]) {
-  return parsedFilters.reduce((acc, { id, value }) => {
-    const foundFilter: { [key: string]: any } | undefined = acc.find((filter: { [key: string]: any }) => filter.id === id)
-    if (!foundFilter) {
-      acc.push({ id, value: [value] })
-    } else {
-      foundFilter.value.push(value)
-    }
-    return acc
-  }, [])
-}
-
 export interface RowAction {
   hideAction: boolean | ((original: object) => boolean)
   action?: ((original: object) => void) | (() => void)
@@ -72,16 +71,26 @@ export interface RowAction {
   text?: string
 }
 
+export interface CustomRowAction {
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  disabled?: boolean | ((original: object) => boolean)
+  onClick: ((original: object) => void) | (() => void)
+  tooltipText?: any
+  extraClass?: string
+}
+
 export interface CustomCellProps {
   cell: CellProps<object>
 }
-
 
 type ExtendedColumn = Column & {
   defaultHidden?: boolean
 }
 
-export interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
+export interface ExtendedRow<T extends object>
+  extends Row,
+    UseExpandedRowProps<T>,
+    UseRowStateRowProps<T> {
   subRows: Array<Row<any>>
 }
 
@@ -106,38 +115,114 @@ interface TableProps {
   globalFilter?: string | ((rows: Array<Row>) => Row[])
   defaultGlobalFilter?: string
   checkRowSelected?: (row: object) => boolean
-  getRowId?: ((originalRow: object, relativeIndex: number, parent?: (Row<object> | undefined)) => string)
+  checkRowHighlighted?: (row: object) => boolean
+  getRowId?: (
+    originalRow: object,
+    relativeIndex: number,
+    parent?: Row<object> | undefined
+  ) => string
   addFilterToUrl?: boolean
-  RowSubComponent?: React.FC<{row: any}>
+  RowSubComponent?: React.FC<{ row: any }>
   listenerPrefix?: string
   onRowClick?: (row?: Row) => void
   miniTable?: boolean
   fixedPageSize?: number
   disableActionsPortal?: boolean
   colPropForShowColumns?: string
+  manualPagination?: boolean
+  itemsAmount?: number
+  canExpandAll?: boolean
+  loading?: boolean
+  onFiltersChanged?: (newFilters: Filters<object>) => void
+  defaultDescendingSort?: boolean
+  customRowActions?: CustomRowAction[]
+  manualFilters?: boolean
+  initialFilters?: Filter[]
 }
 
 function Table({
-  columns, data, rowActions = [], tableActions, title, defaultSort = EMPTY_STRING, globalFilter, defaultGlobalFilter, checkRowSelected, getRowId,
-  addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick = NOP, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns
+  columns,
+  data,
+  rowActions = [],
+  tableActions,
+  title,
+  defaultSort = EMPTY_STRING,
+  globalFilter,
+  defaultGlobalFilter,
+  checkRowSelected,
+  checkRowHighlighted,
+  getRowId,
+  addFilterToUrl,
+  RowSubComponent,
+  listenerPrefix,
+  onRowClick = NOP,
+  miniTable,
+  filterCategory,
+  fixedPageSize,
+  disableActionsPortal,
+  maxRows,
+  emptyMessage,
+  colPropForShowColumns,
+  manualPagination,
+  itemsAmount,
+  canExpandAll = false,
+  loading,
+  onFiltersChanged,
+  defaultDescendingSort = false,
+  customRowActions,
+  manualFilters,
+  initialFilters: initialUserFilters
 }: TableProps) {
-  const LSFilters = localStorageService.getItem(SAVED_FILTERS)
-  const filtersInLocalStorage = (LSFilters && JSON.parse(LSFilters)[filterCategory]) || EMPTY_STRING
-
-  const [searchParams] = useSearchParams()
-
   const LSHidden = localStorageService.getItem(SAVED_HIDDEN)
-  const hiddenInLocalStorage = (LSHidden && JSON.parse(LSHidden)[filterCategory])
-    || columns.filter(({ defaultHidden }) => defaultHidden).map(({ Header, accessor }) => (Utils.isString(accessor) ? accessor : Header))
+  const hiddenInLocalStorage =
+    (LSHidden && JSON.parse(LSHidden)[filterCategory]) ||
+    columns
+      .filter(({ defaultHidden }) => defaultHidden)
+      .map(({ Header, accessor }) =>
+        Utils.isString(accessor) ? accessor : Header
+      )
 
-  const defaultColumn = React.useMemo(() => ({
-    Cell: DefaultCell,
-    width: 100,
-    sortType: Utils.stringSort
-  }), [])
+  const defaultColumn = React.useMemo(
+    () => ({
+      Cell: DefaultCell,
+      width: 100,
+      sortType: Utils.stringSort
+    }),
+    []
+  )
 
-  const navigate = useNavigate()
-  const urlFilters = addFilterToUrl ? useMemo(() => parseURLFilters(window.location.search ? searchParams : Utils.parseParamsToQuery(filtersInLocalStorage)), []) : []
+  const columnIds = useMemo(
+    () =>
+      columns.flatMap((col) => {
+        const id = col.id ?? col.accessor
+
+        return typeof id === 'string' ? id : []
+      }),
+    [columns]
+  )
+
+  const [urlFilters, setUrlFilters] = useUrlFilters({
+    enabled: addFilterToUrl,
+    filterIds: columnIds,
+    filterCategory
+  })
+
+  const { current: initialUrlFilters = [] } = useRef(urlFilters)
+
+  const initialFilters = useMemo(
+    () =>
+      initialUserFilters
+        ? [...initialUserFilters]
+            .filter(
+              ({ id }) =>
+                !initialUrlFilters.find((urlFilter) => urlFilter.id === id)
+            )
+            .concat(initialUrlFilters)
+        : initialUrlFilters,
+
+    []
+  )
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -158,17 +243,22 @@ function Table({
     setFilter,
     setAllFilters,
     visibleColumns,
-    setHiddenColumns
+    setHiddenColumns,
+    getToggleAllRowsExpandedProps,
+    isAllRowsExpanded
   } = useTable(
     {
       columns,
       data,
+      manualPagination,
       defaultColumn,
       globalFilter,
       initialState: {
         pageSize: fixedPageSize || 50,
-        ...(defaultSort && { sortBy: [{ id: defaultSort, desc: false }] }),
-        filters: formatParsedFilters(urlFilters),
+        ...(defaultSort && {
+          sortBy: [{ id: defaultSort, desc: defaultDescendingSort }]
+        }),
+        filters: initialFilters,
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage
       },
@@ -180,7 +270,8 @@ function Table({
       autoResetGlobalFilter: false,
       autoResetHiddenColumns: false,
       getRowId,
-      sortTypes
+      sortTypes,
+      manualFilters
     },
     useRowState,
     useFilters,
@@ -202,7 +293,11 @@ function Table({
   const tableRef = useRef<null | HTMLDivElement>(null)
   const isExpandable = !!RowSubComponent
 
-  const cleanFilters = useMemo(() => filters.filter(({ id }) => allColumns.find((column) => id === column.id)), [filters])
+  const cleanFilters = useMemo(
+    () =>
+      filters.filter(({ id }) => allColumns.find((column) => id === column.id)),
+    [filters]
+  )
 
   interface ExtendedEvent extends Event {
     detail: {
@@ -223,6 +318,11 @@ function Table({
   }
 
   useEffect(() => {
+    onFiltersChanged?.(filters)
+    if (addFilterToUrl) setUrlFilters(filters)
+  }, [filters, addFilterToUrl])
+
+  useEffect(() => {
     setHiddenColumns((hiddenColumns) => {
       localStorageService.updateHidden(filterCategory, hiddenColumns)
       return hiddenColumns
@@ -231,26 +331,20 @@ function Table({
 
   useEffect(() => {
     if (listenerPrefix) {
-      document.addEventListener(`${listenerPrefix}${FILTER_CHANGE_LISTENER}`, addOrRemoveFromFilter as EventListener)
+      document.addEventListener(
+        `${listenerPrefix}${FILTER_CHANGE_LISTENER}`,
+        addOrRemoveFromFilter as EventListener
+      )
       Utils.dispatchCustomEvent(`${listenerPrefix}${FILTER_LISTENER}`, filters)
       return () => {
-        document.removeEventListener(`${listenerPrefix}${FILTER_CHANGE_LISTENER}`, addOrRemoveFromFilter as EventListener)
+        document.removeEventListener(
+          `${listenerPrefix}${FILTER_CHANGE_LISTENER}`,
+          addOrRemoveFromFilter as EventListener
+        )
       }
     }
     return () => {}
   }, [filters])
-
-  useEffect(() => {
-    if (addFilterToUrl) {
-      const formatFilters = cleanFilters.reduce((acc: {[key: string]: any}, { id, value }) => {
-        acc[id] = value
-        return acc
-      }, {})
-      const queryParams = Utils.parseParamsToQuery(formatFilters)
-      navigate({ search: queryParams.toString() }, { replace: true })
-      localStorageService.updateFilters(filterCategory, formatFilters)
-    }
-  }, [cleanFilters])
 
   useEffect(() => {
     gotoPage(0)
@@ -272,12 +366,15 @@ function Table({
     }
   }, [fixedPageSize])
 
-  const calcNumberOfRows = useCallback(_.debounce(() => {
-    const tableHeight = tableRef.current?.clientHeight
-    if (tableHeight && !miniTable && !fixedPageSize) {
-      setPageSize(tableHeight / 35)
-    }
-  }, 350), [])
+  const calcNumberOfRows = useCallback(
+    _.debounce(() => {
+      const tableHeight = tableRef.current?.clientHeight
+      if (tableHeight && !miniTable && !fixedPageSize) {
+        setPageSize(tableHeight / 35)
+      }
+    }, 350),
+    []
+  )
 
   useEffect(() => {
     calcNumberOfRows()
@@ -293,140 +390,262 @@ function Table({
         <div className='table-top'>
           <div>
             <span className='heading-4'>{title}</span>
-            <span className='sub-title'>{`${rows.length} ${maxRows ? `(max ${maxRows})` : EMPTY_STRING}`}</span>
-            {allColumns.length > 2 && <ShowColumns columns={allColumns} colProperty={colPropForShowColumns || 'Header'} />}
+            <span className='sub-title'>
+              {`${itemsAmount || rows.length} ${
+                maxRows ? `(max ${maxRows})` : EMPTY_STRING
+              }`}
+            </span>
+            {allColumns.length > 2 && (
+              <ShowColumns
+                columns={allColumns}
+                colProperty={colPropForShowColumns || 'Header'}
+              />
+            )}
+            {canExpandAll && isExpandable && (
+              <span
+                {...getToggleAllRowsExpandedProps()}
+                className='expand-all-icon'
+              >
+                <Tooltip
+                  data={isAllRowsExpanded ? 'Collapse all' : 'Expand all'}
+                >
+                  <IconButton>
+                    <ThinArrow
+                      className={`${
+                        isAllRowsExpanded ? 'rotate180' : EMPTY_STRING
+                      }`}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </span>
+            )}
           </div>
           {!Utils.isEmpty(cleanFilters) && (
             <div className='table-filters'>
-              {cleanFilters.map(({ id, value }) => <FilterBox key={id} name={id} text={value} onDelete={() => setFilter(id, undefined)} />)}
+              {!Utils.isEmpty(cleanFilters) &&
+                cleanFilters.map(({ id, value }) => (
+                  <FilterBox
+                    key={id}
+                    name={id}
+                    value={value}
+                    onDelete={() => {
+                      setFilter(id, undefined)
+                    }}
+                  />
+                ))}
               <div className='table-filters-clear'>
                 <Tooltip data='Clear Filters'>
-                  <IconButton onClick={() => setAllFilters([])}>
+                  <IconButton
+                    onClick={() => {
+                      setAllFilters([])
+                    }}
+                  >
                     <ClearFilters />
                   </IconButton>
                 </Tooltip>
               </div>
             </div>
           )}
-          <div className='table-actions'>
-            {tableActions}
-          </div>
+          <div className='table-actions'>{tableActions}</div>
         </div>
       )}
-      <div className={wrapperClasses} ref={tableRef}>
-        <table {...getTableProps()} className={tableClass}>
-          <thead className='sticky-header'>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-                {isExpandable ? <th className='table-header header-cell-for-expandable' /> : null}
-                {headerGroup.headers.map((column: ExtendedHeaderGroup) => (
-                  <th {...column.getHeaderProps()} className='table-header'>
-                    <Tooltip data={column.tooltip}>
-                      <span
-                        className={`table-headline ${column.disableSort ? 'disable-sort' : EMPTY_STRING}`}
-                        onClick={() => {
-                          if (!column.disableSort) {
-                            toggleSortBy(column.id, column.isSortedDesc === undefined ? false : !column.isSortedDesc)
-                          }
-                        }}
-                      >
-                        {column.render('Header')}
-                      </span>
-                    </Tooltip>
-                    {column.Filter ? column.render('Filter') : null}
-                    {column.isSorted
-                    && (
-                      <div
-                        className='table-sort'
-                        onClick={() => toggleSortBy(column.id, !column.isSortedDesc)}
-                      >
-                        {column.isSortedDesc ? <LongArrow className='rotate180' /> : <LongArrow />}
-                      </div>
+      {!loading ? (
+        <div className={wrapperClasses} ref={tableRef}>
+          <table {...getTableProps()} className={tableClass}>
+            <thead className='sticky-header'>
+              {headerGroups.map((headerGroup) => {
+                const { key, ...headerGroupProps } =
+                  headerGroup.getHeaderGroupProps()
+                return (
+                  <tr {...headerGroupProps} key={key}>
+                    {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                    {isExpandable ? (
+                      <th className='table-header header-cell-for-expandable' />
+                    ) : null}
+                    {headerGroup.headers.map((column: ExtendedHeaderGroup) => {
+                      const { key, ...headerProps } = column.getHeaderProps()
+                      return (
+                        <th {...headerProps} key={key} className='table-header'>
+                          <Tooltip data={column.tooltip}>
+                            <span
+                              className={`table-headline ${
+                                column.disableSort
+                                  ? 'disable-sort'
+                                  : EMPTY_STRING
+                              }`}
+                              onClick={() => {
+                                if (!column.disableSort) {
+                                  toggleSortBy(
+                                    column.id,
+                                    column.isSortedDesc === undefined
+                                      ? false
+                                      : !column.isSortedDesc
+                                  )
+                                }
+                              }}
+                            >
+                              {column.render('Header')}
+                            </span>
+                          </Tooltip>
+                          {column.Filter ? column.render('Filter') : null}
+
+                          {!column.disableSort &&
+                            (column.isSorted ||
+                              (!column.isSorted && !column.Header)) && (
+                              <div
+                                className={classNames(
+                                  'table-sort',
+                                  !column.isSorted &&
+                                    !column.Header &&
+                                    'table-sort-no-title'
+                                )}
+                                onClick={() =>
+                                  toggleSortBy(column.id, !column.isSortedDesc)
+                                }
+                              >
+                                {column.isSortedDesc ? (
+                                  <LongArrow className='rotate180' />
+                                ) : (
+                                  <LongArrow />
+                                )}
+                              </div>
+                            )}
+                        </th>
+                      )
+                    })}
+                    {!Utils.isEmpty(customRowActions) &&
+                      customRowActions.map(({ tooltipText }) => (
+                        <th
+                          className='table-header table-header-actions'
+                          key={tooltipText}
+                        >
+                          {EMPTY_STRING}
+                        </th>
+                      ))}
+                    {!Utils.isEmpty(rowActions) && (
+                      <th className='table-header table-header-actions'>
+                        {EMPTY_STRING}
+                      </th>
                     )}
-                  </th>
-                ))}
-                {!Utils.isEmpty(rowActions) && (
-                  <th className='table-header table-header-actions'>{EMPTY_STRING}</th>
-                )}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()} className='table-body' emptymessage={emptyMessage || (title ? `No ${title}` : `No ${rows}`)}>
-            {page.map((row) => {
-              const extendedRow = row as ExtendedRow<object>
-              prepareRow(extendedRow)
-              const classes = classNames({
-                'table-line': true,
-                clickable: onRowClick !== NOP || isExpandable,
-                'is-expand': extendedRow.isExpanded,
-                'is-selected': checkRowSelected?.(extendedRow.original)
-              })
-              return (
-                <React.Fragment key={extendedRow.getRowProps().key}>
-                  <tr
-                    {...extendedRow.getRowProps()}
-                    className={classes}
-                  >
-                    {isExpandable
-                      && (
+                  </tr>
+                )
+              })}
+            </thead>
+            <tbody
+              {...getTableBodyProps()}
+              className='table-body'
+              emptymessage={
+                emptyMessage || (title ? `No ${title}` : `No ${rows}`)
+              }
+            >
+              {page.map((row) => {
+                const extendedRow = row as ExtendedRow<object>
+                prepareRow(extendedRow)
+                const classes = classNames({
+                  'table-line': true,
+                  clickable: onRowClick !== NOP || isExpandable,
+                  'is-expand': extendedRow.isExpanded,
+                  'is-selected': checkRowSelected?.(extendedRow.original),
+                  'is-highlighted': checkRowHighlighted?.(extendedRow.original)
+                })
+                return (
+                  <React.Fragment key={extendedRow.getRowProps().key}>
+                    <tr {...extendedRow.getRowProps()} className={classes}>
+                      {isExpandable && (
                         <td
                           className='expand-cell'
                           onClick={() => onRowClick(extendedRow.original)}
-                          {...(!!RowSubComponent && { onClick: extendedRow.getToggleRowExpandedProps().onClick })}
+                          {...(!!RowSubComponent && {
+                            onClick:
+                              extendedRow.getToggleRowExpandedProps().onClick
+                          })}
                         >
-                          {extendedRow.isExpanded
-                            ? <Arrow />
-                            : <Arrow className='rotate270' />}
+                          {extendedRow.isExpanded ? (
+                            <Arrow />
+                          ) : (
+                            <Arrow className='rotate270' />
+                          )}
                         </td>
                       )}
-                    {extendedRow.cells.map((cell) => (
-                      <td
-                        {...cell.getCellProps()}
-                        className='table-cell'
-                        onClick={() => onRowClick(extendedRow.original)}
-                        {...(!!RowSubComponent && { onClick: extendedRow.getToggleRowExpandedProps().onClick })}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                    {!Utils.isEmpty(rowActions) && (
-                      <td className='td-actions'>
-                        <ActionsCell row={extendedRow} actions={rowActions} disablePortal={disableActionsPortal} />
-                      </td>
-                    )}
-                  </tr>
-                  {extendedRow.isExpanded && RowSubComponent ? (
-                    <tr className='sub-table-line'>
-                      <td>
-                        <RowSubComponent row={extendedRow} />
-                      </td>
+                      {extendedRow.cells.map((cell) => (
+                        <td
+                          {...cell.getCellProps()}
+                          className='table-cell'
+                          onClick={() => onRowClick(extendedRow.original)}
+                          {...(!!RowSubComponent && {
+                            onClick:
+                              extendedRow.getToggleRowExpandedProps().onClick
+                          })}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      ))}
+                      {!Utils.isEmpty(customRowActions) &&
+                        customRowActions.map((action) => (
+                          <td className='td-actions' key={action.tooltipText}>
+                            <IconButtonCell row={extendedRow} action={action} />
+                          </td>
+                        ))}
+                      {!Utils.isEmpty(rowActions) && (
+                        <td className='td-actions'>
+                          <ActionsCell
+                            row={extendedRow}
+                            actions={rowActions}
+                            disablePortal={disableActionsPortal}
+                          />
+                        </td>
+                      )}
                     </tr>
-                  ) : null}
-                </React.Fragment>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-      {(!miniTable || fixedPageSize) && (
+                    {extendedRow.isExpanded && RowSubComponent ? (
+                      <tr className='sub-table-line'>
+                        <td>
+                          <RowSubComponent row={extendedRow} />
+                        </td>
+                      </tr>
+                    ) : null}
+                  </React.Fragment>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <Loader />
+      )}
+
+      {(!miniTable || fixedPageSize) && !manualPagination && (
         <div className='footer'>
           <div className='pagination-wrapper'>
             <div className='pagination'>
               <Tooltip data={canPreviousPage ? 'First Page' : EMPTY_STRING}>
-                <LastArrow onClick={() => gotoPage(0)} className='rotate180' disabled={!canPreviousPage} />
+                <LastArrow
+                  onClick={() => gotoPage(0)}
+                  className='rotate180'
+                  disabled={!canPreviousPage}
+                />
               </Tooltip>
               <Tooltip data={canPreviousPage ? 'Previous Page' : EMPTY_STRING}>
-                <Arrow onClick={previousPage} className='rotate90' disabled={!canPreviousPage} />
+                <Arrow
+                  onClick={previousPage}
+                  className='rotate90'
+                  disabled={!canPreviousPage}
+                />
               </Tooltip>
               <span className='note'>
                 {`${pageIndex + 1} / ${pageCount || 1}`}
               </span>
-              <Tooltip data={canNextPage ? 'Next Page': EMPTY_STRING}>
-                <Arrow onClick={nextPage} className='rotate270' disabled={!canNextPage} />
+              <Tooltip data={canNextPage ? 'Next Page' : EMPTY_STRING}>
+                <Arrow
+                  onClick={nextPage}
+                  className='rotate270'
+                  disabled={!canNextPage}
+                />
               </Tooltip>
               <Tooltip data={canNextPage ? 'Last Page' : EMPTY_STRING}>
-                <LastArrow onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} />
+                <LastArrow
+                  onClick={() => gotoPage(pageCount - 1)}
+                  disabled={!canNextPage}
+                />
               </Tooltip>
             </div>
           </div>

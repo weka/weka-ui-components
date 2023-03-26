@@ -12,7 +12,7 @@ declare const utils: {
     };
     isEmpty(val: any): boolean;
     isString: (value: any) => boolean;
-    isObject: (value: any) => boolean;
+    isObject: (value: any) => value is Record<string, unknown>;
     insensitiveSort(array: any[], key: string): any[];
     range(startOrEnd: number, end?: number, step?: number): number[];
     mask2SubnetOp(val: number): string;

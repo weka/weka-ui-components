@@ -86,12 +86,13 @@ interface SelectProps {
   isClearable?: boolean
   autoFocus?: boolean
   groupedOptions?: boolean
+  isSingleClearable?: boolean
 }
 
 function Select(props: SelectProps) {
   const {
-    onChange = NOP, options, value, wrapperClass, isMulti, label,
-    disabled, sortOptions, error, placeholder, info, isRequired, redInfo = NOP, isClearable = true, autoFocus = false, groupedOptions = false, ...rest
+    onChange = NOP, options, value, wrapperClass = EMPTY_STRING, isMulti, label,
+    disabled, sortOptions, error, placeholder, info, isRequired, redInfo = NOP, isSingleClearable = false, isClearable = true, autoFocus = false, groupedOptions = false, ...rest
   } = props
   const [saveOptions, setSaveOptions] = useState(null)
 
@@ -124,10 +125,14 @@ function Select(props: SelectProps) {
 
   function onSelectChange(data) {
     if (!isMulti) {
-      const { value: newValue } = data
-      onChange(newValue)
+      if (data) {
+        const { value: newValue } = data
+        onChange(newValue)
+      } else {
+        onChange(EMPTY_STRING)
+      }
     } else {
-      onChange(data.map((option) => option.value))
+      onChange(data.map((option: Option) => option.value))
     }
   }
 
@@ -159,7 +164,7 @@ function Select(props: SelectProps) {
         options={saveOptions}
         autosize
         isMulti={isMulti}
-        isClearable={isMulti && isClearable}
+        isClearable={(isMulti && isClearable) || isSingleClearable}
         onChange={onSelectChange}
         classNamePrefix='react-select'
         dropdownAlign={{ offset: [0, 0] }}

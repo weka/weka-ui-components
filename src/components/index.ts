@@ -16,10 +16,11 @@ export { default as Tab } from "./Tab"
 export { default as Toast } from "./Toast"
 export { default as ToggleButton } from "./ToggleButton"
 export { default as Tooltip } from "./Tooltip"
-export { default as Table} from "./Table"
+export { default as Table, useUrlFilters } from './Table'
 export { default as MultiSelectFilter } from "./Table/filters/MultiSelectFilter"
 export { default as SelectFilter} from "./Table/filters/SelectFilter"
 export { default as TextFilter} from "./Table/filters/TextFilter"
+export { default as SeverityFilter } from './Table/filters/SeverityFilter'
 export { default as ActionsCell} from "./Table/cells/ActionsCell"
 export { default as ApiCallCell} from "./Table/cells/ApiCallCell"
 export { default as BarCell} from "./Table/cells/BarCell"
@@ -34,5 +35,14 @@ export { default as TimeCell} from "./Table/cells/TimeCell"
 export { default as UptimeCell} from "./Table/cells/UptimeCell"
 export { default as SeverityCell} from "./Table/cells/SeverityCell"
 export { default as DateCell} from "./Table/cells/DateCell"
+export { default as NodeCell} from "./Table/cells/NodeCell"
+export { default as IconButtonCell} from "./Table/cells/IconButtonCell"
 export { default as DateTimePicker} from "./DateTimePicker"
 export { default as NumInput} from "./DateTimePicker/components/NumInput"
+export { default as Pagination} from "./Table/Pagination"
+export { default as PerPage } from './Table/PerPage'
+export { default as DateFilter } from './Table/filters/DateFilter'
+export { default as FilterButton } from './FilterButton'
+export { default as FilterHeader } from './Table/filters/FilterHeader'
+export { default as FilterBox } from './FilterBox'
+export { default as EntityCell } from './Table/cells/EntityCell'
