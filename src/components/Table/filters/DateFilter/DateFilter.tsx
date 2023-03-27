@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
 import DateTimePicker from '../../../DateTimePicker'
 import FilterWrapper from '../FilterWrapper'
@@ -36,6 +36,11 @@ function DateFilter({ column }: DateFilterProps) {
   const [to, onToChange] = useState(
     filterValue?.endTime ? DateTime.fromISO(filterValue.endTime) : undefined
   )
+
+  useEffect(() => {
+    if (!filterValue)
+    onFromChange(undefined)
+  }, [filterValue])
 
   return (
     <FilterWrapper setFilter={setFilter} columnTitle={id || Header} hideWrapper>
