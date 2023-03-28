@@ -4,7 +4,7 @@ import { GENERAL_ERROR } from '../../consts'
 import './errorPage.scss'
 
 interface ErrorPageProps {
-    error: ReactNode | string
+  error?: ReactNode | string
 }
 function ErrorPage({ error = GENERAL_ERROR }: ErrorPageProps) {
   return (

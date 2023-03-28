@@ -43,7 +43,7 @@ interface EmptyPageMessageProps {
 declare function EmptyPageMessage({ children }: EmptyPageMessageProps): JSX.Element;
 
 interface ErrorPageProps {
-    error: ReactNode | string;
+    error?: ReactNode | string;
 }
 declare function ErrorPage({ error }: ErrorPageProps): JSX.Element;
 
