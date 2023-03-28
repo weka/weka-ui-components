@@ -2,15 +2,15 @@
   opacity: 1 !important;
   width: 26px;
   height: 26px;
-  position: absolute;
+  position: absolute!important;
   top: 2px;
   right: 2px;
   &:hover {
-    background-color: #0000000a;
+    background-color: #0000000a!important;
   }
   svg {
     path {
-      fill: var(--toast-text);
+      fill: var(--toast-text)!important;
     }
   }
 }
