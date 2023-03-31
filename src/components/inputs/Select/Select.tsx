@@ -12,6 +12,7 @@ import { Info } from '../../../svgs'
 import Tooltip from '../../Tooltip'
 
 import './select.scss'
+import MenuList from './MenuList'
 
 const getStyle = (hasError, hasLabel) => ({
   menuPortal: (provided, state) => {
@@ -172,7 +173,8 @@ function Select(props: SelectProps) {
           Option: SelectOption,
           SingleValue,
           MultiValue,
-          ClearIndicator
+          ClearIndicator,
+          MenuList
         }}
         menuPortalTarget={document.body}
         closeMenuOnSelect={!isMulti}
