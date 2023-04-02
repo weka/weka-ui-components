@@ -1,6 +1,6 @@
 {
   "name": "@weka.io/weka-ui-components",
-  "version": "0.0.19",
+  "version": "1.13",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -44,10 +44,10 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.11.1",
+    "luxon": "^3.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.6.2",
-    "luxon": "^3.2.1"
+    "react-router-dom": "^6.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -98,11 +98,11 @@
     "gh-pages": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "identity-obj-proxy": "^3.0.0",
+    "luxon": "^3.2.1",
     "postcss": "^8.4.20",
     "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "luxon": "^3.2.1",
     "rollup": "^2.60.0",
     "rollup-plugin-dts": "^4.0.1",
     "rollup-plugin-postcss": "^4.0.1",

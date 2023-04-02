@@ -89,7 +89,7 @@ const utils = {
     .join('.')
 },
   formatStringOption: (option: string) => ({ label: option, value: option }),
-  parseParamsToQuery: (params: {[key: string]: any}) => {
+  parseParamsToQuery: (params: { [key: string]: any }) => {
     if (!params) {
       return {}
     }
@@ -102,7 +102,9 @@ const utils = {
         })
       } else if (utils.isObject(value)) {
         Object.entries(value).forEach(([innerKey, innerVal]) => {
-          acc.append(`${key}[${innerKey}]`, innerVal as any)
+          if (innerVal) {
+            acc.append(`${key}[${innerKey}]`, innerVal as any)
+          }
         })
       } else if (!utils.isEmpty(value)) {
         acc.append(key, value)
@@ -110,6 +112,43 @@ const utils = {
       return acc
     }, new URLSearchParams())
   },
+  parseSearchParamsToObject: (searchParams: URLSearchParams) =>
+    [...searchParams].reduce<
+      Record<string, string[] | Record<string, string[]>>
+    >((acc, [key, value]) => {
+      const matchedObj = key.match(/([A-z_-]+)\[([A-z_-]+)\]/)
+      if (matchedObj) {
+        const [, objName, objKey] = matchedObj
+
+        let objectValue = acc[objName]
+
+        if (Array.isArray(objectValue)) {
+          return acc
+        }
+
+        if (!objectValue) {
+          objectValue = {}
+          acc[objName] = objectValue
+        }
+
+        if (!objectValue[objKey]) {
+          objectValue[objKey] = []
+        }
+
+        objectValue[objKey].push(value)
+      } else if (!acc[key] || Array.isArray(acc[key])) {
+        let arr = acc[key]
+
+        if (!Array.isArray(arr)) {
+          arr = []
+        }
+
+        arr.push(value)
+        acc[key] = arr
+      }
+
+      return acc
+    }, {}),
   dispatchCustomEvent: (id: string, data: any) => {
     document.dispatchEvent(new CustomEvent(id, { detail: data }))
   },
@@ -245,7 +284,7 @@ const utils = {
       return 'Not Valid DateTime Object'
     }
     return utils.formatISODate(dateIn.toISO(), showMili, showSeconds, showTime)
-  },
+  }
 }
 
 export default utils

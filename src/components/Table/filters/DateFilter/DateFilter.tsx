@@ -38,8 +38,10 @@ function DateFilter({ column }: DateFilterProps) {
   )
 
   useEffect(() => {
-    if (!filterValue)
-    onFromChange(undefined)
+    if (!filterValue) {
+      onFromChange(undefined)
+      onToChange(undefined)
+    }
   }, [filterValue])
 
   return (

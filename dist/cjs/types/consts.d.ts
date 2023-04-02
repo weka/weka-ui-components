@@ -2,6 +2,7 @@ export declare const EMPTY_STRING = "";
 export declare const NOP: () => void;
 export declare const TAG_SEPARATOR = ",";
 export declare const SAVED_FILTERS = "saved_filters";
+export declare const EXPLICITLY_REMOVED_FILTERS = "explicitly_removed_filters";
 export declare const SAVED_HIDDEN = "saved_hidden";
 export declare const FILTER_CHANGE_LISTENER = "table-filters-change";
 export declare const FILTER_LISTENER = "table-filters";

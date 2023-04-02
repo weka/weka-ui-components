@@ -14,4 +14,8 @@ declare global {
       | boolean
       | Record<string, string | boolean>
   }
+
+  interface ExtendedFilter extends Filter {
+    defaultFilter?: boolean
+  }
 }

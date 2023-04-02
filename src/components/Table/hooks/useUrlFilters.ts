@@ -1,104 +1,76 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { Utils } from '../../..'
 import { SAVED_FILTERS } from '../../../consts'
 import localStorageService from '../../../localStorageService'
-import utils from '../../../utils'
 
-const parseSearchParams = (searchParams: URLSearchParams) =>
-  [...searchParams].reduce<Record<string, string[] | Record<string, string[]>>>(
-    (acc, [key, value]) => {
-      const matchedObj = key.match(/([A-z_-]+)\[([A-z_-]+)\]/)
-      if (matchedObj) {
-        const [, objName, objKey] = matchedObj
+export interface UrlFilterParser {
+  (rawValue: string[] | Record<string, string[]>):
+    | ExtendedFilter['value']
+    | null
+}
 
-        if (!acc[objName]) {
-          acc[objName] = {}
-        }
-        if (!acc[objName][objKey]) {
-          acc[objName][objKey] = value
-        }
-      } else if (!acc[key] || Array.isArray(acc[key])) {
-        if (!acc[key]) {
-          acc[key] = []
-        }
-        acc[key].push(value)
-      }
-
-      return acc
-    },
-    {}
-  )
-
-export const useUrlFilters = ({
+function useUrlFilters({
   enabled = true,
-  filterIds,
-  initial,
+  filterConfig,
   filterCategory
 }: {
   enabled?: boolean
-  filterIds: string[]
-  initial?: Filter[]
+  filterConfig: { id: string; filterParser: UrlFilterParser }[]
   filterCategory: string
-}) => {
-  const getLocalStorageFilters = (): Record<Filter['id'], Filter['value']> => {
+}): [
+  ExtendedFilter[],
+  (
+    filters:
+      | ExtendedFilter[]
+      | ((prevState: ExtendedFilter[]) => ExtendedFilter[])
+  ) => void
+] {
+  const getLocalStorageFilters = (): Record<
+    ExtendedFilter['id'],
+    ExtendedFilter['value']
+  > => {
     const LSFilters = localStorageService.getItem(SAVED_FILTERS)
     return (LSFilters && JSON.parse(LSFilters)[filterCategory]) || {}
   }
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [filters, setFilters] = useState<Filter[]>(() => {
-    if (!enabled) return []
-    if (initial) return initial
+  const navigate = useNavigate()
 
-    const parsedSearchParams = window.location.search
-      ? parseSearchParams(searchParams)
-      : getLocalStorageFilters()
-
-    return filterIds.flatMap((column) => {
-      const filterValue = parsedSearchParams[column]
-      return filterValue ? { id: column, value: filterValue } : []
-    })
-  })
-
-  const setUrlFilters = (filters: Filter[]) => {
-    const currentSearchParams = new URLSearchParams(window.location.search)
-    const paramsArr = [...currentSearchParams]
-
-    filterIds.forEach((column) => {
-      currentSearchParams.delete(column)
-      paramsArr.forEach(([key]) => {
-        if (key.match(new RegExp(`${column}\\[.+\\]`))) {
-          currentSearchParams.delete(key)
-        }
-      })
-    })
-
-    filters.forEach(({ id, value }) => {
-      if (Array.isArray(value)) {
-        value.forEach((val) => {
-          if (val) {
-            currentSearchParams.append(id, val.toString())
-          }
-        })
-      } else if (utils.isObject(value)) {
-        Object.entries(value).forEach(([innerKey, innerVal]) => {
-          if (innerVal) {
-            currentSearchParams.append(
-              `${id}[${innerKey}]`,
-              innerVal.toString()
-            )
-          }
-        })
-      } else if (!utils.isEmpty(value)) {
-        currentSearchParams.append(id, value.toString())
+  const [filters, setFilters] = useState<ExtendedFilter[]>(
+    (): ExtendedFilter[] => {
+      if (!enabled) {
+        return []
       }
-    })
 
-    setFilters(filters)
+      if (window.location.search) {
+        const searchParams = new URLSearchParams(window.location.search)
+        const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
 
-    setSearchParams(currentSearchParams.toString(), { replace: true })
+        return filterConfig.flatMap(({ id, filterParser }) => {
+          const parsedValue = filterParser(parsedSearchParams[id])
+          return parsedValue ? { id: id, value: parsedValue } : []
+        })
+      }
 
-    const filtersObj = filters.reduce(
+      const parsedLSFilters = getLocalStorageFilters()
+
+      const filtersArr = filterConfig.flatMap(({ id }) => {
+        const parsedValue = parsedLSFilters[id]
+        return parsedValue ? { id: id, value: parsedValue } : []
+      })
+
+      return filtersArr
+    }
+  )
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+
+    const filtersWithoutDefault = filters.filter(
+      ({ defaultFilter }) => !defaultFilter
+    )
+
+    const filtersObj = filtersWithoutDefault.reduce(
       (acc: { [key: string]: any }, { id, value }) => {
         acc[id] = value
         return acc
@@ -106,13 +78,48 @@ export const useUrlFilters = ({
       {}
     )
     localStorageService.updateFilters(filterCategory, filtersObj)
-  }
 
-  useEffect(() => {
-    if (enabled) {
-      setUrlFilters(filters)
-    }
-  }, [enabled])
+    filterConfig.forEach(({ id }) => {
+      searchParams.delete(id)
+      const paramsArr = [...searchParams]
 
-  return [filters, setUrlFilters] as const
+      paramsArr.forEach(([key]) => {
+        if (key.match(new RegExp(`${id}\\[.+\\]`))) {
+          searchParams.delete(key)
+        }
+      })
+    })
+
+    filtersWithoutDefault.forEach(({ id, value }) => {
+      if (Array.isArray(value)) {
+        value.forEach((val) => {
+          if (val) {
+            searchParams.append(id, val.toString())
+          }
+        })
+      } else if (Utils.isObject(value)) {
+        Object.entries(value).forEach(([innerKey, innerVal]) => {
+          if (innerVal) {
+            searchParams.append(`${id}[${innerKey}]`, innerVal.toString())
+          }
+        })
+      } else if (!Utils.isEmpty(value)) {
+        searchParams.append(id, value.toString())
+      }
+    })
+
+    navigate(
+      {
+        pathname: window.location.pathname,
+        search: `?${searchParams.toString()}`
+      },
+      {
+        replace: true
+      }
+    )
+  }, [filters, navigate])
+
+  return [filters, setFilters]
 }
+
+export default useUrlFilters

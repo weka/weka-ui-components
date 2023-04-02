@@ -4,6 +4,7 @@ export const EMPTY_STRING = ''
 export const NOP = () => {}
 export const TAG_SEPARATOR = ','
 export const SAVED_FILTERS = 'saved_filters'
+export const EXPLICITLY_REMOVED_FILTERS = 'explicitly_removed_filters'
 export const SAVED_HIDDEN = 'saved_hidden'
 export const FILTER_CHANGE_LISTENER = 'table-filters-change'
 export const FILTER_LISTENER = 'table-filters'
@@ -159,4 +160,3 @@ export const ORIGIN_OPTIONS = {
   USER: 'USER',
   WEKA: 'WEKA'
 }
-

@@ -1,6 +1,15 @@
-export declare const useUrlFilters: ({ enabled, filterIds, initial, filterCategory }: {
-    enabled?: boolean | undefined;
-    filterIds: string[];
-    initial?: Filter[] | undefined;
+export interface UrlFilterParser {
+    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null;
+}
+declare function useUrlFilters({ enabled, filterConfig, filterCategory }: {
+    enabled?: boolean;
+    filterConfig: {
+        id: string;
+        filterParser: UrlFilterParser;
+    }[];
     filterCategory: string;
-}) => readonly [Filter[], (filters: Filter[]) => void];
+}): [
+    ExtendedFilter[],
+    (filters: ExtendedFilter[] | ((prevState: ExtendedFilter[]) => ExtendedFilter[])) => void
+];
+export default useUrlFilters;

@@ -23,6 +23,7 @@ declare const utils: {
     parseParamsToQuery: (params: {
         [key: string]: any;
     }) => {};
+    parseSearchParamsToObject: (searchParams: URLSearchParams) => Record<string, string[] | Record<string, string[]>>;
     dispatchCustomEvent: (id: string, data: any) => void;
     isNumber: (value: any) => boolean;
     stringSort: (rowA: {
