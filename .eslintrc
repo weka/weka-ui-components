@@ -22,7 +22,7 @@
       "version": "detect"
     }
   },
-  "plugins": ["babel", "react", "promise", "unused-imports", "prettier"],
+  "plugins": ["babel", "react", "promise", "unused-imports", "prettier", "react-hooks"],
   "env": {
     "browser": true
   },
@@ -110,12 +110,6 @@
       }
     ],
     "max-params": [2, 4],
-    "object-curly-newline": [
-      "error",
-      {
-        "multiline": true
-      }
-    ],
     "no-trailing-spaces": [
       "error",
       {
@@ -130,6 +124,9 @@
     ],
     "dot-location": ["error", "property"],
     "no-bitwise": [0],
-    "no-plusplus": [0]
+    "no-plusplus": [0],
+    "curly": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn" 
   }
 }

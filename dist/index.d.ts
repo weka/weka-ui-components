@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement, InputHTMLAttributes } from 'react';
-import { CellProps, Row, Filters, Column, UseExpandedRowProps, UseRowStateRowProps, UseFiltersColumnProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import { UseFiltersColumnProps, CellProps, Row, Filters, Column, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
 
@@ -346,6 +346,58 @@ interface TooltipProps {
 }
 declare function Tooltip({ children, clear, data, extraClass, ...rest }: TooltipProps): JSX.Element;
 
+interface ExtendedFiltersColumn$3<T extends object> extends UseFiltersColumnProps<T> {
+    fixedOptions: Array<any>;
+    Header: string;
+    id?: string;
+    [key: string]: any;
+}
+declare function SelectFilter({ column }: ExtendedFiltersColumn$3<object>): JSX.Element;
+
+interface ExtendedFiltersColumn$2<T extends object> extends UseFiltersColumnProps<T> {
+    fixedOptions: Array<any>;
+    Header: string;
+    id?: string;
+    [key: string]: any;
+}
+declare function MultiSelectFilter({ column }: ExtendedFiltersColumn$2<object>): JSX.Element;
+
+interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProps<T> {
+    Header: string;
+    id?: string;
+}
+interface DateFilterProps {
+    column: ExtendedFiltersColumn$1<object>;
+}
+declare function DateFilter({ column }: DateFilterProps): JSX.Element;
+
+interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
+    Header: string;
+    [key: string]: any;
+    byMinSeverity?: boolean;
+}
+declare function SeverityFilter({ column }: ExtendedFiltersColumn<object>): JSX.Element;
+
+declare function TextFilter({ column }: {
+    [key: string]: any;
+}): JSX.Element;
+
+interface UrlFilterParser {
+    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null;
+}
+declare function useUrlFilters({ enabled, filterConfig, filterCategory }: {
+    enabled?: boolean;
+    filterConfig: {
+        id: string;
+        filterParser: UrlFilterParser;
+    }[];
+    filterCategory: string;
+}): [
+    ExtendedFilter[],
+    (filters: ExtendedFilter[] | ((prevState: ExtendedFilter[]) => ExtendedFilter[])) => void
+];
+
+declare type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
 interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
     action?: ((original: object) => void) | (() => void);
@@ -363,8 +415,9 @@ interface CustomRowAction {
 interface CustomCellProps {
     cell: CellProps<object>;
 }
-declare type ExtendedColumn = Column & {
+declare type ExtendedColumn = Omit<Column, 'Filter'> & {
     defaultHidden?: boolean;
+    Filter: FilterComponent;
 };
 interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
     subRows: Array<Row<any>>;
@@ -406,40 +459,6 @@ interface TableProps {
     extraClass?: string;
 }
 declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClass, initialFilters: initialUserFilters }: TableProps): JSX.Element;
-
-declare const useUrlFilters: ({ enabled, filterIds, initial, filterCategory }: {
-    enabled?: boolean | undefined;
-    filterIds: string[];
-    initial?: Filter[] | undefined;
-    filterCategory: string;
-}) => readonly [Filter[], (filters: Filter[]) => void];
-
-interface ExtendedFiltersColumn$3<T extends object> extends UseFiltersColumnProps<T> {
-    fixedOptions: Array<any>;
-    Header: string;
-    id?: string;
-    [key: string]: any;
-}
-declare function MultiSelectFilter({ column }: ExtendedFiltersColumn$3<object>): JSX.Element;
-
-interface ExtendedFiltersColumn$2<T extends object> extends UseFiltersColumnProps<T> {
-    fixedOptions: Array<any>;
-    Header: string;
-    id?: string;
-    [key: string]: any;
-}
-declare function SelectFilter({ column }: ExtendedFiltersColumn$2<object>): JSX.Element;
-
-declare function TextFilter({ column }: {
-    [key: string]: any;
-}): JSX.Element;
-
-interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProps<T> {
-    Header: string;
-    [key: string]: any;
-    byMinSeverity?: boolean;
-}
-declare function SeverityFilter({ column }: ExtendedFiltersColumn$1<object>): JSX.Element;
 
 interface ActionsCellProps {
     actions: Array<RowAction>;
@@ -547,15 +566,6 @@ interface PerPageProps {
 }
 declare function PerPage({ value, onChange, options }: PerPageProps): JSX.Element;
 
-interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
-    Header: string;
-    id?: string;
-}
-interface DateFilterProps {
-    column: ExtendedFiltersColumn<object>;
-}
-declare function DateFilter({ column }: DateFilterProps): JSX.Element;
-
 interface FilterButtonProps {
     onClick: () => void;
     disable?: boolean;
@@ -607,6 +617,7 @@ declare const utils: {
     parseParamsToQuery: (params: {
         [key: string]: any;
     }) => {};
+    parseSearchParamsToObject: (searchParams: URLSearchParams) => Record<string, string[] | Record<string, string[]>>;
     dispatchCustomEvent: (id: string, data: any) => void;
     isNumber: (value: any) => boolean;
     stringSort: (rowA: {

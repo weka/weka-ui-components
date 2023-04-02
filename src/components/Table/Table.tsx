@@ -11,7 +11,8 @@ import {
   SAVED_HIDDEN,
   FILTER_CHANGE_LISTENER,
   FILTER_LISTENER,
-  NOP
+  NOP,
+  SEVERITIES
 } from '../../consts'
 import Tooltip from '../Tooltip'
 import {
@@ -48,7 +49,13 @@ import DefaultCell from './cells/DefaultCell'
 import IconButtonCell from './cells/IconButtonCell'
 import FilterBox from '../FilterBox'
 import Loader from '../Loader'
-import { useUrlFilters } from './hooks'
+import { useUrlFilters, useExplicitlyRemovedFilters } from './hooks'
+import SelectFilter from './filters/SelectFilter'
+import MultiSelectFilter from './filters/MultiSelectFilter'
+import DateFilter from './filters/DateFilter'
+import SeverityFilter from './filters/SeverityFilter'
+import TextFilter from './filters/TextFilter'
+import { UrlFilterParser } from './hooks/useUrlFilters'
 
 import './table.scss'
 
@@ -62,6 +69,47 @@ const sortTypes = {
     return valALength > valBLength ? 1 : -1
   }
 }
+
+export const filterParsersMap = new Map<FilterComponent, UrlFilterParser>()
+const stringParser: UrlFilterParser = (rawValue) => {
+  if (Array.isArray(rawValue) && rawValue[0]) {
+    return rawValue[0]
+  }
+  return null
+}
+
+const arrayParser: UrlFilterParser = (rawValue) =>
+  Array.isArray(rawValue) ? rawValue : null
+
+filterParsersMap.set(DateFilter, (rawValue) => {
+  if (
+    !Utils.isObject(rawValue) ||
+    (!rawValue?.startTime?.[0] && !rawValue?.endTime?.[0])
+  ) {
+    return null
+  }
+
+  return {
+    startTime: rawValue?.startTime?.[0],
+    endTime: rawValue?.endTime?.[0]
+  }
+})
+
+filterParsersMap.set(MultiSelectFilter, arrayParser)
+filterParsersMap.set(SelectFilter, stringParser)
+filterParsersMap.set(SeverityFilter, (rawValue) =>
+  typeof rawValue === 'string' && SEVERITIES.includes(rawValue)
+    ? rawValue
+    : null
+)
+filterParsersMap.set(TextFilter, stringParser)
+
+export type FilterComponent =
+  | typeof DateFilter
+  | typeof MultiSelectFilter
+  | typeof SelectFilter
+  | typeof SeverityFilter
+  | typeof TextFilter
 
 export interface RowAction {
   hideAction: boolean | ((original: object) => boolean)
@@ -83,8 +131,9 @@ export interface CustomCellProps {
   cell: CellProps<object>
 }
 
-type ExtendedColumn = Column & {
+type ExtendedColumn = Omit<Column, 'Filter'> & {
   defaultHidden?: boolean
+  Filter: FilterComponent
 }
 
 export interface ExtendedRow<T extends object>
@@ -175,6 +224,12 @@ function Table({
   extraClass,
   initialFilters: initialUserFilters
 }: TableProps) {
+  const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
+    () =>
+      initialUserFilters?.map((filter) => ({ ...filter, defaultFilter: true })),
+    [initialUserFilters]
+  )
+
   const LSHidden = localStorageService.getItem(SAVED_HIDDEN)
   const hiddenInLocalStorage =
     (LSHidden && JSON.parse(LSHidden)[filterCategory]) ||
@@ -193,37 +248,47 @@ function Table({
     []
   )
 
-  const columnIds = useMemo(
+  const [explicitlyRemovedFilters, updateExplicitlyRemovedFilters] =
+    useExplicitlyRemovedFilters(extendedInitialUserFilters)
+
+  const urlFilterConfig = useMemo(
     () =>
       columns.flatMap((col) => {
+        const filterParser = filterParsersMap.get(col.Filter)
         const id = col.id ?? col.accessor
 
-        return typeof id === 'string' ? id : []
+        if (!filterParser || typeof id !== 'string') {
+          return []
+        }
+
+        return {
+          id,
+          filterParser
+        }
       }),
-    [columns]
+    []
   )
 
   const [urlFilters, setUrlFilters] = useUrlFilters({
     enabled: addFilterToUrl,
-    filterIds: columnIds,
+    filterConfig: urlFilterConfig,
     filterCategory
   })
 
   const { current: initialUrlFilters = [] } = useRef(urlFilters)
 
-  const initialFilters = useMemo(
-    () =>
-      initialUserFilters
-        ? [...initialUserFilters]
-            .filter(
-              ({ id }) =>
-                !initialUrlFilters.find((urlFilter) => urlFilter.id === id)
-            )
-            .concat(initialUrlFilters)
-        : initialUrlFilters,
+  const initialFilters = useMemo(() => {
+    if (!extendedInitialUserFilters) {
+      return initialUrlFilters
+    }
 
-    []
-  )
+    return [...extendedInitialUserFilters]
+      .filter(({ id }) => !explicitlyRemovedFilters.has(id))
+      .filter(
+        ({ id }) => !initialUrlFilters.find((urlFilter) => urlFilter.id === id)
+      )
+      .concat(initialUrlFilters)
+  }, [])
 
   const {
     getTableProps,
@@ -283,6 +348,11 @@ function Table({
     usePagination,
     useFlexLayout
   )
+
+  useEffect(() => {
+    updateExplicitlyRemovedFilters(filters)
+  }, [filters])
+
   const isEmpty = !rows.length
   const tableClass = classNames({
     'empty-table': isEmpty,
@@ -321,7 +391,9 @@ function Table({
 
   useEffect(() => {
     onFiltersChanged?.(filters)
-    if (addFilterToUrl) setUrlFilters(filters)
+    if (addFilterToUrl) {
+      setUrlFilters(filters)
+    }
   }, [filters, addFilterToUrl])
 
   useEffect(() => {

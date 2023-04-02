@@ -1,6 +1,14 @@
 import React, { ReactNode } from 'react';
 import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps, Filters } from 'react-table';
+import SelectFilter from './filters/SelectFilter';
+import MultiSelectFilter from './filters/MultiSelectFilter';
+import DateFilter from './filters/DateFilter';
+import SeverityFilter from './filters/SeverityFilter';
+import TextFilter from './filters/TextFilter';
+import { UrlFilterParser } from './hooks/useUrlFilters';
 import './table.scss';
+export declare const filterParsersMap: Map<FilterComponent, UrlFilterParser>;
+export declare type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
 export interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
     action?: ((original: object) => void) | (() => void);
@@ -18,8 +26,9 @@ export interface CustomRowAction {
 export interface CustomCellProps {
     cell: CellProps<object>;
 }
-declare type ExtendedColumn = Column & {
+declare type ExtendedColumn = Omit<Column, 'Filter'> & {
     defaultHidden?: boolean;
+    Filter: FilterComponent;
 };
 export interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
     subRows: Array<Row<any>>;
