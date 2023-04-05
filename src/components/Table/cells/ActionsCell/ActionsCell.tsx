@@ -1,5 +1,5 @@
-import React, { useRef, forwardRef } from 'react'
-import {IconButton, IconButtonProps} from '@mui/material'
+import React, { useRef } from 'react'
+import { IconButton } from '@mui/material'
 import MenuPopper from '../../../MenuPopper'
 import { MenuDots } from '../../../../svgs'
 import useToggle from '../../../../hooks/useToggle'
@@ -14,12 +14,7 @@ interface ActionsCellProps {
   disablePortal?: boolean
 }
 
-type CastedForwardRefButtonType = <C extends React.ElementType>(
-  props: IconButtonProps<C, { component?: C }>,
-  ref?: React.Ref<HTMLButtonElement>
-) => React.ReactElement | null
-
-function ActionsCell({ actions, row, disablePortal }: ActionsCellProps) {
+function ActionsCell({ actions, row, disablePortal = false }: ActionsCellProps) {
   const [isPopperOpen, togglePopper] = useToggle(false)
   const anchorRef = useRef<HTMLDivElement | null>(null)
   const formatActions = actions
@@ -52,31 +47,16 @@ function ActionsCell({ actions, row, disablePortal }: ActionsCellProps) {
     )
   }
 
-  const CastedForwardRefButtonFnc: CastedForwardRefButtonType = (props, ref) => {
-    const {children, ...rest} = props
-    return (
-      <IconButton ref={ref} {...rest}>
-        {children}
-      </IconButton>
-    )
-  }
-
-  const CastedForwardRefButton = forwardRef(
-    CastedForwardRefButtonFnc
-  ) as CastedForwardRefButtonType
-
   return formatActions.length ? (
     <div className='table-row-actions' ref={anchorRef}>
-      <CastedForwardRefButton
-        className='actions-btn'
-        onClick={togglePopper}
-      >
+      <IconButton className='actions-btn' onClick={togglePopper}>
         <MenuDots />
-      </CastedForwardRefButton>
+      </IconButton>
       {isPopperOpen && getPopper()}
     </div>
+  ) : (
+    <div className='table-row-actions-empty' />
   )
-    : <div className='table-row-actions-empty' />
 }
 
 export default ActionsCell
