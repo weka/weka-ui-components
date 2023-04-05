@@ -45,7 +45,6 @@ function JsonEditor(props:JsonEditorProps) {
         value={value}
         onChange={onChange}
         onValidate={onValidate}
-        maxLines={Infinity}
         {...rest}
       />
     </div>

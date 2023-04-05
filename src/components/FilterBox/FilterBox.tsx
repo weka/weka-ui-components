@@ -42,12 +42,18 @@ function FilterBox({ name, value: value, onDelete }: FilterBoxProps) {
 
     throw new Error('Unknown filter value!')
   }, [value])
+
+  const formattedName = useMemo(() => {
+    if (name.toUpperCase().replace(/\s/g, '') in FILTERBOXES) {
+      return FILTERBOXES[`${name.toUpperCase().replace(/\s/g, '')}`]
+    }
+    return name.split('_').join(' ')
+  }, [])
+
   return (
     <div className='box-filter-container' key={name}>
       <span className='filter-headline'>
-        {name.toLowerCase() === 'severity'
-          ? 'Min Severity'
-          : FILTERBOXES[`${name.toUpperCase().replace(/\s/g, '')}`]}
+        {formattedName}
         <Close onClick={onDelete} />
       </span>
       <span className='filter-data'>{text}</span>

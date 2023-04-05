@@ -149,7 +149,7 @@ function Table({
   title,
   defaultSort = EMPTY_STRING,
   globalFilter,
-  defaultGlobalFilter,
+  defaultGlobalFilter = EMPTY_STRING,
   checkRowSelected,
   checkRowHighlighted,
   getRowId,
