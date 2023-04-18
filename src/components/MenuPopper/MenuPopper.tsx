@@ -3,6 +3,7 @@ import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper, Divider } f
 import Tooltip from '../Tooltip'
 import Utils from '../../utils'
 import { EMPTY_STRING } from '../../consts'
+import classNames from 'classnames'
 
 import './menuPopper.scss'
 
@@ -23,9 +24,10 @@ interface MenuPopperProps {
   items: menuItem[],
   anchorEl: HTMLElement | null,
   disablePortal?: boolean
+  extraPopperClass?: string
 }
 function MenuPopper(props: MenuPopperProps) {
-  const { open, anchorEl, onClickAway, items, disablePortal } = props
+  const { open, anchorEl, onClickAway, items, disablePortal, extraPopperClass = EMPTY_STRING } = props
 
   const getTooltipData = (disabled: string = '', tooltip: string = '') => {
     if (Utils.isString(disabled)) {
@@ -44,7 +46,7 @@ function MenuPopper(props: MenuPopperProps) {
           {...TransitionProps}
           style={{ transformOrigin: 'center top' }}
         >
-          <Paper className='menu-popper'>
+          <Paper className={classNames('menu-popper', extraPopperClass)}>
             <ClickAwayListener onClickAway={onClickAway}>
               <MenuList disablePadding>
                 {items.map((item) => {

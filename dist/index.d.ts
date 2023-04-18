@@ -276,6 +276,7 @@ interface MenuPopperProps {
     items: menuItem[];
     anchorEl: HTMLElement | null;
     disablePortal?: boolean;
+    extraPopperClass?: string;
 }
 declare function MenuPopper(props: MenuPopperProps): JSX.Element;
 declare namespace MenuPopper {
