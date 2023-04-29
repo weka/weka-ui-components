@@ -38,10 +38,21 @@ function MultiSelectFilter({ column }: ExtendedFiltersColumn<object>) {
     React.useMemo(() => {
       const optionsSet = new Set()
       preFilteredRows?.forEach((row: Row) => {
-        if (value && !value.includes(row.values[id])) {
-          optionsSet.add(row.values[id])
+        if (value) {
+          const rowValue: string | string[] | undefined = row.values[id]
+
+          if (Array.isArray(rowValue)) {
+            rowValue.forEach((val) => {
+              if (!value.includes(val)) {
+                optionsSet.add(val)
+              }
+            })
+          } else if (!value.includes(rowValue)) {
+            optionsSet.add(rowValue)
+          }
         }
       })
+
       return [...optionsSet.values()]
     }, [id, preFilteredRows, value])
 

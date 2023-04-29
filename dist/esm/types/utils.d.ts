@@ -1,6 +1,7 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 declare const utils: {
+    insensitiveSort: typeof insensitiveSort;
     isEllipsisActive(element: HTMLElement): boolean;
     getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement;
     goToNextInput(): void;
@@ -11,9 +12,8 @@ declare const utils: {
         value: any;
     };
     isEmpty(val: any): boolean;
-    isString: (value: any) => boolean;
+    isString: (value: unknown) => value is string;
     isObject: (value: any) => value is Record<string, unknown>;
-    insensitiveSort(array: any[], key: string): any[];
     range(startOrEnd: number, end?: number, step?: number): number[];
     mask2SubnetOp(val: number): string;
     formatStringOption: (option: string) => {
@@ -35,7 +35,7 @@ declare const utils: {
             [key: string]: any;
         };
     }, columnId: string) => number;
-    isIp: (string: any) => any;
+    isIp: (string: any) => string | false;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;
         text: string;
@@ -49,4 +49,6 @@ declare const utils: {
     formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean, showTime?: boolean) => string;
     formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
 };
+declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
+declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 export default utils;
