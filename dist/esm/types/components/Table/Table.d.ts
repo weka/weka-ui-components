@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Row, Column, UseExpandedRowProps, UseRowStateRowProps, CellProps, Filters } from 'react-table';
+import { Row, Column as RTColumn, UseExpandedRowProps, UseRowStateRowProps, CellProps, Filters } from 'react-table';
 import SelectFilter from './filters/SelectFilter';
 import MultiSelectFilter from './filters/MultiSelectFilter';
 import DateFilter from './filters/DateFilter';
@@ -23,19 +23,30 @@ export interface CustomRowAction {
     tooltipText?: any;
     extraClass?: string;
 }
-export interface CustomCellProps {
-    cell: CellProps<object>;
+export interface CustomCellProps<Data extends Record<string, unknown>> {
+    cell: CellProps<Data>;
+    column: Column<Data>;
 }
-declare type ExtendedColumn = Omit<Column, 'Filter'> & {
+export declare type Column<Data extends Record<string, unknown>> = Omit<RTColumn<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
+    onClickCell?: (values: Data) => void;
+    Cell?: React.FC<CustomCellProps<Data>>;
     defaultHidden?: boolean;
-    Filter: FilterComponent;
-};
+    Filter?: FilterComponent;
+    filter?: string | ((rows: Row<Data>[], columnIds: string[], filterValue: any) => Row<Data>[]);
+    sortType?: string | ((rowA: Row<Data>, rowB: Row<Data>, columnId: string, desc: boolean) => number);
+} & ({
+    id?: string;
+    accessor: keyof Data;
+} | {
+    id: string;
+    accessor: (originalRow: Data, rowIndex: number) => unknown;
+});
 export interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
     subRows: Array<Row<any>>;
 }
-interface TableProps {
-    columns: ExtendedColumn[];
-    data: Array<any>;
+interface TableProps<Data extends Record<string, unknown>> {
+    columns: Column<Data>[];
+    data: Data[];
     filterCategory: string;
     title?: string;
     maxRows?: number;
@@ -69,5 +80,5 @@ interface TableProps {
     initialFilters?: Filter[];
     extraClass?: string;
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClass, initialFilters: initialUserFilters }: TableProps): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClass, initialFilters: initialUserFilters }: TableProps<Values>): JSX.Element;
 export default Table;

@@ -25,7 +25,7 @@ import {
 import classNames from 'classnames'
 import {
   Row,
-  Column,
+  Column as RTColumn,
   UseExpandedRowProps,
   UseRowStateRowProps,
   CellProps,
@@ -127,14 +127,45 @@ export interface CustomRowAction {
   extraClass?: string
 }
 
-export interface CustomCellProps {
-  cell: CellProps<object>
+export interface CustomCellProps<Data extends Record<string, unknown>> {
+  cell: CellProps<Data>
+  column: Column<Data>
 }
 
-type ExtendedColumn = Omit<Column, 'Filter'> & {
+export type Column<Data extends Record<string, unknown>> = Omit<
+  RTColumn<Data>,
+  'Filter' | 'Cell' | 'id' | 'accessor'
+> & {
+  // if provided doesn't trigger row click
+  onClickCell?: (values: Data) => void
+  Cell?: React.FC<CustomCellProps<Data>>
   defaultHidden?: boolean
-  Filter: FilterComponent
-}
+  Filter?: FilterComponent
+  filter?:
+    | string
+    | ((
+        rows: Row<Data>[],
+        columnIds: string[],
+        filterValue: any
+      ) => Row<Data>[])
+  sortType?:
+    | string
+    | ((
+        rowA: Row<Data>,
+        rowB: Row<Data>,
+        columnId: string,
+        desc: boolean
+      ) => number)
+} & (
+    | {
+        id?: string
+        accessor: keyof Data
+      }
+    | {
+        id: string
+        accessor: (originalRow: Data, rowIndex: number) => unknown
+      }
+  )
 
 export interface ExtendedRow<T extends object>
   extends Row,
@@ -151,9 +182,9 @@ type ExtendedHeaderGroup = HeaderGroup & {
   isSorted?: boolean
 }
 
-interface TableProps {
-  columns: ExtendedColumn[]
-  data: Array<any>
+interface TableProps<Data extends Record<string, unknown>> {
+  columns: Column<Data>[]
+  data: Data[]
   filterCategory: string
   title?: string
   maxRows?: number
@@ -190,7 +221,7 @@ interface TableProps {
   extraClass?: string
 }
 
-function Table({
+function Table<Values extends Record<string, unknown>>({
   columns,
   data,
   rowActions = [],
@@ -223,7 +254,7 @@ function Table({
   manualFilters,
   extraClass,
   initialFilters: initialUserFilters
-}: TableProps) {
+}: TableProps<Values>) {
   const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
     () =>
       initialUserFilters?.map((filter) => ({ ...filter, defaultFilter: true })),
@@ -622,17 +653,20 @@ function Table({
                   'is-selected': checkRowSelected?.(extendedRow.original),
                   'is-highlighted': checkRowHighlighted?.(extendedRow.original)
                 })
+
                 return (
                   <React.Fragment key={extendedRow.getRowProps().key}>
                     <tr {...extendedRow.getRowProps()} className={classes}>
                       {isExpandable && (
                         <td
                           className='expand-cell'
-                          onClick={() => onRowClick(extendedRow.original)}
-                          {...(!!RowSubComponent && {
-                            onClick:
-                              extendedRow.getToggleRowExpandedProps().onClick
-                          })}
+                          onClick={() => {
+                            if (RowSubComponent) {
+                              extendedRow.getToggleRowExpandedProps().onClick()
+                            } else if (onRowClick) {
+                              onRowClick(extendedRow.original)
+                            }
+                          }}
                         >
                           {extendedRow.isExpanded ? (
                             <Arrow />
@@ -641,19 +675,32 @@ function Table({
                           )}
                         </td>
                       )}
-                      {extendedRow.cells.map((cell) => (
-                        <td
-                          {...cell.getCellProps()}
-                          className='table-cell'
-                          onClick={() => onRowClick(extendedRow.original)}
-                          {...(!!RowSubComponent && {
-                            onClick:
-                              extendedRow.getToggleRowExpandedProps().onClick
-                          })}
-                        >
-                          {cell.render('Cell')}
-                        </td>
-                      ))}
+                      {extendedRow.cells.map((cell, index) => {
+                        const { key, ...cellProps } = cell.getCellProps()
+
+                        return (
+                          <td
+                            key={key}
+                            {...cellProps}
+                            className='table-cell'
+                            onClick={() => {
+                              const onClickCell = columns[index]?.onClickCell
+
+                              if (onClickCell) {
+                                onClickCell(extendedRow.original)
+                              } else if (RowSubComponent) {
+                                extendedRow
+                                  .getToggleRowExpandedProps()
+                                  .onClick()
+                              } else if (onRowClick) {
+                                onRowClick(extendedRow.original)
+                              }
+                            }}
+                          >
+                            {cell.render('Cell')}
+                          </td>
+                        )
+                      })}
                       {!Utils.isEmpty(customRowActions) &&
                         customRowActions.map((action) => (
                           <td className='td-actions' key={action.tooltipText}>
