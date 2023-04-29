@@ -6,6 +6,7 @@ import { UseFiltersColumnProps } from 'react-table'
 import { EMPTY_STRING } from '../../../../consts'
 import utils from '../../../../utils'
 import Button from '../../../Button'
+import useToggle from '../../../../hooks/useToggle'
 
 import './dateFilter.scss'
 
@@ -37,6 +38,8 @@ function DateFilter({ column }: DateFilterProps) {
     filterValue?.endTime ? DateTime.fromISO(filterValue.endTime) : undefined
   )
 
+  const [isFilterOpen, toggleIsFilterOpen] = useToggle(false)
+
   useEffect(() => {
     if (!filterValue) {
       onFromChange(undefined)
@@ -45,7 +48,13 @@ function DateFilter({ column }: DateFilterProps) {
   }, [filterValue])
 
   return (
-    <FilterWrapper setFilter={setFilter} columnTitle={id || Header} hideWrapper>
+    <FilterWrapper
+      setFilter={setFilter}
+      columnTitle={id || Header}
+      hideWrapper
+      isPopperOpen={isFilterOpen}
+      onTogglePopper={toggleIsFilterOpen}
+    >
       <div className='date-filter-wrapper'>
         <div>
           <DateTimePicker
@@ -72,18 +81,20 @@ function DateFilter({ column }: DateFilterProps) {
             onClick={() => {
               onFromChange(undefined)
               onToChange(undefined)
+              setFilter(undefined)
             }}
           >
             Clear
           </Button>
           <Button
             disable={!from && !to}
-            onClick={() =>
+            onClick={() => {
               setFilter({
                 startTime: from?.toJSDate().toISOString() || undefined,
                 endTime: to?.toJSDate().toISOString() || undefined
               })
-            }
+              toggleIsFilterOpen()
+            }}
           >
             Filter
           </Button>

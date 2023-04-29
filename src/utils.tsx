@@ -5,6 +5,7 @@ import { EMPTY_STRING } from './consts'
 import { DateTime } from 'luxon'
 
 const utils = {
+  insensitiveSort,
  isEllipsisActive(element: HTMLElement): boolean {
    return element.offsetWidth < element.scrollWidth
  },
@@ -59,17 +60,9 @@ const utils = {
             && !Object.keys(val).length // empty object
             && Object.prototype.toString.call(val) !== '[object Date]') // Date
   },
-  isString: (value: any) => (typeof value === 'string' || value instanceof String),
+  isString: (value: unknown): value is string =>
+    typeof value === 'string' || value instanceof String,
   isObject: (value: any): value is Record<string, unknown> => (typeof value === 'object' && (value !== null && !Array.isArray(value))),
-  insensitiveSort(array: any[], key:string) {
-    const newArray = [...array]
-    return newArray.sort((objA, objB) => {
-      if (key) {
-        return objA[key].toLowerCase().localeCompare(objB[key].toLowerCase())
-      }
-      return objA.toLowerCase().localeCompare(objB.toLowerCase())
-    })
-  },
   range(startOrEnd: number, end?: number, step: number = 1): number[] {
   let newStartOrEnd = startOrEnd;
   if (!end) {
@@ -285,6 +278,46 @@ const utils = {
     }
     return utils.formatISODate(dateIn.toISO(), showMili, showSeconds, showTime)
   }
+}
+
+function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr
+
+function insensitiveSort<
+  Arr extends Record<Key, string>[] | Record<Key, number>[],
+  Key extends string
+>(array: Arr, key: Key): Arr
+
+function insensitiveSort<Key extends string>(
+  array: string[] | number[] | Record<Key, string>[] | Record<Key, number>[],
+  key?: Key
+) {
+  const newArray = [...array]
+  return newArray.sort((objA, objB) => {
+    if (utils.isString(objA) && utils.isString(objB)) {
+      return objA.toLowerCase().localeCompare(objB.toLowerCase())
+    }
+
+    if (typeof objA === 'number' && typeof objB === 'number') {
+      return objA - objB
+    }
+
+    if (key && utils.isObject(objA) && utils.isObject(objB)) {
+      const a = objA[key]
+      const b = objB[key]
+
+      if (utils.isString(a) && utils.isString(b)) {
+        return a.toLowerCase().localeCompare(b.toLowerCase())
+      }
+
+      if (typeof a === 'number' && typeof b === 'number') {
+        return a - b
+      }
+
+      return 0
+    }
+
+    return 0
+  })
 }
 
 export default utils

@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement, InputHTMLAttributes } from 'react';
-import { UseFiltersColumnProps, CellProps, Row, Filters, Column, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import { UseFiltersColumnProps, Column as Column$1, Row, CellProps, Filters, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
 
@@ -413,19 +413,30 @@ interface CustomRowAction {
     tooltipText?: any;
     extraClass?: string;
 }
-interface CustomCellProps {
-    cell: CellProps<object>;
+interface CustomCellProps<Data extends Record<string, unknown>> {
+    cell: CellProps<Data>;
+    column: Column<Data>;
 }
-declare type ExtendedColumn = Omit<Column, 'Filter'> & {
+declare type Column<Data extends Record<string, unknown>> = Omit<Column$1<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
+    onClickCell?: (values: Data) => void;
+    Cell?: React.FC<CustomCellProps<Data>>;
     defaultHidden?: boolean;
-    Filter: FilterComponent;
-};
+    Filter?: FilterComponent;
+    filter?: string | ((rows: Row<Data>[], columnIds: string[], filterValue: any) => Row<Data>[]);
+    sortType?: 'number' | ((rowA: Row<Data>, rowB: Row<Data>, columnId: string, desc: boolean) => number);
+} & ({
+    id?: string;
+    accessor: string;
+} | {
+    id: string;
+    accessor: (originalRow: Data, rowIndex: number) => unknown;
+});
 interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
     subRows: Array<Row<any>>;
 }
-interface TableProps {
-    columns: ExtendedColumn[];
-    data: Array<any>;
+interface TableProps<Data extends Record<string, unknown>> {
+    columns: Column<Data>[];
+    data: Data[];
     filterCategory: string;
     title?: string;
     maxRows?: number;
@@ -457,9 +468,14 @@ interface TableProps {
     customRowActions?: CustomRowAction[];
     manualFilters?: boolean;
     initialFilters?: Filter[];
-    extraClass?: string;
+    extraClasses?: {
+        tableWrapper?: string;
+        tableLine?: string;
+        expandCell?: string;
+        tableCell?: string;
+    };
 }
-declare function Table({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClass, initialFilters: initialUserFilters }: TableProps): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters }: TableProps<Values>): JSX.Element;
 
 interface ActionsCellProps {
     actions: Array<RowAction>;
@@ -478,7 +494,7 @@ declare function ApiCallCell({ cell }: ApiCallCellProps): JSX.Element;
 
 declare function BarCell({ cell }: CustomCellProps): JSX.Element;
 
-declare function BlocksCell({ cell }: CustomCellProps): JSX.Element;
+declare function BlocksCell<Data extends Record<string, unknown>>({ cell, column }: CustomCellProps<Data>): JSX.Element;
 
 declare function CapacityCell({ cell }: CustomCellProps): JSX.Element;
 
@@ -510,6 +526,8 @@ declare function DateCell({ cell, column }: {
 }): JSX.Element;
 
 declare function NodeCell({ cell }: CustomCellProps): JSX.Element;
+
+declare function MultilineCell({ cell }: CustomCellProps): JSX.Element;
 
 interface IconButtonCellProps {
     action: CustomRowAction;
@@ -596,6 +614,7 @@ declare function FilterBox({ name, value: value, onDelete }: FilterBoxProps): JS
 declare function EntityCell({ cell }: CustomCellProps): JSX.Element;
 
 declare const utils: {
+    insensitiveSort: typeof insensitiveSort;
     isEllipsisActive(element: HTMLElement): boolean;
     getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement;
     goToNextInput(): void;
@@ -606,9 +625,8 @@ declare const utils: {
         value: any;
     };
     isEmpty(val: any): boolean;
-    isString: (value: any) => boolean;
+    isString: (value: unknown) => value is string;
     isObject: (value: any) => value is Record<string, unknown>;
-    insensitiveSort(array: any[], key: string): any[];
     range(startOrEnd: number, end?: number, step?: number): number[];
     mask2SubnetOp(val: number): string;
     formatStringOption: (option: string) => {
@@ -630,7 +648,7 @@ declare const utils: {
             [key: string]: any;
         };
     }, columnId: string) => number;
-    isIp: (string: any) => any;
+    isIp: (string: any) => string | false;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;
         text: string;
@@ -644,5 +662,7 @@ declare const utils: {
     formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean, showTime?: boolean) => string;
     formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
 };
+declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
+declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
