@@ -36,7 +36,7 @@ export declare type Column<Data extends Record<string, unknown>> = Omit<RTColumn
     sortType?: string | ((rowA: Row<Data>, rowB: Row<Data>, columnId: string, desc: boolean) => number);
 } & ({
     id?: string;
-    accessor: keyof Data;
+    accessor: string;
 } | {
     id: string;
     accessor: (originalRow: Data, rowIndex: number) => unknown;
@@ -78,7 +78,12 @@ interface TableProps<Data extends Record<string, unknown>> {
     customRowActions?: CustomRowAction[];
     manualFilters?: boolean;
     initialFilters?: Filter[];
-    extraClass?: string;
+    extraClasses?: {
+        tableWrapper?: string;
+        tableLine?: string;
+        expandCell?: string;
+        tableCell?: string;
+    };
 }
-declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClass, initialFilters: initialUserFilters }: TableProps<Values>): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters }: TableProps<Values>): JSX.Element;
 export default Table;

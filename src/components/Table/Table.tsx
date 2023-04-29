@@ -159,7 +159,7 @@ export type Column<Data extends Record<string, unknown>> = Omit<
 } & (
     | {
         id?: string
-        accessor: keyof Data
+        accessor: string
       }
     | {
         id: string
@@ -218,7 +218,12 @@ interface TableProps<Data extends Record<string, unknown>> {
   customRowActions?: CustomRowAction[]
   manualFilters?: boolean
   initialFilters?: Filter[]
-  extraClass?: string
+  extraClasses?: {
+    tableWrapper?: string
+    tableLine?: string
+    expandCell?: string
+    tableCell?: string
+  }
 }
 
 function Table<Values extends Record<string, unknown>>({
@@ -252,7 +257,7 @@ function Table<Values extends Record<string, unknown>>({
   defaultDescendingSort = false,
   customRowActions,
   manualFilters,
-  extraClass,
+  extraClasses,
   initialFilters: initialUserFilters
 }: TableProps<Values>) {
   const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
@@ -490,7 +495,9 @@ function Table<Values extends Record<string, unknown>>({
   }, [])
 
   return (
-    <div className={classNames('react-table-wrapper', extraClass)}>
+    <div
+      className={classNames('react-table-wrapper', extraClasses?.tableWrapper)}
+    >
       {!miniTable && (
         <div className='table-top'>
           <div>
@@ -651,7 +658,10 @@ function Table<Values extends Record<string, unknown>>({
                   clickable: onRowClick !== NOP || isExpandable,
                   'is-expand': extendedRow.isExpanded,
                   'is-selected': checkRowSelected?.(extendedRow.original),
-                  'is-highlighted': checkRowHighlighted?.(extendedRow.original)
+                  'is-highlighted': checkRowHighlighted?.(extendedRow.original),
+                  ...(extraClasses?.tableLine && {
+                    [extraClasses.tableLine]: true
+                  })
                 })
 
                 return (
@@ -659,7 +669,10 @@ function Table<Values extends Record<string, unknown>>({
                     <tr {...extendedRow.getRowProps()} className={classes}>
                       {isExpandable && (
                         <td
-                          className='expand-cell'
+                          className={classNames(
+                            'expand-cell',
+                            extraClasses?.expandCell
+                          )}
                           onClick={() => {
                             if (RowSubComponent) {
                               extendedRow.getToggleRowExpandedProps().onClick()
@@ -682,7 +695,10 @@ function Table<Values extends Record<string, unknown>>({
                           <td
                             key={key}
                             {...cellProps}
-                            className='table-cell'
+                            className={classNames(
+                              'table-cell',
+                              extraClasses?.tableCell
+                            )}
                             onClick={() => {
                               const onClickCell = columns[index]?.onClickCell
 

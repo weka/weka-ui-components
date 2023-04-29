@@ -20,7 +20,7 @@ function NodeCell({ cell }: CustomCellProps) {
       <span>{nid} </span>
       {isBackend && (
         <span>
-        {roles.length ? `(${roles?.reduce((acc: Array<string>, role: string) => {
+        {roles?.length ? `(${roles?.reduce((acc: Array<string>, role: string) => {
           SHORT_ROLES[role] ? acc.push(SHORT_ROLES[role]) : acc.push(role)
           return acc
         }, []).join(', ')}) `: EMPTY_STRING}
