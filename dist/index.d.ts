@@ -527,6 +527,8 @@ declare function DateCell({ cell, column }: {
 
 declare function NodeCell({ cell }: CustomCellProps): JSX.Element;
 
+declare function MultilineCell({ cell }: CustomCellProps): JSX.Element;
+
 interface IconButtonCellProps {
     action: CustomRowAction;
     row: ExtendedRow<object>;
@@ -661,4 +663,4 @@ declare const utils: {
     formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
 };
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
