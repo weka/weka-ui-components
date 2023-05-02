@@ -21,6 +21,10 @@ function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage }
   const onPrevPage = () => setCurrentPage((prev) => prev - 1)
 
   useEffect(() => {
+    setCurrentPage(defaultCurrentPage)
+  }, [defaultCurrentPage])
+
+  useEffect(() => {
     onPageChange(currentPage)
   }, [currentPage])
 
