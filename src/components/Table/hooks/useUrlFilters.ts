@@ -93,7 +93,7 @@ function useUrlFilters({
     filtersWithoutDefault.forEach(({ id, value }) => {
       if (Array.isArray(value)) {
         value.forEach((val) => {
-          if (val) {
+          if (!Utils.isEmpty(val)) {
             searchParams.append(id, val.toString())
           }
         })
