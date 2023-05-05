@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { Utils } from '../../..'
 import { SAVED_FILTERS } from '../../../consts'
 import localStorageService from '../../../localStorageService'
+import useStaticProps from '../../../hooks/useStaticProps'
 
 export interface UrlFilterParser {
   (rawValue: string[] | Record<string, string[]>):
     | ExtendedFilter['value']
     | null
+    | void
 }
+
+const stringParser: UrlFilterParser = (value) =>
+  Array.isArray(value) ? value[0] : null
 
 function useUrlFilters({
   enabled = true,
@@ -26,6 +31,8 @@ function useUrlFilters({
       | ((prevState: ExtendedFilter[]) => ExtendedFilter[])
   ) => void
 ] {
+  const staticProps = useStaticProps({ filterConfig })
+
   const getLocalStorageFilters = (): Record<
     ExtendedFilter['id'],
     ExtendedFilter['value']
@@ -46,7 +53,7 @@ function useUrlFilters({
         const searchParams = new URLSearchParams(window.location.search)
         const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
 
-        return filterConfig.flatMap(({ id, filterParser }) => {
+        return staticProps.filterConfig.flatMap(({ id, filterParser }) => {
           const parsedValue = filterParser(parsedSearchParams[id])
           return parsedValue ? { id: id, value: parsedValue } : []
         })
@@ -54,7 +61,7 @@ function useUrlFilters({
 
       const parsedLSFilters = getLocalStorageFilters()
 
-      const filtersArr = filterConfig.flatMap(({ id }) => {
+      const filtersArr = staticProps.filterConfig.flatMap(({ id }) => {
         const parsedValue = parsedLSFilters[id]
         return parsedValue ? { id: id, value: parsedValue } : []
       })
@@ -79,7 +86,7 @@ function useUrlFilters({
     )
     localStorageService.updateFilters(filterCategory, filtersObj)
 
-    filterConfig.forEach(({ id }) => {
+    staticProps.filterConfig.forEach(({ id }) => {
       searchParams.delete(id)
       const paramsArr = [...searchParams]
 
@@ -117,7 +124,7 @@ function useUrlFilters({
         replace: true
       }
     )
-  }, [filters, navigate])
+  }, [filterCategory, filters, navigate, staticProps.filterConfig])
 
   return [filters, setFilters]
 }
