@@ -53,10 +53,12 @@ function useUrlFilters({
         const searchParams = new URLSearchParams(window.location.search)
         const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
 
-        return staticProps.filterConfig.flatMap(({ id, filterParser }) => {
-          const parsedValue = filterParser(parsedSearchParams[id])
-          return parsedValue ? { id: id, value: parsedValue } : []
-        })
+        return staticProps.filterConfig.flatMap(
+          ({ id, filterParser = stringParser }) => {
+            const parsedValue = filterParser(parsedSearchParams[id])
+            return parsedValue ? { id: id, value: parsedValue } : []
+          }
+        )
       }
 
       const parsedLSFilters = getLocalStorageFilters()
