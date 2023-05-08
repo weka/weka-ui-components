@@ -71,7 +71,7 @@ const sortTypes = {
 }
 
 export const filterParsersMap = new Map<FilterComponent, UrlFilterParser>()
-const stringParser: UrlFilterParser = (rawValue) => {
+export const stringParser: UrlFilterParser = (rawValue) => {
   if (Array.isArray(rawValue) && rawValue[0]) {
     return rawValue[0]
   }

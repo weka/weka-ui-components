@@ -8,6 +8,7 @@ import TextFilter from './filters/TextFilter';
 import { UrlFilterParser } from './hooks/useUrlFilters';
 import './table.scss';
 export declare const filterParsersMap: Map<FilterComponent, UrlFilterParser>;
+export declare const stringParser: UrlFilterParser;
 export declare type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
 export interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
