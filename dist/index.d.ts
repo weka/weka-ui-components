@@ -384,13 +384,16 @@ declare function TextFilter({ column }: {
 }): JSX.Element;
 
 interface UrlFilterParser {
-    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null;
+    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null | void;
 }
-declare function useUrlFilters({ enabled, filterConfig, filterCategory }: {
+declare function useUrlFilters(props: {
     enabled?: boolean;
     filterConfig: {
         id: string;
-        filterParser: UrlFilterParser;
+        /**
+         * If not provided stringParser will be used
+         */
+        filterParser?: UrlFilterParser;
     }[];
     filterCategory: string;
 }): [

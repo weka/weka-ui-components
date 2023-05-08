@@ -1,22 +1,27 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Utils } from '../../..'
 import { SAVED_FILTERS } from '../../../consts'
 import localStorageService from '../../../localStorageService'
+import useStaticProps from '../../../hooks/useStaticProps'
+import { stringParser } from '../Table'
 
 export interface UrlFilterParser {
   (rawValue: string[] | Record<string, string[]>):
     | ExtendedFilter['value']
     | null
+    | void
 }
 
-function useUrlFilters({
-  enabled = true,
-  filterConfig,
-  filterCategory
-}: {
+function useUrlFilters(props: {
   enabled?: boolean
-  filterConfig: { id: string; filterParser: UrlFilterParser }[]
+  filterConfig: {
+    id: string
+    /**
+     * If not provided stringParser will be used
+     */
+    filterParser?: UrlFilterParser
+  }[]
   filterCategory: string
 }): [
   ExtendedFilter[],
@@ -26,6 +31,9 @@ function useUrlFilters({
       | ((prevState: ExtendedFilter[]) => ExtendedFilter[])
   ) => void
 ] {
+  const { enabled = true, filterConfig, filterCategory } = props
+  const staticProps = useStaticProps({ filterConfig })
+
   const getLocalStorageFilters = (): Record<
     ExtendedFilter['id'],
     ExtendedFilter['value']
@@ -46,7 +54,7 @@ function useUrlFilters({
         const searchParams = new URLSearchParams(window.location.search)
         const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
 
-        return filterConfig.flatMap(({ id, filterParser }) => {
+        return filterConfig.flatMap(({ id, filterParser = stringParser }) => {
           const parsedValue = filterParser(parsedSearchParams[id])
           return parsedValue ? { id: id, value: parsedValue } : []
         })
@@ -63,7 +71,7 @@ function useUrlFilters({
     }
   )
 
-  useEffect(() => {
+  const handleFiltersChange = useCallback(() => {
     const searchParams = new URLSearchParams(window.location.search)
 
     const filtersWithoutDefault = filters.filter(
@@ -79,7 +87,7 @@ function useUrlFilters({
     )
     localStorageService.updateFilters(filterCategory, filtersObj)
 
-    filterConfig.forEach(({ id }) => {
+    staticProps.filterConfig.forEach(({ id }) => {
       searchParams.delete(id)
       const paramsArr = [...searchParams]
 
@@ -117,7 +125,19 @@ function useUrlFilters({
         replace: true
       }
     )
-  }, [filters, navigate])
+  }, [filterCategory, filters, navigate, staticProps.filterConfig])
+
+  useEffect(handleFiltersChange, [handleFiltersChange])
+
+  const [searchParams] = useSearchParams()
+  const lastSavedSearchRef = useRef<string>()
+
+  useEffect(() => {
+    if (lastSavedSearchRef.current !== window.location.search) {
+      handleFiltersChange()
+    }
+    lastSavedSearchRef.current = window.location.search
+  }, [handleFiltersChange, searchParams])
 
   return [filters, setFilters]
 }
