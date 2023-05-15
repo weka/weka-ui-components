@@ -9,9 +9,13 @@ function MultilineCell({ cell }: CustomCellProps) {
 
   return (
     <div className='multiline-cell'>
-      {(value as string[])?.map((line, index) => (
+      {(value as (string | null)[])?.map((line, index) => (
         <div key={index}>
-          <SpanTooltip extraClasses='tooltip'>{line}</SpanTooltip>
+          {line ? (
+            <SpanTooltip extraClasses='tooltip'>{line}</SpanTooltip>
+          ) : (
+            <br />
+          )}
         </div>
       ))}
     </div>
