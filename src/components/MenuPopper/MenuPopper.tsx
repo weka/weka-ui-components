@@ -29,8 +29,8 @@ interface MenuPopperProps {
 function MenuPopper(props: MenuPopperProps) {
   const { open, anchorEl, onClickAway, items, disablePortal, extraPopperClass = EMPTY_STRING } = props
 
-  const getTooltipData = (disabled: string = '', tooltip: string = '') => {
-    if (Utils.isString(disabled)) {
+  const getTooltipData = (disabled = '', tooltip = '') => {
+    if (Utils.isString(disabled) && !Utils.isEmpty(disabled)) {
       return disabled
     } if (!Utils.isEmpty(tooltip)) {
       return tooltip

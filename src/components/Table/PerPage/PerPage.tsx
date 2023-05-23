@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import Select from '../../inputs/Select'
 import { PER_PAGE_OPTIONS } from '../../../consts'
 
@@ -6,7 +6,7 @@ import './perPage.scss'
 
 interface PerPageProps {
   value: string | number
-  onChange: (val: string | number) => void
+  onChange: ((val: string | number) => void) | Dispatch<SetStateAction<number>>
   options?: Option[]
 }
 

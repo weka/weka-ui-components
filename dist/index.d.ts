@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import React, { MouseEventHandler, ReactNode, ReactElement, InputHTMLAttributes } from 'react';
+import React, { MouseEventHandler, ReactNode, ReactElement, InputHTMLAttributes, Dispatch, SetStateAction } from 'react';
 import { UseFiltersColumnProps, Column as Column$1, Row, CellProps, Filters, UseExpandedRowProps, UseRowStateRowProps, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
@@ -238,13 +238,15 @@ interface TextSelectBoxProps {
 declare function TextSelectBox(props: TextSelectBoxProps): JSX.Element;
 
 interface UploadFieldProps {
-    onChange: (newVal: any) => void;
+    onChange?: (newVal: any) => void;
     onReadError?: () => void;
     wrapperClass?: string;
     placeholder?: string;
     label: string;
     error?: string;
     disabled?: boolean;
+    tooltipText?: string;
+    shouldBeBinary?: boolean;
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
@@ -538,6 +540,11 @@ interface IconButtonCellProps {
 }
 declare function IconButtonCell({ row, action }: IconButtonCellProps): JSX.Element;
 
+interface ExtendedCustomCellProps<Data extends Record<string, unknown>> extends CustomCellProps<Data> {
+    row: ExtendedRow<object>;
+}
+declare function SwitchCell<Data extends Record<string, unknown>>({ cell, column, row }: ExtendedCustomCellProps<Data>): JSX.Element;
+
 interface DateTimePickerProps {
     onChange: (val?: any) => void;
     value?: any;
@@ -583,7 +590,7 @@ declare function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurre
 
 interface PerPageProps {
     value: string | number;
-    onChange: (val: string | number) => void;
+    onChange: ((val: string | number) => void) | Dispatch<SetStateAction<number>>;
     options?: Option[];
 }
 declare function PerPage({ value, onChange, options }: PerPageProps): JSX.Element;
@@ -668,4 +675,4 @@ declare const utils: {
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, SwitchCell, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
