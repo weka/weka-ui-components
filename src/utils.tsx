@@ -211,6 +211,16 @@ const utils = {
     const collator = Intl.Collator(undefined, { numeric: true })
     return collator.compare(a, b)
   },
+  numberSort: (
+    rowA: { values: { [key: string]: any } },
+    rowB: { values: { [key: string]: any } },
+    columnId: string
+  ): number => {
+    const a = rowA.values[columnId]
+    const b = rowB.values[columnId]
+
+    return a - b
+  },
   isIp: (string: any) => {
     if (!utils.isString(string)) return false
     const ValidIpAddressRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/

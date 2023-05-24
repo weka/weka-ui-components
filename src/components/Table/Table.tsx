@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useCallback
+  useCallback,
+  useState
 } from 'react'
 import _ from 'lodash'
 import {
@@ -49,7 +50,11 @@ import DefaultCell from './cells/DefaultCell'
 import IconButtonCell from './cells/IconButtonCell'
 import FilterBox from '../FilterBox'
 import Loader from '../Loader'
-import { useUrlFilters, useExplicitlyRemovedFilters } from './hooks'
+import {
+  useUrlFilters,
+  useExplicitlyRemovedFilters,
+  useRowGroups
+} from './hooks'
 import SelectFilter from './filters/SelectFilter'
 import MultiSelectFilter from './filters/MultiSelectFilter'
 import DateFilter from './filters/DateFilter'
@@ -202,7 +207,6 @@ interface TableProps<Data extends Record<string, unknown>> {
     parent?: Row<object> | undefined
   ) => string
   addFilterToUrl?: boolean
-  RowSubComponent?: React.FC<{ row: any }>
   listenerPrefix?: string
   onRowClick?: (row?: Row) => void
   miniTable?: boolean
@@ -224,42 +228,69 @@ interface TableProps<Data extends Record<string, unknown>> {
     expandCell?: string
     tableCell?: string
   }
+  RowSubComponent?: React.FC<{ row: Row }>
+  GroupRowSubComponent?: React.FC<{
+    rows: Row[]
+  }>
+  /**
+   * **Must be memoized**
+   */
+  groupRowsBy?: string[]
 }
 
-function Table<Values extends Record<string, unknown>>({
-  columns,
-  data,
-  rowActions = [],
-  tableActions,
-  title,
-  defaultSort = EMPTY_STRING,
-  globalFilter,
-  defaultGlobalFilter = EMPTY_STRING,
-  checkRowSelected,
-  checkRowHighlighted,
-  getRowId,
-  addFilterToUrl,
-  RowSubComponent,
-  listenerPrefix,
-  onRowClick = NOP,
-  miniTable,
-  filterCategory,
-  fixedPageSize,
-  disableActionsPortal,
-  maxRows,
-  emptyMessage,
-  colPropForShowColumns,
-  manualPagination,
-  itemsAmount,
-  canExpandAll = false,
-  loading,
-  onFiltersChanged,
-  defaultDescendingSort = false,
-  customRowActions,
-  manualFilters,
-  extraClasses,
-  initialFilters: initialUserFilters
-}: TableProps<Values>) {
+function Table<Values extends Record<string, unknown>>(
+  props: TableProps<Values>
+) {
+  const {
+    columns,
+    data,
+    rowActions = [],
+    tableActions,
+    title,
+    defaultSort = EMPTY_STRING,
+    globalFilter,
+    defaultGlobalFilter = EMPTY_STRING,
+    checkRowSelected,
+    checkRowHighlighted,
+    getRowId,
+    addFilterToUrl,
+    listenerPrefix,
+    onRowClick = NOP,
+    miniTable,
+    filterCategory,
+    fixedPageSize,
+    disableActionsPortal,
+    maxRows,
+    emptyMessage,
+    colPropForShowColumns,
+    manualPagination,
+    itemsAmount,
+    canExpandAll = false,
+    loading,
+    onFiltersChanged,
+    defaultDescendingSort = false,
+    customRowActions,
+    manualFilters,
+    extraClasses,
+    initialFilters: initialUserFilters,
+    RowSubComponent,
+    GroupRowSubComponent,
+    groupRowsBy
+  } = props
+
+  const columnsWithId = useMemo(
+    () =>
+      columns.map((columnItem) => ({
+        ...columnItem,
+        id: columnItem.id ?? columnItem.accessor.toString()
+      })),
+    [columns]
+  )
+
+  const [sortedColumn, setSortedColumn] = useState<string | undefined>(
+    defaultSort
+  )
+
   const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
     () =>
       initialUserFilters?.map((filter) => ({ ...filter, defaultFilter: true })),
@@ -269,7 +300,7 @@ function Table<Values extends Record<string, unknown>>({
   const LSHidden = localStorageService.getItem(SAVED_HIDDEN)
   const hiddenInLocalStorage =
     (LSHidden && JSON.parse(LSHidden)[filterCategory]) ||
-    columns
+    columnsWithId
       .filter(({ defaultHidden }) => defaultHidden)
       .map(({ Header, accessor }) =>
         Utils.isString(accessor) ? accessor : Header
@@ -289,16 +320,15 @@ function Table<Values extends Record<string, unknown>>({
 
   const urlFilterConfig = useMemo(
     () =>
-      columns.flatMap((col) => {
+      columnsWithId.flatMap((col) => {
         const filterParser = filterParsersMap.get(col.Filter)
-        const id = col.id ?? col.accessor
 
-        if (!filterParser || typeof id !== 'string') {
+        if (!filterParser) {
           return []
         }
 
         return {
-          id,
+          id: col.id,
           filterParser
         }
       }),
@@ -326,6 +356,12 @@ function Table<Values extends Record<string, unknown>>({
       .concat(initialUrlFilters)
   }, [])
 
+  const { getGroupedRows, orderByFn } = useRowGroups({
+    sortedColumn,
+    groupRowsBy,
+    columns: columnsWithId
+  })
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -342,13 +378,15 @@ function Table<Values extends Record<string, unknown>>({
     setPageSize,
     previousPage,
     page,
-    state: { pageIndex, filters },
+    state: { pageIndex, filters, sortBy },
     setFilter,
     setAllFilters,
     visibleColumns,
     setHiddenColumns,
     getToggleAllRowsExpandedProps,
-    isAllRowsExpanded
+    isAllRowsExpanded,
+    preFilteredRows,
+    toggleRowExpanded
   } = useTable(
     {
       columns,
@@ -374,7 +412,8 @@ function Table<Values extends Record<string, unknown>>({
       autoResetHiddenColumns: false,
       getRowId,
       sortTypes,
-      manualFilters
+      manualFilters,
+      orderByFn: groupRowsBy && orderByFn
     },
     useRowState,
     useFilters,
@@ -384,6 +423,10 @@ function Table<Values extends Record<string, unknown>>({
     usePagination,
     useFlexLayout
   )
+
+  useEffect(() => {
+    setSortedColumn(sortBy[0]?.id)
+  }, [sortBy])
 
   useEffect(() => {
     updateExplicitlyRemovedFilters(filters)
@@ -399,7 +442,7 @@ function Table<Values extends Record<string, unknown>>({
     'scroll-wrapper': true
   })
   const tableRef = useRef<null | HTMLDivElement>(null)
-  const isExpandable = !!RowSubComponent
+  const isExpandable = !!(RowSubComponent || GroupRowSubComponent)
 
   const cleanFilters = useMemo(
     () =>
@@ -493,6 +536,19 @@ function Table<Values extends Record<string, unknown>>({
       window.removeEventListener('resize', calcNumberOfRows)
     }
   }, [])
+
+  const allRowsByMainGroup = useMemo(
+    () =>
+      groupRowsBy?.length
+        ? getGroupedRows(preFilteredRows, groupRowsBy[0])
+        : {},
+    [getGroupedRows, groupRowsBy, preFilteredRows]
+  )
+
+  const pageRowsByMainGroup = useMemo(
+    () => (groupRowsBy?.length ? getGroupedRows(page, groupRowsBy[0]) : {}),
+    [getGroupedRows, groupRowsBy, page]
+  )
 
   return (
     <div
@@ -650,19 +706,38 @@ function Table<Values extends Record<string, unknown>>({
                 emptyMessage || (title ? `No ${title}` : `No ${rows}`)
               }
             >
-              {page.map((row) => {
+              {page.map((row, rowIndex) => {
+                const rowsInGroup =
+                  groupRowsBy && pageRowsByMainGroup[row.values[groupRowsBy[0]]]
+
+                const indexInGroup =
+                  groupRowsBy?.length &&
+                  rowsInGroup?.findIndex((rowItem) => rowItem.id === row.id)
+
                 const extendedRow = row as ExtendedRow<object>
                 prepareRow(extendedRow)
+
+                const isTopInGroup = indexInGroup === 0
+                const isBottomInGroup =
+                  rowsInGroup && indexInGroup === rowsInGroup.length - 1
+
                 const classes = classNames({
                   'table-line': true,
                   clickable: onRowClick !== NOP || isExpandable,
                   'is-expand': extendedRow.isExpanded,
+                  top: isTopInGroup,
                   'is-selected': checkRowSelected?.(extendedRow.original),
                   'is-highlighted': checkRowHighlighted?.(extendedRow.original),
                   ...(extraClasses?.tableLine && {
                     [extraClasses.tableLine]: true
                   })
                 })
+
+                const handleGroupClick = () => {
+                  allRowsByMainGroup[row.values[groupRowsBy[0]]]?.forEach(
+                    (row) => toggleRowExpanded(row.id)
+                  )
+                }
 
                 return (
                   <React.Fragment key={extendedRow.getRowProps().key}>
@@ -676,20 +751,47 @@ function Table<Values extends Record<string, unknown>>({
                           onClick={() => {
                             if (RowSubComponent) {
                               extendedRow.getToggleRowExpandedProps().onClick()
+                            } else if (
+                              GroupRowSubComponent &&
+                              groupRowsBy?.length
+                            ) {
+                              handleGroupClick(
+                                extendedRow.values[groupRowsBy[0]]
+                              )
                             } else if (onRowClick) {
                               onRowClick(extendedRow.original)
                             }
                           }}
                         >
-                          {extendedRow.isExpanded ? (
-                            <Arrow />
-                          ) : (
-                            <Arrow className='rotate270' />
-                          )}
+                          {(!groupRowsBy?.length || isTopInGroup) &&
+                            (extendedRow.isExpanded ? (
+                              <Arrow />
+                            ) : (
+                              <Arrow className='rotate270' />
+                            ))}
                         </td>
                       )}
-                      {extendedRow.cells.map((cell, index) => {
+                      {extendedRow.cells.map((cell, cellIndex) => {
                         const { key, ...cellProps } = cell.getCellProps()
+
+                        const groupIndex =
+                          rowIndex > 0 && groupRowsBy?.indexOf(cell.column.id)
+
+                        let isInPrevGroup = false
+                        if (
+                          groupRowsBy &&
+                          typeof groupIndex === 'number' &&
+                          groupIndex !== -1
+                        ) {
+                          const groups = groupRowsBy.slice(0, groupIndex + 1)
+                          const prevCell = page[rowIndex - 1].cells[cellIndex]
+
+                          isInPrevGroup = groups.every(
+                            (columnId) =>
+                              prevCell.row.values[columnId] ===
+                              cell.row.values[columnId]
+                          )
+                        }
 
                         return (
                           <td
@@ -700,7 +802,8 @@ function Table<Values extends Record<string, unknown>>({
                               extraClasses?.tableCell
                             )}
                             onClick={() => {
-                              const onClickCell = columns[index]?.onClickCell
+                              const onClickCell =
+                                columnsWithId[cellIndex]?.onClickCell
 
                               if (onClickCell) {
                                 onClickCell(extendedRow.original)
@@ -708,12 +811,14 @@ function Table<Values extends Record<string, unknown>>({
                                 extendedRow
                                   .getToggleRowExpandedProps()
                                   .onClick()
+                              } else if (GroupRowSubComponent) {
+                                handleGroupClick(extendedRow)
                               } else if (onRowClick) {
                                 onRowClick(extendedRow.original)
                               }
                             }}
                           >
-                            {cell.render('Cell')}
+                            {!isInPrevGroup && cell.render('Cell')}
                           </td>
                         )
                       })}
@@ -733,10 +838,25 @@ function Table<Values extends Record<string, unknown>>({
                         </td>
                       )}
                     </tr>
-                    {extendedRow.isExpanded && RowSubComponent ? (
+                    {(groupRowsBy?.length
+                      ? extendedRow.isExpanded && isBottomInGroup
+                      : extendedRow.isExpanded) &&
+                    (RowSubComponent || GroupRowSubComponent) ? (
                       <tr className='sub-table-line'>
                         <td>
-                          <RowSubComponent row={extendedRow} />
+                          {GroupRowSubComponent && groupRowsBy?.length && (
+                            <GroupRowSubComponent
+                              rows={preFilteredRows.filter(
+                                (row) =>
+                                  row.values[groupRowsBy[0]] ===
+                                  extendedRow.values[groupRowsBy[0]]
+                              )}
+                            />
+                          )}
+
+                          {RowSubComponent && (
+                            <RowSubComponent row={extendedRow} />
+                          )}
                         </td>
                       </tr>
                     ) : null}

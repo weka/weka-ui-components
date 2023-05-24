@@ -237,8 +237,15 @@
       }
 
       &.is-expand {
-        border: 2px solid var(--main-color);
-        border-bottom: none;
+        $expanded-border: 2px solid var(--main-color);
+        
+        border-left: $expanded-border;
+        border-right: $expanded-border;
+
+
+        &.top {
+          border-top: $expanded-border;
+        }
       }
 
       &:nth-child(2n) {
