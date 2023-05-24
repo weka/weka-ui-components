@@ -455,9 +455,6 @@ interface TableProps<Data extends Record<string, unknown>> {
     checkRowHighlighted?: (row: object) => boolean;
     getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
     addFilterToUrl?: boolean;
-    RowSubComponent?: React.FC<{
-        row: any;
-    }>;
     listenerPrefix?: string;
     onRowClick?: (row?: Row) => void;
     miniTable?: boolean;
@@ -479,8 +476,18 @@ interface TableProps<Data extends Record<string, unknown>> {
         expandCell?: string;
         tableCell?: string;
     };
+    RowSubComponent?: React.FC<{
+        row: Row;
+    }>;
+    GroupRowSubComponent?: React.FC<{
+        rows: Row[];
+    }>;
+    /**
+     * **Must be memoized**
+     */
+    groupRowsBy?: string[];
 }
-declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters }: TableProps<Values>): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>(props: TableProps<Values>): JSX.Element;
 
 interface ActionsCellProps {
     actions: Array<RowAction>;
@@ -531,8 +538,6 @@ declare function DateCell({ cell, column }: {
 }): JSX.Element;
 
 declare function NodeCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function MultilineCell({ cell }: CustomCellProps): JSX.Element;
 
 interface IconButtonCellProps {
     action: CustomRowAction;
@@ -658,6 +663,15 @@ declare const utils: {
             [key: string]: any;
         };
     }, columnId: string) => number;
+    numberSort: (rowA: {
+        values: {
+            [key: string]: any;
+        };
+    }, rowB: {
+        values: {
+            [key: string]: any;
+        };
+    }, columnId: string) => number;
     isIp: (string: any) => string | false;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;
@@ -675,4 +689,4 @@ declare const utils: {
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, SwitchCell, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, JsonEditor, Loader, LoginField, MenuPopper, MultiSelectFilter, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Switch, SwitchCell, Tab, Table, TagsBox, TextArea, TextBox, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };

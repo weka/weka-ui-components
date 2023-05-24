@@ -61,9 +61,6 @@ interface TableProps<Data extends Record<string, unknown>> {
     checkRowHighlighted?: (row: object) => boolean;
     getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
     addFilterToUrl?: boolean;
-    RowSubComponent?: React.FC<{
-        row: any;
-    }>;
     listenerPrefix?: string;
     onRowClick?: (row?: Row) => void;
     miniTable?: boolean;
@@ -85,6 +82,16 @@ interface TableProps<Data extends Record<string, unknown>> {
         expandCell?: string;
         tableCell?: string;
     };
+    RowSubComponent?: React.FC<{
+        row: Row;
+    }>;
+    GroupRowSubComponent?: React.FC<{
+        rows: Row[];
+    }>;
+    /**
+     * **Must be memoized**
+     */
+    groupRowsBy?: string[];
 }
-declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters }: TableProps<Values>): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>(props: TableProps<Values>): JSX.Element;
 export default Table;
