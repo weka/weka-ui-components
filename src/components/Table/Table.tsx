@@ -725,7 +725,7 @@ function Table<Values extends Record<string, unknown>>(
                   'table-line': true,
                   clickable: onRowClick !== NOP || isExpandable,
                   'is-expand': extendedRow.isExpanded,
-                  top: isTopInGroup,
+                  top: isTopInGroup || (extendedRow.isExpanded && !groupRowsBy),
                   'is-selected': checkRowSelected?.(extendedRow.original),
                   'is-highlighted': checkRowHighlighted?.(extendedRow.original),
                   ...(extraClasses?.tableLine && {
