@@ -16,7 +16,7 @@
     justify-content: space-between;
 
     .show-columns-wrapper {
-        margin-left: 4px;
+      margin-left: 4px;
     }
 
     .sub-title {
@@ -24,7 +24,6 @@
       font-size: 11px;
       margin-left: 8px;
     }
-
 
     .table-actions {
       height: 100%;
@@ -42,12 +41,11 @@
 
           &.disabled {
             pointer-events: none;
-             background-color: var(--ironhide-t2);
+            background-color: var(--ironhide-t2);
           }
 
           &:hover {
             background-color: var(--ironhide-t3);
-
           }
 
           svg {
@@ -56,7 +54,7 @@
             margin-right: var(--spread);
 
             path {
-              fill: var(--ironhide-s2)
+              fill: var(--ironhide-s2);
             }
           }
         }
@@ -134,7 +132,6 @@
 
         .table-cell {
           font-size: 14px;
-
         }
       }
     }
@@ -146,7 +143,6 @@
     border-spacing: 0;
     position: relative;
     width: 100%;
-
 
     .sticky-header {
       position: sticky;
@@ -169,7 +165,6 @@
       z-index: 1;
       display: flex;
       user-select: none;
-
 
       .table-headline {
         cursor: pointer;
@@ -224,7 +219,7 @@
       background-color: var(--neutral-t4);
       box-sizing: border-box;
 
-      &.clickable,  {
+      &.clickable {
         cursor: pointer;
       }
 
@@ -237,15 +232,8 @@
       }
 
       &.is-expand {
-        $expanded-border: 2px solid var(--main-color);
-
-        border-left: $expanded-border;
-        border-right: $expanded-border;
-
-
-        &.top {
-          border-top: $expanded-border;
-        }
+        border: 2px solid var(--main-color);
+        border-bottom: none;
       }
 
       &:nth-child(2n) {
@@ -265,6 +253,10 @@
             fill: var(--main-color);
           }
         }
+      }
+
+      .expand-group {
+        margin-right: 8px;
       }
 
       td {
@@ -297,7 +289,6 @@
     display: flex;
     justify-content: center;
     border-top: 1px solid var(--ironhide-t1);
-
 
     .pagination-wrapper {
       border-top: 1px solid var(--ironhide-t1);
