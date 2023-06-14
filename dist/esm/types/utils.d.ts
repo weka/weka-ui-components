@@ -35,15 +35,6 @@ declare const utils: {
             [key: string]: any;
         };
     }, columnId: string) => number;
-    numberSort: (rowA: {
-        values: {
-            [key: string]: any;
-        };
-    }, rowB: {
-        values: {
-            [key: string]: any;
-        };
-    }, columnId: string) => number;
     isIp: (string: any) => string | false;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;
