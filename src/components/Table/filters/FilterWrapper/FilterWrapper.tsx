@@ -19,14 +19,20 @@ interface FilterWrapperProps {
   hideWrapper?: boolean
   isPopperOpen?: boolean
   onTogglePopper?: () => void
+  shouldDisableBtn?: (val: any) => boolean
+  disabledBtnTooltip?: string
 }
+
+const defaultShouldDisable = () => false
 
 function FilterWrapper({
   setFilter,
   value,
   children,
   columnTitle = EMPTY_STRING,
+  disabledBtnTooltip = EMPTY_STRING,
   hideWrapper = false,
+  shouldDisableBtn = defaultShouldDisable,
   isPopperOpen: isPopperOpenOuter,
   onTogglePopper: onTogglePopperOuter
 }: FilterWrapperProps) {
@@ -46,7 +52,8 @@ function FilterWrapper({
   useKeyEvent(ref, 'Enter', onClick)
   const isDisable =
     Utils.isEmpty(value) ||
-    (Utils.isString(value) && value?.trim().length === 0)
+    (Utils.isString(value) && value?.trim().length === 0) ||
+    shouldDisableBtn(value)
 
   function onClick() {
     if (!isDisable) {
@@ -100,12 +107,13 @@ function FilterWrapper({
                       >
                         {children}
                       </div>
-
-                      <div className='filter-table-wrapper-btn'>
-                        <Button disable={isDisable} onClick={onClick}>
-                          Filter
-                        </Button>
-                      </div>
+                      <Tooltip data={(value && shouldDisableBtn(value)) ? disabledBtnTooltip : EMPTY_STRING}>
+                        <div className='filter-table-wrapper-btn'>
+                          <Button disable={isDisable} onClick={onClick}>
+                            Filter
+                          </Button>
+                        </div>
+                      </Tooltip>
                     </div>
                   )}
                 </ClickAwayListener>

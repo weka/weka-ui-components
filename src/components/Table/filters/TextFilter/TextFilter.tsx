@@ -11,14 +11,19 @@ interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<
 }
 
 function TextFilter({ column }: {[key: string]: any}) {
-  const { filterValue, setFilter, Header } = column as ExtendedFiltersColumn<object>
+  const { filterValue, setFilter, Header, ...wrapperRest } = column as ExtendedFiltersColumn<object>
   const [value, setValue] = useState(filterValue)
   useEffect(() => {
     setValue(filterValue)
   }, [filterValue])
 
   return (
-    <FilterWrapper setFilter={setFilter} value={value} columnTitle={Header}>
+    <FilterWrapper
+      setFilter={setFilter}
+      value={value}
+      columnTitle={Header}
+      { ...wrapperRest }
+    >
       <input
         autoFocus
         className='table-text-filter'
