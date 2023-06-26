@@ -94,6 +94,12 @@
       }
     }
   }
+
+  &-sub {
+    .tab-title {
+      text-transform: capitalize !important;
+    }
+  }
 }
 
 .dark-mode {
