@@ -317,8 +317,9 @@ interface TabProps {
     setActive: () => void;
     subComponent?: ReactElement | null;
     isSideTab?: boolean;
+    isSubTab?: boolean;
 }
-declare function Tab({ title, subComponent, active, setActive, wrapperClass, disabled, isSideTab }: TabProps): JSX.Element;
+declare function Tab({ title, subComponent, active, setActive, wrapperClass, disabled, isSideTab, isSubTab }: TabProps): JSX.Element;
 
 interface ToastProps {
     message: any;
