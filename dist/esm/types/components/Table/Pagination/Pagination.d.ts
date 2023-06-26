@@ -5,6 +5,7 @@ interface PaginationProps {
     totalRows: number;
     rowsPerPage: number;
     defaultCurrentPage: number;
+    isLoading?: boolean;
 }
-declare function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage }: PaginationProps): JSX.Element | null;
+declare function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage, isLoading }: PaginationProps): JSX.Element | null;
 export default Pagination;
