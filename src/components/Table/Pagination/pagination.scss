@@ -4,6 +4,14 @@
     display: flex;
     justify-content: center;
 
+  .MuiIconButton-root {
+    padding: 0;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
 
     .pagination-wrapper {
       height: 40px;
@@ -27,6 +35,9 @@
             fill: var(--main-color);
           }
 
+        }
+
+        .pagination-arrow {
           &[disabled] {
             path {
               fill: var(--ironhide-key);
