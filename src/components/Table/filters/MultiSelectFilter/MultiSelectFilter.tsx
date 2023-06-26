@@ -40,6 +40,9 @@ function MultiSelectFilter({ column }: ExtendedFiltersColumn<object>) {
       preFilteredRows?.forEach((row: Row) => {
         if (value) {
           const rowValue: string | string[] | undefined = row.values[id]
+          if (Utils.isEmpty(rowValue)) {
+            return
+          }
 
           if (Array.isArray(rowValue)) {
             rowValue.forEach((val) => {
