@@ -91,4 +91,5 @@ interface TableProps<Data extends Record<string, unknown>> {
     groupBy?: string[];
 }
 declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters, groupBy }: TableProps<Values>): JSX.Element;
-export default Table;
+declare const _default: React.MemoExoticComponent<typeof Table>;
+export default _default;
