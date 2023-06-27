@@ -379,6 +379,7 @@ function Table<Values extends Record<string, unknown>>({
       autoResetRowState: false,
       autoResetGlobalFilter: false,
       autoResetHiddenColumns: false,
+      paginateExpandedRows: false,
       getRowId,
       sortTypes,
       manualFilters
@@ -856,4 +857,4 @@ function Table<Values extends Record<string, unknown>>({
   )
 }
 
-export default Table
+export default React.memo(Table)
