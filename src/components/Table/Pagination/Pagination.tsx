@@ -32,7 +32,7 @@ function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage, 
   }, [currentPage])
 
   useEffect(() => {
-    if (numberOfPages === currentPage || numberOfPages === 0) {
+    if (numberOfPages === currentPage || !numberOfPages) {
       setCanNextPage(false)
     } else {
       setCanNextPage(true)
