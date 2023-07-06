@@ -27,3 +27,4 @@ export { ReactComponent as Warning } from './031-warning-24.svg';
 export { ReactComponent as ThinArrow } from './079-arrow-12.svg';
 export { ReactComponent as User } from './017-user-16.svg';
 export { ReactComponent as Weka } from './043-weka-16.svg';
+export { ReactComponent as CheckMark } from './016-checkmark-10.svg';
