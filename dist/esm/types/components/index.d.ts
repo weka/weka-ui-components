@@ -49,3 +49,4 @@ export { default as FilterButton } from './FilterButton';
 export { default as FilterHeader } from './Table/filters/FilterHeader';
 export { default as FilterBox } from './FilterBox';
 export { default as EntityCell } from './Table/cells/EntityCell';
+export { default as Copy } from './Copy';
