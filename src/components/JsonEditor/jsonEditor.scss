@@ -36,5 +36,86 @@
         background-color: transparent;
       }
     }
+
+    .ace_search {
+      background-color: var(--neutral-t4);
+      color: var(--ironhide-s3);
+      border: 1px solid var(--main-color);
+      margin-right: 8px;
+      &.right {
+        border-radius: 4px;
+      }
+      &_field {
+        border-radius: 4px 0 0 4px;
+        color: var(--text-color);
+        border: 2px solid var(--main-color);
+        background-color: var(--input-background);
+        border-right: 0;
+      }
+
+      .ace_searchbtn {
+        background-color: var(--input-background);
+        border-top: 2px solid var(--main-color);
+        border-bottom: 2px solid var(--main-color);
+        border-left: 1px solid var(--main-color);
+        border-right: 0;
+
+        &_close {
+          background: url('data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMiAxMiI+PHBhdGggZD0iTTYuNzA3LDYsMTEuODU0Ljg1NGEuNS41LDAsMCwwLS43MDgtLjcwOEw2LDUuMjkzLjg1NC4xNDZBLjUuNSwwLDAsMCwuMTQ2Ljg1NEw1LjI5Myw2LC4xNDYsMTEuMTQ2YS41LjUsMCwwLDAsLjcwOC43MDhMNiw2LjcwN2w1LjE0Niw1LjE0N2EuNS41LDAsMCwwLC43MDgtLjcwOFoiIGZpbGw9IiNiM2IzYjMiLz48L3N2Zz4=') no-repeat 50% 0;
+        }
+
+        &.prev:after {
+          border: 2px solid var(--main-color);
+          border-width: 2px 0 0 2px;
+        }
+
+        &.next {
+          border-radius: 0 4px 4px 0;
+          border-right: 2px solid var(--main-color);
+          &:after {
+            border: 2px solid var(--main-color);
+            border-width: 0 2px 2px 0;
+          }
+        }
+        &:last-child {
+          display: none;
+        }
+
+      }
+      &_form {
+        &.ace_nomatch {
+          outline: none;
+        }
+      }
+      &_options {
+        margin-bottom: 4px;
+      }
+      .ace_button {
+        color: white;
+        opacity: 1;
+        background-color: var(--main-color);
+        border-radius: 2px;
+        &:hover, &.checked {
+          background-color: var(--submit-btn-hover);
+          border-color: var(--submit-btn-hover);
+        }
+      }
+    }
+  }
+
+  .copy-btn {
+    position: absolute;
+    z-index: 5;
+    left: 10px;
+    top: 12px;
+  }
+  &-with-copy {
+    padding-left: 20px;
+  }
+}
+
+.hide-search {
+  .ace_search {
+    display: none;
   }
 }
