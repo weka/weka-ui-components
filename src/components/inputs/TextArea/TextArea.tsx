@@ -1,4 +1,4 @@
-import React, {ReactElement} from 'react'
+import React, { ReactElement } from 'react'
 import classNames from 'classnames'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING } from '../../../consts'
@@ -7,17 +7,19 @@ import { Info } from '../../../svgs'
 import './textArea.scss'
 
 export interface TextAreaProps {
-  onChange?: (newVal: any) => void,
-  value?: any,
-  wrapperClass?: string,
-  info?: string,
-  isRequired?: boolean,
-  placeholder?: string | number,
-  label: string | ReactElement,
+  onChange?: (newVal: any) => void
+  value?: any
+  wrapperClass?: string
+  info?: string
+  isRequired?: boolean
+  placeholder?: string | number
+  label: string | ReactElement
   error?: any
+  tooltip?: string
+  disabled?: boolean
 }
 const TextArea = (props: TextAreaProps) => {
-  const { label, onChange, value, error, placeholder, wrapperClass = '', isRequired, info, ...rest } = props
+  const { label, onChange, value, error, placeholder, wrapperClass = '', isRequired, info, tooltip = EMPTY_STRING, disabled = false, ...rest } = props
 
   function onTextChange(event) {
     onChange(event.target.value)
@@ -31,18 +33,25 @@ const TextArea = (props: TextAreaProps) => {
 
   return (
     <div className={wrapperClasses}>
-      <textarea
-        className='field__input'
-        placeholder={placeholder}
-        value={value === null ? EMPTY_STRING : value}
-        onChange={onTextChange}
-        {...rest}
-      />
+      <Tooltip data={tooltip}>
+        <textarea
+          className='field__input'
+          placeholder={placeholder}
+          value={value === null ? EMPTY_STRING : value}
+          onChange={onTextChange}
+          disabled={disabled}
+          {...rest}
+        />
+      </Tooltip>
       <span className='field__label-wrap'>
         <span className='field__label field-1-label-content'>
           {label}
           {isRequired && <span className='required-star'>*</span>}
-          {!!info && <Tooltip data={info}><Info /></Tooltip>}
+          {!!info && (
+            <Tooltip data={info}>
+              <Info />
+            </Tooltip>
+          )}
         </span>
       </span>
       <span className='text-area-error capitalize-first-letter'>{error}</span>
