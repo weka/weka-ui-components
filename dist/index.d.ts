@@ -49,8 +49,9 @@ declare function ErrorPage({ error }: ErrorPageProps): JSX.Element;
 
 interface InfoProps {
     data: ReactElement | string;
+    extraClass?: string;
 }
-declare function Info({ data }: InfoProps): JSX.Element;
+declare function Info({ data, extraClass }: InfoProps): JSX.Element;
 
 declare function Checkbox(props: InputHTMLAttributes<HTMLInputElement>): JSX.Element;
 
