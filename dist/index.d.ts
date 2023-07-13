@@ -256,7 +256,7 @@ declare function UploadField(props: UploadFieldProps): JSX.Element;
 interface JsonEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
-    value?: string;
+    value: string;
     onValidate?: () => void;
     extraClass?: string;
     allowSearch?: boolean;

@@ -5,7 +5,7 @@ import './jsonEditor.scss';
 interface JsonEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
-    value?: string;
+    value: string;
     onValidate?: () => void;
     extraClass?: string;
     allowSearch?: boolean;
