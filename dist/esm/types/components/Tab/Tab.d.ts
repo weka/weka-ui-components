@@ -9,6 +9,7 @@ interface TabProps {
     subComponent?: ReactElement | null;
     isSideTab?: boolean;
     isSubTab?: boolean;
+    navigateTo?: string;
 }
-declare function Tab({ title, subComponent, active, setActive, wrapperClass, disabled, isSideTab, isSubTab }: TabProps): JSX.Element;
+declare function Tab(props: TabProps): JSX.Element;
 export default Tab;
