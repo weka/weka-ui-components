@@ -2,20 +2,23 @@ import React from 'react'
 import classNames from 'classnames'
 import { CustomCellProps } from '../../Table'
 import { DRIVES_STATUSES, NODES_STATUSES } from '../../../../consts'
-import { CellValue, ColumnInstance } from 'react-table'
+import { CellValue, ColumnInstance, Row } from 'react-table'
+import { Link } from 'react-router-dom'
 
 import './blocksCell.scss'
 
 interface ExtendedColumn extends ColumnInstance {
   showTotalCountOnly?: boolean
+  isLink?: boolean
+  getUrl?: (original: Partial<Row>) => string
 }
 
 function BlocksCell<Data extends Record<string, unknown>>({
   cell,
   column
 }: CustomCellProps<Data>) {
-  const { value } = cell
-  const { showTotalCountOnly } = column as unknown as ExtendedColumn
+  const { value, row } = cell
+  const { showTotalCountOnly, isLink, getUrl } = column as unknown as ExtendedColumn
 
   const upBlocks = value.filter(
     ({ status }: CellValue) =>
@@ -25,9 +28,14 @@ function BlocksCell<Data extends Record<string, unknown>>({
       status === DRIVES_STATUSES.PHASING_IN
   )
 
-  return (
+  const cellContent = (
     <div className='blocks-cell'>
-      <span className='table-count-cell'>
+      <span
+        className={classNames({
+          'table-count-cell': true,
+          'table-count-cell-is-link': isLink
+        })}
+      >
         {showTotalCountOnly ?? !value.length
           ? value.length
           : `${upBlocks.length}/${value.length}`}
@@ -43,6 +51,13 @@ function BlocksCell<Data extends Record<string, unknown>>({
         })}
       </div>
     </div>
+  )
+
+
+  return isLink && getUrl ? (
+    <Link to={getUrl(row.original)}>{cellContent}</Link>
+  ) : (
+    <>{cellContent}</>
   )
 }
 

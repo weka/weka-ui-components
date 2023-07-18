@@ -4,3 +4,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.table-link {
+  min-width: 0px;
+  user-select: none;
+}

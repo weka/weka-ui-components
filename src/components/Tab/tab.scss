@@ -102,6 +102,12 @@
   }
 }
 
+.link-tab {
+  text-decoration: none;
+  user-select: none;
+  height: 100%;
+}
+
 .dark-mode {
   .custom-tab {
     .tab-title {

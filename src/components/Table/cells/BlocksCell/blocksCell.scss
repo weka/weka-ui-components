@@ -5,6 +5,10 @@
   .table-count-cell {
     padding-bottom: 2px;
     justify-content: flex-start;
+    &-is-link {
+      color: inherit;
+      user-select: none;
+    }
   }
 
   .blocks-wrapper {
