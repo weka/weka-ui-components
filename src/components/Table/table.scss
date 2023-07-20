@@ -112,6 +112,7 @@
     width: 100%;
     overflow-y: scroll;
     height: calc(100% - 41px);
+    transition: background-color 0.2s ease;
     background-color: var(--table-background);
     &.mini-table {
       height: 100%;
@@ -289,7 +290,7 @@
     display: flex;
     justify-content: center;
     border-top: 1px solid var(--ironhide-t1);
-
+    background: var(--table-background);
     .pagination-wrapper {
       border-top: 1px solid var(--ironhide-t1);
       height: 40px;

@@ -22,23 +22,30 @@
       background-color: var(--accent-t5);
       border: 1px solid var(--accent-t3);
       box-shadow: 0 2px 2px var(--accent-t3) !important;
-
     }
   }
 }
 
-.dark-mode {
-  .tooltip-wrapper {
-    background-color: var(--ironhide-t3) !important;
-    border: 1px solid var(--ironhide-t1);
-    box-shadow: 0 2px 8px #00000066 !important;
-    .tooltip-arrow {
-      color: var(--ironhide-t3);
-      &::before {
-        background-color: var(--ironhide-t3);
-        border: 1px solid var(--ironhide-t1);
-        box-shadow: 0 2px 8px #00000066 !important;
-      }
+@mixin tooltip-wrapper-dark {
+  background-color: var(--ironhide-t3) !important;
+  border: 1px solid var(--ironhide-t1);
+  box-shadow: 0 2px 8px #00000066 !important;
+  .tooltip-arrow {
+    color: var(--ironhide-t3);
+    &::before {
+      background-color: var(--ironhide-t3);
+      border: 1px solid var(--ironhide-t1);
+      box-shadow: 0 2px 8px #00000066 !important;
     }
+  }
+}
+
+.dark-mode .tooltip-wrapper {
+  @include tooltip-wrapper-dark();
+}
+
+@media (prefers-color-scheme: dark) {
+  .tooltip-wrapper {
+    @include tooltip-wrapper-dark();
   }
 }
