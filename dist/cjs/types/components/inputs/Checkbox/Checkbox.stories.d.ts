@@ -1,5 +1,5 @@
-import { default as CheckboxComponent } from './Checkbox';
+import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-declare const _default: ComponentMeta<typeof CheckboxComponent>;
+declare const _default: ComponentMeta<React.ForwardRefExoticComponent<React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>>>;
 export default _default;
-export declare const Checkbox: ComponentStory<typeof CheckboxComponent>;
+export declare const Checkbox: ComponentStory<React.ForwardRefExoticComponent<React.InputHTMLAttributes<HTMLInputElement> & React.RefAttributes<HTMLInputElement>>>;
