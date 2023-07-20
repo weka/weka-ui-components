@@ -14,6 +14,7 @@ interface ExtendedFiltersColumn<T extends object>
   extends UseFiltersColumnProps<T> {
   Header: string
   id?: string
+  customTitle?: string
 }
 
 interface DateFilterProps {
@@ -29,7 +30,7 @@ export const isDateFilterValue = (obj: unknown): obj is DateFilterValue =>
   !!(utils.isObject(obj) && ('startTime' in obj || 'endTime' in obj))
 
 function DateFilter({ column }: DateFilterProps) {
-  const { filterValue, setFilter, id = EMPTY_STRING, Header } = column
+  const { filterValue, setFilter, id = EMPTY_STRING, customTitle = EMPTY_STRING, Header } = column
 
   const [from, onFromChange] = useState(
     filterValue?.startTime ? DateTime.fromISO(filterValue.startTime) : undefined
@@ -50,7 +51,7 @@ function DateFilter({ column }: DateFilterProps) {
   return (
     <FilterWrapper
       setFilter={setFilter}
-      columnTitle={id || Header}
+      columnTitle={customTitle || id || Header}
       hideWrapper
       isPopperOpen={isFilterOpen}
       onTogglePopper={toggleIsFilterOpen}

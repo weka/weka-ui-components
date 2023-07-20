@@ -376,6 +376,7 @@ declare function MultiSelectFilter({ column }: ExtendedFiltersColumn$2<object>):
 interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProps<T> {
     Header: string;
     id?: string;
+    customTitle?: string;
 }
 interface DateFilterProps {
     column: ExtendedFiltersColumn$1<object>;

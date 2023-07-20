@@ -4,6 +4,7 @@ import './dateFilter.scss';
 interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
     Header: string;
     id?: string;
+    customTitle?: string;
 }
 interface DateFilterProps {
     column: ExtendedFiltersColumn<object>;
