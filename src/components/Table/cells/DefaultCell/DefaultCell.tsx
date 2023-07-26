@@ -42,7 +42,7 @@ function DefaultCell({ cell }: CustomCellProps) {
           {cellContent}
         </Link>
       ) : (
-        <>{cellContent}</>
+        cellContent
       )}
     </Tooltip>
   )
