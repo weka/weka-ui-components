@@ -2,7 +2,6 @@ import React, {
   useCallback,
   useEffect,
   useId,
-  useMemo,
   useRef,
   useState
 } from 'react'
@@ -12,6 +11,7 @@ import { EMPTY_STRING } from '../../consts'
 import Copy from '../Copy'
 import { useToggle } from '../../hooks'
 import { Checkbox } from '../inputs'
+import { CircularProgress } from '@mui/material'
 
 import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -30,6 +30,8 @@ interface JsonEditorProps {
   allowSearch?: boolean
   allowCopy?: boolean
   shouldFoldAll?: boolean
+  valueForMatched?: ParsedData
+  isValueForMatchedLoading?: boolean
   [key: string]: any
 }
 function JsonEditor(props: JsonEditorProps) {
@@ -42,6 +44,8 @@ function JsonEditor(props: JsonEditorProps) {
     allowCopy = false,
     shouldFoldAll = false,
     extraClass = EMPTY_STRING,
+    valueForMatched,
+    isValueForMatchedLoading = false,
     ...rest
   } = props
   const id = useId()
@@ -61,49 +65,26 @@ function JsonEditor(props: JsonEditorProps) {
     [extraClass]: true
   })
 
-  const reformattedValue = useMemo(() => {
-    const reformatValue = (json: ParsedData, initialAccounter: Array<string>) =>
-      Object.keys(json).reduce<Record<string, string | number>>((acc, key) => {
-        if (typeof json[key] === 'object' && json[key] !== null) {
-          acc = {
-            ...acc,
-            ...reformatValue(json[key], [...initialAccounter, key])
-          }
-        } else {
-          acc[[...initialAccounter, key].join('.')] = json[key]
-        }
-        return acc
-      }, {})
-
-    if (allowSearch && !!value) {
-      const parsedValue = JSON.parse(value)
-
-      return parsedValue ? reformatValue(parsedValue, []) : {}
-    }
-
-    return {}
-  }, [allowSearch, value])
-
   const handleLoad = () => {
     setEditorReady(true)
   }
 
   const getFilteredValue = useCallback(() => {
     const searchTerm = searchValue.toLowerCase()
-    const filtered = Object.keys(reformattedValue).reduce<
+    const filtered = Object.entries(valueForMatched).reduce<
       Record<string, string | number | boolean>
-    >((acc, key) => {
+    >((acc, [key, value]) => {
       if (
         key.toLowerCase().includes(searchTerm) ||
-        `${reformattedValue[key]}`.toLowerCase().includes(searchTerm)
+        `${value}`.toLowerCase().includes(searchTerm)
       ) {
-        acc[key] = reformattedValue[key]
+        acc[key] = value
       }
 
       return acc
     }, {})
     return JSON.stringify(filtered, null, 2)
-  }, [reformattedValue, searchValue])
+  }, [valueForMatched, searchValue])
 
   useEffect(() => {
     if (allowSearch && editorReady) {
@@ -122,15 +103,19 @@ function JsonEditor(props: JsonEditorProps) {
 
   useEffect(() => {
     if (allowSearch) {
-      const editor = editorRef.current?.editor
-      if (onlyMatching) {
+      if (onlyMatching && valueForMatched) {
         setJsonValue(getFilteredValue())
       } else {
         setJsonValue(value)
       }
-      editor.scrollToLine(0)
     }
   }, [onlyMatching, searchValue, allowSearch, getFilteredValue, value])
+
+  useEffect(() => {
+    const editor = editorRef.current?.editor
+    editor.scrollToLine(0)
+    editor.selection.clearSelection()
+  }, [onlyMatching])
 
   useEffect(() => {
     const editor = editorRef.current?.editor
@@ -155,7 +140,11 @@ function JsonEditor(props: JsonEditorProps) {
       {allowSearch && (
         <div className='matching-toggle'>
           <span>Show only matching lines</span>
-          <Checkbox checked={onlyMatching} onChange={toggleOnlyMatching} />
+          {isValueForMatchedLoading ? (
+            <CircularProgress size={16} />
+          ) : (
+            <Checkbox checked={onlyMatching} onChange={toggleOnlyMatching} />
+          )}
         </div>
       )}
       <AceEditor
