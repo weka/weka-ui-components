@@ -229,6 +229,8 @@ interface TableProps<Data extends Record<string, unknown>> {
    * Must be memoized
    */
   groupBy?: string[]
+  hasCustomDateFormat?: boolean
+  customDateFormat?: string
 }
 
 function Table<Values extends Record<string, unknown>>({
@@ -264,7 +266,9 @@ function Table<Values extends Record<string, unknown>>({
   manualFilters,
   extraClasses,
   initialFilters: initialUserFilters,
-  groupBy
+  groupBy,
+  hasCustomDateFormat,
+  customDateFormat
 }: TableProps<Values>) {
   const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
     () =>
@@ -550,6 +554,8 @@ function Table<Values extends Record<string, unknown>>({
                     onDelete={() => {
                       setFilter(id, undefined)
                     }}
+                    hasCustomDateFormat={hasCustomDateFormat}
+                    customDateFormat={customDateFormat}
                   />
                 ))}
               <div className='table-filters-clear'>

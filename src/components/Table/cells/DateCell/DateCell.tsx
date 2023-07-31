@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import Tooltip from '../../../Tooltip'
 import Utils from '../../../../utils'
 import { CellProps } from 'react-table'
+import { TIME_FORMATS } from '../../../../consts'
 import clsx from 'clsx'
 
 import './dateCell.scss'
@@ -15,8 +16,20 @@ function DateCell({
   column: { [key: string]: any }
 }) {
   const { value } = cell
-  const { showMili, showRelative, relativeOnly } = column
+  const defaultCustomFormat = column?.showMili
+    ? TIME_FORMATS.DATE_TIME_SECONDS_MS
+    : TIME_FORMATS.DATE_TIME_SECONDS
+  const {
+    showMili,
+    showRelative,
+    relativeOnly,
+    enableCustomFormat = false,
+    customFormat = defaultCustomFormat
+  } = column
   const valueToDate = DateTime.fromISO(value)
+  const valueToShow = enableCustomFormat
+    ? valueToDate.toFormat(customFormat)
+    : Utils.formatISODate(value, showMili)
 
   const getDateString = () => {
     if (relativeOnly) {
@@ -25,12 +38,12 @@ function DateCell({
     if (showRelative) {
       return (
         <>
-          <span>{Utils.formatISODate(value, showMili)}</span>
+          <span>{valueToShow}</span>
           <span className='relative-time'>{` (${valueToDate.toRelative()})`}</span>
         </>
       )
     }
-    return Utils.formatISODate(value, showMili)
+    return valueToShow
   }
 
   const dateCellClasses = clsx({

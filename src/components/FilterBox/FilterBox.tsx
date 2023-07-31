@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
+import { DateTime } from 'luxon'
 import { Close } from '../../svgs'
-import { FILTERBOXES } from '../../consts'
+import { FILTERBOXES, TIME_FORMATS } from '../../consts'
 import {
   DateFilterValue,
   isDateFilterValue
@@ -10,9 +11,20 @@ import utils from '../../utils'
 import './filterBox.scss'
 
 const filterFormatters = {
-  dateFilter: ({ startTime, endTime }: DateFilterValue) => {
+  dateFilter: ({ startTime, endTime }: DateFilterValue, hasCustomDateFormat: boolean, customDateFormat: string) => {
     if (!startTime && !endTime) {
       return false
+    }
+    if (hasCustomDateFormat) {
+      return `${
+        startTime
+          ? DateTime.fromISO(startTime).toFormat(customDateFormat)
+          : 'Anytime'
+      } → ${
+        endTime
+          ? DateTime.fromISO(endTime).toFormat(customDateFormat)
+          : 'Anytime'
+      }`
     }
     return `${
       startTime ? utils.formatISODate(startTime, false) : 'Anytime'
@@ -24,9 +36,11 @@ interface FilterBoxProps {
   name: string
   value: string | Array<string> | Record<string, unknown>
   onDelete: () => void
+  hasCustomDateFormat?: boolean
+  customDateFormat?: string
 }
 
-function FilterBox({ name, value: value, onDelete }: FilterBoxProps) {
+function FilterBox({ name, value: value, onDelete, hasCustomDateFormat = false, customDateFormat = TIME_FORMATS.DATE_TIME_SECONDS }: FilterBoxProps) {
   const text = useMemo(() => {
     if (typeof value === 'string') {
       return value
@@ -37,7 +51,7 @@ function FilterBox({ name, value: value, onDelete }: FilterBoxProps) {
     }
 
     if (isDateFilterValue(value)) {
-      return filterFormatters.dateFilter(value)
+      return filterFormatters.dateFilter(value, hasCustomDateFormat, customDateFormat)
     }
 
     throw new Error('Unknown filter value!')
