@@ -382,6 +382,8 @@ interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProp
     Header: string;
     id?: string;
     customTitle?: string;
+    enableCustomFormat?: boolean;
+    customFormat?: string;
 }
 interface DateFilterProps {
     column: ExtendedFiltersColumn$1<object>;
@@ -497,8 +499,10 @@ interface TableProps<Data extends Record<string, unknown>> {
      * Must be memoized
      */
     groupBy?: string[];
+    hasCustomDateFormat?: boolean;
+    customDateFormat?: string;
 }
-declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters, groupBy }: TableProps<Values>): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters, groupBy, hasCustomDateFormat, customDateFormat }: TableProps<Values>): JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof Table>;
 
 interface ActionsCellProps {
@@ -579,6 +583,8 @@ interface DateTimePickerProps {
     disabled?: boolean;
     canClear?: boolean;
     showNow?: boolean;
+    enableCustomFormat?: boolean;
+    customFormat?: string;
 }
 declare function DateTimePicker(props: DateTimePickerProps): JSX.Element;
 
@@ -638,8 +644,10 @@ interface FilterBoxProps {
     name: string;
     value: string | Array<string> | Record<string, unknown>;
     onDelete: () => void;
+    hasCustomDateFormat?: boolean;
+    customDateFormat?: string;
 }
-declare function FilterBox({ name, value: value, onDelete }: FilterBoxProps): JSX.Element;
+declare function FilterBox({ name, value: value, onDelete, hasCustomDateFormat, customDateFormat }: FilterBoxProps): JSX.Element;
 
 declare function EntityCell({ cell }: CustomCellProps): JSX.Element;
 

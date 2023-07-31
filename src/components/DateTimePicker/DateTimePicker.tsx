@@ -24,25 +24,13 @@ interface DateTimePickerProps {
   disabled?: boolean
   canClear?: boolean
   showNow?: boolean
+  enableCustomFormat?: boolean
+  customFormat?: string
 }
 
 function DateTimePicker(props: DateTimePickerProps) {
-  const {
-    onChange,
-    value,
-    label = EMPTY_STRING,
-    minDate,
-    maxDate,
-    showSeconds,
-    isRequired,
-    error,
-    disablePortal,
-    showTime,
-    showCalendarIcon = false,
-    disabled = false,
-    canClear = true,
-    showNow
-  } = props
+  const { onChange, value, label = EMPTY_STRING, minDate, maxDate, showSeconds, isRequired, error,
+    disablePortal, showTime, showCalendarIcon = false, disabled = false, canClear = true, showNow, enableCustomFormat, customFormat } = props
   const [isOpen, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -80,6 +68,8 @@ function DateTimePicker(props: DateTimePickerProps) {
             showSeconds={showSeconds}
             showTime={showTime}
             disabled={disabled}
+            enableCustomFormat={enableCustomFormat}
+            customFormat={customFormat}
           />
         </div>
         <span className='datetime-picker-error'>{error}</span>

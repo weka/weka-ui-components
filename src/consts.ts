@@ -117,6 +117,13 @@ export const TIME_PARTS = {
   SECOND: 'second'
 }
 
+export const TIME_FORMATS = {
+  DATE: 'yyyy-MM-dd',
+  DATE_TIME: 'yyyy-MM-dd HH:mm',
+  DATE_TIME_SECONDS: 'yyyy-MM-dd HH:mm:ss',
+  DATE_TIME_SECONDS_MS: 'yyyy-MM-dd HH:mm:ss.SSS'
+}
+
 interface SeverityIcons {
   [key: string]: any
 }

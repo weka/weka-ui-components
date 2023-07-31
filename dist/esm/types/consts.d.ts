@@ -55,6 +55,12 @@ export declare const TIME_PARTS: {
     MINUTE: string;
     SECOND: string;
 };
+export declare const TIME_FORMATS: {
+    DATE: string;
+    DATE_TIME: string;
+    DATE_TIME_SECONDS: string;
+    DATE_TIME_SECONDS_MS: string;
+};
 interface SeverityIcons {
     [key: string]: any;
 }

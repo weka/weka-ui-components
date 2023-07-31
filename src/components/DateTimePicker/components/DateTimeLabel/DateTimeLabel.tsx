@@ -1,8 +1,8 @@
 import React from 'react'
 import { DateTime } from 'luxon'
 import Utils from '../../../../utils'
-import { EMPTY_STRING } from '../../../../consts'
 import clsx from 'clsx'
+import { EMPTY_STRING, TIME_FORMATS } from '../../../../consts'
 
 import './DateTimeLabel.scss'
 
@@ -11,10 +11,19 @@ interface DateTimeLabelProps {
   showSeconds?: boolean
   showTime?: boolean
   disabled?: boolean
+  enableCustomFormat?: boolean
+  customFormat?: string
 }
 
 function DateTimeLabel(props: DateTimeLabelProps) {
-  const { date = null, showSeconds = true, showTime = true, disabled } = props
+  const {
+    date = null,
+    showSeconds = true,
+    showTime = true,
+    disabled,
+    enableCustomFormat = false,
+    customFormat = TIME_FORMATS.DATE
+  } = props
 
   const labelClasses = clsx({
     'datetime-label': true,
@@ -23,12 +32,20 @@ function DateTimeLabel(props: DateTimeLabelProps) {
 
   const getTime = () => {
     if (date) {
-      return showTime
-        ? `${Utils.formatDate(date, showSeconds, false).slice(
-            0,
-            9
-          )} • ${Utils.formatDate(date, showSeconds, false).slice(9)}`
-        : `${Utils.formatDate(date, false, false, false)}`
+      if (showTime) {
+        if (enableCustomFormat) {
+          return `${date.toFormat(customFormat)} • ${Utils.formatDate(
+            date,
+            showSeconds,
+            false
+          ).slice(9)}`
+        }
+        return `${Utils.formatDate(date, showSeconds, false).slice(
+          0,
+          9
+        )} • ${Utils.formatDate(date, showSeconds, false).slice(9)}`
+      }
+      return `${Utils.formatDate(date, false, false, false)}`
     }
     return EMPTY_STRING
   }

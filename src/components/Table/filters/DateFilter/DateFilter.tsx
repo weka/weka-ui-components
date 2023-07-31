@@ -15,6 +15,8 @@ interface ExtendedFiltersColumn<T extends object>
   Header: string
   id?: string
   customTitle?: string
+  enableCustomFormat?: boolean
+  customFormat?: string
 }
 
 interface DateFilterProps {
@@ -30,7 +32,15 @@ export const isDateFilterValue = (obj: unknown): obj is DateFilterValue =>
   !!(utils.isObject(obj) && ('startTime' in obj || 'endTime' in obj))
 
 function DateFilter({ column }: DateFilterProps) {
-  const { filterValue, setFilter, id = EMPTY_STRING, customTitle = EMPTY_STRING, Header } = column
+  const {
+    filterValue,
+    setFilter,
+    id = EMPTY_STRING,
+    customTitle = EMPTY_STRING,
+    Header,
+    enableCustomFormat,
+    customFormat
+  } = column
 
   const [from, onFromChange] = useState(
     filterValue?.startTime ? DateTime.fromISO(filterValue.startTime) : undefined
@@ -64,6 +74,8 @@ function DateFilter({ column }: DateFilterProps) {
             label='FROM'
             maxDate={to ? to.endOf('day') : DateTime.now()}
             showSeconds
+            enableCustomFormat={enableCustomFormat}
+            customFormat={customFormat}
           />
         </div>
         <div>
@@ -73,6 +85,8 @@ function DateFilter({ column }: DateFilterProps) {
             label='TO'
             minDate={from && from.startOf('day')}
             showSeconds
+            enableCustomFormat={enableCustomFormat}
+            customFormat={customFormat}
           />
         </div>
         <div className='date-filter-controller'>

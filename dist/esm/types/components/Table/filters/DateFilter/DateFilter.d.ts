@@ -5,6 +5,8 @@ interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<
     Header: string;
     id?: string;
     customTitle?: string;
+    enableCustomFormat?: boolean;
+    customFormat?: string;
 }
 interface DateFilterProps {
     column: ExtendedFiltersColumn<object>;
