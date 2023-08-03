@@ -6,7 +6,7 @@ import React, {
   useState
 } from 'react'
 import AceEditor from 'react-ace'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { EMPTY_STRING } from '../../consts'
 import Copy from '../Copy'
 import { useToggle } from '../../hooks'
@@ -56,7 +56,7 @@ function JsonEditor(props: JsonEditorProps) {
   const [searchValue, setSearchValue] = useState(EMPTY_STRING)
   const [jsonValue, setJsonValue] = useState(value)
 
-  const classes = classNames({
+  const classes = clsx({
     'json-editor-wrapper': true,
     'read-only': readOnly,
     'hide-search': !allowSearch,

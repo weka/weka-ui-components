@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import Tooltip from '../../../Tooltip'
 import { Filter as FilterIcon } from '../../../../svgs'
@@ -16,24 +16,28 @@ interface FilterHeaderProps {
   filterKey?: string
 }
 
-function FilterHeader({ title, setFilter, Filter, dataForFilter, filterKey = EMPTY_STRING }: FilterHeaderProps) {
+function FilterHeader({
+  title,
+  setFilter,
+  Filter,
+  dataForFilter,
+  filterKey = EMPTY_STRING
+}: FilterHeaderProps) {
   const [isPopperOpen, togglePopper] = useToggle(false)
   const anchor = useRef(null)
-  const classes = classNames({
+  const classes = clsx({
     'filter-table-header': true,
     'no-title': !title
   })
   return (
     <div className={classes}>
-      <span>
-        {title}
-      </span>
+      <span>{title}</span>
       <Tooltip data='Filter by'>
         <span onClick={togglePopper} ref={anchor}>
           <FilterIcon />
         </span>
       </Tooltip>
-      { isPopperOpen && (
+      {isPopperOpen && (
         <Popper
           open={isPopperOpen}
           anchorEl={anchor.current}

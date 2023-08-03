@@ -1,7 +1,7 @@
 import React from 'react'
 import { ColumnInstance } from 'react-table'
 import { CustomCellProps } from '../../Table'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Tooltip from '../../../Tooltip'
 import { EMPTY_STRING } from '../../../../consts'
 
@@ -27,7 +27,7 @@ function IconCell({ cell }: CustomCellProps) {
 
   return (
     <Tooltip data={dataForTooltip}>
-      <div className={classNames('icon-cell', additionalClass)}>
+      <div className={clsx('icon-cell', additionalClass)}>
         {value && <Icon />}
       </div>
     </Tooltip>

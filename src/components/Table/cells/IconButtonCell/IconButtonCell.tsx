@@ -3,7 +3,7 @@ import { CustomRowAction, ExtendedRow } from '../../Table'
 import Tooltip from '../../../Tooltip'
 import { IconButton } from '@mui/material'
 import { EMPTY_STRING } from '../../../../consts'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import './iconButtonCell.scss'
 
@@ -13,8 +13,14 @@ interface IconButtonCellProps {
 }
 
 function IconButtonCell({ row, action }: IconButtonCellProps) {
-  const { Icon, onClick, tooltipText, disabled, extraClass = EMPTY_STRING } = action
-  const iconBtnClasses = classNames({
+  const {
+    Icon,
+    onClick,
+    tooltipText,
+    disabled,
+    extraClass = EMPTY_STRING
+  } = action
+  const iconBtnClasses = clsx({
     'icon-cell-btn': true,
     [extraClass]: true
   })

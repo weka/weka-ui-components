@@ -1,5 +1,5 @@
-import { MouseEventHandler } from "react";
-import "./button.scss";
+import { MouseEventHandler } from 'react';
+import './button.scss';
 export interface ButtonProps {
     children: any;
     disable?: boolean;

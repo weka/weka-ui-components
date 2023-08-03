@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { Arrow } from '../../../../svgs'
 import { EMPTY_STRING, NOP } from '../../../../consts'
 
@@ -11,14 +11,22 @@ interface NumInputProps {
   onChange?: (val?: number) => void
   numTitle?: string
   numFocus?: { [key: string]: any }
-  setNumFocus?: (state: {[key: string]: any }) => void
+  setNumFocus?: (state: { [key: string]: any }) => void
   initialNumState?: { [key: string]: any }
 }
 
 function NumInput(props: NumInputProps) {
-  const { max, value, onChange = NOP, numTitle = EMPTY_STRING, initialNumState = {}, numFocus = {}, setNumFocus = NOP } = props
+  const {
+    max,
+    value,
+    onChange = NOP,
+    numTitle = EMPTY_STRING,
+    initialNumState = {},
+    numFocus = {},
+    setNumFocus = NOP
+  } = props
 
-  const numInputClasses = classNames({
+  const numInputClasses = clsx({
     'num-input-controller': true,
     'num-input-controller-active': numFocus[numTitle]
   })
@@ -54,7 +62,9 @@ function NumInput(props: NumInputProps) {
               e.preventDefault()
             }
           }}
-          onClick={() => { onChange((value + max + 2) % (max + 1)) }}
+          onClick={() => {
+            onChange((value + max + 2) % (max + 1))
+          }}
         />
         <Arrow
           onMouseDown={(e) => {
@@ -62,10 +72,11 @@ function NumInput(props: NumInputProps) {
               e.preventDefault()
             }
           }}
-          onClick={() => { onChange((value + max) % (max + 1)) }}
+          onClick={() => {
+            onChange((value + max) % (max + 1))
+          }}
         />
       </div>
-
     </div>
   )
 }

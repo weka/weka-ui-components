@@ -1,25 +1,32 @@
-import React, {ChangeEvent} from 'react'
+import React, { ChangeEvent } from 'react'
 import { Radio } from '@mui/material'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
 
 import './radioSwitch.scss'
 
 interface RadioSwitchProps {
-  label: string,
-  value: string,
-  checked: boolean,
-  onChange: (newVal: any) => void,
-  disabled?: boolean,
+  label: string
+  value: string
+  checked: boolean
+  onChange: (newVal: any) => void
+  disabled?: boolean
   info?: string
 }
-function RadioSwitch({ label, checked, onChange, value, disabled, info }: RadioSwitchProps) {
+function RadioSwitch({
+  label,
+  checked,
+  onChange,
+  value,
+  disabled,
+  info
+}: RadioSwitchProps) {
   function onRadioChange(event: ChangeEvent<HTMLInputElement>) {
     onChange(event.target.value)
   }
 
-  const cls = classNames({
+  const cls = clsx({
     disabled,
     'radio-switch': true
   })
@@ -35,7 +42,11 @@ function RadioSwitch({ label, checked, onChange, value, disabled, info }: RadioS
       />
       <span className='radio-label'>
         {label}
-        {!!info && <Tooltip data={info}><Info /></Tooltip>}
+        {!!info && (
+          <Tooltip data={info}>
+            <Info />
+          </Tooltip>
+        )}
       </span>
     </div>
   )

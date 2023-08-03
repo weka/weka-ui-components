@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Button from '../../../Button'
 import { DateTime } from 'luxon'
 import NumInput from '../NumInput'
@@ -16,7 +16,13 @@ interface TimeSelectorProps {
 }
 
 function TimeSelector(props: TimeSelectorProps) {
-  const { time, onSubmit, showSeconds = true, onNowSubmit, showNow = true } = props
+  const {
+    time,
+    onSubmit,
+    showSeconds = true,
+    onNowSubmit,
+    showNow = true
+  } = props
   const initialNumState = {
     hour: false,
     minute: false,
@@ -33,12 +39,12 @@ function TimeSelector(props: TimeSelectorProps) {
     onSubmit(time.set({ ...setOfTime, [key]: value }))
   }
 
-  const dateTimeClasses = classNames({
+  const dateTimeClasses = clsx({
     'datetime-time': true,
     'datetime-time-hour-min-only': !showSeconds
   })
 
-  const timeSelectorClasses = classNames({
+  const timeSelectorClasses = clsx({
     'time-selector': true,
     'time-selector-no-now': !showNow
   })
@@ -46,7 +52,14 @@ function TimeSelector(props: TimeSelectorProps) {
   return (
     <div className={dateTimeClasses}>
       <div className={timeSelectorClasses}>
-        {showNow && <Button extraClass='time-selector-now-btn' onClick={() => onNowSubmit(DateTime.now())}>Now</Button>}
+        {showNow && (
+          <Button
+            extraClass='time-selector-now-btn'
+            onClick={() => onNowSubmit(DateTime.now())}
+          >
+            Now
+          </Button>
+        )}
         <NumInput
           value={hours}
           max={23}

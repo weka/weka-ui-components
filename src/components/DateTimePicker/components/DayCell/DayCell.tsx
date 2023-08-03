@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { DateTime } from 'luxon'
 
 import './DayCell.scss'
@@ -14,15 +14,24 @@ interface DayCellProps {
 }
 
 function DayCell(props: DayCellProps) {
-  const { month, date, selected, onSelect, minDate = null, maxDate = null } = props
+  const {
+    month,
+    date,
+    selected,
+    onSelect,
+    minDate = null,
+    maxDate = null
+  } = props
 
   function isDisable() {
-    return month !== date.month
-      || (maxDate ? date > maxDate : false)
-      || (minDate ? date < minDate : false)
+    return (
+      month !== date.month ||
+      (maxDate ? date > maxDate : false) ||
+      (minDate ? date < minDate : false)
+    )
   }
 
-  const dayClassname = classNames({
+  const dayClassname = clsx({
     'cell-day': true,
     'cell-day-disabled': isDisable(),
     'cell-day-active': !isDisable(),

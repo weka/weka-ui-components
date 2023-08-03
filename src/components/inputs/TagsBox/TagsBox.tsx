@@ -1,7 +1,13 @@
-import React, {ReactElement, MouseEvent, KeyboardEvent, useEffect, useState} from 'react'
+import React, {
+  ReactElement,
+  MouseEvent,
+  KeyboardEvent,
+  useEffect,
+  useState
+} from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { EMPTY_STRING, TAG_SEPARATOR } from '../../../consts'
 import Utils from '../../../utils'
 import Tooltip from '../../Tooltip'
@@ -10,25 +16,37 @@ import { Info } from '../../../svgs'
 import './tagsBox.scss'
 
 interface TagsBoxProps {
-  onChange: (newVal: any) => void,
-  value: any,
-  wrapperClass?: string,
-  warning?: string,
-  isRequired?: boolean,
-  tagsValidation?: (val: any) => boolean,
+  onChange: (newVal: any) => void
+  value: any
+  wrapperClass?: string
+  warning?: string
+  isRequired?: boolean
+  tagsValidation?: (val: any) => boolean
   placeholder?: string | number
   label: string | ReactElement
-  error?: any,
-  info?: any,
-  invalidTagText?: string,
-  disabled?: boolean,
+  error?: any
+  info?: any
+  invalidTagText?: string
+  disabled?: boolean
   isClearable?: boolean
 }
 
 function TagsBox(props: TagsBoxProps) {
   const {
-    label, onChange, value = [], error, placeholder, wrapperClass = '', tagsValidation = (val) => val,
-    warning, isRequired, info, invalidTagText, disabled, isClearable, ...rest
+    label,
+    onChange,
+    value = [],
+    error,
+    placeholder,
+    wrapperClass = '',
+    tagsValidation = (val) => val,
+    warning,
+    isRequired,
+    info,
+    invalidTagText,
+    disabled,
+    isClearable,
+    ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [editValueError, setEditErrorValue] = useState(false)
@@ -43,7 +61,7 @@ function TagsBox(props: TagsBoxProps) {
     }
   }, [editValue])
 
-  const wrapperClasses = classNames({
+  const wrapperClasses = clsx({
     [wrapperClass]: true,
     'tagsbox-wrapper': true,
     'has-error': !!error
@@ -55,11 +73,13 @@ function TagsBox(props: TagsBoxProps) {
       if (editValue) {
         event.preventDefault()
       }
-      const deDuplicateValues = Array.from(new Set(
-        `${value}${TAG_SEPARATOR}${editValue}`
-          .split(TAG_SEPARATOR)
-          .filter((tag) => tag)
-      ))
+      const deDuplicateValues = Array.from(
+        new Set(
+          `${value}${TAG_SEPARATOR}${editValue}`
+            .split(TAG_SEPARATOR)
+            .filter((tag) => tag)
+        )
+      )
       if (Utils.isEmpty(tagsValidation([editValue]))) {
         setEditErrorValue(true)
       } else {
@@ -71,11 +91,13 @@ function TagsBox(props: TagsBoxProps) {
 
   function onMouseClick(event: MouseEvent) {
     event.stopPropagation()
-    const deDuplicateValues = Array.from(new Set(
-      `${value}${TAG_SEPARATOR}${editValue}`
-        .split(TAG_SEPARATOR)
-        .filter((tag) => tag)
-    ))
+    const deDuplicateValues = Array.from(
+      new Set(
+        `${value}${TAG_SEPARATOR}${editValue}`
+          .split(TAG_SEPARATOR)
+          .filter((tag) => tag)
+      )
+    )
     if (Utils.isEmpty(tagsValidation([editValue]))) {
       setEditErrorValue(true)
     } else {
@@ -93,7 +115,11 @@ function TagsBox(props: TagsBoxProps) {
       <span className='tags-label field-1-label-content'>
         {label}
         {isRequired && <span className='required-star'>*</span>}
-        {!!info && <Tooltip data={info}><Info /></Tooltip>}
+        {!!info && (
+          <Tooltip data={info}>
+            <Info />
+          </Tooltip>
+        )}
       </span>
       <CreatableSelect
         components={{ DropdownIndicator: null }}
@@ -110,20 +136,23 @@ function TagsBox(props: TagsBoxProps) {
         formatCreateLabel={(userInput) => (
           <div onClick={onMouseClick}>
             {`'${userInput}'`}
-            {editValueError && <span className='tags-invalid'>{` - ${invalidTagText || 'Invalid value'}`}</span>}
+            {editValueError && (
+              <span className='tags-invalid'>{` - ${
+                invalidTagText || 'Invalid value'
+              }`}</span>
+            )}
           </div>
         )}
         classNamePrefix='react-tagsbox'
         {...rest}
       />
-      <span className='tags-box-error capitalize-first-letter'>{editValueError || error}</span>
+      <span className='tags-box-error capitalize-first-letter'>
+        {editValueError || error}
+      </span>
       {value && !error && warning && (
-        <span className='tags-warning'>
-          {warning}
-        </span>
+        <span className='tags-warning'>{warning}</span>
       )}
     </FormControl>
-
   )
 }
 export default TagsBox

@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import './spinner.scss'
 
@@ -7,7 +7,7 @@ interface SpinnerProps {
   light?: string
 }
 function Spinner({ light }: SpinnerProps) {
-  const cls = classNames({
+  const cls = clsx({
     light,
     spinner: true,
     center: true

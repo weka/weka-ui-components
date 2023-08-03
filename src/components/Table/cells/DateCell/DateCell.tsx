@@ -3,11 +3,17 @@ import { DateTime } from 'luxon'
 import Tooltip from '../../../Tooltip'
 import Utils from '../../../../utils'
 import { CellProps } from 'react-table'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import './dateCell.scss'
 
-function DateCell({ cell, column }: { cell: CellProps<object>, column: { [key: string]: any }}) {
+function DateCell({
+  cell,
+  column
+}: {
+  cell: CellProps<object>
+  column: { [key: string]: any }
+}) {
   const { value } = cell
   const { showMili, showRelative, relativeOnly } = column
   const valueToDate = DateTime.fromISO(value)
@@ -27,16 +33,19 @@ function DateCell({ cell, column }: { cell: CellProps<object>, column: { [key: s
     return Utils.formatISODate(value, showMili)
   }
 
-  const dateCellClasses = classNames({
+  const dateCellClasses = clsx({
     'table-date-cell': !showRelative,
     'table-date-cell-with-relative': showRelative
   })
 
   return (
-    <Tooltip data={valueToDate.toLocaleString({ dateStyle: 'full', timeStyle: 'long' })}>
-      <div className={dateCellClasses}>
-        {getDateString()}
-      </div>
+    <Tooltip
+      data={valueToDate.toLocaleString({
+        dateStyle: 'full',
+        timeStyle: 'long'
+      })}
+    >
+      <div className={dateCellClasses}>{getDateString()}</div>
     </Tooltip>
   )
 }

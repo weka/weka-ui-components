@@ -2,7 +2,7 @@ import React from 'react'
 import { CustomCellProps } from '../../Table'
 import Tooltip from '../../../Tooltip'
 import { EMPTY_STRING, SHORT_ROLES } from '../../../../consts'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import './nodeCell.scss'
 
@@ -10,7 +10,7 @@ function NodeCell({ cell }: CustomCellProps) {
   const { value } = cell
   const { nid, isBackend, roles } = value
 
-  const isBackendClasses = classNames({
+  const isBackendClasses = clsx({
     'is-backend': isBackend,
     'is-client': !isBackend
   })
@@ -20,11 +20,18 @@ function NodeCell({ cell }: CustomCellProps) {
       <span>{nid} </span>
       {isBackend && (
         <span>
-        {roles?.length ? `(${roles?.reduce((acc: Array<string>, role: string) => {
-          SHORT_ROLES[role] ? acc.push(SHORT_ROLES[role]) : acc.push(role)
-          return acc
-        }, []).join(', ')}) `: EMPTY_STRING}
-      </span>)}
+          {roles?.length
+            ? `(${roles
+                ?.reduce((acc: Array<string>, role: string) => {
+                  SHORT_ROLES[role]
+                    ? acc.push(SHORT_ROLES[role])
+                    : acc.push(role)
+                  return acc
+                }, [])
+                .join(', ')}) `
+            : EMPTY_STRING}
+        </span>
+      )}
       <Tooltip data={isBackend ? 'Backend' : 'Client'}>
         <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>
       </Tooltip>

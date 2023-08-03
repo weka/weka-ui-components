@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING } from '../../../consts'
 import { Info } from '../../../svgs'
@@ -19,13 +19,25 @@ export interface TextAreaProps {
   disabled?: boolean
 }
 const TextArea = (props: TextAreaProps) => {
-  const { label, onChange, value, error, placeholder, wrapperClass = '', isRequired, info, tooltip = EMPTY_STRING, disabled = false, ...rest } = props
+  const {
+    label,
+    onChange,
+    value,
+    error,
+    placeholder,
+    wrapperClass = '',
+    isRequired,
+    info,
+    tooltip = EMPTY_STRING,
+    disabled = false,
+    ...rest
+  } = props
 
   function onTextChange(event) {
     onChange(event.target.value)
   }
 
-  const wrapperClasses = classNames({
+  const wrapperClasses = clsx({
     [wrapperClass]: true,
     'text-area-field': true,
     'has-error': !!error
