@@ -1,5 +1,5 @@
 import React, { useId, useState } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
 import { EMPTY_STRING, NOP } from '../../../consts'
@@ -34,7 +34,7 @@ function UploadField(props: UploadFieldProps) {
   } = props
   const id = useId()
   const [fileName, setFileName] = useState(EMPTY_STRING)
-  const uploadWrapperClasses = classNames({
+  const uploadWrapperClasses = clsx({
     'upload-wrapper': true,
     [wrapperClass]: true,
     'upload-wrapper-disabled': disabled

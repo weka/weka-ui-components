@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import { CustomCellProps } from '../../Table'
 import { DRIVES_STATUSES, NODES_STATUSES } from '../../../../consts'
 import { CellValue, ColumnInstance, Row } from 'react-table'
@@ -18,7 +18,8 @@ function BlocksCell<Data extends Record<string, unknown>>({
   column
 }: CustomCellProps<Data>) {
   const { value, row } = cell
-  const { showTotalCountOnly, isLink, getUrl } = column as unknown as ExtendedColumn
+  const { showTotalCountOnly, isLink, getUrl } =
+    column as unknown as ExtendedColumn
 
   const upBlocks = value.filter(
     ({ status }: CellValue) =>
@@ -31,7 +32,7 @@ function BlocksCell<Data extends Record<string, unknown>>({
   const cellContent = (
     <div className='blocks-cell'>
       <span
-        className={classNames({
+        className={clsx({
           'table-count-cell': true,
           'table-count-cell-is-link': isLink
         })}
@@ -42,7 +43,7 @@ function BlocksCell<Data extends Record<string, unknown>>({
       </span>
       <div className='blocks-wrapper'>
         {value.map(({ uid, id, status }: CellValue) => {
-          const classes = classNames({
+          const classes = clsx({
             block: true,
             [status]: true
           })
@@ -52,7 +53,6 @@ function BlocksCell<Data extends Record<string, unknown>>({
       </div>
     </div>
   )
-
 
   return isLink && getUrl ? (
     <Link to={getUrl(row.original)}>{cellContent}</Link>

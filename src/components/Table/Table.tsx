@@ -22,7 +22,7 @@ import {
   ClearFilters,
   ThinArrow
 } from '../../svgs'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import {
   Row,
   Column as RTColumn,
@@ -399,11 +399,11 @@ function Table<Values extends Record<string, unknown>>({
   }, [filters])
 
   const isEmpty = !rows.length
-  const tableClass = classNames({
+  const tableClass = clsx({
     'empty-table': isEmpty,
     'react-table': true
   })
-  const wrapperClasses = classNames({
+  const wrapperClasses = clsx({
     'mini-table': miniTable,
     'scroll-wrapper': true
   })
@@ -504,9 +504,7 @@ function Table<Values extends Record<string, unknown>>({
   }, [])
 
   return (
-    <div
-      className={classNames('react-table-wrapper', extraClasses?.tableWrapper)}
-    >
+    <div className={clsx('react-table-wrapper', extraClasses?.tableWrapper)}>
       {!miniTable && (
         <div className='table-top'>
           <div>
@@ -614,7 +612,7 @@ function Table<Values extends Record<string, unknown>>({
                             (column.isSorted ||
                               (!column.isSorted && !column.Header)) && (
                               <div
-                                className={classNames(
+                                className={clsx(
                                   'table-sort',
                                   !column.isSorted &&
                                     !column.Header &&
@@ -662,7 +660,7 @@ function Table<Values extends Record<string, unknown>>({
               {page.map((row) => {
                 const extendedRow = row as ExtendedRow<object>
                 prepareRow(extendedRow)
-                const classes = classNames({
+                const classes = clsx({
                   'table-line': true,
                   clickable: onRowClick !== NOP || isExpandable,
                   'is-expand': !extendedRow.isGrouped && extendedRow.isExpanded,
@@ -678,7 +676,7 @@ function Table<Values extends Record<string, unknown>>({
                     <tr {...extendedRow.getRowProps()} className={classes}>
                       {isExpandable && !groupBy && (
                         <td
-                          className={classNames(
+                          className={clsx(
                             'expand-cell',
                             extraClasses?.expandCell
                           )}
@@ -723,7 +721,7 @@ function Table<Values extends Record<string, unknown>>({
                           <td
                             key={key}
                             {...cellProps}
-                            className={classNames(
+                            className={clsx(
                               'table-cell',
                               extraClasses?.tableCell
                             )}

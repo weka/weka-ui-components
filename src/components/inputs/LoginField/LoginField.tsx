@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import { EMPTY_STRING } from '../../../consts'
 import useToggle from '../../../hooks/useToggle'
@@ -20,7 +20,18 @@ interface LoginFieldProps {
   error?: any
 }
 function LoginField(props: LoginFieldProps) {
-  const { label, onChange, value = EMPTY_STRING, error, placeholder, type, wrapperClass = EMPTY_STRING, tooltip, isRequired, ...rest } = props
+  const {
+    label,
+    onChange,
+    value = EMPTY_STRING,
+    error,
+    placeholder,
+    type,
+    wrapperClass = EMPTY_STRING,
+    tooltip,
+    isRequired,
+    ...rest
+  } = props
 
   const [showPassword, toggleShowPassword] = useToggle(false)
 
@@ -32,13 +43,13 @@ function LoginField(props: LoginFieldProps) {
     )
   }
 
-  const wrapperClasses = classNames({
+  const wrapperClasses = clsx({
     [wrapperClass]: true,
     'login-text-field': true,
     'has-error': !!error
   })
 
-  const inputClasses = classNames({
+  const inputClasses = clsx({
     'login-field-input': true,
     'is-type-password-login': type === 'password'
   })

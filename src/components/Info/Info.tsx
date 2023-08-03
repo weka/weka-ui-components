@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../Tooltip'
 import { Info as InfoSvg } from '../../svgs'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import './info.scss'
 
@@ -11,11 +11,8 @@ interface InfoProps {
 }
 function Info({ data, extraClass }: InfoProps) {
   return (
-    <Tooltip
-      data={data}
-      placement='right'
-    >
-      <InfoSvg className={classNames('component-info', extraClass)} />
+    <Tooltip data={data} placement='right'>
+      <InfoSvg className={clsx('component-info', extraClass)} />
     </Tooltip>
   )
 }

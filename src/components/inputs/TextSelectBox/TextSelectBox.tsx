@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import TextBox from '../TextBox'
 import Select from '../Select'
 import Utils from '../../../utils'
@@ -8,23 +8,37 @@ import Info from '../../Info'
 import './textSelectBox.scss'
 
 interface TextSelectBoxProps {
-  label: string,
-  onChange: (newVal: any) => void,
+  label: string
+  onChange: (newVal: any) => void
   isRequired?: boolean
-  selectPlaceholder?: any,
-  value?: any,
-  wrapperClass?: string,
-  error?: string,
-  info?: string,
-  options: any[],
+  selectPlaceholder?: any
+  value?: any
+  wrapperClass?: string
+  error?: string
+  info?: string
+  options: any[]
   formatFunc: (val: any) => any
 }
 function TextSelectBox(props: TextSelectBoxProps) {
-  const { label, onChange, value, wrapperClass = '', options, formatFunc, info, selectPlaceholder, error, isRequired, ...rest } = props
+  const {
+    label,
+    onChange,
+    value,
+    wrapperClass = '',
+    options,
+    formatFunc,
+    info,
+    selectPlaceholder,
+    error,
+    isRequired,
+    ...rest
+  } = props
   const { number, unit } = formatFunc(value)
   const [textValue, setTextValue] = useState(number)
-  const [selectValue, setSelectValue] = useState(unit.value || selectPlaceholder)
-  const classes = classNames({
+  const [selectValue, setSelectValue] = useState(
+    unit.value || selectPlaceholder
+  )
+  const classes = clsx({
     [wrapperClass]: true,
     'has-error': !!error,
     'text-select-wrapper': true
@@ -56,7 +70,12 @@ function TextSelectBox(props: TextSelectBoxProps) {
         {isRequired && <span className='required-star'>*</span>}
         {info && <Info data={info} />}
       </span>
-      <TextBox value={textValue} type='number' onChange={onTextChange} {...rest} />
+      <TextBox
+        value={textValue}
+        type='number'
+        onChange={onTextChange}
+        {...rest}
+      />
       <div className='spread-line' />
       <Select value={selectValue} options={options} onChange={onSelectChange} />
       <span className='text-select-error capitalize-first-letter'>{error}</span>

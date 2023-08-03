@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react'
-import classNames from 'classnames'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, NOP } from '../../../consts'
 import Utils from '../../../utils'
@@ -18,22 +18,34 @@ function keyDown(event: React.KeyboardEvent) {
 }
 
 interface IpSubnetTextBoxProps {
-   disabled?: boolean,
-  isRequired?: boolean,
-  onChange: (newVal: any)=>void,
-  value: string,
-  wrapperClass?: string,
-  label: string,
-  error?: string,
+  disabled?: boolean
+  isRequired?: boolean
+  onChange: (newVal: any) => void
+  value: string
+  wrapperClass?: string
+  label: string
+  error?: string
   info?: string
 }
 
 function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
-  const {label, onChange = NOP, value, error, wrapperClass = '', isRequired, info, ...rest} = props
-  const {disabled} = rest
+  const {
+    label,
+    onChange = NOP,
+    value,
+    error,
+    wrapperClass = '',
+    isRequired,
+    info,
+    ...rest
+  } = props
+  const { disabled } = rest
   const [ipVal, subnet] = value ? value.split('/') : ['...', '']
-  const [ipParts, setIpParts] = useState<any[]>([...ipVal.split('.'), Utils.subnet2MaskOp(subnet)])
-  const wrapperClasses = classNames({
+  const [ipParts, setIpParts] = useState<any[]>([
+    ...ipVal.split('.'),
+    Utils.subnet2MaskOp(subnet)
+  ])
+  const wrapperClasses = clsx({
     [wrapperClass]: true,
     'ip-subnet-text-box-field': true,
     disabled,
@@ -43,9 +55,13 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
   function setIpPart(index: number, val: ChangeEvent<HTMLInputElement>) {
     const newIpParts = [...ipParts]
     if (index === 4) {
-      newIpParts[index] = val.target.value && Math.max(0, Math.min(32, parseInt(val.target.value, 10)))
+      newIpParts[index] =
+        val.target.value &&
+        Math.max(0, Math.min(32, parseInt(val.target.value, 10)))
     } else {
-      newIpParts[index] = val.target.value && Math.max(0, Math.min(255, parseInt(val.target.value, 10)))
+      newIpParts[index] =
+        val.target.value &&
+        Math.max(0, Math.min(255, parseInt(val.target.value, 10)))
       if (newIpParts[index] >= 100) {
         Utils.goToNextInput()
       }
@@ -54,14 +70,21 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     if (newIpParts.some(Utils.isEmpty)) {
       onChange(EMPTY_STRING)
     } else {
-      onChange(`${newIpParts.slice(0, 4).join('.')}/${Utils.mask2SubnetOp(newIpParts.slice(4))}`)
+      onChange(
+        `${newIpParts.slice(0, 4).join('.')}/${Utils.mask2SubnetOp(
+          newIpParts.slice(4)
+        )}`
+      )
     }
   }
 
   const inputsRef = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
     const focusElement = document.activeElement as HTMLElement
-    if (focusElement.parentNode && focusElement.parentNode.parentNode === inputsRef.current) {
+    if (
+      focusElement.parentNode &&
+      focusElement.parentNode.parentNode === inputsRef.current
+    ) {
       inputsRef.current?.firstElementChild.firstElementChild.select()
       inputsRef.current?.firstElementChild.firstElementChild.focus()
     }
@@ -86,7 +109,11 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
         <span className='field__label field-1-label-content'>
           {label}
           {isRequired && <span className='required-star'>*</span>}
-          {!!info && <Tooltip data={info}><Info /></Tooltip>}
+          {!!info && (
+            <Tooltip data={info}>
+              <Info />
+            </Tooltip>
+          )}
         </span>
       </span>
       <span className='ip-subnet-error capitalize-first-letter'>{error}</span>

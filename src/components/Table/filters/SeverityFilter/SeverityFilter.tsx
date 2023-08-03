@@ -1,5 +1,5 @@
 import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import FilterWrapper from '../FilterWrapper'
 import { SEVERITIES, SEVERITIES_ICONS } from '../../../../consts'
 import { UseFiltersColumnProps } from 'react-table'
@@ -31,7 +31,7 @@ function SeverityFilter({ column }: ExtendedFiltersColumn<object>) {
         <span className='heading-4'>Min. Severity</span>
         {SEVERITIES.map((severity) => {
           const Icon = SEVERITIES_ICONS[severity]
-          const classes = classNames({
+          const classes = clsx({
             'severity-wrapper': true,
             [severity.toLowerCase()]: true
           })

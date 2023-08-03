@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, NOP } from '../../../consts'
 import Utils from '../../../utils'
@@ -18,21 +18,32 @@ function keyDown(event: React.KeyboardEvent) {
 }
 
 interface IpTextBoxProps {
-  disabled?: boolean,
-  isRequired?: boolean,
-  onChange: (newVal: any) => void,
-  value: string,
-  wrapperClass?: string,
-  label: string,
-  error?: string,
+  disabled?: boolean
+  isRequired?: boolean
+  onChange: (newVal: any) => void
+  value: string
+  wrapperClass?: string
+  label: string
+  error?: string
   info?: string
 }
 
 function IpTextBox(props: IpTextBoxProps) {
-  const { label, onChange = NOP, value, error, wrapperClass = '', isRequired, info, ...rest } = props
+  const {
+    label,
+    onChange = NOP,
+    value,
+    error,
+    wrapperClass = '',
+    isRequired,
+    info,
+    ...rest
+  } = props
   const { disabled } = rest
-  const [ipParts, setIpParts] = useState(value ? value.split('.') : ['', '', '', ''])
-  const wrapperClasses = classNames({
+  const [ipParts, setIpParts] = useState(
+    value ? value.split('.') : ['', '', '', '']
+  )
+  const wrapperClasses = clsx({
     [wrapperClass]: true,
     'ip-text-box-field': true,
     'ip-text-box-disabled': disabled,
@@ -41,7 +52,9 @@ function IpTextBox(props: IpTextBoxProps) {
 
   function setIpPart(index, val) {
     const newIpParts = [...ipParts]
-    newIpParts[index] = val.target.value && Math.max(0, Math.min(255, parseInt(val.target.value, 10)))
+    newIpParts[index] =
+      val.target.value &&
+      Math.max(0, Math.min(255, parseInt(val.target.value, 10)))
     if (newIpParts[index] >= 100) {
       Utils.goToNextInput()
     }
@@ -73,7 +86,11 @@ function IpTextBox(props: IpTextBoxProps) {
         <span className='field__label field-1-label-content'>
           {label}
           {isRequired && <span className='required-star'>*</span>}
-          {!!info && <Tooltip data={info}><Info /></Tooltip>}
+          {!!info && (
+            <Tooltip data={info}>
+              <Info />
+            </Tooltip>
+          )}
         </span>
       </span>
       <span className='ip-text-box-error capitalize-first-letter'>{error}</span>

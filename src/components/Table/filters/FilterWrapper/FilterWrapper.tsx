@@ -7,7 +7,7 @@ import useKeyEvent from '../../../../hooks/useKeyEvent'
 import useToggle from '../../../../hooks/useToggle'
 import Utils from '../../../../utils'
 import { EMPTY_STRING } from '../../../../consts'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import './filterWrapper.scss'
 
@@ -100,14 +100,18 @@ function FilterWrapper({
                   ) : (
                     <div className='filter-table-wrapper-data'>
                       <div
-                        className={classNames(
-                          'filter-table-wrapper-inside-filter'
-                        )}
+                        className={clsx('filter-table-wrapper-inside-filter')}
                         ref={ref}
                       >
                         {children}
                       </div>
-                      <Tooltip data={(value && shouldDisableBtn(value)) ? disabledBtnTooltip : EMPTY_STRING}>
+                      <Tooltip
+                        data={
+                          value && shouldDisableBtn(value)
+                            ? disabledBtnTooltip
+                            : EMPTY_STRING
+                        }
+                      >
                         <div className='filter-table-wrapper-btn'>
                           <Button disable={isDisable} onClick={onClick}>
                             Filter

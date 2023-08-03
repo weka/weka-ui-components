@@ -1,5 +1,5 @@
-import React, {ChangeEvent} from 'react'
-import classNames from 'classnames'
+import React, { ChangeEvent } from 'react'
+import clsx from 'clsx'
 import Tooltip from '../Tooltip'
 
 import './switch.scss'
@@ -10,15 +10,23 @@ interface SwitchProps {
   checked: boolean
   tooltip?: string
 }
-function Switch(props:SwitchProps) {
-  const { onChange, oneColor = false, checked, disabled = false, tooltip = '', ...rest } = props
-  const classes = classNames({
+function Switch(props: SwitchProps) {
+  const {
+    onChange,
+    oneColor = false,
+    checked,
+    disabled = false,
+    tooltip = '',
+    ...rest
+  } = props
+  const classes = clsx({
     'one-color': oneColor,
     'toggle-btn': true,
     disabled
   })
 
-  function onClick(val: ChangeEvent<HTMLInputElement>) { // we cant put disabled on the input becasue to tooltip wont work
+  function onClick(val: ChangeEvent<HTMLInputElement>) {
+    // we cant put disabled on the input becasue to tooltip wont work
     if (!disabled) {
       onChange(val)
     }
