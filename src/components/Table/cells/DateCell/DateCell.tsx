@@ -47,7 +47,8 @@ function DateCell({
   }
 
   const dateCellClasses = clsx({
-    'table-date-cell': !showRelative,
+    'table-date-cell': true,
+    'table-date-cell-regular': !showRelative,
     'table-date-cell-with-relative': showRelative
   })
 

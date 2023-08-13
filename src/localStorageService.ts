@@ -1,5 +1,18 @@
-import {SAVED_HIDDEN, SAVED_FILTERS } from './consts'
+import {
+  SAVED_HIDDEN,
+  SAVED_FILTERS,
+  SAVED_RESIZED,
+  SAVED_RESIZING_ENABLED
+} from './consts'
 import Utils from './utils'
+
+interface ColumnResizing {
+  startX?: number | undefined
+  columnWidth: number
+  headerIdWidths: Record<string, number>
+  columnWidths: any
+  isResizingColumn?: string | undefined
+}
 
 const localStorageService = {
   setItem(key: string, item: string | boolean) {
@@ -29,6 +42,35 @@ const localStorageService = {
     const updatedHidden = { ...parseHidden }
     updatedHidden[key] = value
     localStorageService.setItem(SAVED_HIDDEN, JSON.stringify(updatedHidden))
+  },
+  updateResized(category: string, resizing: ColumnResizing) {
+    const resizedString = localStorageService.getItem(SAVED_RESIZED) ?? '{}'
+    const parsedResized = JSON.parse(resizedString)
+    let updatedResized = { ...parsedResized }
+    if (!Utils.isEmpty(resizing)) {
+      updatedResized = { ...updatedResized, [category]: resizing }
+    } else {
+      Reflect.deleteProperty(updatedResized, category)
+    }
+    return Utils.isEmpty(updatedResized)
+      ? localStorageService.removeItem(SAVED_RESIZED)
+      : localStorageService.setItem(
+          SAVED_RESIZED,
+          JSON.stringify(updatedResized)
+        )
+  },
+  updateResizedEnabled(category: string, isResizedEnabled: boolean) {
+    const enabledResize =
+      localStorageService.getItem(SAVED_RESIZING_ENABLED) ?? '{}'
+    const parsedEnabled = JSON.parse(enabledResize)
+    const updatedEnabledResize = {
+      ...parsedEnabled,
+      [category]: isResizedEnabled
+    }
+    localStorageService.setItem(
+      SAVED_RESIZING_ENABLED,
+      JSON.stringify(updatedEnabledResize)
+    )
   }
 }
 

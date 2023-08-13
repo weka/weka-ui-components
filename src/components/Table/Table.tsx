@@ -12,7 +12,9 @@ import {
   FILTER_CHANGE_LISTENER,
   FILTER_LISTENER,
   NOP,
-  SEVERITIES
+  SEVERITIES,
+  SAVED_RESIZED,
+  SAVED_RESIZING_ENABLED
 } from '../../consts'
 import Tooltip from '../Tooltip'
 import {
@@ -20,7 +22,9 @@ import {
   LastArrow,
   LongArrow,
   ClearFilters,
-  ThinArrow
+  ThinArrow,
+  ColumnResize,
+  ColumnResizeReset
 } from '../../svgs'
 import clsx from 'clsx'
 import {
@@ -39,7 +43,8 @@ import {
   useGlobalFilter,
   useRowState,
   Filters,
-  useGroupBy
+  useGroupBy,
+  useResizeColumns
 } from 'react-table'
 import { IconButton } from '@mui/material'
 import Utils from '../../utils'
@@ -57,6 +62,7 @@ import DateFilter from './filters/DateFilter'
 import SeverityFilter from './filters/SeverityFilter'
 import TextFilter from './filters/TextFilter'
 import { UrlFilterParser } from './hooks/useUrlFilters'
+import { useToggle } from '../../hooks'
 
 import './table.scss'
 
@@ -181,6 +187,7 @@ type ExtendedHeaderGroup = HeaderGroup & {
   isSortedDesc?: boolean
   Filter?: ReactNode
   isSorted?: boolean
+  disableResize?: boolean
 }
 
 interface TableProps<Data extends Record<string, unknown>> {
@@ -231,6 +238,8 @@ interface TableProps<Data extends Record<string, unknown>> {
   groupBy?: string[]
   hasCustomDateFormat?: boolean
   customDateFormat?: string
+  hasResizableColumns?: boolean
+  hasEmptyActionsCell?: boolean
 }
 
 function Table<Values extends Record<string, unknown>>({
@@ -268,7 +277,9 @@ function Table<Values extends Record<string, unknown>>({
   initialFilters: initialUserFilters,
   groupBy,
   hasCustomDateFormat,
-  customDateFormat
+  customDateFormat,
+  hasResizableColumns = false,
+  hasEmptyActionsCell = false
 }: TableProps<Values>) {
   const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
     () =>
@@ -284,6 +295,9 @@ function Table<Values extends Record<string, unknown>>({
       .map(({ Header, accessor }) =>
         Utils.isString(accessor) ? accessor : Header
       )
+  const LSResizing = localStorageService.getItem(SAVED_RESIZED)
+  const initialResizing =
+    (LSResizing && JSON.parse(LSResizing)[filterCategory]) || { columnWidths: {} }
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -321,6 +335,16 @@ function Table<Values extends Record<string, unknown>>({
     filterCategory
   })
 
+  const LSEnabledResizing = localStorageService.getItem(SAVED_RESIZING_ENABLED)
+  const enabledResizingInLocalStorage =
+    LSEnabledResizing &&
+    Object.keys(JSON.parse(LSEnabledResizing)).includes(filterCategory)
+      ? JSON.parse(LSEnabledResizing)[filterCategory]
+      : hasResizableColumns
+  const [isResizable, toggleResizable] = useToggle(
+    enabledResizingInLocalStorage
+  )
+
   const { current: initialUrlFilters = [] } = useRef(urlFilters)
 
   const initialFilters = useMemo(() => {
@@ -352,13 +376,14 @@ function Table<Values extends Record<string, unknown>>({
     setPageSize,
     previousPage,
     page,
-    state: { pageIndex, filters },
+    state: { pageIndex, filters, columnResizing },
     setFilter,
     setAllFilters,
     visibleColumns,
     setHiddenColumns,
     getToggleAllRowsExpandedProps,
-    isAllRowsExpanded
+    isAllRowsExpanded,
+    resetResizing
   } = useTable(
     {
       columns,
@@ -374,7 +399,8 @@ function Table<Values extends Record<string, unknown>>({
         filters: initialFilters,
         globalFilter: defaultGlobalFilter,
         hiddenColumns: hiddenInLocalStorage,
-        groupBy
+        groupBy,
+        columnResizing: initialResizing
       },
       autoResetFilters: false,
       autoResetSortBy: false,
@@ -383,6 +409,7 @@ function Table<Values extends Record<string, unknown>>({
       autoResetRowState: false,
       autoResetGlobalFilter: false,
       autoResetHiddenColumns: false,
+      autoResetResize: false,
       paginateExpandedRows: false,
       getRowId,
       sortTypes,
@@ -395,12 +422,25 @@ function Table<Values extends Record<string, unknown>>({
     useSortBy,
     useExpanded,
     usePagination,
-    useFlexLayout
+    useFlexLayout,
+    useResizeColumns
   )
 
   useEffect(() => {
     updateExplicitlyRemovedFilters(filters)
   }, [filters])
+
+  useEffect(() => {
+    if (hasResizableColumns) {
+      localStorageService.updateResized(filterCategory, columnResizing)
+    }
+  }, [JSON.stringify(columnResizing), filterCategory, hasResizableColumns])
+
+  useEffect(() => {
+    if (hasResizableColumns) {
+      localStorageService.updateResizedEnabled(filterCategory, isResizable)
+    }
+  }, [isResizable, filterCategory, hasResizableColumns])
 
   const isEmpty = !rows.length
   const tableClass = clsx({
@@ -527,7 +567,7 @@ function Table<Values extends Record<string, unknown>>({
             {canExpandAll && isExpandable && (
               <span
                 {...getToggleAllRowsExpandedProps()}
-                className='expand-all-icon'
+                className='table-manipulations-btn'
               >
                 <Tooltip
                   data={isAllRowsExpanded ? 'Collapse all' : 'Expand all'}
@@ -538,6 +578,31 @@ function Table<Values extends Record<string, unknown>>({
                         isAllRowsExpanded ? 'rotate180' : EMPTY_STRING
                       }`}
                     />
+                  </IconButton>
+                </Tooltip>
+              </span>
+            )}
+            {hasResizableColumns && (
+              <span
+                className={clsx({
+                  ['table-manipulations-btn']: true,
+                  ['resizing-btn-is-on']: isResizable
+                })}
+              >
+                <Tooltip
+                  data={`${isResizable ? 'Disable' : 'Enable'} column resizing`}
+                >
+                  <IconButton onClick={toggleResizable}>
+                    <ColumnResize />
+                  </IconButton>
+                </Tooltip>
+              </span>
+            )}
+            {hasResizableColumns && (
+              <span className='table-manipulations-btn'>
+                <Tooltip data='Reset column resizing'>
+                  <IconButton onClick={resetResizing}>
+                    <ColumnResizeReset />
                   </IconButton>
                 </Tooltip>
               </span>
@@ -593,11 +658,10 @@ function Table<Values extends Record<string, unknown>>({
                         <th {...headerProps} key={key} className='table-header'>
                           <Tooltip data={column.tooltip}>
                             <span
-                              className={`table-headline ${
-                                column.disableSort
-                                  ? 'disable-sort'
-                                  : EMPTY_STRING
-                              }`}
+                              className={clsx({
+                                ['table-headline']: true,
+                                ['disable-sort']: column.disableSort
+                              })}
                               onClick={() => {
                                 if (!column.disableSort) {
                                   toggleSortBy(
@@ -635,6 +699,16 @@ function Table<Values extends Record<string, unknown>>({
                                 )}
                               </div>
                             )}
+                          {isResizable && !column.disableResize && (
+                            <div
+                              className={clsx({
+                                ['column-resizer']: true,
+                                ['column-resizer-is-resizing']:
+                                  column.isResizing
+                              })}
+                              {...column.getResizerProps()}
+                            />
+                          )}
                         </th>
                       )
                     })}
@@ -647,7 +721,8 @@ function Table<Values extends Record<string, unknown>>({
                           {EMPTY_STRING}
                         </th>
                       ))}
-                    {!Utils.isEmpty(rowActions) && (
+                    {(!Utils.isEmpty(rowActions) ||
+                      (hasEmptyActionsCell && isResizable)) && (
                       <th className='table-header table-header-actions'>
                         {EMPTY_STRING}
                       </th>
@@ -790,7 +865,8 @@ function Table<Values extends Record<string, unknown>>({
                             <IconButtonCell row={extendedRow} action={action} />
                           </td>
                         ))}
-                      {!Utils.isEmpty(rowActions) && (
+                      {(!Utils.isEmpty(rowActions) ||
+                        (hasEmptyActionsCell && isResizable)) && (
                         <td className='td-actions'>
                           <ActionsCell
                             row={extendedRow}
