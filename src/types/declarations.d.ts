@@ -2,7 +2,7 @@ import { AriaAttributes, DOMAttributes } from 'react'
 import {
   UseFiltersInstanceProps,
   UseFiltersOptions, UseFiltersState, UseGlobalFiltersInstanceProps, UseGlobalFiltersOptions, UseGlobalFiltersState,
-  UsePaginationOptions,
+  UsePaginationOptions, UseResizeColumnsOptions, UseResizeColumnsState,
   UseSortByInstanceProps,
   UseSortByOptions,
   UseSortByState
@@ -20,10 +20,11 @@ declare module 'react-table' {
     UseSortByOptions<D>,
     UseFiltersOptions<D>,
     UseGlobalFiltersOptions<D>,
+    UseResizeColumnsOptions<D>,
     Record<string, any> {
   }
   export interface TableState<D extends Record<string, unknown> = Record<string, unknown>> extends
-    UsePaginationState<D>, UseSortByState<D>, UseFiltersState<D>, UseGlobalFiltersState<D> {}
+    UsePaginationState<D>, UseSortByState<D>, UseFiltersState<D>, UseGlobalFiltersState<D>, UseResizeColumnsState<D> {}
 
   export interface TableInstance<D extends Record<string, unknown> = Record<string, unknown>> extends
     UsePaginationInstanceProps<D>, UseSortByInstanceProps<D>, UseFiltersInstanceProps<D>, UseGlobalFiltersInstanceProps<D> {}

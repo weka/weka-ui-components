@@ -6,6 +6,8 @@ export const TAG_SEPARATOR = ','
 export const SAVED_FILTERS = 'saved_filters'
 export const EXPLICITLY_REMOVED_FILTERS = 'explicitly_removed_filters'
 export const SAVED_HIDDEN = 'saved_hidden'
+export const SAVED_RESIZED = 'saved_resized'
+export const SAVED_RESIZING_ENABLED = 'saved_resizing_enabled'
 export const FILTER_CHANGE_LISTENER = 'table-filters-change'
 export const FILTER_LISTENER = 'table-filters'
 

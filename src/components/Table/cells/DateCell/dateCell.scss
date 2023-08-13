@@ -1,10 +1,15 @@
 .table-date-cell {
-  width: 200px;
-  padding-left: var(--spread);
-}
-
-.table-date-cell-with-relative {
-  width: 270px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &-regular {
+    width: 200px;
+    padding-left: var(--spread);
+  }
+  &-with-relative {
+    width: 270px;
+  }
 }
 
 .relative-time {
