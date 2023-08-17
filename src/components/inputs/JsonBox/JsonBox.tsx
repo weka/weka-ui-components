@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import JsonEditor from '../../JsonEditor'
+import JsonEditor from '../../TextEditor'
 import { Info } from '../../../svgs'
 
 import './jsonBox.scss'

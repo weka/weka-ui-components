@@ -18,5 +18,5 @@ interface JsonEditorProps {
     isValueForMatchedLoading?: boolean;
     [key: string]: any;
 }
-declare function JsonEditor(props: JsonEditorProps): JSX.Element;
-export default JsonEditor;
+declare function TextEditor(props: JsonEditorProps): JSX.Element;
+export default TextEditor;

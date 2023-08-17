@@ -1,10 +1,7 @@
 /// <reference types="react" />
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
-import './jsonEditor.scss';
-interface ParsedData {
-    [key: string]: any;
-}
+import './textEditor.scss';
 interface JsonEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
@@ -14,8 +11,6 @@ interface JsonEditorProps {
     allowSearch?: boolean;
     allowCopy?: boolean;
     shouldFoldAll?: boolean;
-    valueForMatched?: ParsedData;
-    isValueForMatchedLoading?: boolean;
     [key: string]: any;
 }
 declare function TextEditor(props: JsonEditorProps): JSX.Element;
