@@ -16,7 +16,7 @@ import { CircularProgress } from '@mui/material'
 import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 
-import './jsonEditor.scss'
+import './textEditor.scss'
 
 interface ParsedData {
   [key: string]: any
@@ -32,9 +32,10 @@ interface JsonEditorProps {
   shouldFoldAll?: boolean
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
+  mode?: 'text' | 'json'
   [key: string]: any
 }
-function JsonEditor(props: JsonEditorProps) {
+function TextEditor(props: JsonEditorProps) {
   const {
     readOnly,
     value,
@@ -46,6 +47,7 @@ function JsonEditor(props: JsonEditorProps) {
     extraClass = EMPTY_STRING,
     valueForMatched,
     isValueForMatchedLoading = false,
+    mode = 'json',
     ...rest
   } = props
   const id = useId()
@@ -112,10 +114,14 @@ function JsonEditor(props: JsonEditorProps) {
   }, [onlyMatching, searchValue, allowSearch, getFilteredValue, value])
 
   useEffect(() => {
+    if (!value) {
+      return
+    }
+
     const editor = editorRef.current?.editor
     editor.scrollToLine(0)
     editor.selection.clearSelection()
-  }, [onlyMatching])
+  }, [onlyMatching, value])
 
   useEffect(() => {
     const editor = editorRef.current?.editor
@@ -137,7 +143,7 @@ function JsonEditor(props: JsonEditorProps) {
   return (
     <div className={classes}>
       {allowCopy && <Copy text={jsonValue} extraClass='copy-btn' />}
-      {allowSearch && (
+      {valueForMatched && allowSearch && (
         <div className='matching-toggle'>
           <span>Show only matching lines</span>
           {isValueForMatchedLoading ? (
@@ -149,7 +155,7 @@ function JsonEditor(props: JsonEditorProps) {
       )}
       <AceEditor
         ref={editorRef}
-        mode='json'
+        mode={mode}
         height='100%'
         fontSize={16}
         width='99%'
@@ -168,4 +174,4 @@ function JsonEditor(props: JsonEditorProps) {
   )
 }
 
-export default JsonEditor
+export default TextEditor
