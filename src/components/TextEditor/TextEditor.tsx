@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState
-} from 'react'
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react'
 import AceEditor from 'react-ace'
 import clsx from 'clsx'
 import { EMPTY_STRING } from '../../consts'
@@ -16,7 +10,8 @@ import { CircularProgress } from '@mui/material'
 import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 
-import './jsonEditor.scss'
+import './textEditor.scss'
+import { useLinePosition } from './hooks'
 
 interface ParsedData {
   [key: string]: any
@@ -32,9 +27,12 @@ interface JsonEditorProps {
   shouldFoldAll?: boolean
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
+  mode?: 'text' | 'json'
+  initialLineIndex?: number
+  onScroll?: (line: number) => void
   [key: string]: any
 }
-function JsonEditor(props: JsonEditorProps) {
+function TextEditor(props: JsonEditorProps) {
   const {
     readOnly,
     value,
@@ -46,10 +44,13 @@ function JsonEditor(props: JsonEditorProps) {
     extraClass = EMPTY_STRING,
     valueForMatched,
     isValueForMatchedLoading = false,
+    mode = 'json',
+    initialLineIndex,
+    onScroll,
     ...rest
   } = props
   const id = useId()
-  const editorRef = useRef<any>(null)
+  const editorRef = useRef<AceEditor>(null)
 
   const [onlyMatching, toggleOnlyMatching] = useToggle(false)
   const [editorReady, setEditorReady] = useState(false)
@@ -112,10 +113,14 @@ function JsonEditor(props: JsonEditorProps) {
   }, [onlyMatching, searchValue, allowSearch, getFilteredValue, value])
 
   useEffect(() => {
+    if (!value) {
+      return
+    }
+
     const editor = editorRef.current?.editor
     editor.scrollToLine(0)
     editor.selection.clearSelection()
-  }, [onlyMatching])
+  }, [onlyMatching, value])
 
   useEffect(() => {
     const editor = editorRef.current?.editor
@@ -134,10 +139,16 @@ function JsonEditor(props: JsonEditorProps) {
     }
   }, [shouldFoldAll])
 
+  useLinePosition({
+    initialLineIndex,
+    onScroll,
+    editor: editorRef.current?.editor
+  })
+
   return (
     <div className={classes}>
       {allowCopy && <Copy text={jsonValue} extraClass='copy-btn' />}
-      {allowSearch && (
+      {valueForMatched && allowSearch && (
         <div className='matching-toggle'>
           <span>Show only matching lines</span>
           {isValueForMatchedLoading ? (
@@ -149,7 +160,7 @@ function JsonEditor(props: JsonEditorProps) {
       )}
       <AceEditor
         ref={editorRef}
-        mode='json'
+        mode={mode}
         height='100%'
         fontSize={16}
         width='99%'
@@ -168,4 +179,4 @@ function JsonEditor(props: JsonEditorProps) {
   )
 }
 
-export default JsonEditor
+export default TextEditor
