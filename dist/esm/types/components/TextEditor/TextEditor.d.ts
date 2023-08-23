@@ -17,6 +17,8 @@ interface JsonEditorProps {
     valueForMatched?: ParsedData;
     isValueForMatchedLoading?: boolean;
     mode?: 'text' | 'json';
+    initialLineIndex?: number;
+    onScroll?: (line: number) => void;
     [key: string]: any;
 }
 declare function TextEditor(props: JsonEditorProps): JSX.Element;

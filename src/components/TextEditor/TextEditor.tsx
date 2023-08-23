@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState
-} from 'react'
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react'
 import AceEditor from 'react-ace'
 import clsx from 'clsx'
 import { EMPTY_STRING } from '../../consts'
@@ -17,6 +11,7 @@ import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 
 import './textEditor.scss'
+import { useLinePosition } from './hooks'
 
 interface ParsedData {
   [key: string]: any
@@ -33,6 +28,8 @@ interface JsonEditorProps {
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
   mode?: 'text' | 'json'
+  initialLineIndex?: number
+  onScroll?: (line: number) => void
   [key: string]: any
 }
 function TextEditor(props: JsonEditorProps) {
@@ -48,10 +45,12 @@ function TextEditor(props: JsonEditorProps) {
     valueForMatched,
     isValueForMatchedLoading = false,
     mode = 'json',
+    initialLineIndex,
+    onScroll,
     ...rest
   } = props
   const id = useId()
-  const editorRef = useRef<any>(null)
+  const editorRef = useRef<AceEditor>(null)
 
   const [onlyMatching, toggleOnlyMatching] = useToggle(false)
   const [editorReady, setEditorReady] = useState(false)
@@ -139,6 +138,12 @@ function TextEditor(props: JsonEditorProps) {
       editor.scrollToLine(0)
     }
   }, [shouldFoldAll])
+
+  useLinePosition({
+    initialLineIndex,
+    onScroll,
+    editor: editorRef.current?.editor
+  })
 
   return (
     <div className={classes}>

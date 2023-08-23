@@ -1,1 +1,1 @@
-export { default as useOnlyMatching } from './useOnlyMatched';
+export { default as useLinePosition } from './useLinePosition';
