@@ -12,6 +12,7 @@
   border: none;
   background-color: var(--main-color);
   color: var(--white);
+  user-select: none;
 
   &.loading {
     pointer-events: none;
@@ -30,7 +31,6 @@
     width: 100%;
   }
 
-
   &.small {
     height: 16px;
     text-transform: uppercase;
@@ -38,7 +38,6 @@
     font-weight: bold;
     font-family: var(--bold-font);
   }
-
 
   &.empty {
     background-color: transparent;
@@ -68,7 +67,6 @@
       }
     }
   }
-
 }
 
 .dark-mode {

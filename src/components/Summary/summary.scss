@@ -10,6 +10,11 @@
     font: inherit;
     cursor: pointer;
     outline: inherit;
+
+    &:focus-visible {
+      border: 2px solid var(--main-color);
+      border-bottom: 2px solid var(--main-color) !important;
+    }
   }
 
   .title {
@@ -37,6 +42,11 @@
     &.title-expanded {
       border-radius: 8px 8px 0 0;
       border-bottom: 0;
+    }
+
+    &:hover {
+      background: var(--ironhide-t1);
+      transition: background 0.2s;
     }
   }
 

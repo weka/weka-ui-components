@@ -665,6 +665,8 @@ declare function Copy({ text, extraClass }: CopyProps): JSX.Element;
 interface SummaryProps {
     title: ReactNode;
     content: ReactNode;
+    expanded?: boolean;
+    onExpand?: (expanded: boolean) => void;
 }
 declare function Summary(props: SummaryProps): JSX.Element;
 

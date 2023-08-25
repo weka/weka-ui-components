@@ -8,18 +8,32 @@ import clsx from 'clsx'
 interface SummaryProps {
   title: ReactNode
   content: ReactNode
+  expanded?: boolean
+  onExpand?: (expanded: boolean) => void
 }
 
 function Summary(props: SummaryProps) {
-  const { title, content } = props
+  const {
+    title,
+    content,
+    expanded: outerExpanded,
+    onExpand: outerOnExpand
+  } = props
 
-  const [isExpanded, toggleIsExpanded] = useToggle(true)
+  const [innerExpanded, toggleInnerExpanded] = useToggle(true)
+
+  const isExpanded = outerExpanded ?? innerExpanded
+
+  const handleClick = () => {
+    toggleInnerExpanded()
+    outerOnExpand?.(!isExpanded)
+  }
 
   return (
     <div className='summary'>
       <button
         className={clsx({ title: true, 'title-expanded': isExpanded })}
-        onClick={toggleIsExpanded}
+        onClick={handleClick}
       >
         <Arrow
           className={clsx({
