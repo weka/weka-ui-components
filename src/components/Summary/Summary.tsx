@@ -4,10 +4,11 @@ import { useToggle } from '../../hooks'
 import './summary.scss'
 import { Arrow } from '../../svgs'
 import clsx from 'clsx'
+import SpanTooltip from '../SpanTooltip/SpanTooltip'
 
 interface SummaryProps {
-  title: ReactNode
-  content: ReactNode
+  title: string
+  children: ReactNode
   expanded?: boolean
   onExpand?: (expanded: boolean) => void
 }
@@ -15,7 +16,7 @@ interface SummaryProps {
 function Summary(props: SummaryProps) {
   const {
     title,
-    content,
+    children,
     expanded: outerExpanded,
     onExpand: outerOnExpand
   } = props
@@ -41,9 +42,9 @@ function Summary(props: SummaryProps) {
             'arrow-expanded': isExpanded
           })}
         />
-        {title}
+        <SpanTooltip>{title}</SpanTooltip>
       </button>
-      {isExpanded && <div className='content'>{content}</div>}
+      {isExpanded && <div className='content'>{children}</div>}
     </div>
   )
 }

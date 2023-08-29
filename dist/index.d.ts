@@ -663,8 +663,8 @@ interface CopyProps {
 declare function Copy({ text, extraClass }: CopyProps): JSX.Element;
 
 interface SummaryProps {
-    title: ReactNode;
-    content: ReactNode;
+    title: string;
+    children: ReactNode;
     expanded?: boolean;
     onExpand?: (expanded: boolean) => void;
 }
