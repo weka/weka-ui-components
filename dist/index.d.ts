@@ -268,7 +268,7 @@ interface JsonEditorProps {
     valueForMatched?: ParsedData;
     isValueForMatchedLoading?: boolean;
     mode?: 'text' | 'json';
-    initialLineIndex?: number;
+    initialLine?: number;
     onScroll?: (line: number) => void;
     [key: string]: any;
 }
@@ -663,8 +663,8 @@ interface CopyProps {
 declare function Copy({ text, extraClass }: CopyProps): JSX.Element;
 
 interface SummaryProps {
-    title: ReactNode;
-    content: ReactNode;
+    title: string;
+    children: ReactNode;
     expanded?: boolean;
     onExpand?: (expanded: boolean) => void;
 }

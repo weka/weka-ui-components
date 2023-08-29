@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import './summary.scss';
 interface SummaryProps {
-    title: ReactNode;
-    content: ReactNode;
+    title: string;
+    children: ReactNode;
     expanded?: boolean;
     onExpand?: (expanded: boolean) => void;
 }

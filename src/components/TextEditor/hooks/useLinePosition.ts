@@ -4,21 +4,21 @@ import { IAceEditor } from 'react-ace/lib/types'
 import { NOP } from '../../../consts'
 
 function useLinePosition({
-  initialLineIndex,
+  initialLine,
   onScroll,
   editor
 }: {
-  initialLineIndex?: number
+  initialLine?: number
   onScroll?: (line: number) => void
   editor?: IAceEditor
 }) {
-  const staticProps = useStaticProps({ initialLineIndex: initialLineIndex })
+  const staticProps = useStaticProps({ initialLine })
 
   useEffect(() => {
-    if (editor && typeof staticProps.initialLineIndex === 'number') {
-      editor.scrollToLine(staticProps.initialLineIndex, false, false, NOP)
+    if (editor && typeof staticProps.initialLine === 'number') {
+      editor.scrollToLine(staticProps.initialLine - 1, false, false, NOP)
     }
-  }, [editor, staticProps.initialLineIndex])
+  }, [editor, staticProps.initialLine])
 
   useEffect(() => {
     if (onScroll && editor) {
@@ -26,7 +26,7 @@ function useLinePosition({
       let timerId: ReturnType<typeof setTimeout> | null = null
 
       const handleScroll = () => {
-        timerId = setTimeout(() => onScroll(editor.getFirstVisibleRow()))
+        timerId = setTimeout(() => onScroll(editor.getFirstVisibleRow() + 1))
       }
 
       editor.session.on('changeScrollTop', handleScroll)
