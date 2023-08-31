@@ -28,7 +28,7 @@ interface JsonEditorProps {
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
   mode?: 'text' | 'json'
-  initialLineIndex?: number
+  initialLine?: number
   onScroll?: (line: number) => void
   [key: string]: any
 }
@@ -45,7 +45,7 @@ function TextEditor(props: JsonEditorProps) {
     valueForMatched,
     isValueForMatchedLoading = false,
     mode = 'json',
-    initialLineIndex,
+    initialLine,
     onScroll,
     ...rest
   } = props
@@ -140,7 +140,7 @@ function TextEditor(props: JsonEditorProps) {
   }, [shouldFoldAll])
 
   useLinePosition({
-    initialLineIndex,
+    initialLine,
     onScroll,
     editor: editorRef.current?.editor
   })

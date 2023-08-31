@@ -268,7 +268,7 @@ interface JsonEditorProps {
     valueForMatched?: ParsedData;
     isValueForMatchedLoading?: boolean;
     mode?: 'text' | 'json';
-    initialLineIndex?: number;
+    initialLine?: number;
     onScroll?: (line: number) => void;
     [key: string]: any;
 }
