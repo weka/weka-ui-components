@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import React, { MouseEventHandler, ReactNode, ReactElement, Dispatch, SetStateAction } from 'react';
+import React, { MouseEventHandler, ReactNode, ReactElement, PropsWithChildren, Dispatch, SetStateAction } from 'react';
 import { UseFiltersColumnProps, Column as Column$1, Row, CellProps, UseExpandedRowProps, UseRowStateRowProps, Filters, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
@@ -253,10 +253,16 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
+declare function ExpandCollapseButton(): JSX.Element;
+
+declare function TagsInput(): JSX.Element;
+
+declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
+
 interface ParsedData {
     [key: string]: any;
 }
-interface JsonEditorProps {
+interface TextEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
     value: string;
@@ -270,9 +276,13 @@ interface JsonEditorProps {
     mode?: 'text' | 'json';
     initialLine?: number;
     onScroll?: (line: number) => void;
-    [key: string]: any;
 }
-declare function TextEditor(props: JsonEditorProps): JSX.Element;
+declare function TextEditor(props: TextEditorProps): JSX.Element;
+declare namespace TextEditor {
+    var Provider: typeof TextEditorProvider;
+    var TagsInput: typeof TagsInput;
+    var ExpandCollapseButton: typeof ExpandCollapseButton;
+}
 
 declare function Loader(): JSX.Element;
 

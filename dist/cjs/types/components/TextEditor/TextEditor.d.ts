@@ -2,10 +2,11 @@
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
 import './textEditor.scss';
+import { TextEditorProvider } from './context';
 interface ParsedData {
     [key: string]: any;
 }
-interface JsonEditorProps {
+export interface TextEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
     value: string;
@@ -19,7 +20,11 @@ interface JsonEditorProps {
     mode?: 'text' | 'json';
     initialLine?: number;
     onScroll?: (line: number) => void;
-    [key: string]: any;
 }
-declare function TextEditor(props: JsonEditorProps): JSX.Element;
+declare function TextEditor(props: TextEditorProps): JSX.Element;
+declare namespace TextEditor {
+    var Provider: typeof TextEditorProvider;
+    var TagsInput: typeof import("./components/TagsInput/TagsInput").default;
+    var ExpandCollapseButton: typeof import("./components/ExpandCollapseButton/ExpandCollapseButton").default;
+}
 export default TextEditor;

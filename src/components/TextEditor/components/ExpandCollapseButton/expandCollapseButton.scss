@@ -1,0 +1,10 @@
+.text-editor-expand-collapse-btn {
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.rotate {
+    transform: rotate(180deg);
+  }
+}
