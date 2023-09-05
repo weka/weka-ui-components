@@ -1,6 +1,12 @@
-import React, { useCallback, useEffect, useId, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import AceEditor from 'react-ace'
-import clsx from 'clsx'
 import { EMPTY_STRING } from '../../consts'
 import Copy from '../Copy'
 import { useToggle } from '../../hooks'
@@ -11,12 +17,15 @@ import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 
 import './textEditor.scss'
-import { useLinePosition } from './hooks'
+import { useLinePosition, useTags } from './hooks'
+import clsx from 'clsx'
+import { ExpandCollapseButton, TagsInput } from './components'
+import { TextEditorProvider, useTextEditorContext } from './context'
 
 interface ParsedData {
   [key: string]: any
 }
-interface JsonEditorProps {
+export interface TextEditorProps {
   onChange?: () => void
   readOnly?: boolean
   value: string
@@ -30,9 +39,8 @@ interface JsonEditorProps {
   mode?: 'text' | 'json'
   initialLine?: number
   onScroll?: (line: number) => void
-  [key: string]: any
 }
-function TextEditor(props: JsonEditorProps) {
+function TextEditor(props: TextEditorProps) {
   const {
     readOnly,
     value,
@@ -49,6 +57,15 @@ function TextEditor(props: JsonEditorProps) {
     onScroll,
     ...rest
   } = props
+
+  const editorContext = useTextEditorContext(true)
+  const editorContextValue = editorContext?.value
+  const setTextEditorContext = editorContext?.setTextEditorContext
+
+  useEffect(() => {
+    setTextEditorContext?.((prev) => ({ ...prev, mode }))
+  }, [setTextEditorContext, mode])
+
   const id = useId()
   const editorRef = useRef<AceEditor>(null)
 
@@ -57,18 +74,34 @@ function TextEditor(props: JsonEditorProps) {
   const [searchValue, setSearchValue] = useState(EMPTY_STRING)
   const [jsonValue, setJsonValue] = useState(value)
 
-  const classes = clsx({
-    'json-editor-wrapper': true,
-    'read-only': readOnly,
-    'hide-search': !allowSearch,
-    'json-editor-wrapper-with-copy': allowCopy,
-    'json-editor-wrapper-only-matching-lines': onlyMatching,
-    [extraClass]: true
-  })
-
   const handleLoad = () => {
     setEditorReady(true)
   }
+
+  const [forcedOptions, setForcedOptions] = useState<{
+    mode?: string
+    value?: string
+    disableFolding?: boolean
+  }>({})
+
+  const options = useMemo(
+    () => ({
+      value: onlyMatching ? jsonValue : value,
+      mode,
+      disableFolding: false,
+      shouldFoldAll: editorContextValue?.shouldFoldAll ?? shouldFoldAll,
+      ...forcedOptions
+    }),
+    [
+      editorContextValue?.shouldFoldAll,
+      forcedOptions,
+      jsonValue,
+      mode,
+      onlyMatching,
+      shouldFoldAll,
+      value
+    ]
+  )
 
   const getFilteredValue = useCallback(() => {
     const searchTerm = searchValue.toLowerCase()
@@ -131,18 +164,34 @@ function TextEditor(props: JsonEditorProps) {
 
   useEffect(() => {
     const editor = editorRef.current?.editor
-    if (shouldFoldAll) {
+    if (options.shouldFoldAll) {
       editor.getSession().foldAll(1, editor.getSession().getLength())
     } else {
       editor.execCommand('unfoldall')
       editor.scrollToLine(0)
     }
-  }, [shouldFoldAll])
+  }, [options.shouldFoldAll])
 
   useLinePosition({
     initialLine,
     onScroll,
     editor: editorRef.current?.editor
+  })
+
+  const classes = clsx({
+    'text-editor-wrapper': true,
+    'read-only': readOnly,
+    'hide-search': !allowSearch,
+    'text-editor-wrapper-with-copy': allowCopy,
+    'text-editor-wrapper-only-matching-lines': onlyMatching,
+    'disable-folding': options.disableFolding,
+    [extraClass]: true
+  })
+
+  useTags({
+    editor: editorRef.current?.editor,
+    value,
+    setForcedOptions
   })
 
   return (
@@ -160,7 +209,7 @@ function TextEditor(props: JsonEditorProps) {
       )}
       <AceEditor
         ref={editorRef}
-        mode={mode}
+        mode={options.mode}
         height='100%'
         fontSize={16}
         width='99%'
@@ -169,7 +218,7 @@ function TextEditor(props: JsonEditorProps) {
         name={id}
         editorProps={{ $blockScrolling: true }}
         readOnly={readOnly}
-        value={onlyMatching ? jsonValue : value}
+        value={options.value}
         onChange={onChange}
         onValidate={onValidate}
         onLoad={handleLoad}
@@ -178,5 +227,9 @@ function TextEditor(props: JsonEditorProps) {
     </div>
   )
 }
+
+TextEditor.Provider = TextEditorProvider
+TextEditor.TagsInput = TagsInput
+TextEditor.ExpandCollapseButton = ExpandCollapseButton
 
 export default TextEditor

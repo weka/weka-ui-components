@@ -1,4 +1,4 @@
-.json-editor-wrapper {
+.text-editor-wrapper {
   position: relative;
   flex: 1;
   padding-top: 16px;
@@ -10,18 +10,37 @@
     }
   }
 
+  &.disable-folding {
+    .ace_fold-widget {
+      display: none !important;
+    }
+
+    .ace_error_bracket {
+      display: none;
+    }
+  }
+
   .ace_editor {
     background-color: transparent;
     color: var(--text-color);
+
+    .ace_fold {
+      border: unset !important;
+    }
 
     .ace_variable {
       color: var(--optimus-s2);
     }
 
-    .ace_string, .ace_constant, .ace_numeric {
+    .ace_string,
+    .ace_constant,
+    .ace_numeric {
       color: var(--complement-key) !important;
     }
-    .ace_paren,.ace_punctuation,.ace_operator,.ace_cursor{
+    .ace_paren,
+    .ace_punctuation,
+    .ace_operator,
+    .ace_cursor {
       color: var(--text-color);
     }
 
@@ -81,7 +100,6 @@
         &:last-child {
           display: none;
         }
-
       }
       &_form {
         margin: 0 0 8px 0;
@@ -124,7 +142,8 @@
   }
 
   &-only-matching-lines {
-    .ace_search_counter, .ace_button {
+    .ace_search_counter,
+    .ace_button {
       display: none;
     }
 
