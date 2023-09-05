@@ -25,6 +25,6 @@ declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;
     var TagsInput: typeof import("./components/TagsInput/TagsInput").default;
-    var ExpandCollapseButton: typeof import("./components/ExpandCollapseButton/ExpandCollapseButton").default;
+    var FoldAllButton: typeof import("./components/FoldAllButton/FoldAllButton").default;
 }
 export default TextEditor;

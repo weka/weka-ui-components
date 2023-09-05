@@ -19,7 +19,7 @@ import 'ace-builds/src-min-noconflict/ext-searchbox'
 import './textEditor.scss'
 import { useLinePosition, useTags } from './hooks'
 import clsx from 'clsx'
-import { ExpandCollapseButton, TagsInput } from './components'
+import { FoldAllButton, TagsInput } from './components'
 import { TextEditorProvider, useTextEditorContext } from './context'
 
 interface ParsedData {
@@ -230,6 +230,6 @@ function TextEditor(props: TextEditorProps) {
 
 TextEditor.Provider = TextEditorProvider
 TextEditor.TagsInput = TagsInput
-TextEditor.ExpandCollapseButton = ExpandCollapseButton
+TextEditor.FoldAllButton = FoldAllButton
 
 export default TextEditor
