@@ -1,2 +1,2 @@
 export * from './TagsInput';
-export * from './ExpandCollapseButton';
+export * from './FoldAllButton';
