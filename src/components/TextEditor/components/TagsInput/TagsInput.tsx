@@ -13,8 +13,9 @@ function TagsInput() {
   return (
     <TagsBox
       value={tags}
-      info="Start a new tag with '+' or '-'"
-      placeholder='Add...'
+      // TODO: review text
+      info={'Start a new tag with "+" or "-"'}
+      placeholder='Add a tag'
       onChange={(newTags) =>
         setTextEditorContext((prev) => ({ ...prev, tags: newTags }))
       }
@@ -25,7 +26,10 @@ function TagsInput() {
             tag.length >= 2 && (tag.startsWith('+') || tag.startsWith('-'))
         )
       }
-      invalidTagText='A new tag must start with + or - and be 2 or more characters long'
+      invalidTagText={
+        // TODO: review text
+        'A new tag must start with "+" or "-" and be 2 or more characters long'
+      }
       wrapperClass='text-editor-tags-input'
     />
   )

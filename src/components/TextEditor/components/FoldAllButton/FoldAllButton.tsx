@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { useTextEditorContext } from '../../context'
 import ExpandCollapseButton from '../../../ExpandCollapseButton'
+import Tooltip from '../../../Tooltip/Tooltip'
 
 function FoldAllButton() {
   const {
@@ -9,22 +10,29 @@ function FoldAllButton() {
     setTextEditorContext
   } = useTextEditorContext('ExpandCollapseBtn')
 
-  const disabled = useMemo(
-    () => (tags && tags.length > 0) || mode !== 'json',
-    [mode, tags]
-  )
+  const hidden = mode !== 'json'
 
+  let disabled: string | boolean = false
+
+  if (tags && tags.length > 0) {
+    // TODO: review text
+    disabled = 'Code folding is not supported when tags are present'
+  }
   return (
-    <ExpandCollapseButton
-      disabled={disabled}
-      shouldCollapse={!!shouldFoldAll}
-      onChange={(newVal) =>
-        setTextEditorContext((prev) => ({
-          ...prev,
-          shouldFoldAll: newVal
-        }))
-      }
-    />
+    !hidden && (
+      <Tooltip data={disabled || ''}>
+        <ExpandCollapseButton
+          disabled={!!disabled}
+          shouldCollapse={!!shouldFoldAll}
+          onChange={(newVal) =>
+            setTextEditorContext((prev) => ({
+              ...prev,
+              shouldFoldAll: newVal
+            }))
+          }
+        />
+      </Tooltip>
+    )
   )
 }
 

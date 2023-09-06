@@ -1,3 +1,3 @@
 /// <reference types="react" />
-declare function FoldAllButton(): JSX.Element;
+declare function FoldAllButton(): false | JSX.Element;
 export default FoldAllButton;

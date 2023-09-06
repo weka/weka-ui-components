@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import React from 'react'
 import Tooltip from '../Tooltip'
 import { ThinArrow } from '../../svgs'
+import { EMPTY_STRING } from '../../consts'
 
 import './expandCollapseButton.scss'
 
@@ -17,7 +18,9 @@ function ExpandCollapseButton(props: ExpandCollapseButtonProps) {
 
   return (
     <Tooltip
-      data={disabled ? '' : shouldCollapse ? 'Expand All' : 'Collapse All'}
+      data={
+        disabled ? EMPTY_STRING : shouldCollapse ? 'Expand All' : 'Collapse All'
+      }
     >
       <div>
         <IconButton
