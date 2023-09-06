@@ -134,7 +134,7 @@ function TagsBox(props: TagsBoxProps) {
         noOptionsMessage={() => null}
         value={displayValue}
         formatCreateLabel={(userInput) => (
-          <div onClick={onMouseClick} className='user-input-preview'>
+          <div onClick={onMouseClick} className='tags-user-input-preview'>
             {`'${userInput}'`}
             {editValueError && (
               <span className='tags-invalid'>{` - ${
