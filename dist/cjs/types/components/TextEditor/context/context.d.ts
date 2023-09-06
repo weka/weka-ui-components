@@ -1,9 +1,8 @@
 import { PropsWithChildren } from 'react';
-import { Tag } from '../hooks';
 declare type TextEditorContextValue = {
     mode?: 'json' | 'text';
     shouldFoldAll?: boolean;
-    tags?: Tag[];
+    tags?: string[];
 };
 declare type TextEditorContextType = {
     value: TextEditorContextValue;
