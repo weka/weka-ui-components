@@ -8,7 +8,7 @@
   position: relative;
 
   &__label {
-   position: absolute;
+    position: absolute;
     left: 12px;
     top: 4px;
     white-space: nowrap;
@@ -23,7 +23,7 @@
       }
     }
   }
-  .json-editor-wrapper {
+  .text-editor-wrapper {
     padding-top: 24px;
   }
 
@@ -40,8 +40,7 @@
     color: var(--focus-key);
     white-space: nowrap;
   }
-  .json-editor-wrapper.read-only {
+  .text-editor-wrapper.read-only {
     background-color: var(--ironhide-t2);
   }
-
 }

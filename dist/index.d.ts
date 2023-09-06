@@ -253,7 +253,7 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
-declare function FoldAllButton(): JSX.Element;
+declare function FoldAllButton(): false | JSX.Element;
 
 declare function TagsInput(): JSX.Element;
 
