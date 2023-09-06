@@ -6,7 +6,7 @@ interface TagsBoxProps {
     wrapperClass?: string;
     warning?: string;
     isRequired?: boolean;
-    tagsValidation?: (val: any) => boolean;
+    tagsValidation?: (val: string[]) => string[];
     placeholder?: string | number;
     label: string | ReactElement;
     error?: any;

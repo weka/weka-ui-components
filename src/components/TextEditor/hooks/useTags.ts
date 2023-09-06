@@ -2,11 +2,6 @@ import { useEffect } from 'react'
 import { IAceEditor } from 'react-ace/lib/types'
 import { useTextEditorContext } from '../context'
 
-export interface Tag {
-  type: 'plus' | 'minus'
-  value: string
-}
-
 function useTags({
   editor,
   value,
@@ -41,11 +36,14 @@ function useTags({
       value: value
         .split('\n')
         .filter((line, index) => {
-          const matchesAllTags = tags.every((tag) =>
-            tag.type === 'plus'
-              ? line.includes(tag.value)
-              : !line.includes(tag.value)
-          )
+          const matchesAllTags = tags.every((tag) => {
+            const tagType = tag[0]
+            const tagValue = tag.slice(1)
+
+            return tagType === '+'
+              ? line.includes(tagValue)
+              : !line.includes(tagValue)
+          })
 
           if (matchesAllTags) {
             matchedLinesNumbersMap[matchedLineIndex] = index + 1

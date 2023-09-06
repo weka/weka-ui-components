@@ -1,177 +1,21 @@
-.text-editor-tags-input-root {
-  top: -8px;
-
-  &.focused {
-    position: relative;
-
-    .text-editor-tags-input-container {
-      border: 1px solid var(--main-color);
-      box-shadow: 0 0 0 1px var(--main-color);
-      border-radius: 4px;
-
-      z-index: 1;
-      height: fit-content;
-      position: absolute;
-      top: -16px;
-      left: 0;
-      align-items: center;
-      & input {
-        overflow-y: unset;
-        height: fit-content;
-      }
-    }
-  }
-
-  .field__label-wrap {
-    box-sizing: border-box;
-    cursor: text;
+.text-editor-tags-input {
+  &.tagsbox-wrapper {
+    height: 48px;
     z-index: 1;
 
-    position: absolute;
-    top: 4px;
-    right: 0;
-    left: 12px;
-    display: flex;
-    gap: 4px;
+    .react-tagsbox {
+      &__control--is-focused .react-tagsbox__value-container {
+        max-height: 196px !important;
+      }
 
-    width: 200px;
-
-    svg {
-      cursor: default;
-    }
-  }
-}
-
-.text-editor-tags-input-container {
-  box-sizing: border-box;
-  border: 1px solid var(--ironhide-t1);
-  border-radius: 4px;
-  color: var(--ironhide-s4);
-  font-size: 17px;
-  background-color: var(--input-background);
-  display: flex;
-  width: 300px;
-  height: 48px;
-  padding: 18px 12px 1px;
-  min-height: 48px;
-  align-items: center;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
-  gap: 8px;
-
-  .remove-all-btn {
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 2px;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-    display: flex;
-    align-items: center;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 12px;
-
-    &:focus-visible {
-      border: 2px solid var(--main-color);
-      border-radius: 4px;
-    }
-
-    svg {
-      width: 10px;
-      path {
-        fill: var(--main-color);
+      &__value-container,
+      &__single_value {
+        max-height: 31px !important;
       }
     }
   }
 
-  .content {
-    height: 100%;
-    overflow-y: auto;
-    flex: 1;
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    overflow-x: hidden;
-    max-height: 300px;
-    padding-right: 8px;
-  }
-
-  & input {
-    min-width: 100px;
-    flex: 1;
-    border: none;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 4px;
-    color: var(--ironhide-s4);
-    font-size: 17px;
-    background-color: var(--input-background);
-    height: 22px;
-  }
-  & .incorrect-input {
-    color: var(--focus-s1);
-  }
-
-  .tag {
-    display: flex;
-    border-radius: 2px;
-    box-sizing: border-box;
-    margin: 1px 2px 2px 1px;
-    background-color: var(--multivalue-background);
-    width: fit-content;
-    color: var(--text-color);
-    padding: 2px 4px;
-    gap: 6px;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    width: fit-content;
-    max-width: 100%;
-    margin: 1px 2px 2px 1px;
-    font-size: 0.875rem;
-
-    button {
-      background: none;
-      color: inherit;
-      border: none;
-      padding: 2px;
-      font: inherit;
-      cursor: pointer;
-      outline: inherit;
-      display: flex;
-      align-items: center;
-      width: 16px;
-      height: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      &:focus-visible {
-        border: 2px solid var(--main-color);
-        border-radius: 4px;
-      }
-
-      svg {
-        width: 8px;
-        path {
-          fill: var(--ironhide-s3);
-        }
-      }
-
-      &:focus-visible,
-      &:hover {
-        path {
-          fill: var(--main-color);
-        }
-      }
-    }
+  .user-input-preview {
+    word-wrap: break-word;
   }
 }

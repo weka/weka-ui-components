@@ -5,12 +5,11 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import { Tag } from '../hooks'
 
 type TextEditorContextValue = {
   mode?: 'json' | 'text'
   shouldFoldAll?: boolean
-  tags?: Tag[]
+  tags?: string[]
 }
 
 type TextEditorContextType = {
