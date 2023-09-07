@@ -10,6 +10,7 @@ type TextEditorContextValue = {
   mode?: 'json' | 'text'
   shouldFoldAll?: boolean
   tags?: string[]
+  fontSize?: number
 }
 
 type TextEditorContextType = {
@@ -21,7 +22,7 @@ type TextEditorContextType = {
 
 const TextEditorContext = createContext<TextEditorContextType | null>(null)
 
-export function TextEditorProvider({ children }: PropsWithChildren) {
+export function TextEditorProvider({ children }: PropsWithChildren<>) {
   const [state, setState] = useState<TextEditorContextValue>({})
 
   const value = useMemo(
