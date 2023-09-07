@@ -253,7 +253,9 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
-declare function FoldAllButton(): false | JSX.Element;
+declare function FontSizeControls(): JSX.Element;
+
+declare function FoldAllButton(): JSX.Element;
 
 declare function TagsInput(): JSX.Element;
 
@@ -276,12 +278,15 @@ interface TextEditorProps {
     mode?: 'text' | 'json';
     initialLine?: number;
     onScroll?: (line: number) => void;
+    minLines?: number;
+    maxLines?: number;
 }
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;
     var TagsInput: typeof TagsInput;
     var FoldAllButton: typeof FoldAllButton;
+    var FontSizeControls: typeof FontSizeControls;
 }
 
 declare function Loader(): JSX.Element;

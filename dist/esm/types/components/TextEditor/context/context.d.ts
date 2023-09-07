@@ -3,6 +3,7 @@ declare type TextEditorContextValue = {
     mode?: 'json' | 'text';
     shouldFoldAll?: boolean;
     tags?: string[];
+    fontSize?: number;
 };
 declare type TextEditorContextType = {
     value: TextEditorContextValue;

@@ -20,11 +20,14 @@ export interface TextEditorProps {
     mode?: 'text' | 'json';
     initialLine?: number;
     onScroll?: (line: number) => void;
+    minLines?: number;
+    maxLines?: number;
 }
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;
     var TagsInput: typeof import("./components/TagsInput/TagsInput").default;
     var FoldAllButton: typeof import("./components/FoldAllButton/FoldAllButton").default;
+    var FontSizeControls: typeof import("./components/FontSizeControls/FontSizeControls").default;
 }
 export default TextEditor;

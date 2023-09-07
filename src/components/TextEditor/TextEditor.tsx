@@ -17,9 +17,9 @@ import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 
 import './textEditor.scss'
-import { useLinePosition, useTags } from './hooks'
+import { useFontSize, useLinePosition, useTags } from './hooks'
 import clsx from 'clsx'
-import { FoldAllButton, TagsInput } from './components'
+import { FoldAllButton, TagsInput, FontSizeControls } from './components'
 import { TextEditorProvider, useTextEditorContext } from './context'
 
 interface ParsedData {
@@ -39,6 +39,8 @@ export interface TextEditorProps {
   mode?: 'text' | 'json'
   initialLine?: number
   onScroll?: (line: number) => void
+  minLines?: number
+  maxLines?: number
 }
 function TextEditor(props: TextEditorProps) {
   const {
@@ -55,6 +57,8 @@ function TextEditor(props: TextEditorProps) {
     mode = 'json',
     initialLine,
     onScroll,
+    minLines,
+    maxLines,
     ...rest
   } = props
 
@@ -68,6 +72,7 @@ function TextEditor(props: TextEditorProps) {
 
   const id = useId()
   const editorRef = useRef<AceEditor>(null)
+  const editor = editorRef.current?.editor
 
   const [onlyMatching, toggleOnlyMatching] = useToggle(false)
   const [editorReady, setEditorReady] = useState(false)
@@ -175,8 +180,23 @@ function TextEditor(props: TextEditorProps) {
   useLinePosition({
     initialLine,
     onScroll,
-    editor: editorRef.current?.editor
+    editor
   })
+
+  useTags({
+    editor,
+    value,
+    setForcedOptions
+  })
+
+  useFontSize({ editor })
+
+  useEffect(() => {
+    editor?.setOptions({
+      minLines,
+      maxLines
+    })
+  }, [editor, maxLines, minLines])
 
   const classes = clsx({
     'text-editor-wrapper': true,
@@ -186,12 +206,6 @@ function TextEditor(props: TextEditorProps) {
     'text-editor-wrapper-only-matching-lines': onlyMatching,
     'disable-folding': options.disableFolding,
     [extraClass]: true
-  })
-
-  useTags({
-    editor: editorRef.current?.editor,
-    value,
-    setForcedOptions
   })
 
   return (
@@ -231,5 +245,6 @@ function TextEditor(props: TextEditorProps) {
 TextEditor.Provider = TextEditorProvider
 TextEditor.TagsInput = TagsInput
 TextEditor.FoldAllButton = FoldAllButton
+TextEditor.FontSizeControls = FontSizeControls
 
 export default TextEditor
