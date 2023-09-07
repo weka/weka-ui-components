@@ -8,6 +8,10 @@
     .ace_cursor {
       color: transparent !important;
     }
+
+    .ace_invisible .ace_invisible_space .ace_invalid {
+      display: none;
+    }
   }
 
   &.disable-folding {

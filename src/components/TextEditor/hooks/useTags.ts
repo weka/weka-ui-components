@@ -1,88 +1,35 @@
-import { useEffect } from 'react'
-import { IAceEditor } from 'react-ace/lib/types'
+import { useMemo } from 'react'
 import { useTextEditorContext } from '../context'
 
-function useTags({
-  editor,
-  value,
-  setForcedOptions
-}: {
-  editor?: IAceEditor
-  value: string
-  setForcedOptions: (
-    newState: (prev: Record<string, unknown>) => {
-      value?: string
-      disableFolding?: boolean
-    }
-  ) => void
-}) {
+function useTags({ value }: { value?: string }) {
   const context = useTextEditorContext(true)
   const tags = context?.value.tags
 
-  useEffect(() => {
-    if (!tags || !editor) {
+  const lines = useMemo(() => {
+    if (!tags || !value) {
       return
     }
 
-    editor.clearSelection()
-    editor.session.unfold()
+    return value.split('\n').flatMap((lineText, index) => {
+      const matchesAllTags = tags.every((tag) => {
+        const tagType = tag[0]
+        const tagValue = tag.slice(1)
 
-    let matchedLineIndex = 0
-    const matchedLinesNumbersMap: Record<number, number> = {}
+        return tagType === '+'
+          ? lineText.includes(tagValue)
+          : !lineText.includes(tagValue)
+      })
 
-    setForcedOptions((prev) => ({
-      ...prev,
-      disableFolding: true,
-      value: value
-        .split('\n')
-        .filter((line, index) => {
-          const matchesAllTags = tags.every((tag) => {
-            const tagType = tag[0]
-            const tagValue = tag.slice(1)
-
-            return tagType === '+'
-              ? line.includes(tagValue)
-              : !line.includes(tagValue)
-          })
-
-          if (matchesAllTags) {
-            matchedLinesNumbersMap[matchedLineIndex] = index + 1
-            matchedLineIndex += 1
+      return matchesAllTags
+        ? {
+            number: (index + 1).toString(),
+            text: lineText
           }
+        : []
+    }, [])
+  }, [tags, value])
 
-          return matchesAllTags
-        }, [])
-        .join('\n')
-    }))
-
-    const originalGutterRenderer = editor.session.gutterRenderer
-
-    editor.session.gutterRenderer = {
-      getText: function (_session: unknown, row: number) {
-        return matchedLinesNumbersMap[row]?.toString() || ''
-      },
-      getWidth: function (
-        _session: unknown,
-        lastLineNumber: number,
-        config: { characterWidth: number }
-      ) {
-        return lastLineNumber.toString().length * config.characterWidth
-      }
-    }
-
-    editor.session.setUseWorker(false)
-
-    return () => {
-      editor.session.gutterRenderer = originalGutterRenderer
-      editor.session.setUseWorker(true)
-
-      setForcedOptions((prev) => ({
-        ...prev,
-        disableFolding: undefined,
-        value: undefined
-      }))
-    }
-  }, [editor, setForcedOptions, tags, value])
+  return lines
 }
 
 export default useTags

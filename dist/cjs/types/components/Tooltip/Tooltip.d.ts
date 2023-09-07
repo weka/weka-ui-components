@@ -5,7 +5,8 @@ interface TooltipProps {
     clear?: boolean;
     data?: ReactElement | string;
     extraClass?: string;
+    extraPopperClass?: string;
     [key: string]: any;
 }
-declare function Tooltip({ children, clear, data, extraClass, ...rest }: TooltipProps): JSX.Element;
+declare function Tooltip({ children, clear, data, extraClass, extraPopperClass, ...rest }: TooltipProps): JSX.Element;
 export default Tooltip;

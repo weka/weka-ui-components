@@ -10,6 +10,7 @@ interface TooltipProps {
   clear?: boolean
   data?: ReactElement | string
   extraClass?: string
+  extraPopperClass?: string
   [key: string]: any
 }
 
@@ -18,6 +19,7 @@ function Tooltip({
   clear = false,
   data = EMPTY_STRING,
   extraClass = EMPTY_STRING,
+  extraPopperClass,
   ...rest
 }: TooltipProps) {
   const classes = clsx({
@@ -30,7 +32,11 @@ function Tooltip({
       enterNextDelay={400}
       enterDelay={400}
       title={data}
-      classes={{ tooltip: classes, arrow: 'tooltip-arrow' }}
+      classes={{
+        tooltip: classes,
+        arrow: 'tooltip-arrow',
+        popper: extraPopperClass
+      }}
       placement='top'
       arrow
       {...rest}

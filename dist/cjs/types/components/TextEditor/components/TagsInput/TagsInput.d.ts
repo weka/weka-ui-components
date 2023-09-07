@@ -1,4 +1,8 @@
 /// <reference types="react" />
 import './tagsInput.scss';
-declare function TagsInput(): JSX.Element;
+interface TagsInputProps {
+    wrapperClass?: string;
+    addToUrl?: boolean;
+}
+declare function TagsInput(props: TagsInputProps): JSX.Element;
 export default TagsInput;
