@@ -2,26 +2,30 @@ import React from 'react'
 
 import { useTextEditorContext } from '../../context'
 import ExpandCollapseButton from '../../../ExpandCollapseButton'
-import Tooltip from '../../../Tooltip/Tooltip'
+import { EMPTY_STRING } from '../../../../consts'
 
 function FoldAllButton() {
   const {
-    value: { mode, shouldFoldAll, tags },
+    value: { mode, shouldFoldAll, tags, isLiteMode },
     setTextEditorContext
   } = useTextEditorContext('ExpandCollapseBtn')
 
-  const hidden = mode !== 'json'
+  const hidden = mode === 'text'
 
   let disabled: string | boolean = false
 
-  if (tags && tags.length > 0) {
+  if (isLiteMode) {
+    // TODO: review text
+    disabled = 'Code folding is not supported for large files'
+  } else if (tags && tags.length > 0) {
     // TODO: review text
     disabled = 'Code folding is not supported when tags are present'
   }
   return (
-    !hidden && (
-      <Tooltip data={disabled || ''}>
+    <>
+      {!hidden && (
         <ExpandCollapseButton
+          tooltip={disabled || EMPTY_STRING}
           disabled={!!disabled}
           shouldCollapse={!!shouldFoldAll}
           onChange={(newVal) =>
@@ -31,8 +35,8 @@ function FoldAllButton() {
             }))
           }
         />
-      </Tooltip>
-    )
+      )}
+    </>
   )
 }
 

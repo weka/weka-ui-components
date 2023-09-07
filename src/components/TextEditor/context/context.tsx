@@ -9,7 +9,12 @@ import React, {
 type TextEditorContextValue = {
   mode?: 'json' | 'text'
   shouldFoldAll?: boolean
+  shouldShowSearch?: boolean
   tags?: string[]
+  fontSize?: number
+  totalLinesCount?: number
+  visibleLinesCount?: number
+  isLiteMode: boolean
 }
 
 type TextEditorContextType = {
@@ -22,7 +27,9 @@ type TextEditorContextType = {
 const TextEditorContext = createContext<TextEditorContextType | null>(null)
 
 export function TextEditorProvider({ children }: PropsWithChildren) {
-  const [state, setState] = useState<TextEditorContextValue>({})
+  const [state, setState] = useState<TextEditorContextValue>({
+    isLiteMode: false
+  })
 
   const value = useMemo(
     () => ({ value: state, setTextEditorContext: setState }),
