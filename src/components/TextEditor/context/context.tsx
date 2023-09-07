@@ -10,6 +10,9 @@ type TextEditorContextValue = {
   mode?: 'json' | 'text'
   shouldFoldAll?: boolean
   tags?: string[]
+  fontSize?: number
+  totalLinesCount?: number
+  visibleLinesCount?: number
 }
 
 type TextEditorContextType = {

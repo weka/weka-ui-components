@@ -253,7 +253,11 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
-declare function FoldAllButton(): false | JSX.Element;
+declare function LinesCount(): JSX.Element;
+
+declare function FontSizeControls(): JSX.Element;
+
+declare function FoldAllButton(): JSX.Element;
 
 declare function TagsInput(): JSX.Element;
 
@@ -265,7 +269,7 @@ interface ParsedData {
 interface TextEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
-    value: string;
+    value?: string;
     onValidate?: () => void;
     extraClass?: string;
     allowSearch?: boolean;
@@ -276,12 +280,17 @@ interface TextEditorProps {
     mode?: 'text' | 'json';
     initialLine?: number;
     onScroll?: (line: number) => void;
+    minLines?: number;
+    maxLines?: number;
+    loading?: boolean;
 }
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;
     var TagsInput: typeof TagsInput;
     var FoldAllButton: typeof FoldAllButton;
+    var FontSizeControls: typeof FontSizeControls;
+    var LinesCount: typeof LinesCount;
 }
 
 declare function Loader(): JSX.Element;
@@ -684,6 +693,7 @@ interface ExpandCollapseButtonProps {
     onChange: (shouldCollapse: boolean) => void;
     shouldCollapse: boolean;
     disabled?: boolean;
+    tooltip?: string;
 }
 declare function ExpandCollapseButton(props: ExpandCollapseButtonProps): JSX.Element;
 

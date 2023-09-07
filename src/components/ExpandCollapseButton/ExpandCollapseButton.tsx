@@ -11,15 +11,21 @@ interface ExpandCollapseButtonProps {
   onChange: (shouldCollapse: boolean) => void
   shouldCollapse: boolean
   disabled?: boolean
+  tooltip?: string
 }
 
 function ExpandCollapseButton(props: ExpandCollapseButtonProps) {
-  const { onChange, shouldCollapse, disabled } = props
+  const { onChange, shouldCollapse, disabled, tooltip } = props
 
   return (
     <Tooltip
       data={
-        disabled ? EMPTY_STRING : shouldCollapse ? 'Expand All' : 'Collapse All'
+        tooltip ||
+        (disabled
+          ? EMPTY_STRING
+          : shouldCollapse
+          ? 'Expand All'
+          : 'Collapse All')
       }
     >
       <div>
