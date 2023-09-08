@@ -17,9 +17,14 @@ import 'ace-builds/src-noconflict/mode-json'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 
 import './textEditor.scss'
-import { useFontSize, useLinePosition, useTags } from './hooks'
+import { useFontSize, useLinePosition, useLinesCount, useTags } from './hooks'
 import clsx from 'clsx'
-import { FoldAllButton, TagsInput, FontSizeControls } from './components'
+import {
+  FoldAllButton,
+  TagsInput,
+  FontSizeControls,
+  LinesCount
+} from './components'
 import { TextEditorProvider, useTextEditorContext } from './context'
 
 interface ParsedData {
@@ -191,6 +196,11 @@ function TextEditor(props: TextEditorProps) {
 
   useFontSize({ editor })
 
+  useLinesCount({
+    value,
+    forcedValue: forcedOptions.value
+  })
+
   useEffect(() => {
     editor?.setOptions({
       minLines,
@@ -246,5 +256,6 @@ TextEditor.Provider = TextEditorProvider
 TextEditor.TagsInput = TagsInput
 TextEditor.FoldAllButton = FoldAllButton
 TextEditor.FontSizeControls = FontSizeControls
+TextEditor.LinesCount = LinesCount
 
 export default TextEditor
