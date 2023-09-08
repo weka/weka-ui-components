@@ -11,6 +11,8 @@ type TextEditorContextValue = {
   shouldFoldAll?: boolean
   tags?: string[]
   fontSize?: number
+  totalLinesCount?: number
+  visibleLinesCount?: number
 }
 
 type TextEditorContextType = {
@@ -22,7 +24,7 @@ type TextEditorContextType = {
 
 const TextEditorContext = createContext<TextEditorContextType | null>(null)
 
-export function TextEditorProvider({ children }: PropsWithChildren<>) {
+export function TextEditorProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState<TextEditorContextValue>({})
 
   const value = useMemo(
