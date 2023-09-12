@@ -1,8 +1,8 @@
 {
   "name": "@weka.io/weka-ui-components",
   "version": "1.40.0",
-  "main": "src/index.js",
-  "module": "src/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
     "check-password-strength": "^2.0.7",
@@ -12,7 +12,7 @@
     "react-ace": "^10.1.0",
     "react-select": "^5.7.0",
     "react-table": "^7.8.0",
-    "usehooks-ts": "^2.9.1"
+    "react-use": "^17.4.0"
   },
   "scripts": {
     "build": "rollup -c",

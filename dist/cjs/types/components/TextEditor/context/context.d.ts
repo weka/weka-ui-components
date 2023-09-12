@@ -4,6 +4,8 @@ declare type TextEditorContextValue = {
     shouldFoldAll?: boolean;
     tags?: string[];
     fontSize?: number;
+    totalLinesCount?: number;
+    visibleLinesCount?: number;
 };
 declare type TextEditorContextType = {
     value: TextEditorContextValue;

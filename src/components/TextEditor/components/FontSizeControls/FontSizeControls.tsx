@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useTextEditorContext } from '../../context'
-import { useLocalStorage } from 'usehooks-ts'
+import { useLocalStorage } from 'react-use'
 import { ThinArrow } from '../../../../svgs'
 import { IconButton } from '@mui/material'
 
@@ -16,10 +16,8 @@ const STORAGE_KEY = 'text-editor-font-size'
 function FontSizeControls() {
   const { setTextEditorContext } = useTextEditorContext('FontSizeControls')
 
-  const [fontSize, setStorageFontSize] = useLocalStorage(
-    STORAGE_KEY,
-    DEFAULT_FONT_SIZE
-  )
+  const [fontSize = DEFAULT_FONT_SIZE, setStorageFontSize] =
+    useLocalStorage<number>(STORAGE_KEY)
 
   const handleSizeChange = (newSize: number) => {
     setStorageFontSize(newSize)
