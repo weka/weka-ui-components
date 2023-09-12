@@ -253,6 +253,8 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
+declare function LinesCount(): JSX.Element;
+
 declare function FontSizeControls(): JSX.Element;
 
 declare function FoldAllButton(): JSX.Element;
@@ -287,6 +289,7 @@ declare namespace TextEditor {
     var TagsInput: typeof TagsInput;
     var FoldAllButton: typeof FoldAllButton;
     var FontSizeControls: typeof FontSizeControls;
+    var LinesCount: typeof LinesCount;
 }
 
 declare function Loader(): JSX.Element;

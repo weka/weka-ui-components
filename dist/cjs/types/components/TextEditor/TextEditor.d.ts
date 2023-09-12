@@ -29,5 +29,6 @@ declare namespace TextEditor {
     var TagsInput: typeof import("./components/TagsInput/TagsInput").default;
     var FoldAllButton: typeof import("./components/FoldAllButton/FoldAllButton").default;
     var FontSizeControls: typeof import("./components/FontSizeControls/FontSizeControls").default;
+    var LinesCount: typeof import("./components/LinesCount/LinesCount").default;
 }
 export default TextEditor;
