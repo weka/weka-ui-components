@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useTextEditorContext } from '../../context'
 import { useLocalStorage } from 'react-use'
-import { ThinArrow } from '../../../../svgs'
+import { FontSizeEnlarge, FontSizeReduce } from '../../../../svgs'
 import { IconButton } from '@mui/material'
 
 import './fontSizeControls.scss'
@@ -36,18 +36,16 @@ function FontSizeControls() {
         <IconButton
           disabled={fontSize <= MIN_FONT_SIZE}
           onClick={() => handleSizeChange(fontSize - FONT_SIZE_STEP)}
-          style={{ transform: 'rotate(90deg)' }}
         >
-          <ThinArrow />
+          <FontSizeReduce />
         </IconButton>
       </Tooltip>
       <Tooltip data='Increase Font Size'>
         <IconButton
           disabled={fontSize >= MAX_FONT_SIZE}
           onClick={() => handleSizeChange(fontSize + FONT_SIZE_STEP)}
-          style={{ transform: 'rotate(-90deg)' }}
         >
-          <ThinArrow />
+          <FontSizeEnlarge />
         </IconButton>
       </Tooltip>
     </div>
