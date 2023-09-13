@@ -12,12 +12,13 @@ import Copy from '../Copy'
 import { useToggle } from '../../hooks'
 import { Checkbox } from '../inputs'
 import { CircularProgress } from '@mui/material'
-
-import 'ace-builds/src-noconflict/mode-json'
-import 'ace-builds/src-min-noconflict/ext-searchbox'
-
-import './textEditor.scss'
-import { useFontSize, useLinePosition, useLinesCount, useTags } from './hooks'
+import {
+  useFontSize,
+  useLinePosition,
+  useLinesCount,
+  useSearch,
+  useTags
+} from './hooks'
 import clsx from 'clsx'
 import {
   FoldAllButton,
@@ -26,6 +27,12 @@ import {
   LinesCount
 } from './components'
 import { TextEditorProvider, useTextEditorContext } from './context'
+import Loader from '../Loader'
+
+import 'ace-builds/src-noconflict/mode-json'
+import 'ace-builds/src-min-noconflict/ext-searchbox'
+
+import './textEditor.scss'
 
 interface ParsedData {
   [key: string]: any
@@ -33,7 +40,7 @@ interface ParsedData {
 export interface TextEditorProps {
   onChange?: () => void
   readOnly?: boolean
-  value: string
+  value?: string
   onValidate?: () => void
   extraClass?: string
   allowSearch?: boolean
@@ -46,11 +53,12 @@ export interface TextEditorProps {
   onScroll?: (line: number) => void
   minLines?: number
   maxLines?: number
+  loading?: boolean
 }
 function TextEditor(props: TextEditorProps) {
   const {
     readOnly,
-    value,
+    value = EMPTY_STRING,
     onChange,
     onValidate,
     allowSearch = false,
@@ -64,6 +72,7 @@ function TextEditor(props: TextEditorProps) {
     onScroll,
     minLines,
     maxLines,
+    loading,
     ...rest
   } = props
 
@@ -81,7 +90,6 @@ function TextEditor(props: TextEditorProps) {
 
   const [onlyMatching, toggleOnlyMatching] = useToggle(false)
   const [editorReady, setEditorReady] = useState(false)
-  const [searchValue, setSearchValue] = useState(EMPTY_STRING)
   const [jsonValue, setJsonValue] = useState(value)
 
   const handleLoad = () => {
@@ -113,6 +121,13 @@ function TextEditor(props: TextEditorProps) {
     ]
   )
 
+  const searchValue = useSearch({
+    editor,
+    allowSearch,
+    editorReady,
+    value
+  })
+
   const getFilteredValue = useCallback(() => {
     const searchTerm = searchValue.toLowerCase()
     const filtered = Object.entries(valueForMatched).reduce<
@@ -131,21 +146,6 @@ function TextEditor(props: TextEditorProps) {
   }, [valueForMatched, searchValue])
 
   useEffect(() => {
-    if (allowSearch && editorReady) {
-      const onSearchChange = (e: Event) => {
-        const target = e.target as HTMLInputElement
-        setSearchValue(target.value)
-      }
-      const searchInput = document.querySelector('.ace_search_field')
-      searchInput?.addEventListener('input', onSearchChange)
-
-      return () => {
-        searchInput?.removeEventListener('input', onSearchChange)
-      }
-    }
-  }, [allowSearch, editorReady])
-
-  useEffect(() => {
     if (allowSearch) {
       if (onlyMatching && valueForMatched) {
         setJsonValue(getFilteredValue())
@@ -153,34 +153,36 @@ function TextEditor(props: TextEditorProps) {
         setJsonValue(value)
       }
     }
-  }, [onlyMatching, searchValue, allowSearch, getFilteredValue, value])
+  }, [
+    onlyMatching,
+    searchValue,
+    allowSearch,
+    getFilteredValue,
+    value,
+    valueForMatched
+  ])
 
   useEffect(() => {
-    if (!value) {
+    if (!value || !editor) {
       return
     }
 
-    const editor = editorRef.current?.editor
     editor.scrollToLine(0)
     editor.selection.clearSelection()
   }, [onlyMatching, value])
 
   useEffect(() => {
-    const editor = editorRef.current?.editor
-    if (allowSearch) {
-      editor.execCommand('find')
+    if (!editor) {
+      return
     }
-  }, [allowSearch])
 
-  useEffect(() => {
-    const editor = editorRef.current?.editor
     if (options.shouldFoldAll) {
       editor.getSession().foldAll(1, editor.getSession().getLength())
     } else {
       editor.execCommand('unfoldall')
       editor.scrollToLine(0)
     }
-  }, [options.shouldFoldAll])
+  }, [editor, options.shouldFoldAll])
 
   useLinePosition({
     initialLine,
@@ -218,7 +220,9 @@ function TextEditor(props: TextEditorProps) {
     [extraClass]: true
   })
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className={classes}>
       {allowCopy && <Copy text={jsonValue} extraClass='copy-btn' />}
       {valueForMatched && allowSearch && (
