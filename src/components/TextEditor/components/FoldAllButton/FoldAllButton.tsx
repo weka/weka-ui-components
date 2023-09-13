@@ -10,7 +10,7 @@ function FoldAllButton() {
     setTextEditorContext
   } = useTextEditorContext('ExpandCollapseBtn')
 
-  const hidden = mode !== 'json'
+  const hidden = mode === 'text'
 
   let disabled: string | boolean = false
 

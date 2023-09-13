@@ -269,7 +269,7 @@ interface ParsedData {
 interface TextEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
-    value: string;
+    value?: string;
     onValidate?: () => void;
     extraClass?: string;
     allowSearch?: boolean;
@@ -282,6 +282,7 @@ interface TextEditorProps {
     onScroll?: (line: number) => void;
     minLines?: number;
     maxLines?: number;
+    loading?: boolean;
 }
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {

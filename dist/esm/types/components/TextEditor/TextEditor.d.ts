@@ -1,15 +1,15 @@
 /// <reference types="react" />
+import { TextEditorProvider } from './context';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
 import './textEditor.scss';
-import { TextEditorProvider } from './context';
 interface ParsedData {
     [key: string]: any;
 }
 export interface TextEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
-    value: string;
+    value?: string;
     onValidate?: () => void;
     extraClass?: string;
     allowSearch?: boolean;
@@ -22,6 +22,7 @@ export interface TextEditorProps {
     onScroll?: (line: number) => void;
     minLines?: number;
     maxLines?: number;
+    loading?: boolean;
 }
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
