@@ -31,15 +31,20 @@ function DateCell({
     ? valueToDate.toFormat(customFormat)
     : Utils.formatISODate(value, showMili)
 
+  const formattedRelative = valueToDate.toRelative({
+    style: relativeOnly ? 'long' : 'short',
+    round: Math.abs(valueToDate.diffNow().as('hours')) < 1
+  })
+
   const getDateString = () => {
     if (relativeOnly) {
-      return valueToDate.toRelative()
+      return formattedRelative
     }
     if (showRelative) {
       return (
         <>
           <span>{valueToShow}</span>
-          <span className='relative-time'>{` (${valueToDate.toRelative()})`}</span>
+          <span className='relative-time'>{` (${formattedRelative})`}</span>
         </>
       )
     }
