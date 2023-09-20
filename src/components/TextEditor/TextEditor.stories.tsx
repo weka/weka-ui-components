@@ -1,4 +1,4 @@
-import { default as TextEditorComponent } from './TextEditor'
+import { default as TextEditorComponent } from './components/TextEditorFull/TextEditorFull'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
 

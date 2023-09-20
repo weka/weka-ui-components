@@ -261,11 +261,10 @@ declare function FoldAllButton(): JSX.Element;
 
 declare function TagsInput(): JSX.Element;
 
-declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
-
 interface ParsedData {
     [key: string]: any;
 }
+
 interface TextEditorProps {
     onChange?: () => void;
     readOnly?: boolean;
@@ -280,10 +279,12 @@ interface TextEditorProps {
     mode?: 'text' | 'json';
     initialLine?: number;
     onScroll?: (line: number) => void;
-    minLines?: number;
     maxLines?: number;
     loading?: boolean;
 }
+
+declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
+
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;

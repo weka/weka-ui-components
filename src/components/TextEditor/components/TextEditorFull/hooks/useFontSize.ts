@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { IAceEditor } from 'react-ace/lib/types'
-import { useTextEditorContext } from '../context'
+import { useTextEditorContext } from '../../../context'
 
 function useFontSize({ editor }: { editor?: IAceEditor }) {
   const textEditorContext = useTextEditorContext(true)

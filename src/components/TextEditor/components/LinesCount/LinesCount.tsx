@@ -1,5 +1,8 @@
 import React from 'react'
 import { useTextEditorContext } from '../../context'
+import clsx from 'clsx'
+
+import './linesCount.scss'
 
 function LinesCount() {
   const {
@@ -9,7 +12,7 @@ function LinesCount() {
   return (
     <>
       {typeof totalLinesCount === 'number' && (
-        <div className='label-2'>
+        <div className={clsx('label-2', 'text-editor-lines-count')}>
           <div>
             <span>Total lines: </span>
             <span>{totalLinesCount}</span>

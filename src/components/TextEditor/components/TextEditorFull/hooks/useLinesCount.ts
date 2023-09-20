@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useTextEditorContext } from '../context'
+import { useTextEditorContext } from '../../../context'
 
 function useLinesCount({
   value,

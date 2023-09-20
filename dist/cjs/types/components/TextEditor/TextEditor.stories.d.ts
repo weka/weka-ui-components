@@ -1,5 +1,5 @@
-import { default as TextEditorComponent } from './TextEditor';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-declare const _default: ComponentMeta<typeof TextEditorComponent>;
+import React from 'react';
+declare const _default: ComponentMeta<React.MemoExoticComponent<(props: import("./components/TextEditorFull/TextEditorFull").TextEditorProps) => JSX.Element>>;
 export default _default;
-export declare const TextEditor: ComponentStory<typeof TextEditorComponent>;
+export declare const TextEditor: ComponentStory<React.MemoExoticComponent<(props: import("./components/TextEditorFull/TextEditorFull").TextEditorProps) => JSX.Element>>;

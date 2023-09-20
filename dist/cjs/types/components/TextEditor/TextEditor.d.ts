@@ -1,29 +1,7 @@
 /// <reference types="react" />
+import { TextEditorProps } from './components';
 import { TextEditorProvider } from './context';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-min-noconflict/ext-searchbox';
-import './textEditor.scss';
-interface ParsedData {
-    [key: string]: any;
-}
-export interface TextEditorProps {
-    onChange?: () => void;
-    readOnly?: boolean;
-    value?: string;
-    onValidate?: () => void;
-    extraClass?: string;
-    allowSearch?: boolean;
-    allowCopy?: boolean;
-    shouldFoldAll?: boolean;
-    valueForMatched?: ParsedData;
-    isValueForMatchedLoading?: boolean;
-    mode?: 'text' | 'json';
-    initialLine?: number;
-    onScroll?: (line: number) => void;
-    minLines?: number;
-    maxLines?: number;
-    loading?: boolean;
-}
+export declare const DEFAULT_FONT_SIZE = 16;
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;
