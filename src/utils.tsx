@@ -1,8 +1,8 @@
 import React from 'react'
 import Tooltip from './components/Tooltip'
 import { Hide, Show } from './svgs'
-import { EMPTY_STRING } from './consts'
-import { DateTime } from 'luxon'
+import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from './consts'
+import { DateTime, DurationUnits } from 'luxon'
 
 const utils = {
   insensitiveSort,
@@ -277,6 +277,32 @@ const utils = {
       return 'Not Valid DateTime Object'
     }
     return utils.formatISODate(dateIn.toISO(), showMili, showSeconds, showTime)
+  },
+  getRelativeTimeFromISODate: (date: string, showSeconds = false) => {
+    const units: DurationUnits = ['years', 'months', 'days', 'hours', 'minutes']
+    if (showSeconds) {
+      units.push('seconds')
+    }
+    const durationObj = DateTime.fromISO(date).toUTC().diffNow(units).toObject()
+    let stringToShow = EMPTY_STRING
+    let isPast = true
+    const durationObjWithValues: { [key: string]: any } = {}
+    Object.entries(durationObj).forEach(([key, val]) => {
+      if (val) {
+        durationObjWithValues[key] = val
+      }
+    })
+    Object.entries(durationObjWithValues).forEach(([key, val], index) => {
+      if (index < 2) {
+        if (val > 0) {
+          isPast = false
+        }
+        stringToShow += `${Math.floor(Math.abs(val))}${
+          TIME_PARTS_SHORTENINGS[key]
+        } `
+      }
+    })
+    return isPast ? `${stringToShow} ago` : `in ${stringToShow}`
   }
 }
 

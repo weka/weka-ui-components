@@ -4,11 +4,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   &-regular {
-    width: 200px;
     padding-left: var(--spread);
-  }
-  &-with-relative {
-    width: 270px;
   }
 }
 

@@ -15,27 +15,23 @@ function NodeCell({ cell }: CustomCellProps) {
     'is-client': !isBackend
   })
 
+  const formattedRoles = roles?.length
+    ? `(${roles
+        ?.reduce((acc: Array<string>, role: string) => {
+          SHORT_ROLES[role] ? acc.push(SHORT_ROLES[role]) : acc.push(role)
+          return acc
+        }, [])
+        .join(', ')}) `
+    : EMPTY_STRING
+
   return (
-    <div>
-      <span>{nid} </span>
-      {isBackend && (
-        <span>
-          {roles?.length
-            ? `(${roles
-                ?.reduce((acc: Array<string>, role: string) => {
-                  SHORT_ROLES[role]
-                    ? acc.push(SHORT_ROLES[role])
-                    : acc.push(role)
-                  return acc
-                }, [])
-                .join(', ')}) `
-            : EMPTY_STRING}
-        </span>
-      )}
-      <Tooltip data={isBackend ? 'Backend' : 'Client'}>
+    <Tooltip data={`${nid} ${formattedRoles} (${isBackend ? 'Backend' : 'Client'})`}>
+      <div className='node-cell'>
+        <span>{nid} </span>
+        {isBackend && <span>{formattedRoles}</span>}
         <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>
-      </Tooltip>
-    </div>
+      </div>
+    </Tooltip>
   )
 }
 

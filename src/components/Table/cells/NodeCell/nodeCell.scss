@@ -1,3 +1,9 @@
+.node-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .is-backend {
   color: var(--accent-key);
 }
