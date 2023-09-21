@@ -31,10 +31,7 @@ function DateCell({
     ? valueToDate.toFormat(customFormat)
     : Utils.formatISODate(value, showMili)
 
-  const formattedRelative = valueToDate.toRelative({
-    style: relativeOnly ? 'long' : 'short',
-    round: Math.abs(valueToDate.diffNow().as('hours')) < 1
-  })
+  const formattedRelative = Utils.getRelativeTimeFromISODate(value, true)
 
   const getDateString = () => {
     if (relativeOnly) {
@@ -53,8 +50,7 @@ function DateCell({
 
   const dateCellClasses = clsx({
     'table-date-cell': true,
-    'table-date-cell-regular': !showRelative,
-    'table-date-cell-with-relative': showRelative
+    'table-date-cell-regular': !showRelative
   })
 
   return (
