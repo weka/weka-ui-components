@@ -259,7 +259,10 @@ declare function FontSizeControls(): JSX.Element;
 
 declare function FoldAllButton(): JSX.Element;
 
-declare function TagsInput(): JSX.Element;
+interface TagsInputProps {
+    wrapperClass?: string;
+}
+declare function TagsInput(props: TagsInputProps): JSX.Element;
 
 interface ParsedData {
     [key: string]: any;

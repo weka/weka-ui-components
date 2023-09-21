@@ -1,10 +1,17 @@
 import React from 'react'
 import { useTextEditorContext } from '../../context'
 import { TagsBox } from '../../../inputs'
+import clsx from 'clsx'
 
 import './tagsInput.scss'
 
-function TagsInput() {
+interface TagsInputProps {
+  wrapperClass?: string
+}
+
+function TagsInput(props: TagsInputProps) {
+  const { wrapperClass } = props
+
   const {
     value: { tags },
     setTextEditorContext
@@ -30,7 +37,7 @@ function TagsInput() {
         // TODO: review text
         'A new tag must start with "+" or "-" and be 2 or more characters long'
       }
-      wrapperClass='text-editor-tags-input'
+      wrapperClass={clsx('text-editor-tags-input', wrapperClass)}
     />
   )
 }

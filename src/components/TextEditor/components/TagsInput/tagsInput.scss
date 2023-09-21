@@ -1,4 +1,8 @@
 .text-editor-tags-input {
+  max-width: 300px;
+  width: 100%;
+  min-width: 100px;
+
   &.tagsbox-wrapper {
     height: 48px;
     z-index: 1;

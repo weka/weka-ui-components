@@ -3,6 +3,7 @@ import { useTextEditorContext } from '../../context'
 import clsx from 'clsx'
 
 import './linesCount.scss'
+import SpanTooltip from '../../../SpanTooltip'
 
 function LinesCount() {
   const {
@@ -14,18 +15,20 @@ function LinesCount() {
       {typeof totalLinesCount === 'number' && (
         <div className={clsx('label-2', 'text-editor-lines-count')}>
           <div>
-            <span>Total lines: </span>
-            <span>{totalLinesCount}</span>
+            <SpanTooltip>{`Total lines: ${totalLinesCount}`}</SpanTooltip>
           </div>
           <div>
-            <span>Showing: </span>
-            {typeof totalLinesCount === 'number' && (
-              <span>
-                {visibleLinesCount === totalLinesCount
-                  ? 'All lines'
-                  : visibleLinesCount}
-              </span>
-            )}
+            <SpanTooltip>
+              {`Showing: ${
+                typeof totalLinesCount === 'number' && (
+                  <span>
+                    {visibleLinesCount === totalLinesCount
+                      ? 'All lines'
+                      : visibleLinesCount}
+                  </span>
+                )
+              }`}
+            </SpanTooltip>
           </div>
         </div>
       )}
