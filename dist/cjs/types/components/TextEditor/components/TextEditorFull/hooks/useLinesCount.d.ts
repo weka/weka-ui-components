@@ -1,5 +1,8 @@
-declare function useLinesCount({ value, forcedValue }: {
+declare function useLinesCount({ value, lines }: {
     value: string;
-    forcedValue?: string;
+    lines?: {
+        number: string;
+        text: string;
+    }[];
 }): void;
 export default useLinesCount;

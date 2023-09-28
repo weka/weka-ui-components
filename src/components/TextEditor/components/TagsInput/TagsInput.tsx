@@ -1,21 +1,46 @@
-import React from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { useTextEditorContext } from '../../context'
 import { TagsBox } from '../../../inputs'
 import clsx from 'clsx'
+import { useNavigate } from 'react-router-dom'
 
 import './tagsInput.scss'
 
 interface TagsInputProps {
   wrapperClass?: string
+  addToUrl?: boolean
 }
 
 function TagsInput(props: TagsInputProps) {
-  const { wrapperClass } = props
+  const { wrapperClass, addToUrl } = props
 
   const {
     value: { tags },
     setTextEditorContext
   } = useTextEditorContext('TagsInput')
+
+  const navigate = useNavigate()
+
+  useLayoutEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const initialTags = searchParams.getAll('tags')
+    if (initialTags.length > 0) {
+      setTextEditorContext((prev) => ({ ...prev, tags: initialTags }))
+    }
+  }, [setTextEditorContext])
+
+  useEffect(() => {
+    if (addToUrl) {
+      const newSearchParams = new URLSearchParams(window.location.search)
+      newSearchParams.delete('tags')
+
+      tags?.forEach((tag) => {
+        newSearchParams.append('tags', tag)
+      })
+
+      navigate(`?${newSearchParams.toString()}`, { replace: true })
+    }
+  }, [tags, addToUrl, navigate])
 
   return (
     <TagsBox

@@ -12,7 +12,7 @@ import {
   useLinesCount,
   useOnlyMatching,
   useSearch,
-  useTags,
+  useTags as useForcedLineNumbers,
   useEditor,
   ParsedData
 } from './hooks'
@@ -26,7 +26,7 @@ import 'ace-builds/src-min-noconflict/ext-searchbox'
 
 import './textEditorFull.scss'
 
-export interface TextEditorProps {
+export interface TextEditorFullProps {
   onChange?: () => void
   readOnly?: boolean
   value?: string
@@ -42,8 +42,12 @@ export interface TextEditorProps {
   onScroll?: (line: number) => void
   maxLines?: number
   loading?: boolean
+  lines?: {
+    number: string
+    text: string
+  }[]
 }
-function TextEditorFull(props: TextEditorProps) {
+function TextEditorFull(props: TextEditorFullProps) {
   const {
     readOnly,
     value = EMPTY_STRING,
@@ -60,6 +64,7 @@ function TextEditorFull(props: TextEditorProps) {
     onScroll,
     maxLines,
     loading,
+    lines,
     ...rest
   } = props
 
@@ -82,12 +87,6 @@ function TextEditorFull(props: TextEditorProps) {
     setEditorReady(true)
   }
 
-  const [forcedOptions, setForcedOptions] = useState<{
-    mode?: string
-    value?: string
-    disableFolding?: boolean
-  }>({})
-
   const searchValue = useSearch({
     editor,
     allowSearch,
@@ -109,12 +108,14 @@ function TextEditorFull(props: TextEditorProps) {
       mode,
       disableFolding: false,
       shouldFoldAll: editorContextValue?.shouldFoldAll ?? shouldFoldAll,
-      ...forcedOptions
+      ...(lines && {
+        value: lines.map((line) => line.text).join('\n')
+      })
     }),
     [
       editorContextValue?.shouldFoldAll,
-      forcedOptions,
       jsonValue,
+      lines,
       mode,
       onlyMatching,
       shouldFoldAll,
@@ -133,17 +134,17 @@ function TextEditorFull(props: TextEditorProps) {
     editor
   })
 
-  useTags({
+  useForcedLineNumbers({
     editor,
     value,
-    setForcedOptions
+    lines
   })
 
   useFontSize({ editor })
 
   useLinesCount({
     value,
-    forcedValue: forcedOptions.value
+    lines
   })
 
   useEditor({
@@ -159,7 +160,7 @@ function TextEditorFull(props: TextEditorProps) {
     'hide-search': !allowSearch,
     'text-editor-wrapper-with-copy': allowCopy,
     'text-editor-wrapper-only-matching-lines': onlyMatching,
-    'disable-folding': options.disableFolding,
+    'disable-folding': !!(lines && lines.length > 0),
     [extraClass]: true
   })
 

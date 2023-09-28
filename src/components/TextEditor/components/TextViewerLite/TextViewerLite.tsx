@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
-import './textViewerLight.scss'
+import './textViewerLite.scss'
 import { useCharacterSize, useScrolledX } from './hooks'
 import clsx from 'clsx'
 
@@ -9,14 +9,19 @@ const GUTTER_PADDING_LEFT = 21
 const GUTTER_PADDING_RIGHT = 13
 const TEXT_CONTAINER_MARGIN = 16
 
-type TextViewerLightProps = {
+type TextViewerLiteProps = {
   value?: string
   fontSize: number
   maxLines?: number
+  lines?:
+    | {
+        number: string
+        text: string
+      }[]
 }
 
-function TextViewerLight(props: TextViewerLightProps) {
-  const { value, fontSize, maxLines } = props
+function TextViewerLite(props: TextViewerLiteProps) {
+  const { value, fontSize, maxLines, lines: outerLines } = props
 
   const parentRef = useRef<HTMLDivElement>(null)
   const isScrolledX = useScrolledX({ element: parentRef.current })
@@ -26,8 +31,8 @@ function TextViewerLight(props: TextViewerLightProps) {
   })
 
   const lines = useMemo(() => {
-    return value?.split('\n') ?? []
-  }, [value])
+    return outerLines?.map(({ text }) => text) ?? value?.split('\n') ?? []
+  }, [outerLines, value])
 
   const longestLineLength = useMemo(() => {
     return lines.reduce((acc, line) => Math.max(acc, line.length), 0)
@@ -36,7 +41,7 @@ function TextViewerLight(props: TextViewerLightProps) {
   const charactersPerColumn = Math.min(maximumCharPerColumn, longestLineLength)
 
   const getLineNumber = (index: number) => {
-    return (index + 1).toString()
+    return outerLines?.[index]?.number ?? (index + 1).toString()
   }
 
   const rowVirtualizer = useVirtualizer({
@@ -68,7 +73,7 @@ function TextViewerLight(props: TextViewerLightProps) {
   })
 
   return (
-    <div className='text-viewer-light'>
+    <div className='text-viewer-lite'>
       <div
         style={{
           height: `100%`,
@@ -151,4 +156,4 @@ function TextViewerLight(props: TextViewerLightProps) {
   )
 }
 
-export default TextViewerLight
+export default TextViewerLite

@@ -3,7 +3,7 @@ import { ParsedData } from './hooks';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-min-noconflict/ext-searchbox';
 import './textEditorFull.scss';
-export interface TextEditorProps {
+export interface TextEditorFullProps {
     onChange?: () => void;
     readOnly?: boolean;
     value?: string;
@@ -19,7 +19,11 @@ export interface TextEditorProps {
     onScroll?: (line: number) => void;
     maxLines?: number;
     loading?: boolean;
+    lines?: {
+        number: string;
+        text: string;
+    }[];
 }
-declare function TextEditorFull(props: TextEditorProps): JSX.Element;
+declare function TextEditorFull(props: TextEditorFullProps): JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof TextEditorFull>;
 export default _default;

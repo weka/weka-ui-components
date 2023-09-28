@@ -253,6 +253,8 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
+declare function SearchButton(): JSX.Element;
+
 declare function LinesCount(): JSX.Element;
 
 declare function FontSizeControls(): JSX.Element;
@@ -261,12 +263,15 @@ declare function FoldAllButton(): JSX.Element;
 
 interface TagsInputProps {
     wrapperClass?: string;
+    addToUrl?: boolean;
 }
 declare function TagsInput(props: TagsInputProps): JSX.Element;
 
 interface ParsedData {
     [key: string]: any;
 }
+
+declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
 
 interface TextEditorProps {
     onChange?: () => void;
@@ -284,10 +289,8 @@ interface TextEditorProps {
     onScroll?: (line: number) => void;
     maxLines?: number;
     loading?: boolean;
+    liteMode?: boolean;
 }
-
-declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
-
 declare function TextEditor(props: TextEditorProps): JSX.Element;
 declare namespace TextEditor {
     var Provider: typeof TextEditorProvider;
@@ -295,6 +298,7 @@ declare namespace TextEditor {
     var FoldAllButton: typeof FoldAllButton;
     var FontSizeControls: typeof FontSizeControls;
     var LinesCount: typeof LinesCount;
+    var SearchButton: typeof SearchButton;
 }
 
 declare function Loader(): JSX.Element;
@@ -384,9 +388,10 @@ interface TooltipProps {
     clear?: boolean;
     data?: ReactElement | string;
     extraClass?: string;
+    extraPopperClass?: string;
     [key: string]: any;
 }
-declare function Tooltip({ children, clear, data, extraClass, ...rest }: TooltipProps): JSX.Element;
+declare function Tooltip({ children, clear, data, extraClass, extraPopperClass, ...rest }: TooltipProps): JSX.Element;
 
 interface ExtendedFiltersColumn$3<T extends object> extends UseFiltersColumnProps<T> {
     fixedOptions: Array<any>;

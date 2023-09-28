@@ -1,10 +1,10 @@
 import { IAceEditor } from 'react-ace/lib/types';
-declare function useTags({ editor, value, setForcedOptions }: {
+declare function useTags({ editor, value, lines }: {
     editor?: IAceEditor;
     value: string;
-    setForcedOptions: (newState: (prev: Record<string, unknown>) => {
-        value?: string;
-        disableFolding?: boolean;
-    }) => void;
+    lines?: {
+        number: string;
+        text: string;
+    }[];
 }): void;
 export default useTags;

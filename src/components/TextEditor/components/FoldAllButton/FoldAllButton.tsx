@@ -6,7 +6,7 @@ import { EMPTY_STRING } from '../../../../consts'
 
 function FoldAllButton() {
   const {
-    value: { mode, shouldFoldAll, tags },
+    value: { mode, shouldFoldAll, tags, isLiteMode },
     setTextEditorContext
   } = useTextEditorContext('ExpandCollapseBtn')
 
@@ -14,7 +14,10 @@ function FoldAllButton() {
 
   let disabled: string | boolean = false
 
-  if (tags && tags.length > 0) {
+  if (isLiteMode) {
+    // TODO: review text
+    disabled = 'Code folding is not supported for large files'
+  } else if (tags && tags.length > 0) {
     // TODO: review text
     disabled = 'Code folding is not supported when tags are present'
   }

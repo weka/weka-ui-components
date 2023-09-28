@@ -17,19 +17,17 @@ function LinesCount() {
           <div>
             <SpanTooltip>{`Total lines: ${totalLinesCount}`}</SpanTooltip>
           </div>
-          <div>
-            <SpanTooltip>
-              {`Showing: ${
-                typeof totalLinesCount === 'number' && (
-                  <span>
-                    {visibleLinesCount === totalLinesCount
-                      ? 'All lines'
-                      : visibleLinesCount}
-                  </span>
-                )
-              }`}
-            </SpanTooltip>
-          </div>
+          {typeof totalLinesCount === 'number' && (
+            <div>
+              <SpanTooltip>
+                {`Showing: ${
+                  visibleLinesCount === totalLinesCount
+                    ? 'All lines'
+                    : visibleLinesCount
+                }`}
+              </SpanTooltip>
+            </div>
+          )}
         </div>
       )}
     </>
