@@ -88,6 +88,7 @@ interface TimeShortenings {
 }
 
 export const TIME_PARTS_SHORTENINGS: TimeShortenings = {
+  years: 'y',
   months: 'mon',
   weeks: 'w',
   days: 'd',
