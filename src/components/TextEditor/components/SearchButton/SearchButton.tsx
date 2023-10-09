@@ -9,7 +9,7 @@ import './searchButton.scss'
 
 function SearchButton() {
   const {
-    value: { isLiteMode },
+    value: { isLiteMode, allowSearch = false },
     setTextEditorContext
   } = useTextEditorContext('ExpandCollapseBtn')
 
@@ -28,7 +28,7 @@ function SearchButton() {
           onClick={() =>
             setTextEditorContext((prev) => ({
               ...prev,
-              shouldShowSearch: !prev.shouldShowSearch
+              allowSearch: !allowSearch
             }))
           }
         >

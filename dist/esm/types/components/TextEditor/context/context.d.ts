@@ -2,12 +2,13 @@ import { PropsWithChildren } from 'react';
 declare type TextEditorContextValue = {
     mode?: 'json' | 'text';
     shouldFoldAll?: boolean;
-    shouldShowSearch?: boolean;
+    allowSearch?: boolean;
     tags?: string[];
     fontSize?: number;
     totalLinesCount?: number;
     visibleLinesCount?: number;
     isLiteMode: boolean;
+    loading?: boolean;
 };
 declare type TextEditorContextType = {
     value: TextEditorContextValue;
