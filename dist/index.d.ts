@@ -355,7 +355,7 @@ interface TabProps {
     active: boolean;
     disabled?: boolean;
     wrapperClass?: string;
-    setActive: () => void;
+    setActive?: () => void;
     subComponent?: ReactElement | null;
     isSideTab?: boolean;
     isSubTab?: boolean;

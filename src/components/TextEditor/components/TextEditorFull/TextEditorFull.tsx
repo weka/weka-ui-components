@@ -87,41 +87,40 @@ function TextEditorFull(props: TextEditorFullProps) {
     setEditorReady(true)
   }
 
-  const searchValue = useSearch({
-    editor,
-    allowSearch,
-    editorReady,
-    value
-  })
-
-  const jsonValue = useOnlyMatching({
-    allowSearch,
-    onlyMatching,
-    searchValue,
-    value,
-    valueForMatched
-  })
-
   const options = useMemo(
     () => ({
-      value: onlyMatching ? jsonValue : value,
       mode,
       disableFolding: false,
       shouldFoldAll: editorContextValue?.shouldFoldAll ?? shouldFoldAll,
+      allowSearch: editorContextValue?.allowSearch ?? allowSearch,
       ...(lines && {
         value: lines.map((line) => line.text).join('\n')
       })
     }),
     [
+      allowSearch,
+      editorContextValue?.allowSearch,
       editorContextValue?.shouldFoldAll,
-      jsonValue,
       lines,
       mode,
-      onlyMatching,
-      shouldFoldAll,
-      value
+      shouldFoldAll
     ]
   )
+
+  const searchValue = useSearch({
+    editor,
+    allowSearch: options.allowSearch,
+    editorReady,
+    value
+  })
+
+  const jsonValue = useOnlyMatching({
+    allowSearch: options.allowSearch,
+    onlyMatching,
+    searchValue,
+    value,
+    valueForMatched
+  })
 
   useFoldAll({
     editor,
@@ -157,7 +156,7 @@ function TextEditorFull(props: TextEditorFullProps) {
   const classes = clsx({
     'text-editor-wrapper': true,
     'read-only': readOnly,
-    'hide-search': !allowSearch,
+    'hide-search': !options.allowSearch,
     'text-editor-wrapper-with-copy': allowCopy,
     'text-editor-wrapper-only-matching-lines': onlyMatching,
     'disable-folding': !!(lines && lines.length > 0),
@@ -169,7 +168,7 @@ function TextEditorFull(props: TextEditorFullProps) {
   ) : (
     <div className={classes}>
       {allowCopy && <Copy text={jsonValue} extraClass='copy-btn' />}
-      {(valueForMatched || isValueForMatchedLoading) && allowSearch && (
+      {(valueForMatched || isValueForMatchedLoading) && options.allowSearch && (
         <div className='matching-toggle'>
           <span>Show only matching lines</span>
           {isValueForMatchedLoading ? (
@@ -190,7 +189,7 @@ function TextEditorFull(props: TextEditorFullProps) {
         name={id}
         editorProps={{ $blockScrolling: true }}
         readOnly={readOnly}
-        value={options.value}
+        value={onlyMatching ? jsonValue : value}
         onChange={onChange}
         onValidate={onValidate}
         onLoad={handleLoad}

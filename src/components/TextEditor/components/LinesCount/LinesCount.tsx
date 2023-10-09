@@ -7,12 +7,12 @@ import SpanTooltip from '../../../SpanTooltip'
 
 function LinesCount() {
   const {
-    value: { totalLinesCount, visibleLinesCount = totalLinesCount }
+    value: { totalLinesCount, visibleLinesCount = totalLinesCount, loading }
   } = useTextEditorContext('LinesCount')
 
   return (
     <>
-      {typeof totalLinesCount === 'number' && (
+      {typeof totalLinesCount === 'number' && !loading && (
         <div className={clsx('label-2', 'text-editor-lines-count')}>
           <div>
             <SpanTooltip>{`Total lines: ${totalLinesCount}`}</SpanTooltip>

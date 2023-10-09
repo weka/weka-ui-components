@@ -36,7 +36,7 @@ interface TextEditorProps {
 }
 
 function TextEditor(props: TextEditorProps) {
-  const { value, maxLines, liteMode: outerLiteMode } = props
+  const { value, maxLines, liteMode: outerLiteMode, loading } = props
   const context = useTextEditorContext(true)
   const setTextEditorContext = context?.setTextEditorContext
   const fontSize = context?.value?.fontSize ?? DEFAULT_FONT_SIZE
@@ -52,6 +52,13 @@ function TextEditor(props: TextEditorProps) {
       isLiteMode
     }))
   }, [setTextEditorContext, isLiteMode])
+
+  useEffect(() => {
+    setTextEditorContext?.((prev) => ({
+      ...prev,
+      loading
+    }))
+  }, [loading, setTextEditorContext])
 
   return isLiteMode ? (
     <TextViewerLite
