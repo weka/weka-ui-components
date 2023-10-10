@@ -197,3 +197,10 @@
     display: none;
   }
 }
+
+body.dark-mode {
+  .ace_selected-word {
+    background: none !important;
+    border: 2px solid rgb(200, 200, 250) !important;
+  }
+}
