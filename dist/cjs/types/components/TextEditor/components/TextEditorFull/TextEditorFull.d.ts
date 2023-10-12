@@ -23,6 +23,7 @@ export interface TextEditorFullProps {
         number: string;
         text: string;
     }[];
+    fontSize?: number;
 }
 declare function TextEditorFull(props: TextEditorFullProps): JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof TextEditorFull>;

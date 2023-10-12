@@ -33,20 +33,24 @@ function FontSizeControls() {
   return (
     <div className='text-editor-font-size-controls'>
       <Tooltip data='Decrease Font Size'>
-        <IconButton
-          disabled={fontSize <= MIN_FONT_SIZE}
-          onClick={() => handleSizeChange(fontSize - FONT_SIZE_STEP)}
-        >
-          <FontSizeReduce />
-        </IconButton>
+        <div>
+          <IconButton
+            disabled={fontSize <= MIN_FONT_SIZE}
+            onClick={() => handleSizeChange(fontSize - FONT_SIZE_STEP)}
+          >
+            <FontSizeReduce />
+          </IconButton>
+        </div>
       </Tooltip>
       <Tooltip data='Increase Font Size'>
-        <IconButton
-          disabled={fontSize >= MAX_FONT_SIZE}
-          onClick={() => handleSizeChange(fontSize + FONT_SIZE_STEP)}
-        >
-          <FontSizeEnlarge />
-        </IconButton>
+        <div>
+          <IconButton
+            disabled={fontSize >= MAX_FONT_SIZE}
+            onClick={() => handleSizeChange(fontSize + FONT_SIZE_STEP)}
+          >
+            <FontSizeEnlarge />
+          </IconButton>
+        </div>
       </Tooltip>
     </div>
   )

@@ -3,13 +3,15 @@ import { IAceEditor } from 'react-ace/lib/types'
 
 function useFoldAll({
   editor,
-  shouldFoldAll
+  shouldFoldAll,
+  value
 }: {
   editor?: IAceEditor
   shouldFoldAll: boolean
+  value: string
 }) {
   useEffect(() => {
-    if (!editor) {
+    if (!editor || !value) {
       return
     }
 
@@ -19,7 +21,7 @@ function useFoldAll({
       editor.execCommand('unfoldall')
       editor.scrollToLine(0)
     }
-  }, [editor, shouldFoldAll])
+  }, [editor, shouldFoldAll, value])
 }
 
 export default useFoldAll
