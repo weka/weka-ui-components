@@ -1,7 +1,6 @@
 export { default as useLinePosition } from './useLinePosition';
 export { default as useTags } from './useTags';
 export type * from './useTags';
-export { default as useFontSize } from './useFontSize';
 export { default as useLinesCount } from './useLinesCount';
 export { default as useSearch } from './useSearch';
 export { default as useOnlyMatching } from './useOnlyMatching';

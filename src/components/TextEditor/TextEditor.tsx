@@ -69,7 +69,7 @@ function TextEditor(props: TextEditorProps) {
       lines={lines}
     />
   ) : (
-    <TextEditorFull {...props} lines={lines} />
+    <TextEditorFull {...props} lines={lines} fontSize={fontSize} />
   )
 }
 

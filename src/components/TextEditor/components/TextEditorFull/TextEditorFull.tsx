@@ -7,7 +7,6 @@ import { Checkbox } from '../../../inputs'
 import { CircularProgress } from '@mui/material'
 import {
   useFoldAll,
-  useFontSize,
   useLinePosition,
   useLinesCount,
   useOnlyMatching,
@@ -46,6 +45,7 @@ export interface TextEditorFullProps {
     number: string
     text: string
   }[]
+  fontSize?: number
 }
 function TextEditorFull(props: TextEditorFullProps) {
   const {
@@ -65,6 +65,7 @@ function TextEditorFull(props: TextEditorFullProps) {
     maxLines,
     loading,
     lines,
+    fontSize,
     ...rest
   } = props
 
@@ -93,9 +94,7 @@ function TextEditorFull(props: TextEditorFullProps) {
       disableFolding: false,
       shouldFoldAll: editorContextValue?.shouldFoldAll ?? shouldFoldAll,
       allowSearch: editorContextValue?.allowSearch ?? allowSearch,
-      ...(lines && {
-        value: lines.map((line) => line.text).join('\n')
-      })
+      value: lines?.map((line) => line.text).join('\n') ?? value
     }),
     [
       allowSearch,
@@ -103,7 +102,8 @@ function TextEditorFull(props: TextEditorFullProps) {
       editorContextValue?.shouldFoldAll,
       lines,
       mode,
-      shouldFoldAll
+      shouldFoldAll,
+      value
     ]
   )
 
@@ -111,7 +111,7 @@ function TextEditorFull(props: TextEditorFullProps) {
     editor,
     allowSearch: options.allowSearch,
     editorReady,
-    value
+    value: options.value
   })
 
   const jsonValue = useOnlyMatching({
@@ -124,7 +124,8 @@ function TextEditorFull(props: TextEditorFullProps) {
 
   useFoldAll({
     editor,
-    shouldFoldAll: options.shouldFoldAll
+    shouldFoldAll: options.shouldFoldAll,
+    value: options.value
   })
 
   useLinePosition({
@@ -135,14 +136,12 @@ function TextEditorFull(props: TextEditorFullProps) {
 
   useForcedLineNumbers({
     editor,
-    value,
+    value: options.value,
     lines
   })
 
-  useFontSize({ editor })
-
   useLinesCount({
-    value,
+    value: options.value,
     lines
   })
 
@@ -150,7 +149,7 @@ function TextEditorFull(props: TextEditorFullProps) {
     editor,
     maxLines,
     onlyMatching,
-    value
+    value: options.value
   })
 
   const classes = clsx({
@@ -162,6 +161,8 @@ function TextEditorFull(props: TextEditorFullProps) {
     'disable-folding': !!(lines && lines.length > 0),
     [extraClass]: true
   })
+
+  console.log('value={onlyMatching ? jsonValue : options.value}', fontSize)
 
   return loading ? (
     <Loader />
@@ -182,14 +183,14 @@ function TextEditorFull(props: TextEditorFullProps) {
         ref={editorRef}
         mode={mode}
         height='100%'
-        fontSize={16}
+        fontSize={fontSize}
         width='99%'
         showPrintMargin={false}
         highlightActiveLine={false}
         name={id}
         editorProps={{ $blockScrolling: true }}
         readOnly={readOnly}
-        value={onlyMatching ? jsonValue : value}
+        value={onlyMatching ? jsonValue : options.value}
         onChange={onChange}
         onValidate={onValidate}
         onLoad={handleLoad}
