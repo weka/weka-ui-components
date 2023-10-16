@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useCallback
+  useCallback, useState
 } from 'react'
 import _ from 'lodash'
 import {
@@ -240,6 +240,7 @@ interface TableProps<Data extends Record<string, unknown>> {
   customDateFormat?: string
   hasResizableColumns?: boolean
   hasEmptyActionsCell?: boolean
+  collapseRowsOnLeavingPage?: boolean
 }
 
 function Table<Values extends Record<string, unknown>>({
@@ -279,7 +280,8 @@ function Table<Values extends Record<string, unknown>>({
   hasCustomDateFormat,
   customDateFormat,
   hasResizableColumns = false,
-  hasEmptyActionsCell = false
+  hasEmptyActionsCell = false,
+  collapseRowsOnLeavingPage = false
 }: TableProps<Values>) {
   const extendedInitialUserFilters: ExtendedFilter[] | undefined = useMemo(
     () =>
@@ -334,6 +336,7 @@ function Table<Values extends Record<string, unknown>>({
     filterConfig: urlFilterConfig,
     filterCategory
   })
+  const [allRowsExpanded, toggleAllRowsExpanding] = useToggle(false)
 
   const LSEnabledResizing = localStorageService.getItem(SAVED_RESIZING_ENABLED)
   const enabledResizingInLocalStorage =
@@ -404,7 +407,7 @@ function Table<Values extends Record<string, unknown>>({
       },
       autoResetFilters: false,
       autoResetSortBy: false,
-      autoResetExpanded: false,
+      autoResetExpanded: collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
       autoResetPage: false,
       autoResetRowState: false,
       autoResetGlobalFilter: false,
@@ -515,7 +518,14 @@ function Table<Values extends Record<string, unknown>>({
 
   useEffect(() => {
     tableRef.current?.scrollTo(0, 0)
-  }, [pageIndex])
+    if (collapseRowsOnLeavingPage && RowSubComponent && !isAllRowsExpanded) {
+      rows.forEach(row => {
+        if (row.isExpanded) {
+          row.toggleRowExpanded(false)
+        }
+      })
+    }
+  }, [pageIndex, rows])
 
   useEffect(() => {
     if (miniTable && !fixedPageSize) {
@@ -572,7 +582,7 @@ function Table<Values extends Record<string, unknown>>({
                 <Tooltip
                   data={isAllRowsExpanded ? 'Collapse all' : 'Expand all'}
                 >
-                  <IconButton>
+                  <IconButton onClick={toggleAllRowsExpanding}>
                     <ThinArrow
                       className={`${
                         isAllRowsExpanded ? 'rotate180' : EMPTY_STRING
