@@ -8,7 +8,6 @@ import { CircularProgress } from '@mui/material'
 import {
   useFoldAll,
   useLinePosition,
-  useLinesCount,
   useOnlyMatching,
   useSearch,
   useTags as useForcedLineNumbers,
@@ -140,11 +139,6 @@ function TextEditorFull(props: TextEditorFullProps) {
     lines
   })
 
-  useLinesCount({
-    value: options.value,
-    lines
-  })
-
   useEditor({
     editor,
     maxLines,
@@ -161,8 +155,6 @@ function TextEditorFull(props: TextEditorFullProps) {
     'disable-folding': !!(lines && lines.length > 0),
     [extraClass]: true
   })
-
-  console.log('value={onlyMatching ? jsonValue : options.value}', fontSize)
 
   return loading ? (
     <Loader />

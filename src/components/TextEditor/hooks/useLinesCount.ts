@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useTextEditorContext } from '../../../context'
+import { useTextEditorContext } from '../context'
 
 function useLinesCount({
   value,
   lines
 }: {
-  value: string
+  value?: string
   lines?: {
     number: string
     text: string
@@ -21,7 +21,7 @@ function useLinesCount({
 
     setTextEditorContext((prev) => ({
       ...prev,
-      totalLinesCount: value.split('\n').length,
+      totalLinesCount: value?.split('\n').length,
       ...(lines && {
         visibleLinesCount: lines.length
       })

@@ -73,7 +73,7 @@ export declare const SEVERITY_MINOR = "MINOR";
 export declare const SEVERITY_MAJOR = "MAJOR";
 export declare const SEVERITY_CRITICAL = "CRITICAL";
 export declare const SEVERITIES: readonly ["DEBUG", "INFO", "WARNING", "MINOR", "MAJOR", "CRITICAL"];
-export declare type Severities = typeof SEVERITIES[number];
+export type Severities = typeof SEVERITIES[number];
 export declare const SEVERITIES_ICONS: SeverityIcons;
 interface ShortRoles {
     [key: string]: any;

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-declare type TextEditorContextValue = {
+type TextEditorContextValue = {
     mode?: 'json' | 'text';
     shouldFoldAll?: boolean;
     allowSearch?: boolean;
@@ -10,7 +10,7 @@ declare type TextEditorContextValue = {
     isLiteMode: boolean;
     loading?: boolean;
 };
-declare type TextEditorContextType = {
+type TextEditorContextType = {
     value: TextEditorContextValue;
     setTextEditorContext: (setter: (prev: TextEditorContextValue) => TextEditorContextValue) => void;
 };

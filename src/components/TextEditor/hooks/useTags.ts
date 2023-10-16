@@ -6,7 +6,7 @@ function useTags({ value }: { value?: string }) {
   const tags = context?.value.tags
 
   const lines = useMemo(() => {
-    if (!tags || !value) {
+    if (!tags?.length || !value) {
       return
     }
 

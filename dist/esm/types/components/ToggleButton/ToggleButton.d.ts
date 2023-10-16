@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import './ToggleButton.scss';
-declare type Option = {
+type Option = {
     label: string;
     value: string;
 };

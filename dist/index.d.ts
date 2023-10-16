@@ -73,7 +73,7 @@ interface FormSwitchProps {
 }
 declare function FormSwitch({ onChange, oneColor, value, label, placeholder, isRequired, info, ...rest }: FormSwitchProps): JSX.Element;
 
-declare type Subnet = {
+type Subnet = {
     ip: string;
     mask: string;
 };
@@ -303,7 +303,7 @@ declare namespace TextEditor {
 
 declare function Loader(): JSX.Element;
 
-declare type menuItem = {
+type menuItem = {
     hideMenu?: boolean;
     key?: string;
     text?: string;
@@ -372,7 +372,7 @@ declare namespace Toast {
     var propTypes: {};
 }
 
-declare type Option$1 = {
+type Option$1 = {
     label: string;
     value: string;
 };
@@ -450,7 +450,7 @@ declare function useUrlFilters(props: {
     (filters: ExtendedFilter[] | ((prevState: ExtendedFilter[]) => ExtendedFilter[])) => void
 ];
 
-declare type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
+type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
 interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
     action?: ((original: object) => void) | (() => void);
@@ -469,7 +469,7 @@ interface CustomCellProps<Data extends Record<string, unknown>> {
     cell: CellProps<Data>;
     column: Column<Data>;
 }
-declare type Column<Data extends Record<string, unknown>> = Omit<Column$1<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
+type Column<Data extends Record<string, unknown>> = Omit<Column$1<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
     onClickCell?: (values: Data) => void;
     Cell?: React.FC<CustomCellProps<Data>>;
     defaultHidden?: boolean;

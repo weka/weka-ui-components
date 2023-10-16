@@ -11,7 +11,7 @@ import {
 import { TextEditorProvider, useTextEditorContext } from './context'
 
 import React, { useEffect } from 'react'
-import { useTags } from './hooks'
+import { useLinesCount, useTags } from './hooks'
 
 const maximumCharacters = 10 ** 7
 export const DEFAULT_FONT_SIZE = 16
@@ -59,6 +59,11 @@ function TextEditor(props: TextEditorProps) {
       loading
     }))
   }, [loading, setTextEditorContext])
+
+  useLinesCount({
+    value,
+    lines
+  })
 
   return isLiteMode ? (
     <TextViewerLite
