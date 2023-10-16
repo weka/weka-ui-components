@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import './ipRangeTextBox.scss';
-declare type Subnet = {
+type Subnet = {
     ip: string;
     mask: string;
 };

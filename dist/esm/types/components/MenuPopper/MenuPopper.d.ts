@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import './menuPopper.scss';
-export declare type menuItem = {
+export type menuItem = {
     hideMenu?: boolean;
     key?: string;
     text?: string;

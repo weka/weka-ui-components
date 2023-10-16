@@ -1,6 +1,6 @@
 /// <reference types="react" />
 import './textViewerLite.scss';
-declare type TextViewerLiteProps = {
+type TextViewerLiteProps = {
     value?: string;
     fontSize: number;
     maxLines?: number;

@@ -9,7 +9,7 @@ import { UrlFilterParser } from './hooks/useUrlFilters';
 import './table.scss';
 export declare const filterParsersMap: Map<FilterComponent, UrlFilterParser>;
 export declare const stringParser: UrlFilterParser;
-export declare type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
+export type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
 export interface RowAction {
     hideAction: boolean | ((original: object) => boolean);
     action?: ((original: object) => void) | (() => void);
@@ -28,7 +28,7 @@ export interface CustomCellProps<Data extends Record<string, unknown>> {
     cell: CellProps<Data>;
     column: Column<Data>;
 }
-export declare type Column<Data extends Record<string, unknown>> = Omit<RTColumn<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
+export type Column<Data extends Record<string, unknown>> = Omit<RTColumn<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
     onClickCell?: (values: Data) => void;
     Cell?: React.FC<CustomCellProps<Data>>;
     defaultHidden?: boolean;
