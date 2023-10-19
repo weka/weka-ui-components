@@ -10,6 +10,7 @@ export const SAVED_RESIZED = 'saved_resized'
 export const SAVED_RESIZING_ENABLED = 'saved_resizing_enabled'
 export const FILTER_CHANGE_LISTENER = 'table-filters-change'
 export const FILTER_LISTENER = 'table-filters'
+export const COLUMN_RESIZING_LISTENER = 'column-resizing'
 
 export const GENERAL_ERROR = 'Something went wrong. Please refresh the page and try again.'
 

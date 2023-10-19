@@ -8,6 +8,14 @@ import { Info } from '../../../svgs'
 import './ipSubnetTextBox.scss'
 
 function keyDown(event: React.KeyboardEvent) {
+  if (
+    event.key === 'e' ||
+    event.key === 'E' ||
+    event.key === '-' ||
+    event.key === '+'
+  ) {
+    event.preventDefault()
+  }
   if (event.key === '.' || event.key === 'ArrowRight') {
     Utils.goToNextInput()
     event.preventDefault()
@@ -85,7 +93,6 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
       focusElement.parentNode &&
       focusElement.parentNode.parentNode === inputsRef.current
     ) {
-      inputsRef.current?.firstElementChild.firstElementChild.select()
       inputsRef.current?.firstElementChild.firstElementChild.focus()
     }
   }, [inputsRef.current])
