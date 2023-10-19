@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useCallback, useState
+  useCallback
 } from 'react'
 import _ from 'lodash'
 import {
@@ -14,7 +14,8 @@ import {
   NOP,
   SEVERITIES,
   SAVED_RESIZED,
-  SAVED_RESIZING_ENABLED
+  SAVED_RESIZING_ENABLED,
+  COLUMN_RESIZING_LISTENER
 } from '../../consts'
 import Tooltip from '../Tooltip'
 import {
@@ -436,6 +437,7 @@ function Table<Values extends Record<string, unknown>>({
   useEffect(() => {
     if (hasResizableColumns) {
       localStorageService.updateResized(filterCategory, columnResizing)
+      Utils.dispatchCustomEvent(COLUMN_RESIZING_LISTENER, undefined)
     }
   }, [JSON.stringify(columnResizing), filterCategory, hasResizableColumns])
 

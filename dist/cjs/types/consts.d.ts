@@ -8,6 +8,7 @@ export declare const SAVED_RESIZED = "saved_resized";
 export declare const SAVED_RESIZING_ENABLED = "saved_resizing_enabled";
 export declare const FILTER_CHANGE_LISTENER = "table-filters-change";
 export declare const FILTER_LISTENER = "table-filters";
+export declare const COLUMN_RESIZING_LISTENER = "column-resizing";
 export declare const GENERAL_ERROR = "Something went wrong. Please refresh the page and try again.";
 interface FilterBoxes {
     [key: string]: string;

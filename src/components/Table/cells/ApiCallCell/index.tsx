@@ -1,1 +1,1 @@
-export {default} from './ApiCallCell'
+export { default } from './ApiCallCell'

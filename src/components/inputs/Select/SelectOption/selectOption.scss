@@ -11,11 +11,12 @@
     width: 40px;
   }
 
-  &--is-selected{
-    background: var(--accent-key);
-  }
   &--is-focused{
-    background: var(--ironhide-t2);
+    background: var(--ironhide-t2) !important;
+  }
+
+  &--is-selected {
+    background: var(--ironhide-t1) !important;
   }
 
   .option-wrapper {

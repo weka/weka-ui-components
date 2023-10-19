@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Tooltip from '../../../Tooltip'
-import { EMPTY_STRING } from '../../../../consts'
+import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from '../../../../consts'
 import Utils from '../../../../utils'
 import { CustomCellProps } from '../../Table'
 import { Link } from 'react-router-dom'
@@ -24,8 +24,10 @@ function DefaultCell({ cell }: CustomCellProps) {
   useEffect(() => {
     compareSize()
     window.addEventListener('resize', compareSize)
+    document.addEventListener(COLUMN_RESIZING_LISTENER, compareSize)
     return () => {
       window.removeEventListener('resize', compareSize)
+      document.removeEventListener(COLUMN_RESIZING_LISTENER, compareSize)
     }
   }, [value])
 
