@@ -242,6 +242,8 @@ interface TableProps<Data extends Record<string, unknown>> {
   hasResizableColumns?: boolean
   hasEmptyActionsCell?: boolean
   collapseRowsOnLeavingPage?: boolean
+  onSortChanged: (sort: { id: string; desc?: boolean }) => void
+  manualSorting?: boolean
 }
 
 function Table<Values extends Record<string, unknown>>({
@@ -274,6 +276,8 @@ function Table<Values extends Record<string, unknown>>({
   onFiltersChanged,
   defaultDescendingSort = false,
   customRowActions,
+  onSortChanged,
+  manualSorting,
   manualFilters,
   extraClasses,
   initialFilters: initialUserFilters,
@@ -299,8 +303,8 @@ function Table<Values extends Record<string, unknown>>({
         Utils.isString(accessor) ? accessor : Header
       )
   const LSResizing = localStorageService.getItem(SAVED_RESIZED)
-  const initialResizing =
-    (LSResizing && JSON.parse(LSResizing)[filterCategory]) || { columnWidths: {} }
+  const initialResizing = (LSResizing &&
+    JSON.parse(LSResizing)[filterCategory]) || { columnWidths: {} }
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -329,7 +333,7 @@ function Table<Values extends Record<string, unknown>>({
           filterParser
         }
       }),
-    []
+    [columns]
   )
 
   const [urlFilters, setUrlFilters] = useUrlFilters({
@@ -380,7 +384,7 @@ function Table<Values extends Record<string, unknown>>({
     setPageSize,
     previousPage,
     page,
-    state: { pageIndex, filters, columnResizing },
+    state: { pageIndex, filters, columnResizing, sortBy },
     setFilter,
     setAllFilters,
     visibleColumns,
@@ -408,7 +412,8 @@ function Table<Values extends Record<string, unknown>>({
       },
       autoResetFilters: false,
       autoResetSortBy: false,
-      autoResetExpanded: collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
+      autoResetExpanded:
+        collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
       autoResetPage: false,
       autoResetRowState: false,
       autoResetGlobalFilter: false,
@@ -417,6 +422,7 @@ function Table<Values extends Record<string, unknown>>({
       paginateExpandedRows: false,
       getRowId,
       sortTypes,
+      manualSortBy: manualSorting,
       manualFilters
     },
     useRowState,
@@ -429,6 +435,13 @@ function Table<Values extends Record<string, unknown>>({
     useFlexLayout,
     useResizeColumns
   )
+
+  const onSortChangedRef = useRef(onSortChanged)
+  onSortChangedRef.current = onSortChanged
+
+  useEffect(() => {
+    onSortChangedRef.current?.(sortBy[0])
+  }, [sortBy])
 
   useEffect(() => {
     updateExplicitlyRemovedFilters(filters)
@@ -521,7 +534,7 @@ function Table<Values extends Record<string, unknown>>({
   useEffect(() => {
     tableRef.current?.scrollTo(0, 0)
     if (collapseRowsOnLeavingPage && RowSubComponent && !isAllRowsExpanded) {
-      rows.forEach(row => {
+      rows.forEach((row) => {
         if (row.isExpanded) {
           row.toggleRowExpanded(false)
         }

@@ -1,7 +1,6 @@
 .select-wrapper {
   width: var(--input-width);
 
-
   position: relative;
 
   .select-label {
@@ -21,22 +20,25 @@
 
   &.no-label {
     .react-select {
-
-      &__value-container, &__single_value {
+      &__value-container,
+      &__single_value {
         margin-top: 0;
       }
-      &__input-container, &__single-value {
+      &__input-container,
+      &__single-value {
         color: var(--text-color);
       }
-    }}
+    }
+  }
 
-    .react-select {
-      &__input-container, &__single-value {
-        color: var(--text-color);
-      }
-      &__placeholder {
-        margin-left: 4px !important;
-      }
+  .react-select {
+    &__input-container,
+    &__single-value {
+      color: var(--text-color);
+    }
+    &__placeholder {
+      margin-left: 4px !important;
+    }
     &__control {
       border-radius: 4px;
       height: unset;
@@ -51,8 +53,8 @@
       margin: 0px;
     }
 
-    &__value-container, &__single_value {
-
+    &__value-container,
+    &__single_value {
       font-size: 17px;
       margin-top: 10px;
     }
@@ -79,10 +81,10 @@
 .select-wrapper-is-multi {
   .react-select {
     &__input-container {
-        padding-top: 0;
-        max-height: 21px;
-        color: var(--text-color);
-      }
+      padding-top: 0;
+      max-height: 21px;
+      color: var(--text-color);
+    }
     &__value-container {
       padding: 1px 8px;
       &--is-multi {
@@ -147,6 +149,22 @@
       padding-bottom: 3px;
     }
   }
+
+  &.expand-input-on-focus {
+    height: 48px;
+
+    &.select-wrapper-is-multi {
+      z-index: 10;
+    }
+
+    & .react-select__value-container--is-multi {
+      max-height: 30px !important;
+    }
+
+    &.select-wrapper-is-multi
+      .react-select__control--is-focused
+      .react-select__value-container--is-multi {
+      max-height: 196px !important;
+    }
+  }
 }
-
-

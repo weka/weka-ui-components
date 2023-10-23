@@ -39,7 +39,7 @@ function TextEditor(props: TextEditorProps) {
   const { value, maxLines, liteMode: outerLiteMode, loading } = props
   const context = useTextEditorContext(true)
   const setTextEditorContext = context?.setTextEditorContext
-  const fontSize = context?.value?.fontSize ?? DEFAULT_FONT_SIZE
+  const fontSize = context?.value.fontSize ?? DEFAULT_FONT_SIZE
 
   const lines = useTags({ value })
 

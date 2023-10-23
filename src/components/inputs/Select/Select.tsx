@@ -101,6 +101,7 @@ interface SelectProps {
   autoFocus?: boolean
   groupedOptions?: boolean
   isSingleClearable?: boolean
+  expandInputOnFocus?: boolean
 }
 
 function Select(props: SelectProps) {
@@ -122,6 +123,7 @@ function Select(props: SelectProps) {
     isClearable = true,
     autoFocus = false,
     groupedOptions = false,
+    expandInputOnFocus,
     ...rest
   } = props
   const [saveOptions, setSaveOptions] = useState(null)
@@ -177,7 +179,8 @@ function Select(props: SelectProps) {
     [wrapperClass]: true,
     'select-wrapper-is-multi': isMulti,
     'has-error': error,
-    'no-label': !label
+    'no-label': !label,
+    'expand-input-on-focus': expandInputOnFocus
   })
 
   return (
