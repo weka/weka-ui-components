@@ -5,13 +5,15 @@ import React, {
   useMemo,
   useState
 } from 'react'
+import { FONT_SIZE_STORAGE_KEY } from '../components/FontSizeControls/FontSizeControls'
+import { DEFAULT_FONT_SIZE } from '../TextEditor'
 
 type TextEditorContextValue = {
   mode?: 'json' | 'text'
   shouldFoldAll?: boolean
   allowSearch?: boolean
   tags?: string[]
-  fontSize?: number
+  fontSize: number
   totalLinesCount?: number
   visibleLinesCount?: number
   isLiteMode: boolean
@@ -28,9 +30,12 @@ type TextEditorContextType = {
 const TextEditorContext = createContext<TextEditorContextType | null>(null)
 
 export function TextEditorProvider({ children }: PropsWithChildren) {
-  const [state, setState] = useState<TextEditorContextValue>({
-    isLiteMode: false
-  })
+  const [state, setState] = useState<TextEditorContextValue>(() => ({
+    isLiteMode: false,
+    fontSize: +(
+      localStorage.getItem(FONT_SIZE_STORAGE_KEY) ?? DEFAULT_FONT_SIZE
+    )
+  }))
 
   const value = useMemo(
     () => ({ value: state, setTextEditorContext: setState }),

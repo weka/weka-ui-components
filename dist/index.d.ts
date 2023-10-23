@@ -166,6 +166,7 @@ interface SelectProps {
     autoFocus?: boolean;
     groupedOptions?: boolean;
     isSingleClearable?: boolean;
+    expandInputOnFocus?: boolean;
 }
 declare function Select(props: SelectProps): JSX.Element;
 
@@ -535,8 +536,13 @@ interface TableProps<Data extends Record<string, unknown>> {
     hasResizableColumns?: boolean;
     hasEmptyActionsCell?: boolean;
     collapseRowsOnLeavingPage?: boolean;
+    onSortChanged: (sort: {
+        id: string;
+        desc?: boolean;
+    }) => void;
+    manualSorting?: boolean;
 }
-declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, manualFilters, extraClasses, initialFilters: initialUserFilters, groupBy, hasCustomDateFormat, customDateFormat, hasResizableColumns, hasEmptyActionsCell, collapseRowsOnLeavingPage }: TableProps<Values>): JSX.Element;
+declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, onSortChanged, manualSorting, manualFilters, extraClasses, initialFilters: initialUserFilters, groupBy, hasCustomDateFormat, customDateFormat, hasResizableColumns, hasEmptyActionsCell, collapseRowsOnLeavingPage }: TableProps<Values>): JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof Table>;
 
 interface ActionsCellProps {

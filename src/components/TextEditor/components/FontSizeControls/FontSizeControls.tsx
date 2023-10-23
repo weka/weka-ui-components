@@ -12,12 +12,13 @@ const MIN_FONT_SIZE = 10
 const MAX_FONT_SIZE = 30
 const FONT_SIZE_STEP = 2
 
-const STORAGE_KEY = 'text-editor-font-size'
+export const FONT_SIZE_STORAGE_KEY = 'text-editor-font-size'
+
 function FontSizeControls() {
   const { setTextEditorContext } = useTextEditorContext('FontSizeControls')
 
   const [fontSize = DEFAULT_FONT_SIZE, setStorageFontSize] =
-    useLocalStorage<number>(STORAGE_KEY)
+    useLocalStorage<number>(FONT_SIZE_STORAGE_KEY)
 
   const handleSizeChange = (newSize: number) => {
     setStorageFontSize(newSize)

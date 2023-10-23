@@ -4,7 +4,7 @@ type TextEditorContextValue = {
     shouldFoldAll?: boolean;
     allowSearch?: boolean;
     tags?: string[];
-    fontSize?: number;
+    fontSize: number;
     totalLinesCount?: number;
     visibleLinesCount?: number;
     isLiteMode: boolean;
