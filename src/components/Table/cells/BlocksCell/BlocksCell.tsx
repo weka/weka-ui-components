@@ -11,6 +11,7 @@ interface ExtendedColumn extends ColumnInstance {
   showTotalCountOnly?: boolean
   isLink?: boolean
   getUrl?: (original: Partial<Row>) => string
+  openInNewTab?: boolean
 }
 
 function BlocksCell<Data extends Record<string, unknown>>({
@@ -18,7 +19,7 @@ function BlocksCell<Data extends Record<string, unknown>>({
   column
 }: CustomCellProps<Data>) {
   const { value, row } = cell
-  const { showTotalCountOnly, isLink, getUrl } =
+  const { showTotalCountOnly, isLink, getUrl, openInNewTab } =
     column as unknown as ExtendedColumn
 
   const upBlocks = value.filter(
@@ -55,7 +56,15 @@ function BlocksCell<Data extends Record<string, unknown>>({
   )
 
   return isLink && getUrl ? (
-    <Link to={getUrl(row.original)}>{cellContent}</Link>
+    <Link
+      to={getUrl(row.original)}
+      {...(openInNewTab && {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      })}
+    >
+      {cellContent}
+    </Link>
   ) : (
     <>{cellContent}</>
   )

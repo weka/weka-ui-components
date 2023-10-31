@@ -9,7 +9,7 @@ import './defaultCell.scss'
 
 function DefaultCell({ cell }: CustomCellProps) {
   const { value, column, row } = cell
-  const { isLink, getUrl } = column
+  const { isLink, getUrl, openInNewTab } = column
   const ref = useRef<null | HTMLDivElement>(null)
   const [tooltip, setTooltip] = useState(EMPTY_STRING)
 
@@ -40,7 +40,14 @@ function DefaultCell({ cell }: CustomCellProps) {
   return (
     <Tooltip data={tooltip?.toString()}>
       {isLink && getUrl ? (
-        <Link to={getUrl(row.original)} className='table-link'>
+        <Link
+          to={getUrl(row.original)}
+          className='table-link'
+          {...(openInNewTab && {
+            target: '_blank',
+            rel: 'noopener noreferrer'
+          })}
+        >
           {cellContent}
         </Link>
       ) : (
