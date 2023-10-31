@@ -578,7 +578,7 @@ function Table<Values extends Record<string, unknown>>({
         <div className='table-top'>
           <div>
             <span className='heading-4'>{title}</span>
-            <span className='sub-title'>
+            <span className='sub-title bold'>
               {`${itemsAmount || rows.length} ${
                 maxRows ? `(max ${maxRows})` : EMPTY_STRING
               }`}
