@@ -303,7 +303,19 @@ const utils = {
       }
     })
     return isPast ? `${stringToShow} ago` : `in ${stringToShow}`
-  }
+  },
+  getNestedValueByString: (obj, keysString) => {
+    let ans = obj
+    const keys = keysString.split('.')
+    for (let i = 0; i < keys.length; i += 1) {
+      if (keys[i] in ans) {
+        ans = ans[keys[i]]
+      } else {
+        return undefined
+      }
+    }
+    return ans
+  },
 }
 
 function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr

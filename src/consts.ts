@@ -171,3 +171,61 @@ export const ORIGIN_OPTIONS = {
   USER: 'USER',
   WEKA: 'WEKA'
 }
+
+// form
+
+export const FORM_VALIDATIONS = {
+  REQUIRED: 'required',
+  POSITIVE: 'positive',
+  NOT_NEGATIVE: 'not-negative',
+  VALID_RANGE: (value) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (!value?.includes('-')) {
+      return true
+    }
+    // eslint-disable-next-line react/destructuring-assignment
+    const range = value.split('.')[3]
+    const [start, end] = range.split('-')
+    if (parseInt(start, 10) > parseInt(end, 10)) {
+      return 'Not a valid IP range'
+    }
+    return true
+  },
+  MAX_VALUE: (max, customErrorMsg) => (val) => {
+    if (val > max) {
+      return customErrorMsg || `The maximum value is ${max}`
+    }
+    return true
+  },
+  MAX_LENGTH: (max, customErrorMsg) => (val) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (val?.length > max) {
+      return customErrorMsg || `The maximum length is ${max}`
+    }
+    return true
+  },
+  MIN_LENGTH: (min, customErrorMsg) => (val) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (val?.length < min) {
+      return customErrorMsg || `The minimum length is ${min}`
+    }
+    return true
+  }
+}
+
+export const FORM_INPUTS = {
+  LOGIN_FIELD: 'login-field',
+  TEXT_FIELD: 'text-field',
+  SWITCH: 'switch',
+  TEXT_BOX: 'text-box',
+  TEXT_AREA: 'text-area',
+  TAGS_BOX: 'tags-box',
+  SELECT: 'select',
+  DATA_INFO: 'data-info',
+  TEXT_SELECT: 'text-select',
+  INPUTS_SECTION: 'inputs-section',
+  IP_TEXT_BOX: 'masked-text-box',
+  IP_SUBNET_TEXT_BOX: 'ip-subnet-text-box',
+  IP_RANGE_TEXT_BOX: 'ip-range-text-box',
+  DATE_PICKER: 'date-picker'
+}

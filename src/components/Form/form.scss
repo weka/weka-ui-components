@@ -1,0 +1,57 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .form-body {
+    max-height: 80vh;
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .form-section {
+    align-self: flex-start;
+    max-width: 744px;
+    .heading-4 {
+      display: flex;
+      align-items: center;
+    }
+
+    .field-container:not(:last-child) {
+      padding-right: 24px;
+    }
+
+    &.has-title {
+      padding-top: 24px;
+    }
+
+    &-body {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      flex-grow: 0;
+    }
+  }
+
+  .field-container {
+    padding-top: 24px;
+    display: flex;
+    align-items: flex-end;
+
+    .field-label {
+      min-width: 150px;
+    }
+  }
+
+  .actions {
+    margin-top: 20px;
+
+    .main-button {
+      background-color: var(--main-color);
+      color: #fafafa;
+    }
+  }
+}

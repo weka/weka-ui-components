@@ -713,6 +713,34 @@ interface ExpandCollapseButtonProps {
 }
 declare function ExpandCollapseButton(props: ExpandCollapseButtonProps): JSX.Element;
 
+declare function ReactForm(props: any): JSX.Element;
+
+declare const FORM_VALIDATIONS: {
+    REQUIRED: string;
+    POSITIVE: string;
+    NOT_NEGATIVE: string;
+    VALID_RANGE: (value: any) => true | "Not a valid IP range";
+    MAX_VALUE: (max: any, customErrorMsg: any) => (val: any) => any;
+    MAX_LENGTH: (max: any, customErrorMsg: any) => (val: any) => any;
+    MIN_LENGTH: (min: any, customErrorMsg: any) => (val: any) => any;
+};
+declare const FORM_INPUTS: {
+    LOGIN_FIELD: string;
+    TEXT_FIELD: string;
+    SWITCH: string;
+    TEXT_BOX: string;
+    TEXT_AREA: string;
+    TAGS_BOX: string;
+    SELECT: string;
+    DATA_INFO: string;
+    TEXT_SELECT: string;
+    INPUTS_SECTION: string;
+    IP_TEXT_BOX: string;
+    IP_SUBNET_TEXT_BOX: string;
+    IP_RANGE_TEXT_BOX: string;
+    DATE_PICKER: string;
+};
+
 declare const utils: {
     insensitiveSort: typeof insensitiveSort;
     isEllipsisActive(element: HTMLElement): boolean;
@@ -762,8 +790,9 @@ declare const utils: {
     formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean, showTime?: boolean) => string;
     formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
     getRelativeTimeFromISODate: (date: string, showSeconds?: boolean) => string;
+    getNestedValueByString: (obj: any, keysString: any) => any;
 };
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FORM_INPUTS, FORM_VALIDATIONS, FilterBox, FilterButton, FilterHeader, ReactForm as Form, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };

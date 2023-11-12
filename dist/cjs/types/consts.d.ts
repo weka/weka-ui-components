@@ -88,4 +88,29 @@ export declare const ORIGIN_OPTIONS: {
     USER: string;
     WEKA: string;
 };
+export declare const FORM_VALIDATIONS: {
+    REQUIRED: string;
+    POSITIVE: string;
+    NOT_NEGATIVE: string;
+    VALID_RANGE: (value: any) => true | "Not a valid IP range";
+    MAX_VALUE: (max: any, customErrorMsg: any) => (val: any) => any;
+    MAX_LENGTH: (max: any, customErrorMsg: any) => (val: any) => any;
+    MIN_LENGTH: (min: any, customErrorMsg: any) => (val: any) => any;
+};
+export declare const FORM_INPUTS: {
+    LOGIN_FIELD: string;
+    TEXT_FIELD: string;
+    SWITCH: string;
+    TEXT_BOX: string;
+    TEXT_AREA: string;
+    TAGS_BOX: string;
+    SELECT: string;
+    DATA_INFO: string;
+    TEXT_SELECT: string;
+    INPUTS_SECTION: string;
+    IP_TEXT_BOX: string;
+    IP_SUBNET_TEXT_BOX: string;
+    IP_RANGE_TEXT_BOX: string;
+    DATE_PICKER: string;
+};
 export {};

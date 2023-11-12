@@ -49,6 +49,7 @@ declare const utils: {
     formatISODate: (isoDate: string, showMili?: boolean, showSeconds?: boolean, showTime?: boolean) => string;
     formatDate: (dateIn: DateTime, showSeconds?: boolean, showMili?: boolean, showTime?: boolean) => string;
     getRelativeTimeFromISODate: (date: string, showSeconds?: boolean) => string;
+    getNestedValueByString: (obj: any, keysString: any) => any;
 };
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
