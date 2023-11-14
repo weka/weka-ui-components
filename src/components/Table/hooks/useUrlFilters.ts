@@ -107,7 +107,7 @@ function useUrlFilters(props: {
         })
       } else if (Utils.isObject(value)) {
         Object.entries(value).forEach(([innerKey, innerVal]) => {
-          if (innerVal) {
+          if (!Utils.isEmpty(innerVal)) {
             searchParams.append(`${id}[${innerKey}]`, innerVal.toString())
           }
         })
