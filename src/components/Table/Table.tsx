@@ -814,7 +814,7 @@ function Table<Values extends Record<string, unknown>>({
 
                           const cellGroupIndex = cell.column.groupedIndex
                           const currentGroupIndex = groupBy.indexOf(
-                            row.groupByID
+                            extendedRow.groupByID
                           )
 
                           return (
@@ -832,8 +832,8 @@ function Table<Values extends Record<string, unknown>>({
                               extraClasses?.tableCell
                             )}
                             onClick={() => {
-                              if (row.isGrouped) {
-                                row.toggleRowExpanded()
+                              if (extendedRow.isGrouped) {
+                                extendedRow.toggleRowExpanded()
                               } else {
                                 const onClickCell = columns[index]?.onClickCell
 
@@ -866,7 +866,7 @@ function Table<Values extends Record<string, unknown>>({
                               <>
                                 {groupBy &&
                                   RowSubComponent &&
-                                  !row.isGrouped &&
+                                  !extendedRow.isGrouped &&
                                   (index === 0 ||
                                     extendedRow.cells[index - 1]
                                       .isPlaceholder) && (

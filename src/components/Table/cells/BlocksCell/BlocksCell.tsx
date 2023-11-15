@@ -57,7 +57,7 @@ function BlocksCell<Data extends Record<string, unknown>>({
 
   return isLink && getUrl ? (
     <Link
-      to={getUrl(row.original)}
+      to={getUrl(row.original || row.values)}
       {...(openInNewTab && {
         target: '_blank',
         rel: 'noopener noreferrer'
