@@ -41,7 +41,7 @@ function DefaultCell({ cell }: CustomCellProps) {
     <Tooltip data={tooltip?.toString()}>
       {isLink && getUrl ? (
         <Link
-          to={getUrl(row.original)}
+          to={getUrl(row.original || row.values)}
           className='table-link'
           {...(openInNewTab && {
             target: '_blank',
