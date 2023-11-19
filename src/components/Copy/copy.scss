@@ -1,13 +1,24 @@
-.copy {
-  margin: 0 2px !important;
-  svg {
+.copy-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+
+  .copy {
+    margin: 0 2px !important;
+    svg {
+      height: 12px;
+      width: 12px;
+    }
+  }
+
+  .copied {
     height: 12px;
     width: 12px;
-  }
-}
 
-.green {
-  path {
-    fill: var(--complement-key);
+    path {
+      fill: var(--complement-key);
+    }
   }
 }
