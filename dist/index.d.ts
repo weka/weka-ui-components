@@ -717,6 +717,11 @@ interface ExpandCollapseButtonProps {
 }
 declare function ExpandCollapseButton(props: ExpandCollapseButtonProps): JSX.Element;
 
+declare function ShowMore(props: {
+    isClose: boolean;
+    onClick: () => void;
+}): JSX.Element;
+
 declare const utils: {
     insensitiveSort: typeof insensitiveSort;
     isEllipsisActive(element: HTMLElement): boolean;
@@ -770,4 +775,4 @@ declare const utils: {
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, ShowMore, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
