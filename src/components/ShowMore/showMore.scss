@@ -1,0 +1,15 @@
+.show-more-wrapper {
+
+  svg {
+    width: 8px;
+    height: 8px;
+    path {
+      fill: var(--main-color);
+    }
+  }
+
+  .close {
+    transition: all 0.5s ease;
+    transform: rotate(-90deg);
+  }
+}
