@@ -1,11 +1,9 @@
-import React, { FC } from 'react';
+import { ReactNode } from 'react';
 import './copy.scss';
 interface CopyProps {
     text: string;
     extraClass?: string;
-    CopyComponent?: FC<{
-        onClick: (e: React.MouseEvent) => void;
-    }>;
+    copyIcon?: ReactNode;
     copyText?: string;
 }
 declare function Copy(props: CopyProps): JSX.Element;

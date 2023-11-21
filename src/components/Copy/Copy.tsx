@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { IconButton } from '@mui/material'
 import Tooltip from '../Tooltip'
 import copy from 'copy-to-clipboard'
@@ -11,12 +11,12 @@ import './copy.scss'
 interface CopyProps {
   text: string
   extraClass?: string
-  CopyComponent?: FC<{ onClick: (e: React.MouseEvent) => void }>
+  copyIcon?: ReactNode
   copyText?: string
 }
 
 function Copy(props: CopyProps) {
-  const { text, extraClass, CopyComponent, copyText = 'Copy' } = props
+  const { text, extraClass, copyIcon: outerCopyIcon, copyText = 'Copy' } = props
 
   const [isCopyPress, setCopyPress] = useState(false)
 
@@ -32,13 +32,9 @@ function Copy(props: CopyProps) {
     <Tooltip data={isCopyPress ? 'Copied!' : copyText}>
       <div className={clsx('copy-wrapper', extraClass)}>
         {!isCopyPress ? (
-          CopyComponent ? (
-            <CopyComponent onClick={onClick} />
-          ) : (
-            <IconButton className='copy' onClick={onClick}>
-              <CopyIcon />
-            </IconButton>
-          )
+          <IconButton className='copy' onClick={onClick}>
+            {outerCopyIcon ?? <CopyIcon />}
+          </IconButton>
         ) : (
           <CheckMark className='copied' />
         )}
