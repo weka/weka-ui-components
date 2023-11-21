@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import React, { MouseEventHandler, ReactNode, ReactElement, PropsWithChildren, Dispatch, SetStateAction, FC } from 'react';
+import React, { MouseEventHandler, ReactNode, ReactElement, PropsWithChildren, Dispatch, SetStateAction } from 'react';
 import { UseFiltersColumnProps, Column as Column$1, Row, CellProps, UseExpandedRowProps, UseRowStateRowProps, Filters, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
@@ -694,9 +694,7 @@ declare function EntityCell({ cell }: CustomCellProps): JSX.Element;
 interface CopyProps {
     text: string;
     extraClass?: string;
-    CopyComponent?: FC<{
-        onClick: (e: React.MouseEvent) => void;
-    }>;
+    copyIcon?: ReactNode;
     copyText?: string;
 }
 declare function Copy(props: CopyProps): JSX.Element;
