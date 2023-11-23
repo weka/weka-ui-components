@@ -1,1 +1,2 @@
-export { default as TableNext } from './Table'
+export { default } from './TableNext'
+export { createColumnHelper } from '@tanstack/react-table'
