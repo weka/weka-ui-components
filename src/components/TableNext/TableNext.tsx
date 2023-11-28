@@ -10,6 +10,11 @@ import {
   getSortedRowModel,
   flexRender
 } from '@tanstack/react-table'
+import ShowColumns from './ShowColumns'
+
+import './table.scss'
+import { LongArrow } from '../../svgs'
+import Tooltip from '../Tooltip'
 
 interface TableProps<Data extends Record<string, unknown>> {
   columns: Column<Data>[]
@@ -121,6 +126,7 @@ function Table<Values extends Record<string, unknown>>(
   })
 
   const { rows } = tableInstance.getRowModel()
+  const allColumns = tableInstance.getAllColumns()
 
   const isEmpty = !rows.length
   const tableClass = clsx({
@@ -134,9 +140,16 @@ function Table<Values extends Record<string, unknown>>(
   const tableRef = useRef<null | HTMLDivElement>(null)
   const isExpandable = !!RowSubComponent
 
+  console.log('visible columns', tableInstance.getVisibleFlatColumns())
+
   return (
-    <div className={clsx('react-table-wrapper', extraClasses?.tableWrapper)}>
-      {/* {!miniTable && (
+    <div
+      className={clsx(
+        'react-table-wrapper-TEMP_NEXT',
+        extraClasses?.tableWrapper
+      )}
+    >
+      {!miniTable && (
         <div className='table-top'>
           <div>
             <span className='heading-4'>{title}</span>
@@ -147,11 +160,11 @@ function Table<Values extends Record<string, unknown>>(
             </span>
             {allColumns.length > 2 && (
               <ShowColumns
-                columns={allColumns}
+                tableInstance={tableInstance}
                 colProperty={colPropForShowColumns || 'Header'}
               />
             )}
-            {canExpandAll && isExpandable && (
+            {/* {canExpandAll && isExpandable && (
               <span
                 {...getToggleAllRowsExpandedProps()}
                 className='table-manipulations-btn'
@@ -168,8 +181,8 @@ function Table<Values extends Record<string, unknown>>(
                   </IconButton>
                 </Tooltip>
               </span>
-            )}
-            {hasResizableColumns && (
+            )} */}
+            {/* {hasResizableColumns && (
               <span
                 className={clsx({
                   ['table-manipulations-btn']: true,
@@ -184,8 +197,8 @@ function Table<Values extends Record<string, unknown>>(
                   </IconButton>
                 </Tooltip>
               </span>
-            )}
-            {hasResizableColumns && (
+            )} */}
+            {/* {hasResizableColumns && (
               <span className='table-manipulations-btn'>
                 <Tooltip data='Reset column resizing'>
                   <IconButton onClick={resetResizing}>
@@ -193,9 +206,9 @@ function Table<Values extends Record<string, unknown>>(
                   </IconButton>
                 </Tooltip>
               </span>
-            )}
+            )} */}
           </div>
-          {!Utils.isEmpty(cleanFilters) && (
+          {/* {!Utils.isEmpty(cleanFilters) && (
             <div className='table-filters'>
               {!Utils.isEmpty(cleanFilters) &&
                 cleanFilters.map(({ id, value }) => (
@@ -222,18 +235,131 @@ function Table<Values extends Record<string, unknown>>(
                 </Tooltip>
               </div>
             </div>
-          )}
+          )} */}
           <div className='table-actions'>{tableActions}</div>
         </div>
-      )} */}
+      )}
       {!loading ? (
         <div className={wrapperClasses} ref={tableRef}>
-          <table className={tableClass}>
+          <table
+            className={tableClass}
+            {...{
+              style: {
+                width: tableInstance.getCenterTotalSize()
+              }
+            }}
+          >
+            <thead className='sticky-header'>
+              {tableInstance.getHeaderGroups().map((headerGroup) => {
+                return (
+                  <tr key={headerGroup.id}>
+                    {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+                    {isExpandable ? (
+                      <th className='table-header header-cell-for-expandable' />
+                    ) : null}
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        style={{
+                          width: header.getSize()
+                        }}
+                        className='table-header'
+                      >
+                        <Tooltip
+                          data='TODO:'
+                          // data={header.tooltip} // TODO:
+                        >
+                          <span
+                            className={clsx({
+                              ['table-headline']: true
+                              // ['disable-sort']: header.disableSort
+                            })}
+                            // TODO:
+                            // onClick={() => {
+                            //   if (!header.disableSort) {
+                            //     toggleSortBy(
+                            //       header.id,
+                            //       header.isSortedDesc === undefined
+                            //         ? false
+                            //         : !header.isSortedDesc
+                            //     )
+                            //   }
+                            // }}
+                          >
+                            TODO: render Header
+                            {/* {header.render('Header')} */}
+                          </span>
+                        </Tooltip>
+                        {/* {header.Filter ? header.render('Filter') : null} */}
+
+                        {/* {!header.disableSort &&
+                          (header.isSorted ||
+                            (!header.isSorted && !header.Header)) && (
+                            <div
+                              className={clsx(
+                                'table-sort',
+                                !header.isSorted &&
+                                  !header.Header &&
+                                  'table-sort-no-title'
+                              )}
+                              onClick={() =>
+                                toggleSortBy(header.id, !header.isSortedDesc)
+                              }
+                            >
+                              {header.isSortedDesc ? (
+                                <LongArrow className='rotate180' />
+                              ) : (
+                                <LongArrow />
+                              )}
+                            </div>
+                          )} */}
+                        {/* {isResizable && !header.disableResize && (
+                          <div
+                            className={clsx({
+                              ['column-resizer']: true,
+                              ['column-resizer-is-resizing']: header.isResizing
+                            })}
+                            {...header.getResizerProps()}
+                          />
+                        )} */}
+                      </th>
+                    ))}
+                    {/* {!Utils.isEmpty(customRowActions) &&
+                      customRowActions.map(({ tooltipText }) => (
+                        <th
+                          className='table-header table-header-actions'
+                          key={tooltipText}
+                        >
+                          {EMPTY_STRING}
+                        </th>
+                      ))} */}
+                    {/* {(!Utils.isEmpty(rowActions) ||
+                      (hasEmptyActionsCell && isResizable)) && (
+                      <th className='table-header table-header-actions'>
+                        {EMPTY_STRING}
+                      </th>
+                    )} */}
+                  </tr>
+                )
+              })}
+            </thead>
             <tbody className='table-body'>
               {rows.map((row) => {
+                const trClasses = clsx({
+                  'table-line': true,
+                  clickable: onRowClick !== NOP || isExpandable,
+                  // 'is-expand': !extendedRow.isGrouped && extendedRow.isExpanded, // TODO:
+                  // 'is-selected': checkRowSelected?.(extendedRow.original), // TODO:
+                  // 'is-highlighted': checkRowHighlighted?.(extendedRow.original), // TODO:
+                  ...(extraClasses?.tableLine && {
+                    [extraClasses.tableLine]: true
+                  })
+                })
+
                 return (
                   <React.Fragment key={row.id}>
-                    <tr>
+                    <tr className={trClasses}>
                       {row.getVisibleCells().map((cell) => {
                         return (
                           <td
@@ -242,6 +368,9 @@ function Table<Values extends Record<string, unknown>>(
                               'table-cell',
                               extraClasses?.tableCell
                             )}
+                            style={{
+                              width: cell.column.getSize()
+                            }}
                           >
                             {flexRender(
                               cell.column.columnDef.cell,

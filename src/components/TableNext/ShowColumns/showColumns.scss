@@ -1,0 +1,23 @@
+.show-columns-wrapper {
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+
+  .show-columns {
+    padding: 12px;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    &-line {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      color: var(--text-color);
+      gap: 8px;
+      .checkbox-container {
+        margin-bottom: 2px;
+      }
+    }
+  }
+}
