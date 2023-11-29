@@ -3,6 +3,8 @@ import { EventInfo, Warning, DebugWarning, AccidentMinor, AccidentMajor, Acciden
 export const EMPTY_STRING = ''
 export const NOP = () => {}
 export const TAG_SEPARATOR = ','
+export const ENTER = 'Enter'
+export const BACKSPACE = 'Backspace'
 export const SAVED_FILTERS = 'saved_filters'
 export const EXPLICITLY_REMOVED_FILTERS = 'explicitly_removed_filters'
 export const SAVED_HIDDEN = 'saved_hidden'

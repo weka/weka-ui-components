@@ -1,5 +1,18 @@
 import { ReactElement } from 'react';
 import './select.scss';
+export declare const getStyle: (hasError: any, hasLabel: any) => {
+    menuPortal: (provided: any, state: any) => any;
+    menu: (base: any) => any;
+    control: (base: any, state: any) => any;
+    clearIndicator: (base: any, { isDisabled }: {
+        isDisabled: any;
+    }) => any;
+    indicatorSeparator: (base: any, state: any) => any;
+    dropdownIndicator: (base: any, state: any) => any;
+    option: (base: any, { isDisabled }: {
+        isDisabled: any;
+    }) => any;
+};
 interface SelectProps {
     onChange?: (newVal: any) => void;
     isMulti?: boolean;

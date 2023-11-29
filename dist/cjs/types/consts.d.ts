@@ -1,6 +1,8 @@
 export declare const EMPTY_STRING = "";
 export declare const NOP: () => void;
 export declare const TAG_SEPARATOR = ",";
+export declare const ENTER = "Enter";
+export declare const BACKSPACE = "Backspace";
 export declare const SAVED_FILTERS = "saved_filters";
 export declare const EXPLICITLY_REMOVED_FILTERS = "explicitly_removed_filters";
 export declare const SAVED_HIDDEN = "saved_hidden";

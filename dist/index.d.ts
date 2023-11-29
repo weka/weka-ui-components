@@ -254,6 +254,28 @@ interface UploadFieldProps {
 }
 declare function UploadField(props: UploadFieldProps): JSX.Element;
 
+interface CustomizableSelectProps {
+    onChange?: (newVal: unknown) => void;
+    sortOptions?: boolean;
+    disabled?: boolean;
+    isRequired?: boolean;
+    value?: unknown;
+    info?: string | ReactElement;
+    wrapperClass?: string;
+    error?: string;
+    label?: string | ReactElement;
+    options: Option[];
+    redInfo?: (value: unknown) => string;
+    placeholder?: string;
+    isClearable?: boolean;
+    autoFocus?: boolean;
+    groupedOptions?: boolean;
+    customValueValidation?: (val: string) => boolean;
+    customValueError?: string;
+    createLabel?: string;
+}
+declare function CustomizableSelect(props: CustomizableSelectProps): JSX.Element;
+
 declare function SearchButton(): JSX.Element;
 
 declare function LinesCount(): JSX.Element;
@@ -718,6 +740,9 @@ declare function ExpandCollapseButton(props: ExpandCollapseButtonProps): JSX.Ele
 declare function ShowMore(props: {
     isClose: boolean;
     onClick: () => void;
+    extraClass?: string;
+    disabled?: boolean;
+    tooltip?: string;
 }): JSX.Element;
 
 declare const utils: {
@@ -773,4 +798,4 @@ declare const utils: {
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, ShowMore, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, CustomizableSelect, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, ShowMore, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };

@@ -1,4 +1,4 @@
-.react-select__option {
+.react-select__option, .react-creatable-select__option {
   display: flex !important;
   align-items: center;
   &.has-icon {
@@ -30,7 +30,7 @@
 }
 
 .dark-mode {
-  .react-select__option {
+  .react-select__option, .react-creatable-select__option {
     &.has-icon {
         svg {
           path, rect {

@@ -1,18 +1,32 @@
 import React from 'react'
 import clsx from 'clsx'
 import { IconButton } from '@mui/material'
-
+import Tooltip from '../Tooltip'
 import { Arrow } from '../../svgs'
 
 import './showMore.scss'
 
-function ShowMore(props: { isClose: boolean; onClick: () => void }) {
-  const { isClose, onClick } = props
+function ShowMore(props: {
+  isClose: boolean
+  onClick: () => void
+  extraClass?: string
+  disabled?: boolean
+  tooltip?: string
+}) {
+  const { isClose, onClick, extraClass, disabled, tooltip } = props
   const showClasses = clsx({ close: isClose })
   return (
-    <IconButton onClick={onClick} className='show-more-wrapper'>
-      <Arrow className={showClasses} />
-    </IconButton>
+    <Tooltip data={tooltip}>
+      <div>
+        <IconButton
+          onClick={onClick}
+          className={clsx('show-more-wrapper', extraClass)}
+          disabled={!!disabled}
+        >
+          <Arrow className={showClasses} />
+        </IconButton>
+      </div>
+    </Tooltip>
   )
 }
 
