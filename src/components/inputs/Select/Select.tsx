@@ -10,11 +10,11 @@ import ClearIndicator from './ClearIndicator'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 import Tooltip from '../../Tooltip'
-
-import './select.scss'
 import MenuList from './MenuList'
 
-const getStyle = (hasError, hasLabel) => ({
+import './select.scss'
+
+export const getStyle = (hasError, hasLabel) => ({
   menuPortal: (provided, state) => {
     return {
       ...provided,
@@ -115,7 +115,7 @@ function Select(props: SelectProps) {
     disabled,
     sortOptions,
     error,
-    placeholder,
+    placeholder = 'Select...',
     info,
     isRequired,
     redInfo = NOP,
@@ -228,7 +228,7 @@ function Select(props: SelectProps) {
         }}
         menuPortalTarget={document.body}
         closeMenuOnSelect={!isMulti}
-        placeholder={placeholder || 'Select...'}
+        placeholder={placeholder}
       />
       <span className='select-error capitalize-first-letter'>
         {error || redInfo(value)}

@@ -1,4 +1,4 @@
-.react-select__single-value {
+.react-select__single-value, .react-creatable-select__single-value {
 
   display: flex;
   align-items: center;
@@ -20,7 +20,7 @@
 
 
 .dark-mode {
-  .react-select__single-value {
+  .react-select__single-value, .react-creatable-select__single-value {
     svg {
       path, rect {
         fill: #FFFFFF;

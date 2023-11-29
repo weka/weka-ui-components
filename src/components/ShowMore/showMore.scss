@@ -12,4 +12,12 @@
     transition: all 0.5s ease;
     transform: rotate(-90deg);
   }
+
+  &.Mui-disabled {
+    svg {
+      path {
+        fill: var(--ironhide-s1) !important;
+      }
+    }
+  }
 }
