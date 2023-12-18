@@ -1,11 +1,17 @@
 /// <reference types="react" />
 import './pagination.scss';
-interface PaginationProps {
+type PaginationProps = {
     onPageChange: (page: number) => void;
+    defaultCurrentPage?: number;
+    isLoading?: boolean;
+} & ({
     totalRows: number;
     rowsPerPage: number;
-    defaultCurrentPage: number;
-    isLoading?: boolean;
-}
-declare function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage, isLoading }: PaginationProps): JSX.Element | null;
+    numberOfPages?: undefined;
+} | {
+    numberOfPages: number;
+    totalRows?: undefined;
+    rowsPerPage?: undefined;
+});
+declare function Pagination(props: PaginationProps): JSX.Element | null;
 export default Pagination;

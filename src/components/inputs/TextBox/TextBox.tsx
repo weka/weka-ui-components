@@ -7,6 +7,7 @@ import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 
 import './textBox.scss'
+import { useAutosizeWidth } from './hooks'
 
 interface TextBoxProps {
   onChange: (newVal: any) => void
@@ -21,9 +22,11 @@ interface TextBoxProps {
   isRequired?: boolean
   info?: any
   allowDecimal?: boolean
+  autosize?: boolean
+  maxLength?: number
 }
 
-const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
+const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
   const {
     label = EMPTY_STRING,
     onChange,
@@ -37,9 +40,11 @@ const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
     info,
     isRequired,
     allowDecimal,
+    autosize,
     ...rest
   } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
 
   function onTextChange(event: ChangeEvent<HTMLInputElement>) {
     if (!Number.isNaN(event.target.valueAsNumber)) {
@@ -62,9 +67,23 @@ const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
     'is-type-password': type === 'password'
   })
 
+  const { inputWidth, calculationBoxRef } = useAutosizeWidth({
+    autosize,
+    value,
+    inputRef
+  })
+
   return (
     <Tooltip data={tooltip}>
-      <div className={wrapperClasses}>
+      <div
+        className={wrapperClasses}
+        style={autosize ? { width: `${inputWidth}px` } : {}}
+      >
+        {autosize && (
+          <div ref={calculationBoxRef} className='calculation-box'>
+            {value}
+          </div>
+        )}
         {Icon && <Icon className='text-box-icon' />}
         <input
           onKeyDown={(e) => {
@@ -85,7 +104,17 @@ const TextBox = React.forwardRef((props: TextBoxProps, ref) => {
           placeholder={placeholder}
           value={value === null ? EMPTY_STRING : value}
           onChange={onTextChange}
-          ref={ref}
+          ref={(node) => {
+            inputRef.current = node
+
+            if (ref) {
+              if (typeof ref === 'function') {
+                ref(node)
+              } else {
+                ref.current = node
+              }
+            }
+          }}
           type={showPassword && type === 'password' ? 'text' : type}
           {...rest}
         ></input>

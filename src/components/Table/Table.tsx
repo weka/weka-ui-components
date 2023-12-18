@@ -20,7 +20,6 @@ import {
 import Tooltip from '../Tooltip'
 import {
   Arrow,
-  LastArrow,
   LongArrow,
   ClearFilters,
   ThinArrow,
@@ -64,6 +63,7 @@ import SeverityFilter from './filters/SeverityFilter'
 import TextFilter from './filters/TextFilter'
 import { UrlFilterParser } from './hooks/useUrlFilters'
 import { useToggle } from '../../hooks'
+import Pagination from './Pagination'
 
 import './table.scss'
 
@@ -368,6 +368,8 @@ function Table<Values extends Record<string, unknown>>({
       .concat(initialUrlFilters)
   }, [])
 
+  const pageSize = fixedPageSize || 50
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -375,14 +377,10 @@ function Table<Values extends Record<string, unknown>>({
     rows,
     allColumns,
     prepareRow,
-    canPreviousPage,
-    canNextPage,
     pageCount,
     toggleSortBy,
     gotoPage,
-    nextPage,
     setPageSize,
-    previousPage,
     page,
     state: { pageIndex, filters, columnResizing, sortBy },
     setFilter,
@@ -400,7 +398,7 @@ function Table<Values extends Record<string, unknown>>({
       defaultColumn,
       globalFilter,
       initialState: {
-        pageSize: fixedPageSize || 50,
+        pageSize,
         ...(defaultSort && {
           sortBy: [{ id: defaultSort, desc: defaultDescendingSort }]
         }),
@@ -919,43 +917,13 @@ function Table<Values extends Record<string, unknown>>({
       ) : (
         <Loader />
       )}
-
       {(!miniTable || fixedPageSize) && !manualPagination && (
         <div className='footer'>
-          <div className='pagination-wrapper'>
-            <div className='pagination'>
-              <Tooltip data={canPreviousPage ? 'First Page' : EMPTY_STRING}>
-                <LastArrow
-                  onClick={() => gotoPage(0)}
-                  className='rotate180'
-                  disabled={!canPreviousPage}
-                />
-              </Tooltip>
-              <Tooltip data={canPreviousPage ? 'Previous Page' : EMPTY_STRING}>
-                <Arrow
-                  onClick={previousPage}
-                  className='rotate90'
-                  disabled={!canPreviousPage}
-                />
-              </Tooltip>
-              <span className='note'>
-                {`${pageIndex + 1} / ${pageCount || 1}`}
-              </span>
-              <Tooltip data={canNextPage ? 'Next Page' : EMPTY_STRING}>
-                <Arrow
-                  onClick={nextPage}
-                  className='rotate270'
-                  disabled={!canNextPage}
-                />
-              </Tooltip>
-              <Tooltip data={canNextPage ? 'Last Page' : EMPTY_STRING}>
-                <LastArrow
-                  onClick={() => gotoPage(pageCount - 1)}
-                  disabled={!canNextPage}
-                />
-              </Tooltip>
-            </div>
-          </div>
+          <Pagination
+            onPageChange={(pageNumber) => gotoPage(pageNumber - 1)}
+            numberOfPages={pageCount}
+            isLoading={loading}
+          />
         </div>
       )}
     </div>

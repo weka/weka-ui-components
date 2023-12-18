@@ -2,7 +2,10 @@
   --uiFieldBorderWidth: var(--fieldBorderWidth, 2px);
   --uiFieldPaddingRight: var(--fieldPaddingRight, 1rem);
   --uiFieldPaddingLeft: var(--fieldPaddingLeft, 1rem);
-  --uiFieldBorderColorActive: var(--fieldBorderColorActive, rgba(22, 22, 22, 1));
+  --uiFieldBorderColorActive: var(
+    --fieldBorderColorActive,
+    rgba(22, 22, 22, 1)
+  );
 
   display: var(--fieldDisplay, inline-flex);
   position: relative;
@@ -31,7 +34,6 @@
     left: 8px;
   }
 
-
   .field__input {
     box-sizing: border-box;
     border: 1px solid var(--ironhide-t1);
@@ -44,12 +46,13 @@
     font-size: 17px;
     background-color: var(--input-background);
 
-    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
 
-    &[type=number] {
+    &[type='number'] {
       -moz-appearance: textfield;
     }
   }
@@ -84,7 +87,6 @@
         fill: currentColor;
       }
     }
-
   }
 
   .field__input:focus {
@@ -102,7 +104,6 @@
   .field__input:disabled {
     background-color: var(--ironhide-t2);
     color: var(--ironhide-s1);
-
   }
 
   .text-box-error {
@@ -133,5 +134,11 @@
 
   .is-type-password {
     padding-right: 37px !important;
+  }
+
+  .calculation-box {
+    position: absolute;
+    top: -200vh;
+    visibility: hidden;
   }
 }
