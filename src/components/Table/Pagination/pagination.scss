@@ -1,9 +1,9 @@
 .pagination-footer {
-    flex: 1;
-    align-items: flex-end;
-    display: flex;
-    justify-content: center;
-    user-select: none;
+  flex: 1;
+  align-items: flex-end;
+  display: flex;
+  justify-content: center;
+  user-select: none;
 
   .MuiIconButton-root {
     padding: 0;
@@ -13,30 +13,31 @@
     }
   }
 
+  .pagination-wrapper {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    align-items: center;
 
-    .pagination-wrapper {
-      height: 40px;
+    .pagination {
       display: flex;
-      justify-content: center;
-      flex: 1;
       align-items: center;
+      gap: 4px;
 
-      .pagination {
-        display: flex;
-        align-items: center;
-        width: 120px;
-        justify-content: space-between;
+      svg {
+        height: 10px;
+        width: 10px;
+        cursor: pointer;
 
-        svg {
-          height: 10px;
-          width: 10px;
-          cursor: pointer;
-
-          path {
-            fill: var(--main-color);
-          }
-
+        path {
+          fill: var(--main-color);
         }
+      }
+
+      .pagination-control-wrapper {
+        height: 100%;
+        display: flex;
 
         .pagination-arrow {
           &[disabled] {
@@ -46,5 +47,29 @@
           }
         }
       }
+
+      .page-number-wrapper {
+        margin: 0 4px;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+
+        .text-box-field {
+          height: 24px;
+
+          .field__input {
+            height: 24px;
+            font-size: 12px;
+            padding-left: 6px;
+            padding-right: 6px;
+            font-family: var(--body-font);
+          }
+        }
+
+        .note {
+          white-space: nowrap;
+        }
+      }
     }
   }
+}

@@ -13,6 +13,8 @@ interface TextBoxProps {
     isRequired?: boolean;
     info?: any;
     allowDecimal?: boolean;
+    autosize?: boolean;
+    maxLength?: number;
 }
 declare const TextBox: React.ForwardRefExoticComponent<TextBoxProps & React.RefAttributes<unknown>>;
 export default TextBox;

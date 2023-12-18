@@ -214,6 +214,8 @@ interface TextBoxProps {
     isRequired?: boolean;
     info?: any;
     allowDecimal?: boolean;
+    autosize?: boolean;
+    maxLength?: number;
 }
 declare const TextBox: React.ForwardRefExoticComponent<TextBoxProps & React.RefAttributes<unknown>>;
 
@@ -667,14 +669,20 @@ interface NumInputProps {
 }
 declare function NumInput(props: NumInputProps): JSX.Element;
 
-interface PaginationProps {
+type PaginationProps = {
     onPageChange: (page: number) => void;
+    defaultCurrentPage?: number;
+    isLoading?: boolean;
+} & ({
     totalRows: number;
     rowsPerPage: number;
-    defaultCurrentPage: number;
-    isLoading?: boolean;
-}
-declare function Pagination({ onPageChange, totalRows, rowsPerPage, defaultCurrentPage, isLoading }: PaginationProps): JSX.Element | null;
+    numberOfPages?: undefined;
+} | {
+    numberOfPages: number;
+    totalRows?: undefined;
+    rowsPerPage?: undefined;
+});
+declare function Pagination(props: PaginationProps): JSX.Element | null;
 
 interface PerPageProps {
     value: string | number;
