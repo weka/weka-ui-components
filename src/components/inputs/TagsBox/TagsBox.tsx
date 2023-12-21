@@ -8,7 +8,7 @@ import React, {
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
-import { EMPTY_STRING, ENTER, TAG_SEPARATOR } from '../../../consts'
+import { EMPTY_STRING, EVENT_KEYS, TAG_SEPARATOR } from '../../../consts'
 import Utils from '../../../utils'
 import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
@@ -68,7 +68,7 @@ function TagsBox(props: TagsBoxProps) {
   })
 
   function onKeyDown(event: KeyboardEvent) {
-    const triggerKey = new Set([TAG_SEPARATOR, ENTER])
+    const triggerKey = new Set([TAG_SEPARATOR, EVENT_KEYS.ENTER])
     if (triggerKey.has(event.key)) {
       if (editValue) {
         event.preventDefault()
