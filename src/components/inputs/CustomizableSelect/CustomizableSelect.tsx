@@ -1,7 +1,7 @@
 import React, { MouseEvent, ReactElement, useEffect, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
-import { BACKSPACE, EMPTY_STRING, ENTER, NOP } from '../../../consts'
+import { EMPTY_STRING, EVENT_KEYS, NOP } from '../../../consts'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
@@ -67,14 +67,14 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === ENTER) {
+    if (event.key === EVENT_KEYS.ENTER) {
       event.preventDefault()
       if (!!editValue && customValueValidation(editValue)) {
         onChange(editValue)
         setMenuIsOpen(false)
       }
     }
-    if (event.key === BACKSPACE && editValue.length === 1) {
+    if (event.key === EVENT_KEYS.BACKSPACE && editValue.length === 1) {
       onChange(EMPTY_STRING)
     }
   }

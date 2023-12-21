@@ -15,6 +15,7 @@ interface TextBoxProps {
     allowDecimal?: boolean;
     autosize?: boolean;
     maxLength?: number;
+    autofill?: boolean;
 }
 declare const TextBox: React.ForwardRefExoticComponent<TextBoxProps & React.RefAttributes<unknown>>;
 export default TextBox;

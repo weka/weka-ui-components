@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { EMPTY_STRING, NOP } from '../../../consts'
+import { EMPTY_STRING, EVENT_KEYS } from '../../../consts'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 
@@ -18,10 +18,10 @@ type Subnet = {
   mask: string
 }
 function keyDown(event: React.KeyboardEvent<HTMLElement>) {
-  if (event.key === '.' || event.key === 'ArrowRight') {
+  if (event.key === EVENT_KEYS.DOT || event.key === EVENT_KEYS.ARROW_RIGHT) {
     Utils.goToNextInput()
     event.preventDefault()
-  } else if (event.key === 'ArrowLeft') {
+  } else if (event.key === EVENT_KEYS.ARROW_LEFT) {
     Utils.goToPreviousInput()
     event.preventDefault()
   }

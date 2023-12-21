@@ -1,13 +1,13 @@
 import React, { ReactElement, ChangeEvent } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { EMPTY_STRING } from '../../../consts'
+import { EMPTY_STRING, EVENT_KEYS } from '../../../consts'
 import useToggle from '../../../hooks/useToggle'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
+import { useAutosizeWidth } from './hooks'
 
 import './textBox.scss'
-import { useAutosizeWidth } from './hooks'
 
 interface TextBoxProps {
   onChange: (newVal: any) => void
@@ -24,6 +24,7 @@ interface TextBoxProps {
   allowDecimal?: boolean
   autosize?: boolean
   maxLength?: number
+  autofill?: boolean
 }
 
 const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
@@ -41,6 +42,7 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     isRequired,
     allowDecimal,
     autosize,
+    autofill,
     ...rest
   } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
@@ -93,9 +95,17 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
                 e.key === 'E' ||
                 e.key === '-' ||
                 e.key === '+' ||
-                (!allowDecimal && e.key === '.'))
+                (!allowDecimal && e.key === EVENT_KEYS.DOT))
             ) {
               e.preventDefault()
+            }
+            if (
+              (e.key === EVENT_KEYS.TAB || e.key === EVENT_KEYS.ARROW_RIGHT) &&
+              autofill &&
+              placeholder
+            ) {
+              e.preventDefault()
+              onChange(placeholder)
             }
           }}
           step='any'
