@@ -13,6 +13,7 @@ interface TextBoxProps {
     isRequired?: boolean;
     info?: any;
     allowDecimal?: boolean;
+    allowNegative?: boolean;
     autosize?: boolean;
     maxLength?: number;
     autofill?: boolean;
