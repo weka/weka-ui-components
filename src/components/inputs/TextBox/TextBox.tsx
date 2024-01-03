@@ -22,6 +22,7 @@ interface TextBoxProps {
   isRequired?: boolean
   info?: any
   allowDecimal?: boolean
+  allowNegative?: boolean
   autosize?: boolean
   maxLength?: number
   autofill?: boolean
@@ -43,6 +44,7 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     allowDecimal,
     autosize,
     autofill,
+    allowNegative,
     ...rest
   } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
@@ -50,7 +52,11 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
 
   function onTextChange(event: ChangeEvent<HTMLInputElement>) {
     if (!Number.isNaN(event.target.valueAsNumber)) {
-      onChange(event.target.valueAsNumber >= 0 ? event.target.valueAsNumber : 0)
+      onChange(
+        allowNegative || event.target.valueAsNumber >= 0
+          ? event.target.valueAsNumber
+          : 0
+      )
     } else {
       onChange(event.target.value)
     }
@@ -93,7 +99,8 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
               type === 'number' &&
               (e.key === 'e' ||
                 e.key === 'E' ||
-                e.key === '-' ||
+                (!(allowNegative && value.toString().length === 0) &&
+                  e.key === '-') ||
                 e.key === '+' ||
                 (!allowDecimal && e.key === EVENT_KEYS.DOT))
             ) {
