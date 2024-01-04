@@ -10,6 +10,7 @@ interface TabProps {
     isSideTab?: boolean;
     isSubTab?: boolean;
     navigateTo?: string;
+    info?: string;
 }
 declare function Tab(props: TabProps): JSX.Element;
 export default Tab;

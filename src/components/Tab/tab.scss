@@ -10,6 +10,7 @@
   box-sizing: border-box;
   transition: background-color 0.5s, border-bottom-color 0.25s;
   height: 100%;
+  position: relative;
 
   &:hover {
     background-color: var(--ironhide-t3);
@@ -99,6 +100,13 @@
     .tab-title {
       text-transform: capitalize !important;
     }
+  }
+
+  .tab-info {
+    right: 4px;
+    top: 4px;
+    height: 14px;
+    position: absolute;
   }
 }
 

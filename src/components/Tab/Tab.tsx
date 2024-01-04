@@ -2,6 +2,8 @@ import React, { ReactElement } from 'react'
 import clsx from 'clsx'
 import { EMPTY_STRING } from '../../consts'
 import { Link } from 'react-router-dom'
+import Tooltip from '../Tooltip'
+import { Info } from '../../svgs'
 
 import './tab.scss'
 
@@ -15,6 +17,7 @@ interface TabProps {
   isSideTab?: boolean
   isSubTab?: boolean
   navigateTo?: string
+  info?: string
 }
 
 function Tab(props: TabProps) {
@@ -27,7 +30,8 @@ function Tab(props: TabProps) {
     disabled = false,
     isSideTab = false,
     isSubTab = false,
-    navigateTo
+    navigateTo,
+    info
   } = props
   const cls = clsx({
     'custom-tab': true,
@@ -40,6 +44,11 @@ function Tab(props: TabProps) {
 
   const tabContent = (
     <div className={cls} onClick={setActive}>
+      {info && (
+        <Tooltip data={info}>
+          <Info className='tab-info' />
+        </Tooltip>
+      )}
       <div className='tab-title'>{title}</div>
       {subComponent}
     </div>
