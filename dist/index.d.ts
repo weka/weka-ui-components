@@ -99,6 +99,7 @@ interface IpSubnetTextBoxProps {
     label: string;
     error?: string;
     info?: string;
+    shouldConvertSubnet2Mask?: boolean;
 }
 declare function IpSubnetTextBox(props: IpSubnetTextBoxProps): JSX.Element;
 

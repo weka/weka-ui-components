@@ -16,6 +16,9 @@ function keyDown(event: React.KeyboardEvent) {
   ) {
     event.preventDefault()
   }
+  if (event.key === '0' && event.target.value?.startsWith('0')) {
+    event.preventDefault()
+  }
   if (event.key === EVENT_KEYS.DOT || event.key === EVENT_KEYS.ARROW_RIGHT) {
     Utils.goToNextInput()
     event.preventDefault()
@@ -34,6 +37,7 @@ interface IpSubnetTextBoxProps {
   label: string
   error?: string
   info?: string
+  shouldConvertSubnet2Mask?: boolean
 }
 
 function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
@@ -45,14 +49,16 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     wrapperClass = '',
     isRequired,
     info,
+    shouldConvertSubnet2Mask = true,
     ...rest
   } = props
   const { disabled } = rest
   const [ipVal, subnet] = value ? value.split('/') : ['...', '']
-  const [ipParts, setIpParts] = useState<any[]>([
-    ...ipVal.split('.'),
-    Utils.subnet2MaskOp(subnet)
-  ])
+  const [ipParts, setIpParts] = useState<any[]>(
+    shouldConvertSubnet2Mask
+      ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
+      : [...ipVal.split('.'), subnet]
+  )
   const wrapperClasses = clsx({
     [wrapperClass]: true,
     'ip-subnet-text-box-field': true,
@@ -76,13 +82,21 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     }
     setIpParts(newIpParts)
     if (newIpParts.some(Utils.isEmpty)) {
-      onChange(EMPTY_STRING)
+      if (isRequired) {
+        onChange(EMPTY_STRING)
+      } else {
+        onChange(`${newIpParts.slice(0, 4).join('.')}/${newIpParts.slice(4)}`)
+      }
     } else {
-      onChange(
-        `${newIpParts.slice(0, 4).join('.')}/${Utils.mask2SubnetOp(
-          newIpParts.slice(4)
-        )}`
-      )
+      if (shouldConvertSubnet2Mask) {
+        onChange(
+          `${newIpParts.slice(0, 4).join('.')}/${Utils.mask2SubnetOp(
+            newIpParts.slice(4)
+          )}`
+        )
+      } else {
+        onChange(`${newIpParts.slice(0, 4).join('.')}/${newIpParts.slice(4)}`)
+      }
     }
   }
 
