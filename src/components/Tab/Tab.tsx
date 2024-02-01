@@ -18,6 +18,7 @@ interface TabProps {
   isSubTab?: boolean
   navigateTo?: string
   info?: string
+  hasIncompleteFields?: boolean
 }
 
 function Tab(props: TabProps) {
@@ -31,7 +32,8 @@ function Tab(props: TabProps) {
     isSideTab = false,
     isSubTab = false,
     navigateTo,
-    info
+    info,
+    hasIncompleteFields
   } = props
   const cls = clsx({
     'custom-tab': true,
@@ -49,7 +51,12 @@ function Tab(props: TabProps) {
           <Info className='tab-info' />
         </Tooltip>
       )}
-      <div className='tab-title'>{title}</div>
+      <div className='tab-title'>
+        {title}
+        {hasIncompleteFields && (
+          <span className='required-star tab-title-required-star'>*</span>
+        )}
+      </div>
       {subComponent}
     </div>
   )
