@@ -389,6 +389,7 @@ interface TabProps {
     isSubTab?: boolean;
     navigateTo?: string;
     info?: string;
+    hasIncompleteFields?: boolean;
 }
 declare function Tab(props: TabProps): JSX.Element;
 
