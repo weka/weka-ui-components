@@ -530,13 +530,15 @@ function Table<Values extends Record<string, unknown>>({
   }, [pageCount])
 
   useEffect(() => {
-    tableRef.current?.scrollTo(0, 0)
-    if (collapseRowsOnLeavingPage && RowSubComponent && !isAllRowsExpanded) {
-      rows.forEach((row) => {
-        if (row.isExpanded) {
-          row.toggleRowExpanded(false)
-        }
-      })
+    if (!miniTable) {
+      tableRef.current?.scrollTo(0, 0)
+      if (collapseRowsOnLeavingPage && RowSubComponent && !isAllRowsExpanded) {
+        rows.forEach((row) => {
+          if (row.isExpanded) {
+            row.toggleRowExpanded(false)
+          }
+        })
+      }
     }
   }, [pageIndex, rows])
 
