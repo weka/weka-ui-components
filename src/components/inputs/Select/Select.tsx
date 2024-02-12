@@ -1,12 +1,13 @@
 import React, { ReactElement, useEffect, useState, useMemo } from 'react'
 import { FormControl } from '@mui/material'
-import ReactSelect from 'react-select'
+import ReactSelect, { ActionMeta } from 'react-select'
 import clsx from 'clsx'
 import { EMPTY_STRING, NOP } from '../../../consts'
 import SelectOption from './SelectOption'
 import SingleValue from './SingleValue'
 import MultiValue from './MultiValue'
 import ClearIndicator from './ClearIndicator'
+import MultiValueRemove from './MultiValueRemove'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 import Tooltip from '../../Tooltip'
@@ -161,7 +162,10 @@ function Select(props: SelectProps) {
     }
   }, [JSON.stringify(options)])
 
-  function onSelectChange(data) {
+  function onSelectChange(
+    data: Option | Option[] | null,
+    actionMeta: ActionMeta<Option>
+  ) {
     if (!isMulti) {
       if (data) {
         const { value: newValue } = data
@@ -170,7 +174,26 @@ function Select(props: SelectProps) {
         onChange(EMPTY_STRING)
       }
     } else {
-      onChange(data.map((option: Option) => option.value))
+      if (actionMeta.removedValue?.isUnremovable) {
+        return
+      }
+
+      const removedUnremovable =
+        actionMeta.removedValues?.filter((option) => option.isUnremovable) ?? []
+
+      onChange(
+        [...data, ...removedUnremovable]
+          .sort((a, b) => {
+            if (a.isUnremovable && !b.isUnremovable) {
+              return -1
+            }
+            if (!a.isUnremovable && b.isUnremovable) {
+              return 1
+            }
+            return 0
+          })
+          .map((option: Option) => option.value)
+      )
     }
   }
 
@@ -224,7 +247,8 @@ function Select(props: SelectProps) {
           SingleValue,
           MultiValue,
           ClearIndicator,
-          MenuList
+          MenuList,
+          MultiValueRemove
         }}
         menuPortalTarget={document.body}
         closeMenuOnSelect={!isMulti}
