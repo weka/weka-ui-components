@@ -434,6 +434,8 @@ function Table<Values extends Record<string, unknown>>({
     useResizeColumns
   )
 
+  console.log('visibleColumns', visibleColumns)
+
   const onSortChangedRef = useRef(onSortChanged)
   onSortChangedRef.current = onSortChanged
 
@@ -503,6 +505,7 @@ function Table<Values extends Record<string, unknown>>({
 
   useEffect(() => {
     setHiddenColumns((hiddenColumns) => {
+      console.log('hiddenColumns', hiddenColumns)
       localStorageService.updateHidden(filterCategory, hiddenColumns)
       return hiddenColumns
     })

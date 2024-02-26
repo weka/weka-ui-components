@@ -1,0 +1,10 @@
+import { IAceEditor } from 'react-ace/lib/types';
+declare function useTags({ editor, value, lines }: {
+    editor?: IAceEditor;
+    value: string;
+    lines?: {
+        number: string;
+        text: string;
+    }[];
+}): void;
+export default useTags;

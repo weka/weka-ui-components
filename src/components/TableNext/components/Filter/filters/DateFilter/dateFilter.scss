@@ -1,0 +1,16 @@
+.date-filter-wrapper {
+  padding: var(--spread2);
+  border: 1px solid var(--main-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.date-filter-controller {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  .full-size {
+    flex: 1;
+  }
+}

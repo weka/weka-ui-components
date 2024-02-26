@@ -1,0 +1,50 @@
+.severity-filter {
+  padding: var(--spread) 0;
+  border: 1px solid var(--main-color);
+  border-radius: 8px;
+
+  .heading-4 {
+    margin-left: 12px;
+  }
+
+  .severity-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    padding: 3px var(--spread);
+    color: var(--text-color);
+    margin-top: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--ironhide-t1);
+    }
+
+    svg {
+      height: 24px;
+      width: 24px;
+      padding-right: 8px;
+
+      path {
+        fill: var(--accent-s2);
+      }
+    }
+
+    &.warning, &.minor {
+
+      svg {
+        path {
+          fill: var(--optimus-s2);
+        }
+      }
+    }
+
+    &.major, &.critical {
+      svg {
+        path {
+          fill: var(--focus-s1);
+        }
+      }
+    }
+  }
+}

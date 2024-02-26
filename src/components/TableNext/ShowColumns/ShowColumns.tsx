@@ -26,6 +26,7 @@ interface ShowColumnsProps<Values extends Record<string, unknown>> {
 function ShowColumns<Values extends Record<string, unknown>>(
   props: ShowColumnsProps<Values>
 ) {
+  return null
   const { tableInstance, colProperty } = props
   const ref = useRef(null)
 
