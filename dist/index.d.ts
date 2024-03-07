@@ -281,6 +281,11 @@ interface CustomizableSelectProps {
 }
 declare function CustomizableSelect(props: CustomizableSelectProps): JSX.Element;
 
+interface HideContentInputProps {
+    wrapperClass?: string;
+}
+declare function HideContentInput(props: HideContentInputProps): JSX.Element;
+
 declare function SearchButton(): JSX.Element;
 
 declare function LinesCount(): JSX.Element;
@@ -299,7 +304,10 @@ interface ParsedData {
     [key: string]: any;
 }
 
-declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
+type TextEditorProviderProps = {
+    pageStorageKey?: string;
+};
+declare function TextEditorProvider({ children, pageStorageKey }: PropsWithChildren<TextEditorProviderProps>): JSX.Element;
 
 interface TextEditorProps {
     onChange?: () => void;
@@ -327,6 +335,7 @@ declare namespace TextEditor {
     var FontSizeControls: typeof FontSizeControls;
     var LinesCount: typeof LinesCount;
     var SearchButton: typeof SearchButton;
+    var HideContentInput: typeof HideContentInput;
 }
 
 declare function Loader(): JSX.Element;

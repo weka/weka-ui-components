@@ -11,6 +11,8 @@ interface TagsInputProps {
   addToUrl?: boolean
 }
 
+const DISABLE_SYNTAX_CHECK_KEY = 'tags'
+
 function TagsInput(props: TagsInputProps) {
   const { wrapperClass, addToUrl } = props
 
@@ -42,10 +44,22 @@ function TagsInput(props: TagsInputProps) {
     }
   }, [tags, addToUrl, navigate])
 
+  useEffect(() => {
+    setTextEditorContext((prev) => {
+      const newDisableSyntaxCheck = new Set(prev.shouldDisableSyntaxCheck)
+      if (tags && tags.length > 0) {
+        newDisableSyntaxCheck.add(DISABLE_SYNTAX_CHECK_KEY)
+      } else {
+        newDisableSyntaxCheck.delete(DISABLE_SYNTAX_CHECK_KEY)
+      }
+
+      return { ...prev, shouldDisableSyntaxCheck: newDisableSyntaxCheck }
+    })
+  }, [setTextEditorContext, tags])
+
   return (
     <TagsBox
       value={tags}
-      // TODO: review text
       info={'Start a new tag with "+" or "-"'}
       placeholder='Add a tag'
       onChange={(newTags) =>
@@ -59,7 +73,6 @@ function TagsInput(props: TagsInputProps) {
         )
       }
       invalidTagText={
-        // TODO: review text
         'A new tag must start with "+" or "-" and be 2 or more characters long'
       }
       wrapperClass={clsx('text-editor-tags-input', wrapperClass)}

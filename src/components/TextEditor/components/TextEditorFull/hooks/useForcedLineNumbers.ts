@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { IAceEditor } from 'react-ace/lib/types'
 
-function useTags({
+function useForcedLineNumbers({
   editor,
   value,
   lines
@@ -36,13 +36,10 @@ function useTags({
       }
     }
 
-    editor.session.setUseWorker(false)
-
     return () => {
       editor.session.gutterRenderer = originalGutterRenderer
-      editor.session.setUseWorker(true)
     }
   }, [editor, lines, value])
 }
 
-export default useTags
+export default useForcedLineNumbers

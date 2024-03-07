@@ -10,9 +10,10 @@ import {
   useLinePosition,
   useOnlyMatching,
   useSearch,
-  useTags as useForcedLineNumbers,
+  useForcedLineNumbers,
   useEditor,
-  ParsedData
+  ParsedData,
+  useDisableSyntaxCheck
 } from './hooks'
 import clsx from 'clsx'
 
@@ -137,6 +138,10 @@ function TextEditorFull(props: TextEditorFullProps) {
     editor,
     value: options.value,
     lines
+  })
+
+  useDisableSyntaxCheck({
+    editor
   })
 
   useEditor({

@@ -18,6 +18,9 @@ type TextEditorContextValue = {
   visibleLinesCount?: number
   isLiteMode: boolean
   loading?: boolean
+  hideContent?: string[]
+  shouldDisableSyntaxCheck: Set<'hideContent' | 'tags'>
+  pageStorageKey?: string
 }
 
 type TextEditorContextType = {
@@ -29,12 +32,21 @@ type TextEditorContextType = {
 
 const TextEditorContext = createContext<TextEditorContextType | null>(null)
 
-export function TextEditorProvider({ children }: PropsWithChildren) {
+type TextEditorProviderProps = {
+  pageStorageKey?: string
+}
+
+export function TextEditorProvider({
+  children,
+  pageStorageKey
+}: PropsWithChildren<TextEditorProviderProps>) {
   const [state, setState] = useState<TextEditorContextValue>(() => ({
     isLiteMode: false,
     fontSize: +(
       localStorage.getItem(FONT_SIZE_STORAGE_KEY) ?? DEFAULT_FONT_SIZE
-    )
+    ),
+    shouldDisableSyntaxCheck: new Set(),
+    pageStorageKey
   }))
 
   const value = useMemo(

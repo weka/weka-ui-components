@@ -3,13 +3,15 @@ import { useTextEditorContext } from '../context'
 
 function useLinesCount({
   value,
-  lines
+  lines,
+  filteredValue
 }: {
   value?: string
   lines?: {
     number: string
     text: string
   }[]
+  filteredValue?: string
 }) {
   const context = useTextEditorContext(true)
   const setTextEditorContext = context?.setTextEditorContext
@@ -22,8 +24,10 @@ function useLinesCount({
     setTextEditorContext((prev) => ({
       ...prev,
       totalLinesCount: value?.split('\n').length,
-      ...(lines && {
-        visibleLinesCount: lines.length
+      ...((lines || filteredValue) && {
+        visibleLinesCount: lines
+          ? lines.length
+          : filteredValue?.split('\n').length
       })
     }))
 
@@ -34,7 +38,7 @@ function useLinesCount({
         visibleLinesCount: undefined
       }))
     }
-  }, [setTextEditorContext, value, lines])
+  }, [setTextEditorContext, value, lines, filteredValue])
 }
 
 export default useLinesCount
