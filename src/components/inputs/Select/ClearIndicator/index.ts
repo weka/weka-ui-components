@@ -1,1 +1,3 @@
-export { default } from './ClearIndicator'
+export {default} from './ClearIndicator'
+
+

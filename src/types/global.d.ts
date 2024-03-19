@@ -4,8 +4,6 @@ declare global {
   interface Option {
     label: string
     value?: string | number | boolean | string[] | number[] | boolean[]
-    tooltip?: string
-    isUnremovable?: boolean
   }
 
   interface Filter {
