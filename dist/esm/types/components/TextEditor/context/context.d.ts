@@ -9,12 +9,18 @@ type TextEditorContextValue = {
     visibleLinesCount?: number;
     isLiteMode: boolean;
     loading?: boolean;
+    hideContent?: string[];
+    shouldDisableSyntaxCheck: Set<'hideContent' | 'tags'>;
+    pageStorageKey?: string;
 };
 type TextEditorContextType = {
     value: TextEditorContextValue;
     setTextEditorContext: (setter: (prev: TextEditorContextValue) => TextEditorContextValue) => void;
 };
-export declare function TextEditorProvider({ children }: PropsWithChildren): JSX.Element;
+type TextEditorProviderProps = {
+    pageStorageKey?: string;
+};
+export declare function TextEditorProvider({ children, pageStorageKey }: PropsWithChildren<TextEditorProviderProps>): JSX.Element;
 export declare function useTextEditorContext(isProviderOptional: true): TextEditorContextType | null;
 export declare function useTextEditorContext(componentName: string): TextEditorContextType;
 export {};

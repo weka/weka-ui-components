@@ -28,5 +28,6 @@ declare namespace TextEditor {
     var FontSizeControls: typeof import("./components/FontSizeControls/FontSizeControls").default;
     var LinesCount: typeof import("./components/LinesCount/LinesCount").default;
     var SearchButton: typeof import("./components/SearchButton/SearchButton").default;
+    var HideContentInput: typeof import("./components/HideContentInput/HideContentInput").default;
 }
 export default TextEditor;

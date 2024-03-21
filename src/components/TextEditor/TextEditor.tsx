@@ -6,12 +6,14 @@ import {
   TextEditorFull,
   TextViewerLite,
   SearchButton,
-  ParsedData
+  ParsedData,
+  HideContentInput
 } from './components'
 import { TextEditorProvider, useTextEditorContext } from './context'
 
 import React, { useEffect } from 'react'
 import { useLinesCount, useTags } from './hooks'
+import { useHideContent } from './components/TextEditorFull/hooks'
 
 const maximumCharacters = 10 ** 7
 export const DEFAULT_FONT_SIZE = 16
@@ -41,7 +43,9 @@ function TextEditor(props: TextEditorProps) {
   const setTextEditorContext = context?.setTextEditorContext
   const fontSize = context?.value.fontSize ?? DEFAULT_FONT_SIZE
 
-  const lines = useTags({ value })
+  const filteredValue = useHideContent({ value })
+
+  const lines = useTags({ value: filteredValue })
 
   const isLiteMode =
     outerLiteMode ?? !!(value && value.length > maximumCharacters)
@@ -62,19 +66,25 @@ function TextEditor(props: TextEditorProps) {
 
   useLinesCount({
     value,
-    lines
+    lines,
+    filteredValue
   })
 
   return isLiteMode ? (
     <TextViewerLite
       key={fontSize}
-      value={value}
+      value={filteredValue}
       fontSize={fontSize}
       maxLines={maxLines}
       lines={lines}
     />
   ) : (
-    <TextEditorFull {...props} lines={lines} fontSize={fontSize} />
+    <TextEditorFull
+      {...props}
+      lines={lines}
+      fontSize={fontSize}
+      value={filteredValue}
+    />
   )
 }
 
@@ -84,5 +94,6 @@ TextEditor.FoldAllButton = FoldAllButton
 TextEditor.FontSizeControls = FontSizeControls
 TextEditor.LinesCount = LinesCount
 TextEditor.SearchButton = SearchButton
+TextEditor.HideContentInput = HideContentInput
 
 export default TextEditor
