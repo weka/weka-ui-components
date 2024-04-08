@@ -26,15 +26,6 @@ declare const utils: {
     parseSearchParamsToObject: (searchParams: URLSearchParams) => Record<string, string[] | Record<string, string[]>>;
     dispatchCustomEvent: (id: string, data: any) => void;
     isNumber: (value: any) => boolean;
-    stringSort: (rowA: {
-        values: {
-            [key: string]: any;
-        };
-    }, rowB: {
-        values: {
-            [key: string]: any;
-        };
-    }, columnId: string) => number;
     isIp: (string: any) => string | false;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;

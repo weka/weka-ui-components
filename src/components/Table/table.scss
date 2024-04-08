@@ -3,6 +3,7 @@
   flex-direction: column;
   flex: 1;
   border: 1px solid var(--ironhide-key);
+  overflow-x: hidden;
 
   .table-top {
     width: 100%;
@@ -15,14 +16,16 @@
     border-bottom: 1px solid var(--ironhide-key);
     justify-content: space-between;
 
-    .show-columns-wrapper {
-      margin-left: 4px;
+    &-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .sub-title {
       color: var(--main-color);
       font-size: 11px;
-      margin-left: 8px;
+      margin-left: 4px;
     }
 
     .table-actions {
@@ -100,7 +103,6 @@
     }
 
     .table-manipulations-btn {
-      margin-left: 4px;
       svg {
         width: 16px;
         height: 16px;
@@ -132,10 +134,6 @@
           background-color: var(--ironhide-t4);
         }
 
-        .table-body:empty::after {
-          display: none;
-        }
-
         .table-line {
           height: 34px;
           border-radius: 4px;
@@ -154,6 +152,13 @@
     border-spacing: 0;
     position: relative;
     width: 100%;
+
+    thead {
+      tr {
+        flex: 1;
+        display: flex;
+      }
+    }
 
     .sticky-header {
       position: sticky;
@@ -216,6 +221,9 @@
         min-width: 4px !important;
         background-color: var(--ironhide-key);
         margin-left: 8px;
+        cursor: col-resize;
+        user-select: none;
+        touch-action: none;
         &:hover, &-is-resizing {
           background-color: var(--main-color);
         }
@@ -239,6 +247,7 @@
     }
 
     .table-line {
+      display: flex;
       position: relative;
       height: 52px;
       background-color: var(--neutral-t4);
@@ -351,5 +360,15 @@
     &:hover {
       background-color: var(--icon-button-hover);
     }
+  }
+
+  .empty-message {
+    display: flex;
+    justify-content: center;
+    background-color: var(--table-background);
+    padding-top: 100px;
+    padding-bottom: 100px;
+    font-size: 18px;
+    color: var(--ironhide-s3);
   }
 }

@@ -1,4 +1,11 @@
-import { EventInfo, Warning, DebugWarning, AccidentMinor, AccidentMajor, AccidentCritical } from './svgs'
+import {
+  EventInfo,
+  Warning,
+  DebugWarning,
+  AccidentMinor,
+  AccidentMajor,
+  AccidentCritical
+} from './svgs'
 
 export const EMPTY_STRING = ''
 export const NOP = () => {}
@@ -15,13 +22,14 @@ export const EVENT_KEYS = {
 export const SAVED_FILTERS = 'saved_filters'
 export const EXPLICITLY_REMOVED_FILTERS = 'explicitly_removed_filters'
 export const SAVED_HIDDEN = 'saved_hidden'
-export const SAVED_RESIZED = 'saved_resized'
+export const SAVED_RESIZED = 'saved_resized_columns'
 export const SAVED_RESIZING_ENABLED = 'saved_resizing_enabled'
 export const FILTER_CHANGE_LISTENER = 'table-filters-change'
 export const FILTER_LISTENER = 'table-filters'
 export const COLUMN_RESIZING_LISTENER = 'column-resizing'
 
-export const GENERAL_ERROR = 'Something went wrong. Please refresh the page and try again.'
+export const GENERAL_ERROR =
+  'Something went wrong. Please refresh the page and try again.'
 
 interface FilterBoxes {
   [key: string]: string
@@ -149,8 +157,15 @@ export const SEVERITY_MINOR = 'MINOR'
 export const SEVERITY_MAJOR = 'MAJOR'
 export const SEVERITY_CRITICAL = 'CRITICAL'
 
-export const SEVERITIES = [SEVERITY_DEBUG, SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_MINOR, SEVERITY_MAJOR, SEVERITY_CRITICAL] as const
-export type Severities = typeof SEVERITIES[number]
+export const SEVERITIES = [
+  SEVERITY_DEBUG,
+  SEVERITY_INFO,
+  SEVERITY_WARNING,
+  SEVERITY_MINOR,
+  SEVERITY_MAJOR,
+  SEVERITY_CRITICAL
+] as const
+export type Severities = (typeof SEVERITIES)[number]
 
 export const SEVERITIES_ICONS: SeverityIcons = {
   INFO: EventInfo,
@@ -159,7 +174,7 @@ export const SEVERITIES_ICONS: SeverityIcons = {
   MINOR: AccidentMinor,
   MAJOR: AccidentMajor,
   CRITICAL: AccidentCritical
-}
+} as const
 
 interface ShortRoles {
   [key: string]: any

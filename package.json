@@ -1,10 +1,11 @@
 {
   "name": "@weka.io/weka-ui-components",
-  "version": "1.77.0",
+  "version": "2.0.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@tanstack/react-table": "^8.14.0",
     "@tanstack/react-virtual": "3.0.0-beta.60",
     "check-password-strength": "^2.0.7",
     "clsx": "^2.0.0",
@@ -12,7 +13,6 @@
     "lodash": "^4.17.21",
     "react-ace": "^10.1.0",
     "react-select": "^5.7.0",
-    "react-table": "^7.8.0",
     "react-use": "^17.4.0"
   },
   "scripts": {
@@ -80,7 +80,6 @@
     "@types/jest": "^28.1.6",
     "@types/luxon": "^3.2.0",
     "@types/react": "^18.0.15",
-    "@types/react-table": "^7.7.14",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "5.60.1",
     "babel-jest": "^27.3.1",

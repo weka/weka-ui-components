@@ -1,7 +1,8 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement, PropsWithChildren, Dispatch, SetStateAction } from 'react';
 import { TooltipProps as TooltipProps$1 } from '@mui/material';
-import { UseFiltersColumnProps, Column as Column$1, Row, CellProps, UseExpandedRowProps, UseRowStateRowProps, Filters, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
+import { ColumnHelper, ColumnDef, SortingFn, Row, Cell, FilterFn, ColumnFilter, Table as Table$1, Column } from '@tanstack/react-table';
+export { Cell, Column, FilterFn, Row, SortingFn } from '@tanstack/react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
 
@@ -436,48 +437,164 @@ interface ToggleButtonProps {
 }
 declare function ToggleButton(props: ToggleButtonProps): JSX.Element;
 
-interface ExtendedFiltersColumn$3<T extends object> extends UseFiltersColumnProps<T> {
-    fixedOptions: Array<any>;
-    Header: string;
-    id?: string;
-    [key: string]: any;
+interface ApiCallCellOptions<Data, Value> {
+    apiCall: (cell: ExtendedCell<Data, Value>) => Promise<string>;
+    errorText: string;
 }
-declare function SelectFilter({ column }: ExtendedFiltersColumn$3<object>): JSX.Element;
+type ApiCallCellValue = never;
+declare const ApiCallCellName = "ApiCallCell";
+declare function ApiCallCell<Data>(props: ExtendedCellProps<Data, ApiCallCellValue>): JSX.Element;
 
-interface ExtendedFiltersColumn$2<T extends object> extends UseFiltersColumnProps<T> {
-    fixedOptions: Array<any>;
-    Header: string;
-    id?: string;
-    [key: string]: any;
+type BarCellValue = number;
+declare function BarCell<Data>(props: ExtendedCellProps<Data, BarCellValue>): JSX.Element;
+
+interface BlocksCellOptions<Data> {
+    showTotalCountOnly?: boolean;
+    isLink?: boolean;
+    getUrl?: (values: Data) => string;
+    openInNewTab?: boolean;
 }
-declare function MultiSelectFilter({ column }: ExtendedFiltersColumn$2<object>): JSX.Element;
+type BlocksCellValue = {
+    uid: string;
+    id: string;
+    status: string;
+}[];
+declare const BlocksCellName = "BlocksCell";
+declare function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>): JSX.Element;
 
-interface ExtendedFiltersColumn$1<T extends object> extends UseFiltersColumnProps<T> {
-    Header: string;
-    id?: string;
-    customTitle?: string;
+interface CapacityCellOptions {
+    noDataLabel?: string;
+}
+interface CapacityCellValue {
+    used: number;
+    total: number;
+    isThin: boolean;
+    maxThin: number;
+    minThin: number;
+    caution: boolean;
+}
+declare const CapacityCellName = "CapacityCell";
+declare function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>): JSX.Element;
+
+interface DateCellOptions {
+    showMili?: boolean;
+    showRelative?: boolean;
+    relativeOnly?: boolean;
     enableCustomFormat?: boolean;
     customFormat?: string;
 }
-interface DateFilterProps {
-    column: ExtendedFiltersColumn$1<object>;
-}
-declare function DateFilter({ column }: DateFilterProps): JSX.Element;
+type DateCellValue = string;
+declare const DateCellName = "DateCell";
+declare function DateCell<Data>(props: ExtendedCellProps<Data, DateCellValue>): JSX.Element;
 
-interface ExtendedFiltersColumn<T extends object> extends UseFiltersColumnProps<T> {
-    Header: string;
-    [key: string]: any;
-    byMinSeverity?: boolean;
+interface DefaultCellOptions<Data, Value> {
+    getUrl?: (values: Data) => string;
+    openInNewTab?: boolean;
+    tooltipText?: string | ((cell: ExtendedCell<Data, Value>) => string);
 }
-declare function SeverityFilter({ column }: ExtendedFiltersColumn<object>): JSX.Element;
+type DefaultCellValue = string | number | string[] | null | undefined;
+declare const DefaultCellName = "DefaultCell";
+declare function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>): JSX.Element;
 
-declare function TextFilter({ column }: {
-    [key: string]: any;
-}): JSX.Element;
+type EntityCellValue = string;
+declare function EntityCell<Data>(props: ExtendedCellProps<Data, EntityCellValue>): JSX.Element;
 
-interface UrlFilterParser {
-    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null | void;
+interface IconButtonCellOptions<Data> {
+    Icon: React.FC<React.SVGProps<SVGSVGElement>>;
+    disabled?: boolean | ((rowValues: Data) => boolean);
+    onClick: ((rowValues: Data) => void) | (() => void);
+    tooltipText?: string | ((rowValues: Data) => string);
+    extraClass?: string;
 }
+type IconButtonCellValue = never;
+declare const IconButtonCellName = "IconButtonCell";
+declare function IconButtonCell<Data>(props: ExtendedCellProps<Data, IconButtonCellValue>): JSX.Element;
+
+interface IconCellOptions<Data> {
+    Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    extraClass?: string | ((values: Data) => string);
+    tooltipText?: string | ((values: Data) => string);
+}
+type IconCellValue = string | boolean | null | undefined;
+declare const IconCellName = "IconCell";
+declare function IconCell<Data>(props: ExtendedCellProps<Data, IconCellValue>): JSX.Element;
+
+type NodeCellValue = {
+    nid: string;
+    isBackend: boolean;
+    roles?: string[];
+};
+declare function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>): JSX.Element;
+
+type ProgressCellValue = {
+    status: string;
+    progress: string;
+};
+declare function ProgressCell<Data>(props: ExtendedCellProps<Data, ProgressCellValue>): JSX.Element;
+
+type SeverityCellValue = string;
+declare function SeverityCell<Data>(props: ExtendedCellProps<Data, SeverityCellValue>): JSX.Element;
+
+interface StatusCellOptions<Data> {
+    getTooltip?: (rowValues: Data) => string;
+    showString?: boolean;
+}
+type StatusCellValue = string | null;
+declare const StatusCellName = "StatusCell";
+declare function StatusCell<Data>(props: ExtendedCellProps<Data, StatusCellValue>): JSX.Element;
+
+interface SwitchCellOptions<Data> {
+    onChange: (row: ExtendedRow<Data>) => void;
+    tooltipText?: string | ((value: boolean) => string);
+}
+type SwitchCellValue = boolean;
+declare const SwitchCellName = "SwitchCell";
+declare function SwitchCell<Data>(props: ExtendedCellProps<Data, SwitchCellValue>): JSX.Element;
+
+type TieringValue = {
+    mode: string;
+    name: string;
+    state: string;
+    detachProgress: number | null;
+};
+type TieringCellValue = TieringValue[];
+declare function TieringCell<Data>(props: ExtendedCellProps<Data, TieringCellValue>): JSX.Element;
+
+type TimeCellValue = number;
+declare function TimeCell<Data>(props: ExtendedCellProps<Data, TimeCellValue>): JSX.Element;
+
+type UptimeCellValue = string;
+declare function UptimeCell<Data>(props: ExtendedCellProps<Data, UptimeCellValue>): JSX.Element;
+
+declare function AggregatedTotalCell<Data>(props: ExtendedCellProps<Data>): string;
+
+declare const createColumnHelperWithAction: <Data>() => ColumnHelper<Data> & {
+    action: (actionDef: IconButtonCellOptions<Data>) => ColumnDef<Data, unknown>;
+};
+
+declare const PER_PAGE_OPTIONS: {
+    value: number;
+    label: string;
+}[];
+
+interface PerPageProps {
+    value: string | number;
+    onChange: ((val: string | number) => void) | Dispatch<SetStateAction<number>>;
+    options?: typeof PER_PAGE_OPTIONS;
+}
+declare function PerPage({ value, onChange, options }: PerPageProps): JSX.Element;
+
+declare const urlFilterParsers: {
+    readonly boolean: (rawValue: Parameters<UrlFilterParser>[0]) => boolean | null;
+    readonly string: (rawValue: Parameters<UrlFilterParser>[0]) => string | null;
+    readonly arrayOfStrings: (rawValue: Parameters<UrlFilterParser>[0]) => string[] | null;
+    readonly date: (rawValue: Parameters<UrlFilterParser>[0]) => {
+        startTime: string;
+        endTime: string;
+    } | null;
+    readonly severity: (rawValue: Parameters<UrlFilterParser>[0]) => string[] | null;
+};
+
 declare function useUrlFilters(props: {
     enabled?: boolean;
     filterConfig: {
@@ -485,170 +602,210 @@ declare function useUrlFilters(props: {
         /**
          * If not provided stringParser will be used
          */
-        filterParser?: UrlFilterParser;
+        filterParser?: UrlFilterParser | keyof typeof urlFilterParsers;
     }[];
     filterCategory: string;
 }): [
-    ExtendedFilter[],
-    (filters: ExtendedFilter[] | ((prevState: ExtendedFilter[]) => ExtendedFilter[])) => void
+    ExtendedColumnFilter[],
+    (filters: ExtendedColumnFilter[] | ((prevState: ExtendedColumnFilter[]) => ExtendedColumnFilter[])) => void
 ];
 
-type FilterComponent = typeof DateFilter | typeof MultiSelectFilter | typeof SelectFilter | typeof SeverityFilter | typeof TextFilter;
-interface RowAction {
-    hideAction: boolean | ((original: object) => boolean);
-    action?: ((original: object) => void) | (() => void);
-    content?: string | ((original: object) => HTMLElement);
-    disabled?: boolean | ((original: object) => boolean);
+declare const TABLE_FILTERS_MAP: {
+    readonly multiSelect: {
+        readonly component: typeof MultiSelectFilter;
+        readonly parser: (rawValue: string[] | Record<string, string[]>) => string[] | null;
+        readonly filterFn: <Data>(row: ExtendedRow<Data>, columnId: string, filterValue: string | string[] | number[]) => boolean;
+    };
+    readonly select: {
+        readonly component: typeof SelectFilter;
+        readonly parser: (rawValue: string[] | Record<string, string[]>) => string | null;
+        readonly filterFn: "equalsString";
+    };
+    readonly date: {
+        readonly component: typeof DateFilter;
+        readonly parser: (rawValue: string[] | Record<string, string[]>) => {
+            startTime: string;
+            endTime: string;
+        } | null;
+        readonly filterFn: <Data_1>(row: ExtendedRow<Data_1>, columnId: string, { startTime, endTime }: {
+            startTime?: string | undefined;
+            endTime?: string | undefined;
+        }) => boolean;
+    };
+    readonly text: {
+        readonly component: typeof TextFilter;
+        readonly parser: (rawValue: string[] | Record<string, string[]>) => string | null;
+        readonly filterFn: "includesString";
+    };
+    readonly severity: {
+        readonly component: typeof SeverityFilter;
+        readonly parser: (rawValue: string[] | Record<string, string[]>) => string[] | null;
+        readonly filterFn: <Data_2>(row: ExtendedRow<Data_2>, columnId: string, filterValue: "DEBUG" | "INFO" | "WARNING" | "MINOR" | "MAJOR" | "CRITICAL") => boolean;
+    };
+};
+
+type FilterTypes = keyof typeof TABLE_FILTERS_MAP;
+
+type PaginationProps = {
+    onPageChange: (page: number) => void;
+    defaultCurrentPage?: number;
+    isLoading?: boolean;
+} & ({
+    totalRows: number;
+    rowsPerPage: number;
+    numberOfPages?: undefined;
+} | {
+    numberOfPages: number;
+    totalRows?: undefined;
+    rowsPerPage?: undefined;
+});
+declare function Pagination(props: PaginationProps): JSX.Element | null;
+
+type DateFilterOptions = {
+    enableCustomFormat?: boolean;
+    customFormat?: string;
+};
+interface DateFilterValue {
+    startTime?: string;
+    endTime?: string;
+}
+declare function DateFilter<Data>({ column, filterOptions }: ExtendedFilterProps<Data, DateFilterValue, DateFilterOptions>): JSX.Element;
+
+interface MultiSelectFilterOptions {
+    fixedOptions?: string[];
+}
+declare function MultiSelectFilter<Data, Value>({ column, filterOptions }: ExtendedFilterProps<Data, Value, MultiSelectFilterOptions>): JSX.Element;
+
+interface SelectFilterOptions {
+    fixedOptions?: string[];
+}
+declare function SelectFilter<Data, Value>({ column, filterOptions }: ExtendedFilterProps<Data, Value, SelectFilterOptions>): JSX.Element;
+
+declare function SeverityFilter<Data, Value>({ column }: ExtendedFilterProps<Data, Value>): JSX.Element;
+
+interface TextFilterOptions {
+    shouldDisableBtn?: (val: string) => boolean;
+    disabledBtnTooltip?: string;
+}
+declare function TextFilter<Data, Value>({ column, filterOptions }: ExtendedFilterProps<Data, Value, TextFilterOptions>): JSX.Element;
+
+type ExtendedTable<Data> = Table$1<Data>;
+type ExtendedColumnDef<Data, Value> = ColumnDef<Data, Value>;
+type ExtendedColumn<Data, Value> = Column<Data, Value>;
+type ExtendedRow<Data> = Row<Data>;
+type ExtendedCell<Data, Value> = Cell<Data, Value>;
+interface ExtendedCellProps<Data, Value> {
+    table: ExtendedTable<Data>;
+    row: ExtendedRow<Data>;
+    column: ExtendedColumn<Data, Value>;
+    cell: ExtendedCell<Data, Value>;
+    getValue: () => unknown;
+    renderValue: () => unknown;
+    customValue?: Value;
+}
+type FilterDef<Data, Type extends FilterTypes, FilterOptions = undefined> = Type | {
+    type: Type;
+    filterFn?: FilterFn<Data>;
+    options?: FilterOptions;
+};
+type CellOptions<Type, Options> = {
+    type: Type;
+    options: Options;
+};
+type CellDef<TData, TValue, Type extends string | undefined, Options = undefined> = {
+    onClick?: (cell: Cell<TData, TValue>) => void;
+} & (never | CellOptions<Type, Options>);
+declare module '@tanstack/react-table' {
+    interface SortingFns {
+        stringSort: SortingFn<unknown>;
+        numberSort: SortingFn<unknown>;
+    }
+    interface ColumnMeta<TData, TValue> {
+        defaultHidden?: boolean;
+        headerTooltip?: string;
+        filter?: FilterDef<TData, 'date', DateFilterOptions> | FilterDef<TData, 'multiSelect', MultiSelectFilterOptions> | FilterDef<TData, 'select', SelectFilterOptions> | FilterDef<TData, 'severity'> | FilterDef<TData, 'text', TextFilterOptions>;
+        cell?: CellDef<TData, TValue, typeof ApiCallCellName, ApiCallCellOptions<TData, TValue>> | CellDef<TData, TValue, typeof CapacityCellName, CapacityCellOptions> | CellDef<TData, TValue, typeof StatusCellName, StatusCellOptions<TData>> | CellDef<TData, TValue, typeof BlocksCellName, BlocksCellOptions<TData>> | CellDef<TData, TValue, typeof DateCellName, DateCellOptions> | CellDef<TData, TValue, typeof SwitchCellName, SwitchCellOptions<TData>> | CellDef<TData, TValue, typeof IconCellName, IconCellOptions<TData>> | CellDef<TData, TValue, typeof DefaultCellName, DefaultCellOptions<TData, TValue>> | CellDef<TData, TValue, typeof IconButtonCellName, IconButtonCellOptions<TData>>;
+        columnTitle?: string;
+        _type?: 'column' | 'action';
+    }
+}
+type BaseFilterProps<Data, Value> = {
+    column: ExtendedColumn<Data, Value>;
+};
+type ExtendedFilterProps<Data, Value, FilterOptions = unknown> = BaseFilterProps<Data, Value> & {
+    filterOptions: FilterOptions;
+};
+interface UrlFilterParser {
+    (rawValue: string[] | Record<string, string[]>): unknown;
+}
+interface TableExtraClasses {
+    tableWrapper?: string;
+    tableLine?: string;
+    expandCell?: string;
+    tableCell?: string;
+}
+interface RowAction<Data> {
+    hideAction: boolean | ((rowValues: Data) => boolean);
+    action?: ((rowValues: Data) => void) | (() => void);
+    content?: string | ((rowValues: Data) => HTMLElement);
+    disabled?: boolean | ((rowValues: Data) => boolean);
     text?: string;
 }
-interface CustomRowAction {
-    Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    disabled?: boolean | ((original: object) => boolean);
-    onClick: ((original: object) => void) | (() => void);
-    tooltipText?: any;
-    extraClass?: string;
-}
-interface CustomCellProps<Data extends Record<string, unknown>> {
-    cell: CellProps<Data>;
-    column: Column<Data>;
-}
-type Column<Data extends Record<string, unknown>> = Omit<Column$1<Data>, 'Filter' | 'Cell' | 'id' | 'accessor'> & {
-    onClickCell?: (values: Data) => void;
-    Cell?: React.FC<CustomCellProps<Data>>;
-    defaultHidden?: boolean;
-    Filter?: FilterComponent;
-    filter?: string | ((rows: Row<Data>[], columnIds: string[], filterValue: any) => Row<Data>[]);
-    sortType?: 'number' | ((rowA: Row<Data>, rowB: Row<Data>, columnId: string, desc: boolean) => number);
-} & ({
-    id?: string;
-    accessor: string;
-} | {
-    id: string;
-    accessor: (originalRow: Data, rowIndex: number) => unknown;
-});
-interface ExtendedRow<T extends object> extends Row, UseExpandedRowProps<T>, UseRowStateRowProps<T> {
-    subRows: Array<Row<any>>;
-}
-interface TableProps<Data extends Record<string, unknown>> {
-    columns: Column<Data>[];
+type ExtendedColumnFilter = ColumnFilter & {
+    defaultFilter?: boolean;
+};
+
+interface TableProps<Data, Value> {
+    columns: ExtendedColumnDef<Data, Value>[];
     data: Data[];
     filterCategory: string;
     title?: string;
     maxRows?: number;
-    rowActions?: RowAction[];
+    rowActions?: RowAction<Data>[];
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
     defaultSort?: string;
-    globalFilter?: string | ((rows: Array<Row>) => Row[]);
+    globalFilter?: any;
+    globalFilterFn?: FilterFn<Data>;
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
     checkRowHighlighted?: (row: object) => boolean;
-    getRowId?: (originalRow: object, relativeIndex: number, parent?: Row<object> | undefined) => string;
+    getRowId?: (originalRow: Data, index: number, parent?: ExtendedRow<Data>) => string;
     addFilterToUrl?: boolean;
     RowSubComponent?: React.FC<{
         row: any;
     }>;
     listenerPrefix?: string;
-    onRowClick?: (row?: Row) => void;
+    onRowClick?: (values?: Data) => void;
     miniTable?: boolean;
     fixedPageSize?: number;
     disableActionsPortal?: boolean;
-    colPropForShowColumns?: string;
     manualPagination?: boolean;
     itemsAmount?: number;
     canExpandAll?: boolean;
     loading?: boolean;
-    onFiltersChanged?: (newFilters: Filters<object>) => void;
+    onFiltersChanged?: (newFilters: ExtendedColumnFilter[]) => void;
     defaultDescendingSort?: boolean;
-    customRowActions?: CustomRowAction[];
     manualFilters?: boolean;
-    initialFilters?: Filter[];
-    extraClasses?: {
-        tableWrapper?: string;
-        tableLine?: string;
-        expandCell?: string;
-        tableCell?: string;
-    };
+    initialFilters?: ColumnFilter[];
+    extraClasses?: TableExtraClasses;
     /**
      * Must be memoized
      */
-    groupBy?: string[];
+    grouping?: string[];
     hasCustomDateFormat?: boolean;
     customDateFormat?: string;
     hasResizableColumns?: boolean;
     hasEmptyActionsCell?: boolean;
     collapseRowsOnLeavingPage?: boolean;
-    onSortChanged: (sort: {
+    onSortChanged?: (sort: {
         id: string;
         desc?: boolean;
     }) => void;
     manualSorting?: boolean;
 }
-declare function Table<Values extends Record<string, unknown>>({ columns, data, rowActions, tableActions, title, defaultSort, globalFilter, defaultGlobalFilter, checkRowSelected, checkRowHighlighted, getRowId, addFilterToUrl, RowSubComponent, listenerPrefix, onRowClick, miniTable, filterCategory, fixedPageSize, disableActionsPortal, maxRows, emptyMessage, colPropForShowColumns, manualPagination, itemsAmount, canExpandAll, loading, onFiltersChanged, defaultDescendingSort, customRowActions, onSortChanged, manualSorting, manualFilters, extraClasses, initialFilters: initialUserFilters, groupBy, hasCustomDateFormat, customDateFormat, hasResizableColumns, hasEmptyActionsCell, collapseRowsOnLeavingPage }: TableProps<Values>): JSX.Element;
+declare function Table<Data, Value>(props: TableProps<Data, Value>): JSX.Element;
 declare const _default: React.MemoExoticComponent<typeof Table>;
-
-interface ActionsCellProps {
-    actions: Array<RowAction>;
-    row: ExtendedRow<object>;
-    disablePortal?: boolean;
-}
-declare function ActionsCell({ actions, row, disablePortal }: ActionsCellProps): JSX.Element;
-
-interface ExtendedCellProps<T extends object> extends CellProps<T>, UseRowStateCellProps<T> {
-    state: UseRowStateLocalState<T>;
-}
-interface ApiCallCellProps {
-    cell: ExtendedCellProps<object>;
-}
-declare function ApiCallCell({ cell }: ApiCallCellProps): JSX.Element;
-
-declare function BarCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function BlocksCell<Data extends Record<string, unknown>>({ cell, column }: CustomCellProps<Data>): JSX.Element;
-
-declare function CapacityCell({ cell }: CustomCellProps): JSX.Element;
-
-interface CustomTooltipProps {
-    value: CellValue;
-    tooltipData?: string;
-}
-declare function CustomTooltipCell({ value, tooltipData }: CustomTooltipProps): JSX.Element;
-
-declare function IconCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function StatusCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function ProgressCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function TieringCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function TimeCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function UptimeCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function SeverityCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function DateCell({ cell, column }: {
-    cell: CellProps<object>;
-    column: {
-        [key: string]: any;
-    };
-}): JSX.Element;
-
-declare function NodeCell({ cell }: CustomCellProps): JSX.Element;
-
-declare function MultilineCell({ cell }: CustomCellProps): JSX.Element;
-
-interface IconButtonCellProps {
-    action: CustomRowAction;
-    row: ExtendedRow<object>;
-}
-declare function IconButtonCell({ row, action }: IconButtonCellProps): JSX.Element;
-
-interface ExtendedCustomCellProps<Data extends Record<string, unknown>> extends CustomCellProps<Data> {
-    row: ExtendedRow<object>;
-}
-declare function SwitchCell<Data extends Record<string, unknown>>({ cell, column, row }: ExtendedCustomCellProps<Data>): JSX.Element;
 
 interface DateTimePickerProps {
     onChange: (val?: any) => void;
@@ -687,28 +844,6 @@ interface NumInputProps {
 }
 declare function NumInput(props: NumInputProps): JSX.Element;
 
-type PaginationProps = {
-    onPageChange: (page: number) => void;
-    defaultCurrentPage?: number;
-    isLoading?: boolean;
-} & ({
-    totalRows: number;
-    rowsPerPage: number;
-    numberOfPages?: undefined;
-} | {
-    numberOfPages: number;
-    totalRows?: undefined;
-    rowsPerPage?: undefined;
-});
-declare function Pagination(props: PaginationProps): JSX.Element | null;
-
-interface PerPageProps {
-    value: string | number;
-    onChange: ((val: string | number) => void) | Dispatch<SetStateAction<number>>;
-    options?: Option[];
-}
-declare function PerPage({ value, onChange, options }: PerPageProps): JSX.Element;
-
 interface FilterButtonProps {
     onClick: () => void;
     disable?: boolean;
@@ -716,28 +851,6 @@ interface FilterButtonProps {
     tooltipText?: string;
 }
 declare function FilterButton({ onClick, disable, extraClass, tooltipText }: FilterButtonProps): JSX.Element;
-
-interface FilterHeaderProps {
-    title?: string;
-    setFilter: (val: any) => void;
-    Filter: typeof React.Component;
-    dataForFilter?: {
-        [key: string]: any;
-    };
-    filterKey?: string;
-}
-declare function FilterHeader({ title, setFilter, Filter, dataForFilter, filterKey }: FilterHeaderProps): JSX.Element;
-
-interface FilterBoxProps {
-    name: string;
-    value: string | Array<string> | Record<string, unknown>;
-    onDelete: () => void;
-    hasCustomDateFormat?: boolean;
-    customDateFormat?: string;
-}
-declare function FilterBox({ name, value: value, onDelete, hasCustomDateFormat, customDateFormat }: FilterBoxProps): JSX.Element;
-
-declare function EntityCell({ cell }: CustomCellProps): JSX.Element;
 
 interface CopyProps {
     text: string;
@@ -797,15 +910,6 @@ declare const utils: {
     parseSearchParamsToObject: (searchParams: URLSearchParams) => Record<string, string[] | Record<string, string[]>>;
     dispatchCustomEvent: (id: string, data: any) => void;
     isNumber: (value: any) => boolean;
-    stringSort: (rowA: {
-        values: {
-            [key: string]: any;
-        };
-    }, rowB: {
-        values: {
-            [key: string]: any;
-        };
-    }, columnId: string) => number;
     isIp: (string: any) => string | false;
     formatBytes: (bytes: number, decimals?: number) => {
         value: number;
@@ -824,4 +928,4 @@ declare const utils: {
 declare function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr;
 declare function insensitiveSort<Arr extends Record<Key, string>[] | Record<Key, number>[], Key extends string>(array: Arr, key: Key): Arr;
 
-export { ActionsCell, ApiCallCell, BarCell, BlocksCell, Button, CapacityBar, CapacityCell, Checkbox, CircularProgress, CloseButton, Column, Copy, CustomTooltipCell, CustomizableSelect, DataInfo, DateCell, DateFilter, DateTimePicker, EmptyPageMessage, EntityCell, ErrorPage, ExpandCollapseButton, FilterBox, FilterButton, FilterHeader, FormSwitch, IconButtonCell, IconCell, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, MultiSelectFilter, MultilineCell, NewPasswordTooltip, NodeCell, NumInput, Pagination, PerPage, ProgressCell, RadioSwitch, Select, SelectFilter, SeverityCell, SeverityFilter, ShowMore, SpanTooltip, StatusCell, Summary, Switch, SwitchCell, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextFilter, TextSelectBox, TieringCell, TimeCell, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, utils as Utils, useUrlFilters };
+export { AggregatedTotalCell, ApiCallCell, ApiCallCellName, ApiCallCellOptions, ApiCallCellValue, BarCell, BarCellValue, BlocksCell, BlocksCellName, BlocksCellOptions, BlocksCellValue, Button, CapacityBar, CapacityCell, CapacityCellName, CapacityCellOptions, CapacityCellValue, Checkbox, CircularProgress, CloseButton, Copy, CustomizableSelect, DataInfo, DateCell, DateCellName, DateCellOptions, DateCellValue, DateTimePicker, DefaultCell, DefaultCellName, DefaultCellOptions, DefaultCellValue, EmptyPageMessage, EntityCell, EntityCellValue, ErrorPage, ExpandCollapseButton, FilterButton, FormSwitch, IconButtonCell, IconButtonCellName, IconButtonCellOptions, IconButtonCellValue, IconCell, IconCellName, IconCellOptions, IconCellValue, Info, IpRangeTextBox, IpSubnetTextBox, IpTextBox, JsonBox, Loader, LoginField, MenuPopper, NewPasswordTooltip, NodeCell, NodeCellValue, NumInput, Pagination, PerPage, ProgressCell, ProgressCellValue, RadioSwitch, Select, SeverityCell, SeverityCellValue, ShowMore, SpanTooltip, StatusCell, StatusCellName, StatusCellOptions, StatusCellValue, Summary, Switch, SwitchCell, SwitchCellName, SwitchCellOptions, SwitchCellValue, Tab, _default as Table, TagsBox, TextArea, TextBox, TextEditor, TextField, TextSelectBox, TieringCell, TieringCellValue, TimeCell, TimeCellValue, Toast, ToggleButton, Tooltip, UploadField, UptimeCell, UptimeCellValue, utils as Utils, createColumnHelperWithAction as createColumnHelper, useUrlFilters };

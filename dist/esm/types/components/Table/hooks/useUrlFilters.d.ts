@@ -1,6 +1,5 @@
-export interface UrlFilterParser {
-    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null | void;
-}
+import { ExtendedColumnFilter, UrlFilterParser } from '../types';
+import { urlFilterParsers } from '../tableUtils';
 declare function useUrlFilters(props: {
     enabled?: boolean;
     filterConfig: {
@@ -8,11 +7,11 @@ declare function useUrlFilters(props: {
         /**
          * If not provided stringParser will be used
          */
-        filterParser?: UrlFilterParser;
+        filterParser?: UrlFilterParser | keyof typeof urlFilterParsers;
     }[];
     filterCategory: string;
 }): [
-    ExtendedFilter[],
-    (filters: ExtendedFilter[] | ((prevState: ExtendedFilter[]) => ExtendedFilter[])) => void
+    ExtendedColumnFilter[],
+    (filters: ExtendedColumnFilter[] | ((prevState: ExtendedColumnFilter[]) => ExtendedColumnFilter[])) => void
 ];
 export default useUrlFilters;

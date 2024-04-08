@@ -6,14 +6,6 @@ import {
 } from './consts'
 import Utils from './utils'
 
-interface ColumnResizing {
-  startX?: number | undefined
-  columnWidth: number
-  headerIdWidths: Record<string, number>
-  columnWidths: any
-  isResizingColumn?: string | undefined
-}
-
 const localStorageService = {
   setItem(key: string, item: string | boolean) {
     return localStorage.setItem(key, item as string)
@@ -43,7 +35,7 @@ const localStorageService = {
     updatedHidden[key] = value
     localStorageService.setItem(SAVED_HIDDEN, JSON.stringify(updatedHidden))
   },
-  updateResized(category: string, resizing: ColumnResizing) {
+  updateResized(category: string, resizing: Record<string, number>) {
     const resizedString = localStorageService.getItem(SAVED_RESIZED) ?? '{}'
     const parsedResized = JSON.parse(resizedString)
     let updatedResized = { ...parsedResized }
