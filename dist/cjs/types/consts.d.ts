@@ -48,6 +48,7 @@ export declare const STATUS: {
     CREATING: string;
     DOWNLOADING: string;
     REMOVING: string;
+    ADDING: string;
 };
 export declare const OBS_IS_DETACHING = "DETACHING";
 export declare const OBS_MODES: {
