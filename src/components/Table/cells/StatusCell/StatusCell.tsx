@@ -25,6 +25,7 @@ function getIcon(status: string) {
     case STATUS.CREATING:
       return <Propeller className='working' />
     case STATUS.REMOVING:
+    case STATUS.ADDING:
       return <Propeller className='working' />
     case STATUS.DEGRADED:
       return <FullWarning className='degraded-status' />
