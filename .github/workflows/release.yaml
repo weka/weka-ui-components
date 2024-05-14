@@ -22,6 +22,8 @@ jobs:
 
       - run: yarn build
 
+      - run: pip install cz_version_bump
+
       - uses: weka/commitizen-action@0.21.0
         with:
           dry_run: true
