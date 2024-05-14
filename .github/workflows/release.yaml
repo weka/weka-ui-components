@@ -1,0 +1,15 @@
+name: Release
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: yarn --version
+
+      - run: yarn build
