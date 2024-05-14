@@ -3,6 +3,10 @@ name: Release
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: Release version
+        required: true
 
 jobs:
   release:
@@ -17,3 +21,10 @@ jobs:
       - run: npm i --legacy-peer-deps
 
       - run: yarn build
+
+      - uses: weka/commitizen-action@0.21.0
+        with:
+          dry_run: true
+          increment: minor
+          commit: false
+          push: false
