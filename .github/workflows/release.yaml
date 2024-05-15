@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: '20'
 
-      - run: npm i --legacy-peer-deps
+      - run: yarn i
 
       - name: Validate build
         run: yarn build
