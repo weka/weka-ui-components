@@ -1,7 +1,6 @@
 name: Release
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       bump:
@@ -38,7 +37,6 @@ jobs:
 
       - uses: weka/commitizen-action@0.21.0
         with:
-          dry_run: true
           increment: ${{ github.event.inputs.bump != 'auto' && github.event.inputs.bump || '' }}
           commit: false
           push: false
