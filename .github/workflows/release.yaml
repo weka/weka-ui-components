@@ -4,9 +4,16 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      release_version:
-        description: Release version
+      bump:
+        description: "Version bump type"
         required: true
+        type: choice
+        default: auto
+        options:
+          - auto
+          - patch
+          - minor
+          - major
 
 jobs:
   release:
@@ -31,6 +38,6 @@ jobs:
       - uses: weka/commitizen-action@0.21.0
         with:
           dry_run: true
-          increment: minor
+          increment: ${{ github.event.inputs.bump != 'auto' && github.event.inputs.bump || '' }}
           commit: false
           push: false
