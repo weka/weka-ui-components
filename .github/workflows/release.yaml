@@ -27,7 +27,8 @@ jobs:
 
       - run: npm i --legacy-peer-deps
 
-      - run: yarn build
+      - name: Validate build
+        run: yarn build
 
       - name: Set up Python
         uses: actions/setup-python@v5.0.0
