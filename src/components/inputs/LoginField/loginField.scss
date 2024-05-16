@@ -24,12 +24,11 @@
   text-align: left;
   letter-spacing: 0px;
   padding: 0px 10px;
-
 }
 
 .text-login-error {
-  top:58px;
-  left : 3px;
+  top: 62px;
+  left: 3px;
   position: absolute;
   color: var(--focus-key);
 }
@@ -42,13 +41,12 @@
     position: absolute;
     right: 15px;
     bottom: 9px;
-      &:hover {
-        path {
-          fill: var(--ironhide-s2);
-        }
+    &:hover {
+      path {
+        fill: var(--ironhide-s2);
+      }
     }
   }
-
 }
 
 .is-type-password-login {
