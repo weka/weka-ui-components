@@ -23,5 +23,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.sha }}
+          name: "${{ github.sha }}_${{ github.run_attempt }}"
           path: dist
