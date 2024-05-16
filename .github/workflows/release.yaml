@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: '20'
 
-      - run: yarn i
+      - run: yarn install
 
       - name: Validate build
         run: yarn build
