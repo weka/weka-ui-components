@@ -14,14 +14,13 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@weka'
 
       - run: yarn install
 
       - run: yarn build
 
-      - run: ls -l dist
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "${{ github.sha }}_${{ github.run_attempt }}"
-          path: dist
+      - run: yarn npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
