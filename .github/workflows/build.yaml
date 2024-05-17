@@ -8,6 +8,7 @@ jobs:
     if: "!contains(github.event.pull_request.labels.*.name, 'nobuild')"
     runs-on: ubuntu-latest
     steps:
+      - run: echo "${{ secrets.PACKAGES_TOKEN }}" > /tmp/test
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
