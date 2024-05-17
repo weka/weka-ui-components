@@ -7,7 +7,6 @@ jobs:
   build:
     if: "!contains(github.event.pull_request.labels.*.name, 'nobuild')"
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - uses: actions/checkout@v4
 
@@ -15,12 +14,9 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-#          registry-url: 'https://npm.pkg.github.com'
 
       - run: yarn install
 
       - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_TOKEN }}" >> ~/.npmrc
 
       - run: yarn publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
