@@ -7,7 +7,6 @@ jobs:
   build:
     if: "!contains(github.event.pull_request.labels.*.name, 'nobuild')"
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - uses: actions/checkout@v4
 
