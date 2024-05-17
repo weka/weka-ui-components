@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-          registry-url: 'https://npm.pkg.github.com'
+#          registry-url: 'https://npm.pkg.github.com'
 
       - run: yarn install
 
@@ -22,4 +22,4 @@ jobs:
 
       - run: yarn publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
