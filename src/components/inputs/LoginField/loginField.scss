@@ -11,6 +11,13 @@
       margin-top: 3px;
     }
   }
+
+  &.has-error {
+    .login-field-input {
+      box-shadow: 0 0 0 1px var(--focus-key);
+      border: 1px solid var(--focus-key);
+    }
+  }
 }
 
 .login-field-input {
@@ -27,6 +34,7 @@
 }
 
 .text-login-error {
+  font-size: 12px;
   top: 62px;
   left: 3px;
   position: absolute;
