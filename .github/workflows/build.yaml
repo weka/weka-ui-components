@@ -20,8 +20,5 @@ jobs:
       - run: yarn install
 
       - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_TOKEN }}" >> ~/.npmrc
-      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_TOKEN }}" >> ~/.yarnrc
 
       - run: yarn publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
