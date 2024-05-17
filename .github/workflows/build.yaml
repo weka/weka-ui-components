@@ -7,8 +7,9 @@ jobs:
   build:
     if: "!contains(github.event.pull_request.labels.*.name, 'nobuild')"
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
-      - run: echo "${{ secrets.PACKAGES_TOKEN }}" > /tmp/test && wc -m /tmp/test
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -18,6 +19,6 @@ jobs:
 
       - run: yarn install
 
-      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_TOKEN }}" >> ~/.npmrc
+      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
       - run: yarn publish
