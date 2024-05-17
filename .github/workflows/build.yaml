@@ -16,11 +16,12 @@ jobs:
           cache: 'yarn'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@weka'
+          always-auth: true
 
       - run: yarn install
 
       - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_TOKEN }}" >> ~/.npmrc
-        
+
       - run: yarn login  --registry=npm.pkg.github.com --non-interactive
 
       - run: yarn publish
