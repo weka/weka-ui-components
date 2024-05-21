@@ -18,6 +18,7 @@ jobs:
           node-version: '20'
           cache: 'yarn'
           registry-url: https://npm.pkg.github.com/
+          scope: '@weka'
 
       - run: yarn install
 
