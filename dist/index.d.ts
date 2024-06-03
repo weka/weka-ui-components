@@ -339,7 +339,10 @@ declare namespace TextEditor {
     var HideContentInput: typeof HideContentInput;
 }
 
-declare function Loader(): JSX.Element;
+interface LoaderProps {
+    extraClass?: string;
+}
+declare function Loader({ extraClass }: LoaderProps): JSX.Element;
 
 type menuItem = {
     hideMenu?: boolean;
