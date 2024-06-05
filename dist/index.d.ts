@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import React, { MouseEventHandler, ReactNode, ReactElement, PropsWithChildren, Dispatch, SetStateAction } from 'react';
+import { TooltipProps as TooltipProps$1 } from '@mui/material';
 import { UseFiltersColumnProps, Column as Column$1, Row, CellProps, UseExpandedRowProps, UseRowStateRowProps, Filters, UseRowStateCellProps, UseRowStateLocalState, CellValue } from 'react-table';
 import * as luxon from 'luxon';
 import { DateTime } from 'luxon';
@@ -375,12 +376,21 @@ interface NewPasswordTooltipProps {
 }
 declare function NewPasswordTooltip({ passValue }: NewPasswordTooltipProps): JSX.Element;
 
-interface SpanTooltipProps {
+type TooltipProps = {
+    children: ReactElement;
+    clear?: boolean;
+    data?: ReactElement | string;
+    extraClass?: string;
+    extraPopperClass?: string;
+} & Pick<TooltipProps$1, 'open' | 'onClose' | 'onOpen'>;
+declare function Tooltip({ children, clear, data, extraClass, extraPopperClass, ...rest }: TooltipProps): JSX.Element;
+
+type SpanTooltipProps = {
     children: number | string;
     extraClasses?: string;
     style?: object;
-}
-declare function SpanTooltip({ children, extraClasses, style }: SpanTooltipProps): JSX.Element;
+} & Omit<TooltipProps, 'children' | 'data'>;
+declare function SpanTooltip({ children, extraClasses, style, ...tooltipProps }: SpanTooltipProps): JSX.Element;
 
 interface SwitchProps {
     onChange: (newValue: any) => void;
@@ -425,16 +435,6 @@ interface ToggleButtonProps {
     onChange: (newVal: any) => void;
 }
 declare function ToggleButton(props: ToggleButtonProps): JSX.Element;
-
-interface TooltipProps {
-    children: ReactElement;
-    clear?: boolean;
-    data?: ReactElement | string;
-    extraClass?: string;
-    extraPopperClass?: string;
-    [key: string]: any;
-}
-declare function Tooltip({ children, clear, data, extraClass, extraPopperClass, ...rest }: TooltipProps): JSX.Element;
 
 interface ExtendedFiltersColumn$3<T extends object> extends UseFiltersColumnProps<T> {
     fixedOptions: Array<any>;
