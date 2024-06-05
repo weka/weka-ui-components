@@ -1,10 +1,14 @@
 import React from 'react'
-
+import clsx from 'clsx'
 import './loader.scss'
 
-function Loader() {
+interface LoaderProps {
+  extraClass?: string
+}
+
+function Loader({ extraClass }: LoaderProps) {
   return (
-    <div className='loader-wrapper'>
+    <div className={clsx('loader-wrapper', extraClass)}>
       <div className='loading-bar'>
         <div className='fill-bar' />
       </div>
