@@ -1,6 +1,4 @@
-export interface UrlFilterParser {
-    (rawValue: string[] | Record<string, string[]>): ExtendedFilter['value'] | null | void;
-}
+import { ExtendedColumnFilter, UrlFilterParser } from '../types';
 declare function useUrlFilters(props: {
     enabled?: boolean;
     filterConfig: {
@@ -12,7 +10,7 @@ declare function useUrlFilters(props: {
     }[];
     filterCategory: string;
 }): [
-    ExtendedFilter[],
-    (filters: ExtendedFilter[] | ((prevState: ExtendedFilter[]) => ExtendedFilter[])) => void
+    ExtendedColumnFilter[],
+    (filters: ExtendedColumnFilter[] | ((prevState: ExtendedColumnFilter[]) => ExtendedColumnFilter[])) => void
 ];
 export default useUrlFilters;

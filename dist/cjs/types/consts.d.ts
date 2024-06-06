@@ -12,7 +12,7 @@ export declare const EVENT_KEYS: {
 export declare const SAVED_FILTERS = "saved_filters";
 export declare const EXPLICITLY_REMOVED_FILTERS = "explicitly_removed_filters";
 export declare const SAVED_HIDDEN = "saved_hidden";
-export declare const SAVED_RESIZED = "saved_resized";
+export declare const SAVED_RESIZED = "saved_resized_columns";
 export declare const SAVED_RESIZING_ENABLED = "saved_resizing_enabled";
 export declare const FILTER_CHANGE_LISTENER = "table-filters-change";
 export declare const FILTER_LISTENER = "table-filters";
@@ -83,7 +83,7 @@ export declare const SEVERITY_MINOR = "MINOR";
 export declare const SEVERITY_MAJOR = "MAJOR";
 export declare const SEVERITY_CRITICAL = "CRITICAL";
 export declare const SEVERITIES: readonly ["DEBUG", "INFO", "WARNING", "MINOR", "MAJOR", "CRITICAL"];
-export type Severities = typeof SEVERITIES[number];
+export type Severities = (typeof SEVERITIES)[number];
 export declare const SEVERITIES_ICONS: SeverityIcons;
 interface ShortRoles {
     [key: string]: any;

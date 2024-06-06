@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { EXPLICITLY_REMOVED_FILTERS } from '../../../consts'
 import localStorageService from '../../../localStorageService'
-import { Filters } from 'react-table'
+import { ExtendedColumnFilter } from '../types'
 
 /**
  * Keeps track of user-removed **default** filters
  */
-function useExplicitlyRemovedFilters(initialUserFilters?: Filters<object>) {
+function useExplicitlyRemovedFilters(
+  initialUserFilters?: ExtendedColumnFilter[]
+) {
   const [explicitlyRemovedFilters, setExplicitlyRemovedFilters] = useState<
     Set<string>
   >(() => {
@@ -18,7 +20,7 @@ function useExplicitlyRemovedFilters(initialUserFilters?: Filters<object>) {
     return new Set(LSValue ? JSON.parse(LSValue) : [])
   })
 
-  const handleFiltersUpdate = (filters: Filters<object>) => {
+  const handleFiltersUpdate = (filters: ExtendedColumnFilter[]) => {
     if (!initialUserFilters) {
       return
     }

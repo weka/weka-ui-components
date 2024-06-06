@@ -152,65 +152,6 @@ const utils = {
       return false
     }
   },
-    stringSort: (rowA: { values: { [key: string]: any } }, rowB: { values: { [key: string]: any } }, columnId: string): number=> {
-      const _getRowValuesByColumn4 = [rowA.values[columnId], rowB.values[columnId]]
-    let a = _getRowValuesByColumn4[0] || EMPTY_STRING
-    let b = _getRowValuesByColumn4[1] || EMPTY_STRING
-    // eslint-disable-next-line no-restricted-globals
-    if (utils.isNumber(a) && utils.isNumber(b)) {
-      if (utils.isEmpty(a)) {
-        return 1
-      }
-      if (utils.isEmpty(b)) {
-        return -1
-      }
-      const numberA = parseFloat(a)
-      const numberB = parseFloat(b)
-      if (numberA === numberB) {
-        return 0
-      }
-      return numberA > numberB ? 1 : -1
-    }
-
-    if (utils.isIp(a) || utils.isIp(b)) {
-      if (utils.isEmpty(a)) {
-        return 1
-      }
-      if (utils.isEmpty(b)) {
-        return -1
-      }
-      const num1 = Number(a.split('.').map((num: string) => (`000${num}`).slice(-3)).join(''))
-      const num2 = Number(b.split('.').map((num: string) => (`000${num}`).slice(-3)).join(''))
-      return num1 - num2
-    }
-
-    if (!utils.isString(a) || !utils.isString(b)) {
-      if (Array.isArray(a) && Array.isArray(b)) {
-        a = a.length
-        b = b.length
-        if (!a) {
-          return 1
-        }
-        if (!b) {
-          return -1
-        }
-      }
-      if (a === b) {
-        return 0
-      }
-      return a > b ? 1 : -1
-    }
-
-    if (!a.length) {
-      return 1
-    }
-    if (!b.length) {
-      return -1
-    }
-
-    const collator = Intl.Collator(undefined, { numeric: true })
-    return collator.compare(a, b)
-  },
   isIp: (string: any) => {
     if (!utils.isString(string)) return false
     const ValidIpAddressRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
