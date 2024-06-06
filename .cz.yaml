@@ -1,6 +1,0 @@
----
-commitizen:
-  name: cz_version_bump
-  tag_format: $version
-  version_provider: npm
-  version_scheme: semver
