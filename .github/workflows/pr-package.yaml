@@ -26,7 +26,7 @@ jobs:
 
       - id: version
         run: |
-          curl -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/weka/packages/npm/ui-components/versions >> $HOME/versionIds.json
+          curl -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/weka/packages/npm/weka-ui-components/versions >> $HOME/versionIds.json
             echo "id=$(jq -r '.[] | select(.name == "${{ github.head_ref }}").id' $HOME/versionIds.json)" >> $GITHUB_OUTPUT
 
       - run: echo "${{ steps.version.outputs.id }}"
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/delete-package-versions@v5
         with:
           package-version-ids: ${{ steps.version.outputs.id }}
-          package-name: ui-components
+          package-name: weka-ui-components
           package-type: npm
         if: ${{ steps.version.outputs.id }}
 
