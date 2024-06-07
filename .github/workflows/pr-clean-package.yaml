@@ -1,0 +1,25 @@
+name: Delete PR package
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - id: version
+        run: |
+          curl -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/weka/packages/npm/weka-ui-components/versions >> $HOME/versionIds.json
+            echo "id=$(jq -r '.[] | select(.name == "${{ github.head_ref }}").id' $HOME/versionIds.json)" >> $GITHUB_OUTPUT
+
+      - run: echo "${{ steps.version.outputs.id }}"
+
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-version-ids: ${{ steps.version.outputs.id }}
+          package-name: weka-ui-components
+          package-type: npm
