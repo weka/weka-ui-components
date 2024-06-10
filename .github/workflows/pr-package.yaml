@@ -1,0 +1,45 @@
+name: Publish PR package
+
+on:
+  pull_request:
+
+jobs:
+  publish:
+    if: "!contains(github.event.pull_request.labels.*.name, 'nopublish')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@weka'
+
+      - run: echo "$(jq '.version="${{ github.head_ref }}"' package.json)" > package.json
+
+      - run: yarn install
+
+      - id: version
+        run: |
+          curl -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/weka/packages/npm/weka-ui-components/versions >> $HOME/versionIds.json
+            echo "id=$(jq -r '.[] | select(.name == "${{ github.head_ref }}").id' $HOME/versionIds.json)" >> $GITHUB_OUTPUT
+
+      - run: echo "${{ steps.version.outputs.id }}"
+
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-version-ids: ${{ steps.version.outputs.id }}
+          package-name: weka-ui-components
+          package-type: npm
+        if: ${{ steps.version.outputs.id }}
+
+      - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
+
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
