@@ -261,7 +261,9 @@ function insensitiveSort<Key extends string>(
   const newArray = [...array]
   return newArray.sort((objA, objB) => {
     if (utils.isString(objA) && utils.isString(objB)) {
-      return objA.toLowerCase().localeCompare(objB.toLowerCase())
+      return objA
+        .toLowerCase()
+        .localeCompare(objB.toLowerCase(), undefined, { numeric: true })
     }
 
     if (typeof objA === 'number' && typeof objB === 'number') {
@@ -273,7 +275,9 @@ function insensitiveSort<Key extends string>(
       const b = objB[key]
 
       if (utils.isString(a) && utils.isString(b)) {
-        return a.toLowerCase().localeCompare(b.toLowerCase())
+        return a
+          .toLowerCase()
+          .localeCompare(b.toLowerCase(), undefined, { numeric: true })
       }
 
       if (typeof a === 'number' && typeof b === 'number') {
