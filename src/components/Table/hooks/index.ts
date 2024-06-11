@@ -3,3 +3,4 @@ export { default as useExplicitlyRemovedFilters } from './useExplicityRemovedFil
 export { default as useHiddenColumns } from './useHiddenColumns'
 export { default as usePrepareColumnDefs } from './usePrepareColumnDefs'
 export { default as usePageSize } from './usePageSize'
+export { default as useFiltersChangeListener } from './useFiltersChangeListener'
