@@ -8,8 +8,6 @@ import React, {
 import {
   COLUMN_RESIZING_LISTENER,
   EMPTY_STRING,
-  FILTER_CHANGE_LISTENER,
-  FILTER_LISTENER,
   NOP,
   SAVED_RESIZED,
   SAVED_RESIZING_ENABLED
@@ -36,7 +34,8 @@ import {
   useExplicitlyRemovedFilters,
   useHiddenColumns,
   usePageSize,
-  usePrepareColumnDefs
+  usePrepareColumnDefs,
+  useFiltersChangeListener
 } from './hooks'
 import { useToggle } from '../../hooks'
 import {
@@ -327,28 +326,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   const tableRef = useRef<null | HTMLDivElement>(null)
   const isExpandable = !!RowSubComponent
 
-  interface ExtendedEvent extends Event {
-    detail: {
-      value: any
-      id: any
-    }
-  }
-  function addOrRemoveFromFilter(event: ExtendedEvent) {
-    const { value, id } = event.detail
-    const findFilter =
-      columnFilters.find((filter) => filter.id === id)?.value || []
-    const newFilter = Array.isArray(findFilter) ? [...findFilter] : [findFilter]
-    if (!newFilter?.includes(value)) {
-      newFilter.push(value)
-    } else {
-      newFilter.splice(newFilter.indexOf(value), 1)
-    }
-    table.setColumnFilters((prev) => [
-      ...prev.filter((filter) => filter.id !== id),
-      { id, value: newFilter }
-    ])
-  }
-
   useEffect(() => {
     onFiltersChanged?.(columnFilters)
     if (addFilterToUrl) {
@@ -359,25 +336,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   useEffect(() => {
     onVisibilityChange(allColumns, columnVisibility)
   }, [onVisibilityChange, allColumns, columnVisibility])
-
-  useEffect(() => {
-    if (listenerPrefix) {
-      document.addEventListener(
-        `${listenerPrefix}${FILTER_CHANGE_LISTENER}`,
-        addOrRemoveFromFilter as EventListener
-      )
-      Utils.dispatchCustomEvent(
-        `${listenerPrefix}${FILTER_LISTENER}`,
-        columnFilters
-      )
-      return () => {
-        document.removeEventListener(
-          `${listenerPrefix}${FILTER_CHANGE_LISTENER}`,
-          addOrRemoveFromFilter as EventListener
-        )
-      }
-    }
-  }, [columnFilters])
 
   useEffect(() => {
     table.setPageIndex(0)
@@ -398,6 +356,12 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     miniTable,
     table
   ])
+
+  useFiltersChangeListener({
+    columnFilters,
+    table,
+    listenerPrefix
+  })
 
   usePageSize<Data>({ table, tableRef, miniTable, fixedPageSize, data })
 
