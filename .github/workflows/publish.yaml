@@ -7,13 +7,12 @@ on:
 
 jobs:
   publish:
+    if: github.actor != 'weka-version-bumper[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
     steps:
-      - run: echo ${{ github.actor_id }}
-      - run: echo ${{ github.actor }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
