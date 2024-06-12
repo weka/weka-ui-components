@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    if: github.event.actor.login != 'github-actions'
+    if: github.actor != 'weka-version-bumper'
     runs-on: ubuntu-latest
     permissions:
       contents: write
