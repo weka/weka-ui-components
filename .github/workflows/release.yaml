@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "tag=$(gh release view --json tagName | jq .tagName -r)" >> $GITHUB_OUTPUT
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: Get tag from the latest release
+      - run: echo ${{ steps.release.outputs.tag }}
+        name: Print latest release tag
+      - run: yarn version --minor --no-git-tag-version
+        name: Bump minor version
+      - run: echo "tag=$(jq .version package.json -r)" >> $GITHUB_OUTPUT
+        name: Print future release version
+        id: version_bump
+      - run: gh release create ${{ steps.version_bump.outputs.tag }} --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: Create the release
