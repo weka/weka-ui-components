@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+concurrency:
+  group: release
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -12,6 +15,19 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@weka'
+      - run: yarn install
+      - run: yarn build
+      - run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@users.noreply.github.com'
+      - run: git add dist/
+      - run: git status
       - run: echo "tag=$(gh release view --json tagName | jq .tagName -r)" >> $GITHUB_OUTPUT
         id: release
         env:
@@ -24,7 +40,6 @@ jobs:
       - run: echo "tag=$(jq .version package.json -r)" >> $GITHUB_OUTPUT
         name: Print future release version
         id: version_bump
-      - run: gh release create ${{ steps.version_bump.outputs.tag }} --generate-notes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        name: Create the release
+      - run: git commit -m 'build ${{ steps.version_bump.outputs.tag }}'
+      - run: git tag ${{ steps.version_bump.outputs.tag }}
+      - run: git push -u --tags
