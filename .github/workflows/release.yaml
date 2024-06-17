@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   publish:
-    if: github.actor_id != '919414'
+    if: github.actor != 'weka-version-bumper[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
