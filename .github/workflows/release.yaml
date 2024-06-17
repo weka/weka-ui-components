@@ -10,6 +10,7 @@ concurrency:
 
 jobs:
   publish:
+    if: github.actor_id != '919414'
     runs-on: ubuntu-latest
     permissions:
       contents: write
