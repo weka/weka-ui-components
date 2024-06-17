@@ -40,6 +40,8 @@ jobs:
       - run: echo "tag=$(jq .version package.json -r)" >> $GITHUB_OUTPUT
         name: Print future release version
         id: version_bump
+      - run: git add package.json
       - run: git commit -m 'build ${{ steps.version_bump.outputs.tag }}'
       - run: git tag ${{ steps.version_bump.outputs.tag }}
-      - run: git push -u --tags
+      - run: git push origin main
+      - run: git push origin tag ${{ steps.version_bump.outputs.tag }}
