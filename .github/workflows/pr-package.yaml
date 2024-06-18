@@ -20,23 +20,27 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@weka'
 
-      - run: echo "$(jq '.version="${{ github.head_ref }}"' package.json)" > package.json
+      - name: Prepare package version
+        run: echo "name=$(echo ${{ github.head_ref }} | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+        id: version
+
+      - run: echo "${{ steps.version.outputs.name }}" > package.json
 
       - run: yarn install
 
-      - id: version
+      - id: version-published
         run: |
           curl -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/orgs/weka/packages/npm/weka-ui-components/versions >> $HOME/versionIds.json
-            echo "id=$(jq -r '.[] | select(.name == "${{ github.head_ref }}").id' $HOME/versionIds.json)" >> $GITHUB_OUTPUT
+            echo "id=$(jq -r '.[] | select(.name == "${{ steps.version.outputs.name }}").id' $HOME/versionIds.json)" >> $GITHUB_OUTPUT
 
-      - run: echo "${{ steps.version.outputs.id }}"
+      - run: echo "${{ steps.version-published.outputs.id }}"
 
       - uses: actions/delete-package-versions@v5
         with:
-          package-version-ids: ${{ steps.version.outputs.id }}
+          package-version-ids: ${{ steps.version.outputs.name }}
           package-name: weka-ui-components
           package-type: npm
-        if: ${{ steps.version.outputs.id }}
+        if: ${{ steps.version-published.outputs.id }}
 
       - run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
 
