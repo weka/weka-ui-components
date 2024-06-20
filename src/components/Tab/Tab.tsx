@@ -4,6 +4,7 @@ import { EMPTY_STRING } from '../../consts'
 import { Link } from 'react-router-dom'
 import Tooltip from '../Tooltip'
 import { Info } from '../../svgs'
+import ValidityIndicator from './ValidityIndicator'
 
 import './tab.scss'
 
@@ -18,7 +19,8 @@ interface TabProps {
   isSubTab?: boolean
   navigateTo?: string
   info?: string
-  hasIncompleteFields?: boolean
+  hasValidIndicator?: boolean
+  unfilledFields?: unknown[]
 }
 
 function Tab(props: TabProps) {
@@ -33,7 +35,8 @@ function Tab(props: TabProps) {
     isSubTab = false,
     navigateTo,
     info,
-    hasIncompleteFields
+    hasValidIndicator = false,
+    unfilledFields
   } = props
   const cls = clsx({
     'custom-tab': true,
@@ -46,15 +49,23 @@ function Tab(props: TabProps) {
 
   const tabContent = (
     <div className={cls} onClick={setActive}>
-      {info && (
-        <Tooltip data={info}>
-          <Info className='tab-info' />
-        </Tooltip>
-      )}
-      <div className='tab-title'>
-        {title}
-        {hasIncompleteFields && (
-          <span className='required-star tab-title-required-star'>*</span>
+      <div className='tab-title-wrapper'>
+        <div className='tab-title'>{title}</div>
+        {(info || hasValidIndicator) && (
+          <div className='tab-indicators'>
+            {info && (
+              <Tooltip data={info}>
+                <Info className='tab-info' />
+              </Tooltip>
+            )}
+            {hasValidIndicator && (
+              <div>
+                <ValidityIndicator
+                  invalidFieldsLength={unfilledFields?.length || 0}
+                />
+              </div>
+            )}
+          </div>
         )}
       </div>
       {subComponent}

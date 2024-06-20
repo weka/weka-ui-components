@@ -30,7 +30,17 @@
     }
   }
 
+  .tab-title-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
   .tab-title {
+    display: flex;
     color: var(--ironhide-s3);
     font-weight: bold;
     font-family: var(--bold-font);
@@ -105,11 +115,16 @@
     }
   }
 
+  .tab-indicators {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
   .tab-info {
-    right: 4px;
-    top: 4px;
     height: 14px;
-    position: absolute;
   }
 }
 
