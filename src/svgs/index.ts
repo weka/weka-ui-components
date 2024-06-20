@@ -33,3 +33,4 @@ export { ReactComponent as ColumnResizeReset } from './189-column-resize-reset-1
 export { ReactComponent as FontSizeEnlarge } from './193-fontSize-enlarge-16.svg'
 export { ReactComponent as FontSizeReduce } from './194-fontSize-reduce-16.svg'
 export { ReactComponent as Search } from './047-search-16.svg'
+export { ReactComponent as CheckmarkSmall } from './217-checkmark-10.svg'

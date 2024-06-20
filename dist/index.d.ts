@@ -413,7 +413,8 @@ interface TabProps {
     isSubTab?: boolean;
     navigateTo?: string;
     info?: string;
-    hasIncompleteFields?: boolean;
+    hasValidIndicator?: boolean;
+    unfilledFields?: unknown[];
 }
 declare function Tab(props: TabProps): JSX.Element;
 
