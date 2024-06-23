@@ -59,7 +59,7 @@ function IpTextBox(props: IpTextBoxProps) {
       Utils.goToNextInput()
     }
     setIpParts(newIpParts)
-    if (newIpParts.some(Utils.isEmpty)) {
+    if (isRequired && newIpParts.some(Utils.isEmpty)) {
       onChange(EMPTY_STRING)
     } else {
       onChange(newIpParts.join('.'))
