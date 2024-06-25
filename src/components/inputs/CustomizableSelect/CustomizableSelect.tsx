@@ -130,7 +130,10 @@ function CustomizableSelect(props: CustomizableSelectProps) {
         onKeyDown={onKeyDown}
         isDisabled={disabled}
         placeholder={placeholder}
-        onChange={(newVal) => onChange(newVal?.value)}
+        onChange={(newVal: Option | null) => {
+          const newValue = newVal?.value ?? EMPTY_STRING
+          onChange(newValue)
+        }}
         options={
           sortOptions ? Utils.insensitiveSort(options, 'label') : options
         }
