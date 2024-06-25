@@ -303,9 +303,7 @@ interface TagsInputProps {
 }
 declare function TagsInput(props: TagsInputProps): JSX.Element;
 
-interface ParsedData {
-    [key: string]: any;
-}
+type ParsedData = [string, unknown][];
 
 type TextEditorProviderProps = {
     pageStorageKey?: string;

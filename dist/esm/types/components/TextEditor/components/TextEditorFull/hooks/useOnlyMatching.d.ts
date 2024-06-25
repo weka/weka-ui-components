@@ -1,6 +1,4 @@
-export interface ParsedData {
-    [key: string]: any;
-}
+export type ParsedData = [string, unknown][];
 declare function useOnlyMatching({ allowSearch, onlyMatching, searchValue, value, valueForMatched }: {
     allowSearch: boolean;
     onlyMatching: boolean;
