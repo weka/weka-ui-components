@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export interface ParsedData {
-  [key: string]: any
-}
+export type ParsedData = [string, unknown][]
 
 function useOnlyMatching({
   allowSearch,
@@ -19,24 +17,29 @@ function useOnlyMatching({
 }) {
   const [jsonValue, setJsonValue] = useState(value)
 
-  const getFilteredValue = useCallback(() => {
-    const searchTerm = searchValue.toLowerCase()
-    const filtered = Object.entries(valueForMatched).reduce<
-      Record<string, string | number | boolean>
-    >((acc, [key, value]) => {
-      if (
-        key.toLowerCase().includes(searchTerm) ||
-        `${value}`.toLowerCase().includes(searchTerm)
-      ) {
-        acc[key] = value
+  useEffect(() => {
+    const getFilteredValue = () => {
+      if (!valueForMatched) {
+        return value
       }
 
-      return acc
-    }, {})
-    return JSON.stringify(filtered, null, 2)
-  }, [valueForMatched, searchValue])
+      const searchTerm = searchValue.toLowerCase()
+      const filtered = valueForMatched.reduce<Record<string, unknown>>(
+        (acc, [key, value]) => {
+          if (
+            key.toLowerCase().includes(searchTerm) ||
+            `${value}`.toLowerCase().includes(searchTerm)
+          ) {
+            acc[key] = value
+          }
 
-  useEffect(() => {
+          return acc
+        },
+        {}
+      )
+      return JSON.stringify(filtered, null, 2)
+    }
+
     if (allowSearch) {
       if (onlyMatching && valueForMatched) {
         setJsonValue(getFilteredValue())
@@ -44,14 +47,7 @@ function useOnlyMatching({
         setJsonValue(value)
       }
     }
-  }, [
-    onlyMatching,
-    searchValue,
-    allowSearch,
-    getFilteredValue,
-    value,
-    valueForMatched
-  ])
+  }, [onlyMatching, searchValue, allowSearch, value, valueForMatched])
 
   return jsonValue
 }
