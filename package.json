@@ -9,8 +9,8 @@
   },
   "type": "module",
   "version": "3.12.0",
-  "module": "lib/weka-ui-components.js",
-  "types": "lib/main.d.ts",
+  "module": "dist/weka-ui-components.js",
+  "types": "dist/main.d.ts",
   "scripts": {
     "build": "vite build",
     "prepublish": "python scripts/prepare-for-release.py",
