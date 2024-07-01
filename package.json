@@ -9,15 +9,15 @@
   },
   "type": "module",
   "version": "3.12.0",
-  "module": "dist/weka-ui-components.js",
-  "types": "dist/main.d.ts",
+  "module": "lib/weka-ui-components.js",
+  "types": "lib/main.d.ts",
   "scripts": {
     "build": "vite build",
+    "prepublish": "python scripts/prepare-for-release.py",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -c .storybook",
     "predeploy-storybook": "yarn run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static",
-    "prepublish": "yarn run build"
+    "deploy-storybook": "gh-pages -d storybook-static"
   },
   "files": [
     "dist"
