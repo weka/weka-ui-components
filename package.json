@@ -8,7 +8,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "3.12.0",
+  "version": "3.13.0",
   "module": "dist/weka-ui-components.js",
   "types": "dist/main.d.ts",
   "scripts": {
