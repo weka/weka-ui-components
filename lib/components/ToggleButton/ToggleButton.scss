@@ -39,6 +39,16 @@
       color: var(--neutral-t4);
     }
   }
+  &-small {
+    .toggle-button-option {
+      text-transform: uppercase;
+      font-weight: bold;
+      font-family: var(--bold-font);
+      font-size: 10px;
+      min-width: 60px;
+      padding: 1px 8px;
+    }
+  }
 }
 
 

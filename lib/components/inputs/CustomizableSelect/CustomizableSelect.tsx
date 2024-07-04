@@ -12,7 +12,7 @@ import MenuList from '../Select/MenuList'
 import { getStyle } from '../Select/Select'
 import Utils from '../../../utils'
 
-import './customizableSelect.module.scss'
+import './customizableSelect.scss'
 
 interface CustomizableSelectProps {
   onChange?: (newVal: unknown) => void

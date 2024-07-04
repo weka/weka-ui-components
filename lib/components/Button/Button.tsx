@@ -1,8 +1,9 @@
 import React, { MouseEventHandler } from 'react'
 import clsx from 'clsx'
 import { CircularProgress } from '@mui/material'
-import './button.scss'
 import { EMPTY_STRING } from '../../consts'
+
+import './button.scss'
 
 export interface ButtonProps {
   children: any
@@ -38,6 +39,7 @@ function Button(props: ButtonProps) {
     loading: isLoading,
     disable
   })
+
   return (
     // eslint-disable-next-line react/button-has-type
     <button
@@ -50,7 +52,10 @@ function Button(props: ButtonProps) {
       {!isLoading ? (
         <div className='btn-children-wrapper'>{children}</div>
       ) : (
-        <CircularProgress size={17} sx={{ color: 'currentColor' }} />
+        <CircularProgress
+          size={small ? 11 : 17}
+          sx={{ color: 'currentColor' }}
+        />
       )}
     </button>
   )
