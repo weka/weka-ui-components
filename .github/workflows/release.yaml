@@ -24,6 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
+          ref: build
 
       - uses: actions/setup-node@v4
         with:
@@ -32,11 +33,13 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@weka'
 
-      - name: Checkout build branch
-        run: git checkout build
+      - name: Fetch main branch
+        run: git fetch origin main
 
       - name: Merge main branch into build branch
-        run: git merge main
+        run: git merge origin/main
+
+      - run: yarn install
 
       - run: yarn run prepare-for-release --force
 
