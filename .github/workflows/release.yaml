@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - build
+      - main
 
 concurrency:
   group: release
@@ -20,29 +20,57 @@ jobs:
         with:
           app-id: 919414
           private-key: ${{ secrets.WEKA_VERSION_BUMPER_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'yarn'
           registry-url: https://npm.pkg.github.com/
           scope: '@weka'
-      - run: yarn install
-      - run: yarn build
+
+      - name: Checkout build branch
+        run: git checkout build
+
+      - name: Merge main branch into build branch
+        run: git merge main
+
+      - run: yarn run prepare-for-release --force
+
       - run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@users.noreply.github.com'
-      - run: git add dist/
+
+      - run: git add .
+
       - run: git status
-      - run: yarn version --minor --no-git-tag-version
-        name: Bump minor version
+
+      - name: Bump minor version
+        run: yarn version --minor --no-git-tag-version
+
       - run: echo "tag=$(jq .version package.json -r)" >> $GITHUB_OUTPUT
         name: Print future release version
         id: version_bump
+
       - run: git add package.json
-      - run: git commit -m 'build ${{ steps.version_bump.outputs.tag }}'
+
+      - run: git commit -m 'prepublish ${{ steps.version_bump.outputs.tag }}'
+
       - run: git tag ${{ steps.version_bump.outputs.tag }}
-      - run: git push origin main
+
+      - run: git push -f origin build
+
       - run: git push origin tag ${{ steps.version_bump.outputs.tag }}
+
+      - run: git checkout main
+
+      - run: yarn version --minor --no-git-tag-version
+
+      - run: git add package.json
+
+      - run: git commit -m 'prepublish ${{ steps.version_bump.outputs.tag }}'
+
+      - run: git push origin main
