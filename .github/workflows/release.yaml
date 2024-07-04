@@ -37,7 +37,7 @@ jobs:
         run: git fetch origin main
 
       - name: Merge main branch into build branch
-        run: git merge origin/main
+        run: git merge origin/main --allow-unrelated-histories
 
       - run: yarn install
 
