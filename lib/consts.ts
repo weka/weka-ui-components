@@ -196,3 +196,7 @@ export const ORIGIN_OPTIONS = {
   USER: 'USER',
   WEKA: 'WEKA'
 }
+
+// CUSTOM EVENTS
+export const STORAGE = 'storage'
+export const SCHEME_CHANGE = 'schemeChange'
