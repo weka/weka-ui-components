@@ -74,7 +74,7 @@ function DarkModeSwitch() {
         <div className='dark-mode-switch-tooltip'>
           <div>
             Switch to
-            {isDarkMode ? 'light' : 'dark'}
+            {isDarkMode ? ' light ' : ' dark '}
             mode
           </div>
           <label
