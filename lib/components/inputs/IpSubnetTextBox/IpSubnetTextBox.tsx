@@ -38,6 +38,7 @@ interface IpSubnetTextBoxProps {
   error?: string
   info?: string
   shouldConvertSubnet2Mask?: boolean
+  fixedSubnet: number
 }
 
 function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
@@ -50,10 +51,11 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     isRequired,
     info,
     shouldConvertSubnet2Mask = true,
+    fixedSubnet,
     ...rest
   } = props
   const { disabled } = rest
-  const [ipVal, subnet] = value ? value.split('/') : ['...', '']
+  const [ipVal, subnet] = value ? value.split('/') : ['...', fixedSubnet ?? '']
   const [ipParts, setIpParts] = useState<any[]>(
     shouldConvertSubnet2Mask
       ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
@@ -119,7 +121,8 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
               value={ipParts[inputIndex]}
               onKeyDown={keyDown}
               type='number'
-              onChange={(newValue) => setIpPart(inputIndex, newValue)}
+              readOnly={!!fixedSubnet && inputIndex === 4}
+              onChange={(newValue) => setIpPart(inputIndex, newValue )}
               {...rest}
             />
             {['.', '.', '.', '/'][inputIndex]}
