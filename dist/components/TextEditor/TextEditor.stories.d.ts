@@ -1,0 +1,6 @@
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { default as React } from 'react';
+
+declare const _default: ComponentMeta<React.MemoExoticComponent<(props: import('./components/TextEditorFull/TextEditorFull').TextEditorFullProps) => JSX.Element>>;
+export default _default;
+export declare const TextEditor: ComponentStory<React.MemoExoticComponent<(props: import('./components/TextEditorFull/TextEditorFull').TextEditorFullProps) => JSX.Element>>;
