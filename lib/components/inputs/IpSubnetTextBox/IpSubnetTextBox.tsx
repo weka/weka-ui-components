@@ -47,7 +47,7 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     onChange = NOP,
     value,
     error,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     isRequired,
     info,
     shouldConvertSubnet2Mask = true,
@@ -55,7 +55,7 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     ...rest
   } = props
   const { disabled } = rest
-  const [ipVal, subnet] = value ? value.split('/') : ['...', fixedSubnet ?? '']
+  const [ipVal, subnet] = value ? value.split('/') : ['...', fixedSubnet ?? EMPTY_STRING]
   const [ipParts, setIpParts] = useState<any[]>(
     shouldConvertSubnet2Mask
       ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
