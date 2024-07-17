@@ -1,8 +1,8 @@
-import '../src/style/theme.scss'
-import '../src/style/app.scss'
+import '../lib/style/theme.scss'
+import '../lib/style/app.scss'
+import '../lib/style/fonts.scss'
 
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
       color: /(background|color)$/i,
@@ -10,3 +10,4 @@ export const parameters = {
     },
   },
 }
+export const tags = ['autodocs'];

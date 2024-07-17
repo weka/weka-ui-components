@@ -1,16 +1,19 @@
+import type { Meta, StoryObj } from 'storybook-solidjs'
+import { ButtonProps, default as ButtonComponent } from './Button'
 import React from 'react'
-import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import  { default as ButtonComponent } from "./Button"
+const meta: Meta<typeof ButtonComponent> = {
+  component: ButtonComponent
+}
 
-export default {
-  title: "Components/Button",
-  component: ButtonComponent,
-} as ComponentMeta<typeof ButtonComponent>
+export default meta
+type Story = StoryObj<typeof ButtonComponent>
 
-const Template: ComponentStory<typeof ButtonComponent> = args => <ButtonComponent {...args} />
-
-export const Button = Template.bind({})
-Button.args = {
-  children: 'Primary'
+export const Default: Story = {
+  args: {
+    children: 'Primary'
+  },
+  render: (args: ButtonProps) => (
+    <ButtonComponent {...args}>{args.children}</ButtonComponent>
+  )
 }

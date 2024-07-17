@@ -8,6 +8,17 @@
   --bold-font: 'IBMPlexSans Bold', 'Exo 2', 'Roboto', sans-serif;
 }
 
+@font-face {
+  font-family: 'IBMPlexSans';
+  src: url('../fonts/IBMPlexSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'IBMPlexSans Bold';
+  font-weight: 700;
+  src: url('../fonts/IBMPlexSans-Bold.ttf');
+}
+
 /* Character Styles */
 .field-1-errormessage {
 
@@ -17,10 +28,8 @@
 }
 
 .field-1-label-error {
-
-
   font-weight: bold;
-font-family: var(--bold-font);
+  font-family: var(--bold-font);
   font-size: 8px;
   color: var(--focus-key);
   text-transform: uppercase;
@@ -30,7 +39,7 @@ font-family: var(--bold-font);
 .field-1-label-infocus {
 
   font-weight: bold;
-font-family: var(--bold-font);
+  font-family: var(--bold-font);
   font-size: 8px;
   letter-spacing: var(--unnamed-character-spacing-0-16);
   color: var(--main-color);
@@ -40,7 +49,7 @@ font-family: var(--bold-font);
 .field-1-label-regular {
 
   font-weight: bold;
-font-family: var(--bold-font);
+  font-family: var(--bold-font);
   font-size: 8px;
   letter-spacing: var(--unnamed-character-spacing-0-16);
   color: var(--ironhide-s2);
@@ -95,12 +104,13 @@ font-family: var(--bold-font);
   letter-spacing: var(--unnamed-character-spacing-0);
   color: var(--ironhide-s3);
 }
+
 .bold-heading-2 {
   font-size: 18px;
   letter-spacing: var(--unnamed-character-spacing-0);
   color: var(--ironhide-s3);
   font-weight: bold;
-font-family: var(--bold-font);
+  font-family: var(--bold-font);
 }
 
 .d-heading-2 {
@@ -160,7 +170,7 @@ font-family: var(--bold-font);
   letter-spacing: var(--unnamed-character-spacing-0);
   color: var(--main-color);
 
-  &[disabled]{
+  &[disabled] {
     color: var(--ironhide-key);
   }
 }
@@ -249,6 +259,7 @@ font-family: var(--bold-font);
   color: var(--main-color);
   cursor: pointer;
 }
+
 .small-field-btn__disabled {
   font-size: 12px;
   letter-spacing: var(--unnamed-character-spacing-0);
@@ -297,7 +308,7 @@ font-family: var(--bold-font);
 .page-headline {
   color: var(--main-color);
   font-weight: bold;
-font-family: var(--bold-font);
+  font-family: var(--bold-font);
   font-size: 16px;
   text-transform: uppercase;
 }
@@ -310,7 +321,7 @@ font-family: var(--bold-font);
 }
 
 .multi-settings-headline {
-    font-weight: bold;
+  font-weight: bold;
   font-family: var(--bold-font);
   font-size: 14px;
   letter-spacing: var(--unnamed-character-spacing-0);

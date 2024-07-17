@@ -1,15 +1,18 @@
-import {default as NewPasswordTooltipComponent} from './NewPasswordTooltip'
-import {ComponentMeta, ComponentStory} from "@storybook/react";
-import React from 'react';
+import type { Meta, StoryObj } from 'storybook-solidjs'
+import { default as NewPasswordTooltipComponent } from './NewPasswordTooltip'
+import React from 'react'
 
-export default {
-    title: "Components/NewPasswordTooltip",
-    component: NewPasswordTooltipComponent
-} as ComponentMeta<typeof NewPasswordTooltipComponent>
+const meta: Meta<typeof NewPasswordTooltipComponent> = {
+  component: NewPasswordTooltipComponent,
+  title: 'Components/NewPasswordTooltip'
+}
 
-const Template: ComponentStory<typeof NewPasswordTooltipComponent> = args => (<NewPasswordTooltipComponent {...args} />)
+export default meta
+type Story = StoryObj<typeof NewPasswordTooltipComponent>
 
-export const NewPasswordTooltip = Template.bind({})
-NewPasswordTooltip.args = {
+export const Default: Story = {
+  args: {
     passValue: ''
+  },
+  render: (args: object) => <NewPasswordTooltipComponent {...args} />
 }

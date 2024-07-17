@@ -5,15 +5,17 @@ import clsx from 'clsx'
 
 import './info.scss'
 
-interface InfoProps {
+export interface InfoProps {
   data: ReactElement | string
   extraClass?: string
 }
+
 function Info({ data, extraClass }: InfoProps) {
   return (
-    <Tooltip data={data} placement='right'>
+    <Tooltip data={data}>
       <InfoSvg className={clsx('component-info', extraClass)} />
     </Tooltip>
   )
 }
+
 export default Info
