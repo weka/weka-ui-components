@@ -72,6 +72,10 @@ export const getStyle = (hasError, hasLabel) => ({
     },
     '>svg': { transform: state.selectProps.menuIsOpen && 'rotate(180deg)' }
   }),
+  loadingIndicator: (base) => ({
+    ...base,
+    color: 'var(--main-color)'
+  }),
   option: (base, { isDisabled }) => ({
     ...base,
     color: 'var(--text-color)',
@@ -102,6 +106,7 @@ interface SelectProps {
   groupedOptions?: boolean
   isSingleClearable?: boolean
   expandInputOnFocus?: boolean
+  getAsyncOptions?: () => Promise<Option[]>
 }
 
 function Select(props: SelectProps) {
@@ -124,9 +129,21 @@ function Select(props: SelectProps) {
     autoFocus = false,
     groupedOptions = false,
     expandInputOnFocus,
+    getAsyncOptions,
     ...rest
   } = props
-  const [saveOptions, setSaveOptions] = useState(null)
+  const isAsync = !!getAsyncOptions
+  const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
+
+  useEffect(() => {
+    if (isAsync) {
+      getAsyncOptions().then((asyncOptions) => {
+        initialOptionsSetup(asyncOptions)
+      })
+    } else {
+      initialOptionsSetup(options)
+    }
+  }, [JSON.stringify(options)])
 
   const formattedGroupedOptions = useMemo(() => {
     if (groupedOptions) {
@@ -140,15 +157,17 @@ function Select(props: SelectProps) {
     return []
   }, [JSON.stringify(options)])
 
-  useEffect(() => {
-    // this is for a case that the options change while modal open
+  // this is for a case that the options change while modal is open:
+  function initialOptionsSetup(currentOptions: Option[]) {
     setSaveOptions(
-      sortOptions ? Utils.insensitiveSort(options, 'label') : options
+      sortOptions
+        ? Utils.insensitiveSort(currentOptions, 'label')
+        : currentOptions
     )
     if (isMulti) {
       if (value) {
-        const valuesInOptions = value.filter((val) =>
-          options.find((option) => option.value === val)
+        const valuesInOptions = value.filter((val: string | number) =>
+          currentOptions.find((option) => option.value === val)
         )
         if (Utils.isEmpty(valuesInOptions)) {
           onChange([])
@@ -156,10 +175,13 @@ function Select(props: SelectProps) {
           onChange(valuesInOptions)
         }
       }
-    } else if (value && !options.find((option) => option.value === value)) {
+    } else if (
+      value &&
+      !currentOptions.find((option) => option.value === value)
+    ) {
       onChange(EMPTY_STRING)
     }
-  }, [JSON.stringify(options)])
+  }
 
   function onSelectChange(data) {
     if (!isMulti) {
@@ -173,6 +195,24 @@ function Select(props: SelectProps) {
       onChange(data.map((option: Option) => option.value))
     }
   }
+
+  const currentValue = useMemo(() => {
+    const currentOptions = isAsync ? saveOptions : options
+    if (isMulti) {
+      if (value && currentOptions) {
+        return value.map((val: string | number) =>
+          currentOptions.find((option) => option.value === val)
+        )
+      }
+      return EMPTY_STRING
+    }
+    if (groupedOptions) {
+      return formattedGroupedOptions.find((option) => option.value === value)
+    }
+    return (
+      currentOptions?.find((option) => option.value === value) || EMPTY_STRING
+    )
+  }, [isAsync, value, saveOptions])
 
   const wrapperClasses = clsx({
     'select-wrapper': true,
@@ -196,22 +236,12 @@ function Select(props: SelectProps) {
       </span>
       <ReactSelect
         {...rest}
+        isLoading={isAsync && !saveOptions}
         menuPosition='fixed'
         isDisabled={disabled}
         styles={getStyle(!!error, !!label)}
         autoFocus={autoFocus}
-        /* eslint-disable-next-line no-nested-ternary */
-        value={
-          isMulti
-            ? value
-              ? value.map((val) =>
-                  options.find((option) => option.value === val)
-                )
-              : EMPTY_STRING
-            : groupedOptions
-            ? formattedGroupedOptions.find((option) => option.value === value)
-            : options.find((option) => option.value === value) || EMPTY_STRING
-        }
+        value={currentValue}
         options={saveOptions}
         autosize
         isMulti={isMulti}
