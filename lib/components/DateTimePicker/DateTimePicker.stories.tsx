@@ -1,17 +1,12 @@
-import React from 'react'
-import  { default as DateTimePickerComponent } from './DateTimePicker'
-import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { NOP } from '../../consts'
+import type { Meta, StoryObj } from '@storybook/react'
+import { default as DateTimePickerComponent } from './DateTimePicker'
 
-
-export default {
-  title: 'Components/DateTimePicker',
-  component: DateTimePickerComponent
-} as ComponentMeta<typeof DateTimePickerComponent>
-
-const Template: ComponentStory<typeof DateTimePickerComponent> = args => <DateTimePickerComponent {...args} />
-
-export const DateTimePicker = Template.bind({})
-DateTimePicker.args = {
-  onChange: NOP
+const meta: Meta<typeof DateTimePickerComponent> = {
+  component: DateTimePickerComponent,
+  title: 'Components/DateTimePicker'
 }
+export default meta
+
+type Story = StoryObj<typeof DateTimePickerComponent>
+
+export const Default: Story = {}

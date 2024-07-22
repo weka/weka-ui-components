@@ -2,7 +2,7 @@ import React from 'react'
 
 import './emptyPageMessage.scss'
 
-interface EmptyPageMessageProps {
+export interface EmptyPageMessageProps {
   children: any
 }
 function EmptyPageMessage({ children }: EmptyPageMessageProps) {

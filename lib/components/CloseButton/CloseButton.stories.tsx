@@ -1,13 +1,12 @@
-import React from "react"
-import  { default as CloseButtonComponent } from "./CloseButton"
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
+import { default as CloseButtonComponent } from './CloseButton'
 
+const meta: Meta<typeof CloseButtonComponent> = {
+  component: CloseButtonComponent,
+  title: 'Components/CloseButton'
+}
+export default meta
 
-export default {
-  title: "Components/CloseButton",
-  component: CloseButtonComponent
-} as ComponentMeta<typeof CloseButtonComponent>
+type Story = StoryObj<typeof CloseButtonComponent>
 
-const Template: ComponentStory<typeof CloseButtonComponent> = args => <CloseButtonComponent />
-
-export const CloseButton = Template.bind({})
+export const Default: Story = {}

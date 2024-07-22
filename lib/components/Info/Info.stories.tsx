@@ -1,15 +1,18 @@
-import  { default as InfoComponent } from './Info'
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import { default as InfoComponent, InfoProps } from './Info'
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
 
-export default {
-  title: "Components/Info",
+const meta: Meta<typeof InfoComponent> = {
+  title: 'Components/Info',
   component: InfoComponent
-}as ComponentMeta<typeof InfoComponent>
+}
 
-const Template: ComponentStory<typeof InfoComponent> = args => <InfoComponent {...args} />
+export default meta
+type Story = StoryObj<typeof InfoComponent>
 
-export const Info = Template.bind({})
-Info.args = {
-  data: 'Info to show',
+export const Default: Story = {
+  args: {
+    data: 'Info to show'
+  },
+  render: (args: InfoProps) => <InfoComponent {...args} />
 }

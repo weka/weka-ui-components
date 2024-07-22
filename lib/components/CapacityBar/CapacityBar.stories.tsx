@@ -1,22 +1,29 @@
-import React from "react"
-import CapacityBar from "./CapacityBar"
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+import CapacityBar from './CapacityBar'
 
-export default {
-  title: "Components/CapacityBar",
-  component: CapacityBar
-} as ComponentMeta<typeof CapacityBar>
+import React from 'react'
 
-const Template: ComponentStory<typeof CapacityBar> = args => <CapacityBar {...args} />
-
-export const OneUsageCapacity = Template.bind({})
-OneUsageCapacity.args = {
-  firstUsage: 0.5
+const meta: Meta<typeof CapacityBar> = {
+  component: CapacityBar,
+  title: 'Components/CapacityBar'
 }
 
-export const TwoUsageCapacity = Template.bind({})
-TwoUsageCapacity.args = {
-  firstUsage: 0.4,
-  secondUsage: 0.8
+export default meta
+type OneUsageCapacity = StoryObj<typeof CapacityBar>
+
+export const OneUsageCapacity: OneUsageCapacity = {
+  args: {
+    firstUsage: 0.5
+  },
+  render: (args: object) => <CapacityBar {...args} />
 }
 
+type TwoUsageCapacity = StoryObj<typeof CapacityBar>
+
+export const TwoUsageCapacity: TwoUsageCapacity = {
+  args: {
+    firstUsage: 0.4,
+    secondUsage: 0.8
+  },
+  render: (args: object) => <CapacityBar {...args} />
+}

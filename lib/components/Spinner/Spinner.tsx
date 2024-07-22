@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 import './spinner.scss'
 
-interface SpinnerProps {
+export interface SpinnerProps {
   light?: string
 }
 function Spinner({ light }: SpinnerProps) {

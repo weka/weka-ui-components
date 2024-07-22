@@ -1,19 +1,18 @@
+import type { Meta, StoryObj } from 'storybook-solidjs'
 import { default as SpanTooltipComponent } from './SpanTooltip'
-import {ComponentMeta, ComponentStory} from "@storybook/react";
-import React from 'react';
+import React from 'react'
 
-export default {
-  title: "Components/SpanTooltip",
-  component: SpanTooltipComponent
-} as ComponentMeta<typeof SpanTooltipComponent>
+const meta: Meta<typeof SpanTooltipComponent> = {
+  component: SpanTooltipComponent,
+  title: 'Components/SpanTooltip'
+}
 
-const Template: ComponentStory<typeof SpanTooltipComponent> = args => (
-  <div style={{width: '85px', display: 'flex', border: '1px solid black'}}>
-    <SpanTooltipComponent {...args} />
-  </div>
-)
+export default meta
+type Story = StoryObj<typeof SpanTooltipComponent>
 
-export const SpanTooltip = Template.bind({})
-SpanTooltip.args = {
-  children: 'Info to show',
+export const Default: Story = {
+  args: {},
+  render: (args: object) => (
+    <SpanTooltipComponent {...args}>Info to show</SpanTooltipComponent>
+  )
 }

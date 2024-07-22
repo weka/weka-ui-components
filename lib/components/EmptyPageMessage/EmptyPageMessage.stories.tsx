@@ -1,15 +1,22 @@
-import React from "react"
-import  { default as EmptyPageMessageComponent } from "./EmptyPageMessage"
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+import { default as EmptyPageMessageComponent, EmptyPageMessageProps } from './EmptyPageMessage'
+import React from 'react'
 
-export default {
-  title: "Components/EmptyPageMessage",
+const meta: Meta<typeof EmptyPageMessageComponent> = {
   component: EmptyPageMessageComponent,
-} as ComponentMeta<typeof EmptyPageMessageComponent>
+  title: 'Components/EmptyPageMessage'
+}
 
-const Template: ComponentStory<typeof EmptyPageMessageComponent> = args => <EmptyPageMessageComponent {...args} />
+export default meta
+type Story = StoryObj<typeof EmptyPageMessageComponent>
 
-export const EmptyPageMessage = Template.bind({})
-EmptyPageMessage.args = {
-  children: 'Some empty message'
+export const Default: Story = {
+  args: {
+    children: 'Some empty message'
+  },
+  render: (args: EmptyPageMessageProps) => (
+    <EmptyPageMessageComponent {...args}>
+      {args.children}
+    </EmptyPageMessageComponent>
+  )
 }

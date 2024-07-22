@@ -16,6 +16,12 @@ To release a new version of the package:
 1. Open a pull request to the `main` branch.
 2. A new release will be created for each merged PR.
 
+## Storybook
+https://weka.github.io/weka-ui-components
+
+## Run storybook locally
+yarn run storybook
+
 ## Commits Naming
 
 We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). Here are some examples:

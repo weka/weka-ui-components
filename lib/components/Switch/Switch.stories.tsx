@@ -1,15 +1,25 @@
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
 import { default as SwitchComponent } from './Switch'
-import {ComponentMeta, ComponentStory} from "@storybook/react";
-import React from 'react';
+import React, { useState } from 'react'
 
-export default {
-  title: "Components/Switch",
+const meta: Meta<typeof SwitchComponent> = {
   component: SwitchComponent,
-}as ComponentMeta<typeof SwitchComponent>
+  title: 'Components/Switch'
+}
+export default meta
 
-const Template: ComponentStory<typeof SwitchComponent> = args => <SwitchComponent {...args} />
+type Story = StoryObj<typeof SwitchComponent>
 
-export const Switch = Template.bind({})
-Switch.args = {
-  onChange: (value) => { console.log(value)},
+const SwitchWithState = (args: object) => {
+  const [checked, setChecked] = useState(false)
+  const handleOnChange = () => setChecked(!checked)
+  return (
+    <SwitchComponent checked={checked} onChange={handleOnChange} {...args} />
+  )
+}
+
+export const Default: Story = {
+  args: {},
+  render: (args: object) => <SwitchWithState {...args} />
 }

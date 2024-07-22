@@ -1,22 +1,37 @@
 import { default as ToggleButtonComponent } from './ToggleButton'
 import Utils from '../../utils'
-import { useState } from 'react'
-import React from 'react'
+import React, { useState } from 'react'
 
 export default {
-  title: "Components/ToggleButton",
+  title: 'Components/ToggleButton',
   component: ToggleButtonComponent,
   argTypes: {
-    onChange: { description: 'Trigger on click on the ToggleButton', type: { name: 'function', required: true }, },
-    options: { description: 'Array of options', type: { name: 'object', required: true }, },
-    value: { description: 'Control value of the toggle', type: { name: 'string', required: true }, },
-  },
+    onChange: {
+      description: 'Trigger on click on the ToggleButton',
+      type: { name: 'function', required: true }
+    },
+    options: {
+      description: 'Array of options',
+      type: { name: 'object', required: true }
+    },
+    value: {
+      description: 'Control value of the toggle',
+      type: { name: 'string', required: true }
+    }
+  }
 }
 
-const Template = args => {
+const Template = (args: object) => {
   const { options } = args
   const [value, setValue] = useState(options[0].value)
-  return <ToggleButtonComponent {...args} onChange={setValue} value={value} />
+  return (
+    <ToggleButtonComponent
+      {...args}
+      onChange={setValue}
+      value={value}
+      options={options}
+    />
+  )
 }
 
 export const ToggleButton = Template.bind({})
