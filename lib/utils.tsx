@@ -1,86 +1,164 @@
 import React from 'react'
-import Tooltip from './components/Tooltip'
-import { Hide, Show } from './svgs'
-import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from './consts'
+import { toast } from 'react-toastify'
+import { Approve, Hide, Show, Warning } from './svgs'
+import {
+  DIALOG_STATUSES,
+  EMPTY_STRING,
+  TIME_PARTS_SHORTENINGS,
+  TOASTER_DIALOG
+} from './consts'
 import { DateTime, DurationUnits } from 'luxon'
+import { Toast, Tooltip } from './components'
+
+interface CustomEventPayload {
+  status: string
+  message: string
+}
 
 const utils = {
   insensitiveSort,
- isEllipsisActive(element: HTMLElement): boolean {
-   return element.offsetWidth < element.scrollWidth
- },
-  getPasswordIcon(showPassword: boolean, toggleShowPassword: () => void): React.ReactElement {
+  isEllipsisActive(element: HTMLElement): boolean {
+    return element.offsetWidth < element.scrollWidth
+  },
+  getPasswordIcon(
+    showPassword: boolean,
+    toggleShowPassword: () => void
+  ): React.ReactElement {
     if (showPassword) {
       return (
-          <Tooltip data="Hide password" placement="right">
-            <Show onClick={toggleShowPassword} />
-          </Tooltip>
+        <Tooltip data='Hide password' placement='right'>
+          <Show onClick={toggleShowPassword} />
+        </Tooltip>
       )
     }
     return (
-        <Tooltip data="Show password" placement="right">
-          <Hide onClick={toggleShowPassword} />
-        </Tooltip>
-    );
+      <Tooltip data='Show password' placement='right'>
+        <Hide onClick={toggleShowPassword} />
+      </Tooltip>
+    )
   },
-    goToNextInput(): void {
-    const nextInput: HTMLInputElement | null = document.activeElement?.parentElement?.nextElementSibling?.firstElementChild as HTMLInputElement | null
+  goToNextInput(): void {
+    const nextInput: HTMLInputElement | null = document.activeElement
+      ?.parentElement?.nextElementSibling
+      ?.firstElementChild as HTMLInputElement | null
     if (nextInput) {
       nextInput.focus()
       nextInput.select()
     }
   },
   goToPreviousInput(): void {
-    const previousInput: HTMLInputElement | null = document.activeElement?.parentElement?.previousElementSibling?.firstElementChild as HTMLInputElement | null
+    const previousInput: HTMLInputElement | null = document.activeElement
+      ?.parentElement?.previousElementSibling
+      ?.firstElementChild as HTMLInputElement | null
     if (previousInput) {
       previousInput.focus()
       previousInput.select()
     }
   },
   subnet2MaskOp(subnet: string): string {
-  return subnet
-    ? subnet
-      .split('.')
-      .reduce((globalBitMaskCounter: number, byte: string) => (
-        [0, 1, 2, 3, 4, 5, 6, 7]
-          .reduce((bitMaskCounter: number, shiftingIndex: number) => (bitMaskCounter + ((parseInt(byte, 10) >> shiftingIndex) & 1)),
-            globalBitMaskCounter)), 0).toString()
-    : '';
-},
-  formatOption(label: string, value?: any): { label: string, value: any } {
-    return value !== undefined ? {label, value } : { label, value: label };
+    return subnet
+      ? subnet
+          .split('.')
+          .reduce(
+            (globalBitMaskCounter: number, byte: string) =>
+              [0, 1, 2, 3, 4, 5, 6, 7].reduce(
+                (bitMaskCounter: number, shiftingIndex: number) =>
+                  bitMaskCounter + ((parseInt(byte, 10) >> shiftingIndex) & 1),
+                globalBitMaskCounter
+              ),
+            0
+          )
+          .toString()
+      : ''
+  },
+  formatOption(label: string, value?: any): { label: string; value: any } {
+    return value !== undefined ? { label, value } : { label, value: label }
   },
   isEmpty(val: any): boolean {
-    return val === null // null
-        || val === undefined // undefined
-        || val === EMPTY_STRING // empty string
-        || (Array.isArray(val) && !val.length) // empty array
-        || (Object.prototype.toString.call(val) === '[object Number]' && isNaN(val)) /* eslint-disable-line */ // NaN
-        || (typeof val === 'object'
-            && !Object.keys(val).length // empty object
-            && Object.prototype.toString.call(val) !== '[object Date]') // Date
+    return (
+      val === null || // null
+      val === undefined || // undefined
+      val === EMPTY_STRING || // empty string
+      (Array.isArray(val) && !val.length) || // empty array
+      (Object.prototype.toString.call(val) === '[object Number]' &&
+        isNaN(val)) /* eslint-disable-line */ || // NaN
+      (typeof val === 'object' &&
+        !Object.keys(val).length && // empty object
+        Object.prototype.toString.call(val) !== '[object Date]')
+    ) // Date
   },
   isString: (value: unknown): value is string =>
     typeof value === 'string' || value instanceof String,
-  isObject: (value: any): value is Record<string, unknown> => (typeof value === 'object' && (value !== null && !Array.isArray(value))),
+  isObject: (value: any): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null && !Array.isArray(value),
   range(startOrEnd: number, end?: number, step: number = 1): number[] {
-  let newStartOrEnd = startOrEnd;
-  if (!end) {
-    end = newStartOrEnd;
-    newStartOrEnd = 0;
-  }
-  const result: number[] = [];
-  for (let i = newStartOrEnd; i < end; i += step) {
-    result.push(i);
-  }
-  return result;
-},
- mask2SubnetOp(val: number): string {
-  return [255, 255, 255, 255]
-    .map(() => [0, 1, 2, 3, 4, 5, 6, 7]
-     .reduce((rst: number) => (rst * 2 + (val-- > 0 ? 1 : 0)), 0))
-    .join('.')
-},
+    let newStartOrEnd = startOrEnd
+    if (!end) {
+      end = newStartOrEnd
+      newStartOrEnd = 0
+    }
+    const result: number[] = []
+    for (let i = newStartOrEnd; i < end; i += step) {
+      result.push(i)
+    }
+    return result
+  },
+  toastError: (
+    err?: string | Error | { data: string } | unknown,
+    showDialog?: boolean
+  ) => {
+    let message: string
+
+    if (typeof err === 'string') {
+      message = err
+    } else if (err instanceof Error) {
+      message = err.message
+    } else if (err && typeof err === 'object' && 'data' in err) {
+      const errorWithData = err as { data: unknown }
+      if (typeof errorWithData.data === 'string') {
+        message = errorWithData.data
+      } else {
+        message = 'Something went wrong'
+      }
+    } else {
+      message = 'Something went wrong'
+    }
+
+    if (message.length < 75 && !showDialog) {
+      toast.error(<Toast message={message} icon={<Warning />} />, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        icon: false
+      })
+    } else {
+      utils.dispatchCustomEvent(TOASTER_DIALOG, {
+        status: DIALOG_STATUSES.ERROR,
+        message
+      })
+    }
+  },
+  toastSuccess: (message: string, showDialog?: boolean) => {
+    if (message.length < 100 && !showDialog) {
+      toast.success(<Toast message={message} icon={<Approve />} />, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        icon: false
+      })
+    } else {
+      utils.dispatchCustomEvent(TOASTER_DIALOG, {
+        status: DIALOG_STATUSES.SUCCESS,
+        message
+      })
+    }
+  },
+  mask2SubnetOp(val: number): string {
+    return [255, 255, 255, 255]
+      .map(() =>
+        [0, 1, 2, 3, 4, 5, 6, 7].reduce(
+          (rst: number) => rst * 2 + (val-- > 0 ? 1 : 0),
+          0
+        )
+      )
+      .join('.')
+  },
   formatStringOption: (option: string) => ({ label: option, value: option }),
   parseParamsToQuery: (params: { [key: string]: any }) => {
     if (!params) {
@@ -142,7 +220,7 @@ const utils = {
 
       return acc
     }, {}),
-  dispatchCustomEvent: (id: string, data: any) => {
+  dispatchCustomEvent: (id: string, data: CustomEventPayload) => {
     document.dispatchEvent(new CustomEvent(id, { detail: data }))
   },
   isNumber: (value: any) => {
@@ -153,19 +231,24 @@ const utils = {
     }
   },
   isIp: (string: any) => {
-    if (!utils.isString(string)) return false
-    const ValidIpAddressRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
+    if (!utils.isString(string)) {
+      return false
+    }
+    const ValidIpAddressRegex =
+      /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
     if (ValidIpAddressRegex.test(string)) {
       const isValid = (valid: boolean, part: string) => {
         const numPart = parseInt(part, 10)
-        return valid && (numPart >= 0) && (numPart < 256)
+        return valid && numPart >= 0 && numPart < 256
       }
       return string.split('.').reduce(isValid)
     }
     return false
   },
   formatBytes: (bytes: number, decimals = 2) => {
-    if (bytes === 0) return { value: 0, text: 'Bytes' }
+    if (bytes === 0) {
+      return { value: 0, text: 'Bytes' }
+    }
     const isNegative = bytes < 0
     if (isNegative) {
       bytes *= -1
@@ -174,7 +257,10 @@ const utils = {
     const dm = decimals < 0 ? 0 : decimals
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return { value: ((isNegative ? bytes * -1 : bytes) / k ** i).toFixed(dm), text: `${sizes[i]}` }
+    return {
+      value: ((isNegative ? bytes * -1 : bytes) / k ** i).toFixed(dm),
+      text: `${sizes[i]}`
+    }
   },
   formatBytesToString: (bytes: number, decimals?: number) => {
     if (utils.isEmpty(bytes)) {
@@ -183,38 +269,57 @@ const utils = {
     const { value, text } = utils.formatBytes(bytes, decimals)
     return `${value} ${text}`
   },
-  getTimeDiffObject: (time: string) => DateTime.fromISO(time).diffNow(['days', 'hours', 'minutes']).toObject(),
+  getTimeDiffObject: (time: string) =>
+    DateTime.fromISO(time).diffNow(['days', 'hours', 'minutes']).toObject(),
   getTimeDiffString: (time: string, largest = false) => {
-  if (!time) {
-    return EMPTY_STRING
-  }
-  const keys = ['days', 'hours', 'minutes']
-  const diffObject: { [key: string]: any }= utils.getTimeDiffObject(time)
-  let ans = ''
-  keys.forEach((key) => {
-    if (!largest || (largest && ans === '' && diffObject[key])) {
-      if (diffObject[key] < 0) {
-        ans = `${ans} ${Math.round(diffObject[key]) * -1}${key.charAt(0)}`
-      } else {
-        ans = `${ans} ${Math.round(diffObject[key])}${key.charAt(0)}`
-      }
+    if (!time) {
+      return EMPTY_STRING
     }
-  })
-  return ans.trim() || '0m'
+    const keys = ['days', 'hours', 'minutes']
+    const diffObject: { [key: string]: any } = utils.getTimeDiffObject(time)
+    let ans = ''
+    keys.forEach((key) => {
+      if (!largest || (largest && ans === '' && diffObject[key])) {
+        if (diffObject[key] < 0) {
+          ans = `${ans} ${Math.round(diffObject[key]) * -1}${key.charAt(0)}`
+        } else {
+          ans = `${ans} ${Math.round(diffObject[key])}${key.charAt(0)}`
+        }
+      }
+    })
+    return ans.trim() || '0m'
   },
-  formatISODate: (isoDate: string, showMili = true, showSeconds = true, showTime = true) => `${DateTime.fromISO(isoDate).toLocaleString({
-  year: '2-digit',
-  month: '2-digit',
-  day: '2-digit'
-})} ${showTime ? DateTime.fromISO(isoDate).toLocaleString({
-  hour: '2-digit',
-  minute: '2-digit',
-  ...(showSeconds && { second: '2-digit' }),
-  ...(showMili && showSeconds && { fractionalSecondDigits: 3 }),
-  hourCycle: 'h23'
-}) : EMPTY_STRING}`,
-  formatDate: (dateIn: DateTime, showSeconds = true, showMili = true, showTime = true) => {
-    if (!(dateIn instanceof DateTime) && !(Object.getPrototypeOf(dateIn).constructor.name === 'DateTime')) {
+  formatISODate: (
+    isoDate: string,
+    showMili = true,
+    showSeconds = true,
+    showTime = true
+  ) =>
+    `${DateTime.fromISO(isoDate).toLocaleString({
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit'
+    })} ${
+      showTime
+        ? DateTime.fromISO(isoDate).toLocaleString({
+            hour: '2-digit',
+            minute: '2-digit',
+            ...(showSeconds && { second: '2-digit' }),
+            ...(showMili && showSeconds && { fractionalSecondDigits: 3 }),
+            hourCycle: 'h23'
+          })
+        : EMPTY_STRING
+    }`,
+  formatDate: (
+    dateIn: DateTime,
+    showSeconds = true,
+    showMili = true,
+    showTime = true
+  ) => {
+    if (
+      !(dateIn instanceof DateTime) &&
+      !(Object.getPrototypeOf(dateIn).constructor.name === 'DateTime')
+    ) {
       return 'Not Valid DateTime Object'
     }
     return utils.formatISODate(dateIn.toISO(), showMili, showSeconds, showTime)

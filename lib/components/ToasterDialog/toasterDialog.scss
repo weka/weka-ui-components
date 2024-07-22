@@ -1,0 +1,31 @@
+.isToasterDialogSuccess {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+
+    path {
+      fill: var(--complement-key);
+    }
+  }
+}
+
+.isToasterDialogError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+
+    path {
+      fill: var(--focus-key);
+    }
+  }
+}

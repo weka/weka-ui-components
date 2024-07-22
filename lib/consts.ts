@@ -200,3 +200,11 @@ export const ORIGIN_OPTIONS = {
 // CUSTOM EVENTS
 export const STORAGE = 'storage'
 export const SCHEME_CHANGE = 'schemeChange'
+
+//ToasterDialog
+export const DIALOG_STATUSES = {
+  SUCCESS: 'success',
+  ERROR: 'error'
+} as const
+
+export const TOASTER_DIALOG = 'toasterDialog'

@@ -6,19 +6,16 @@ import { Copy } from '../../svgs'
 import './toast.scss'
 
 interface ToastProps {
-    message: any
-    icon: any
+  message: string
+  icon: React.ReactNode
 }
+
 function Toast(props: ToastProps) {
   const { message, icon } = props
   return (
     <div className='toast-wrapper'>
-      <span>
-        {icon}
-      </span>
-      <span className='label-1'>
-        {message}
-      </span>
+      <span>{icon}</span>
+      <span className='label-1'>{message}</span>
       <div className='copy-btn-div'>
         <IconButton
           className='toast-copy'
@@ -34,6 +31,6 @@ function Toast(props: ToastProps) {
   )
 }
 
-Toast.propTypes = {  }
+Toast.propTypes = {}
 
 export default Toast
