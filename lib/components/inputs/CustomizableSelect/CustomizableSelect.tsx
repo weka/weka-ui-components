@@ -33,12 +33,13 @@ interface CustomizableSelectProps {
   customValueValidation?: (val: string) => boolean
   customValueError?: string
   createLabel?: string
+  getAsyncOptions?: () => Promise<Option[]>
 }
 
 function CustomizableSelect(props: CustomizableSelectProps) {
   const {
     onChange = NOP,
-    options,
+    options: localOptions,
     value,
     wrapperClass = EMPTY_STRING,
     label,
@@ -53,10 +54,22 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     customValueValidation = () => true,
     customValueError,
     createLabel = 'Create',
+    getAsyncOptions,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [isMenuOpen, setMenuIsOpen] = useState(false)
+  const [asyncOptions, setAsyncOptions] = useState<Option[] | null>(null)
+  const isAsync = !!getAsyncOptions
+  const options = isAsync ? asyncOptions : localOptions
+
+  useEffect(() => {
+    if (isAsync) {
+      getAsyncOptions().then((asyncOptions) => {
+        setAsyncOptions(asyncOptions)
+      })
+    }
+  }, [])
 
   const onMouseClick = (event: MouseEvent, userInput: string) => {
     event.stopPropagation()
@@ -104,6 +117,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
       </span>
       <CreatableSelect
         {...rest}
+        isLoading={isAsync && !asyncOptions}
         menuPosition='fixed'
         createOptionPosition='first'
         styles={getStyle(!!error, !!label)}
@@ -111,7 +125,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
         onMenuClose={() => setMenuIsOpen(false)}
         menuIsOpen={isMenuOpen}
         value={
-          options.find((option) => option.value === value) ||
+          options?.find((option) => option.value === value) ||
           (value
             ? {
                 label: value,
@@ -135,7 +149,9 @@ function CustomizableSelect(props: CustomizableSelectProps) {
           onChange(newValue)
         }}
         options={
-          sortOptions ? Utils.insensitiveSort(options, 'label') : options
+          sortOptions && options
+            ? Utils.insensitiveSort(options, 'label')
+            : options
         }
         classNamePrefix='react-creatable-select'
         components={{
