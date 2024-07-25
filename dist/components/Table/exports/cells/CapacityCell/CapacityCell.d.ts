@@ -1,0 +1,16 @@
+import { ExtendedCellProps } from '../../../types';
+
+export interface CapacityCellOptions {
+    noDataLabel?: string;
+}
+export interface CapacityCellValue {
+    used: number;
+    total: number;
+    isThin: boolean;
+    maxThin: number;
+    minThin: number;
+    caution: boolean;
+}
+export declare const CapacityCellName = "CapacityCell";
+declare function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>): JSX.Element;
+export default CapacityCell;
