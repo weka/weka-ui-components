@@ -33,7 +33,8 @@ interface CustomizableSelectProps {
   customValueValidation?: (val: string) => boolean
   customValueError?: string
   createLabel?: string
-  getAsyncOptions?: () => Promise<Option[]>
+  getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
+  optionsUrl?: string
 }
 
 function CustomizableSelect(props: CustomizableSelectProps) {
@@ -55,6 +56,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     customValueError,
     createLabel = 'Create',
     getAsyncOptions,
+    optionsUrl,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
@@ -64,12 +66,12 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   const options = isAsync ? asyncOptions : localOptions
 
   useEffect(() => {
-    if (isAsync) {
-      getAsyncOptions().then((asyncOptions) => {
+    if (isAsync && optionsUrl) {
+      getAsyncOptions(optionsUrl).then((asyncOptions) => {
         setAsyncOptions(asyncOptions)
       })
     }
-  }, [])
+  }, [optionsUrl])
 
   const onMouseClick = (event: MouseEvent, userInput: string) => {
     event.stopPropagation()

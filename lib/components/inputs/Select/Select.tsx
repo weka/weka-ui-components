@@ -106,7 +106,8 @@ interface SelectProps {
   groupedOptions?: boolean
   isSingleClearable?: boolean
   expandInputOnFocus?: boolean
-  getAsyncOptions?: () => Promise<Option[]>
+  getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
+  optionsUrl?: string
 }
 
 function Select(props: SelectProps) {
@@ -130,20 +131,21 @@ function Select(props: SelectProps) {
     groupedOptions = false,
     expandInputOnFocus,
     getAsyncOptions,
+    optionsUrl,
     ...rest
   } = props
   const isAsync = !!getAsyncOptions
   const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
 
   useEffect(() => {
-    if (isAsync) {
-      getAsyncOptions().then((asyncOptions) => {
+    if (isAsync && optionsUrl) {
+      getAsyncOptions(optionsUrl).then((asyncOptions) => {
         initialOptionsSetup(asyncOptions)
       })
     } else {
       initialOptionsSetup(options)
     }
-  }, [JSON.stringify(options)])
+  }, [JSON.stringify(options), optionsUrl])
 
   const formattedGroupedOptions = useMemo(() => {
     if (groupedOptions) {
