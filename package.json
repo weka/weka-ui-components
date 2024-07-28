@@ -8,9 +8,9 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "3.24.0",
-  "module": "lib/main.ts",
-  "types": "lib/main.ts",
+  "version": "3.25.0",
+  "module": "dist/weka-ui-components.js",
+  "types": "dist/main.d.ts",
   "scripts": {
     "build": "vite build",
     "prepare-for-release": "python scripts/prepare-for-release.py",
