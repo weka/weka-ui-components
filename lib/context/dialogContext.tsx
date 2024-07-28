@@ -6,9 +6,7 @@ import React, {
   useState
 } from 'react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
-import { ToastContainer } from 'react-toastify'
 import Button from '../components/Button'
-import CloseButton from '../components/CloseButton'
 import {
   Dialog as MuiDialog,
   DialogActions,
@@ -112,10 +110,6 @@ const DialogProvider = (props: DialogProviderProps) => {
   )
 }
 
-const DialogToastContainer = () => (
-  <ToastContainer closeButton={<CloseButton />} limit={3} />
-)
-
 const useDialog = () => {
   const context = useContext(DialogContext)
   if (context === undefined || context === null) {
@@ -125,4 +119,4 @@ const useDialog = () => {
   return context
 }
 
-export { DialogProvider, useDialog, DialogToastContainer }
+export { DialogProvider, useDialog }

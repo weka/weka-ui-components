@@ -1,10 +1,13 @@
 import { Meta, StoryFn } from '@storybook/react'
 
+import { ToastContainer } from 'react-toastify'
+
 import { default as ToasterDialogComponent } from './ToasterDialog'
-import { DialogProvider, DialogToastContainer } from '../../context'
+import { DialogProvider } from '../../context'
 import React from 'react'
 import Utils from '../../utils'
 import Button from '../Button'
+import { CloseButton } from '../index'
 
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -67,7 +70,7 @@ export const Toaster: StoryFn<ToasterStoryArgs> = (args) => (
   <DialogProvider>
     <ToasterStory {...args} />
     <div style={{ paddingTop: '20px' }}>
-      <DialogToastContainer />
+      <ToastContainer closeButton={<CloseButton />} limit={3} />
     </div>
     <ToasterDialogComponent />
   </DialogProvider>
