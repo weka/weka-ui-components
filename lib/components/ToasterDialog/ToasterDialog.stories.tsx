@@ -1,7 +1,8 @@
 import { Meta, StoryFn } from '@storybook/react'
 
 import { default as ToasterDialogComponent } from './ToasterDialog'
-import { DialogProvider, DialogToastContainer } from '../../context'
+import ToasterContainer from '../Toast/ToasterContainer'
+import { DialogProvider } from '../../context'
 import React from 'react'
 import Utils from '../../utils'
 import Button from '../Button'
@@ -67,7 +68,7 @@ export const Toaster: StoryFn<ToasterStoryArgs> = (args) => (
   <DialogProvider>
     <ToasterStory {...args} />
     <div style={{ paddingTop: '20px' }}>
-      <DialogToastContainer />
+      <ToasterContainer />
     </div>
     <ToasterDialogComponent />
   </DialogProvider>
