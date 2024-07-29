@@ -1,6 +1,7 @@
+import React from 'react'
 import { ToastContainer } from 'react-toastify'
 import CloseButton from '../CloseButton'
-import React from 'react'
+
 import 'react-toastify/dist/ReactToastify.css'
 
 const ToasterContainer = () => (
