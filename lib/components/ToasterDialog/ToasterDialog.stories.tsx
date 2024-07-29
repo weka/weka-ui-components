@@ -7,8 +7,6 @@ import React from 'react'
 import Utils from '../../utils'
 import Button from '../Button'
 
-import 'react-toastify/dist/ReactToastify.css'
-
 interface DialogStoryArgs {
   successMessage: string
   errorMessage: string
