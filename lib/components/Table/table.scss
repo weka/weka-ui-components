@@ -153,6 +153,10 @@
     position: relative;
     width: 100%;
 
+    thead, tbody, tr {
+      display: contents;
+    }
+
     thead {
       tr {
         flex: 1;
