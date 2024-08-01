@@ -61,12 +61,13 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [isMenuOpen, setMenuIsOpen] = useState(false)
-  const [asyncOptions, setAsyncOptions] = useState<Option[] | null>(null)
+  const [asyncOptions, setAsyncOptions] = useState<Option[]>([])
   const isAsync = !!getAsyncOptions
   const options = isAsync ? asyncOptions : localOptions
 
   useEffect(() => {
     if (isAsync && optionsUrl) {
+      onChange(EMPTY_STRING)
       getAsyncOptions(optionsUrl).then((asyncOptions) => {
         setAsyncOptions(asyncOptions)
       })
@@ -119,7 +120,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
       </span>
       <CreatableSelect
         {...rest}
-        isLoading={isAsync && !asyncOptions}
+        isLoading={isAsync && asyncOptions.length === 0 && !editValue}
         menuPosition='fixed'
         createOptionPosition='first'
         styles={getStyle(!!error, !!label)}
