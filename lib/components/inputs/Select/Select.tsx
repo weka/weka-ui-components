@@ -244,7 +244,7 @@ function Select(props: SelectProps) {
         styles={getStyle(!!error, !!label)}
         autoFocus={autoFocus}
         value={currentValue}
-        options={saveOptions}
+        options={saveOptions || []}
         autosize
         isMulti={isMulti}
         isClearable={(isMulti && isClearable) || isSingleClearable}
