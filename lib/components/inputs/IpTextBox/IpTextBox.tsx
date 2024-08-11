@@ -4,6 +4,7 @@ import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS, NOP } from '../../../consts'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
+import Copy from '../../Copy'
 
 import './ipTextBox.scss'
 
@@ -26,6 +27,7 @@ interface IpTextBoxProps {
   label: string
   error?: string
   info?: string
+  allowCopy?: boolean
 }
 
 function IpTextBox(props: IpTextBoxProps) {
@@ -37,6 +39,7 @@ function IpTextBox(props: IpTextBoxProps) {
     wrapperClass = '',
     isRequired,
     info,
+    allowCopy,
     ...rest
   } = props
   const { disabled } = rest
@@ -73,6 +76,15 @@ function IpTextBox(props: IpTextBoxProps) {
           <div className='ip-part-value-edit' key={`input_${inputIndex}`}>
             <input
               value={ipParts[inputIndex]}
+              onPaste={(e) => {
+                e.preventDefault()
+                const pastedData = e.clipboardData.getData('text')
+                if (Utils.isIp(pastedData)) {
+                  const ipArr = pastedData.split('.')
+                  setIpParts(ipArr)
+                  onChange(ipArr.join('.'))
+                }
+              }}
               onKeyDown={keyDown}
               type='number'
               onChange={(newValue) => setIpPart(inputIndex, newValue)}
@@ -93,6 +105,7 @@ function IpTextBox(props: IpTextBoxProps) {
           )}
         </span>
       </span>
+      {allowCopy && value && <Copy text={value} />}
       <span className='ip-text-box-error capitalize-first-letter'>{error}</span>
     </div>
   )
