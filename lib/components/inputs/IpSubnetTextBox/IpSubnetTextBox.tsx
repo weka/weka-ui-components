@@ -153,7 +153,7 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
           )}
         </span>
       </span>
-      {allowCopy && value && <Copy text={value} />}
+      {allowCopy && value && Utils.isIpSubnet(value) && <Copy text={value} />}
       <span className='ip-subnet-error capitalize-first-letter'>{error}</span>
     </div>
   )
