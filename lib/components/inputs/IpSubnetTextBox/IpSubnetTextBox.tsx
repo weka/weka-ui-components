@@ -4,6 +4,7 @@ import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS, NOP } from '../../../consts'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
+import Copy from '../../Copy'
 
 import './ipSubnetTextBox.scss'
 
@@ -38,7 +39,8 @@ interface IpSubnetTextBoxProps {
   error?: string
   info?: string
   shouldConvertSubnet2Mask?: boolean
-  fixedSubnet: number
+  fixedSubnet?: number
+  allowCopy?: boolean
 }
 
 function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
@@ -52,6 +54,7 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     info,
     shouldConvertSubnet2Mask = true,
     fixedSubnet,
+    allowCopy,
     ...rest
   } = props
   const { disabled } = rest
@@ -120,9 +123,19 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
             <input
               value={ipParts[inputIndex]}
               onKeyDown={keyDown}
+              onPaste={(e) => {
+                e.preventDefault()
+                const pastedData = e.clipboardData.getData('text')
+                if (Utils.isIpSubnet(pastedData)) {
+                  const [ip, subnet] = pastedData.split('/')
+                  const ipArr = ip.split('.')
+                  setIpParts([...ipArr, fixedSubnet ?? subnet])
+                  onChange(`${ipArr.join('.')}/${fixedSubnet ?? subnet}`)
+                }
+              }}
               type='number'
               readOnly={!!fixedSubnet && inputIndex === 4}
-              onChange={(newValue) => setIpPart(inputIndex, newValue )}
+              onChange={(newValue) => setIpPart(inputIndex, newValue)}
               {...rest}
             />
             {['.', '.', '.', '/'][inputIndex]}
@@ -140,6 +153,7 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
           )}
         </span>
       </span>
+      {allowCopy && value && <Copy text={value} />}
       <span className='ip-subnet-error capitalize-first-letter'>{error}</span>
     </div>
   )

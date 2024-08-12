@@ -245,6 +245,14 @@ const utils = {
     }
     return false
   },
+  isIpSubnet: (string: string) => {
+    if (!utils.isString(string)) {
+      return false
+    }
+    const SubnetMaskRegex = /^([0-9]|[12][0-9]|3[0-2])$/
+    const [ipVal, subnet] = string.split('/')
+    return utils.isIp(ipVal) && SubnetMaskRegex.test(subnet)
+  },
   formatBytes: (bytes: number, decimals = 2) => {
     if (bytes === 0) {
       return { value: 0, text: 'Bytes' }
