@@ -105,7 +105,7 @@ function IpTextBox(props: IpTextBoxProps) {
           )}
         </span>
       </span>
-      {allowCopy && value && <Copy text={value} />}
+      {allowCopy && value && Utils.isIp(value) && <Copy text={value} />}
       <span className='ip-text-box-error capitalize-first-letter'>{error}</span>
     </div>
   )
