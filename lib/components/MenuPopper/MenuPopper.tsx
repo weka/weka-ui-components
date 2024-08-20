@@ -40,7 +40,7 @@ function MenuPopper(props: MenuPopperProps) {
     anchorEl,
     onClickAway,
     items,
-    disablePortal,
+    disablePortal = false,
     extraPopperClass = EMPTY_STRING
   } = props
 
@@ -106,9 +106,5 @@ function MenuPopper(props: MenuPopperProps) {
     </Popper>
   )
 }
-
-MenuPopper.defaultProps = { disablePortal: false }
-
-MenuPopper.propTypes = {}
 
 export default MenuPopper
