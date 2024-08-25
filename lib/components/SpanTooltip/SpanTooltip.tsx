@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../Tooltip'
 import type { TooltipProps } from '../Tooltip'
@@ -11,12 +11,14 @@ type SpanTooltipProps = {
   children: number | string
   extraClasses?: string
   style?: object
+  additionalData?: string
 } & Omit<TooltipProps, 'children' | 'data'>
 
 function SpanTooltip({
   children = EMPTY_STRING,
   extraClasses = EMPTY_STRING,
   style = {},
+  additionalData = EMPTY_STRING,
   ...tooltipProps
 }: SpanTooltipProps) {
   const ref = useRef<HTMLSpanElement | null>(null)
@@ -36,13 +38,21 @@ function SpanTooltip({
       window.removeEventListener('resize', compareSize)
     }
   }, [children])
-  const classes = clsx({
-    [extraClasses]: true,
-    'span-tooltip': true
-  })
+
+  const data = useMemo(() => {
+    if (tooltip && additionalData) {
+      return `${tooltip.toString()}\n\n${additionalData}`
+    }
+    return tooltip?.toString() || additionalData || EMPTY_STRING
+  }, [additionalData, tooltip])
+
   return (
-    <Tooltip data={tooltip?.toString()} {...tooltipProps}>
-      <span className={classes} ref={ref} style={style}>
+    <Tooltip data={data} {...tooltipProps}>
+      <span
+        className={clsx(extraClasses, 'span-tooltip')}
+        ref={ref}
+        style={style}
+      >
         {children}
       </span>
     </Tooltip>
