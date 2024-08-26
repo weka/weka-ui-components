@@ -22,6 +22,10 @@
   .option-wrapper {
     display: flex;
     align-items: center;
+
+    .sub-label {
+      margin-top: 4px;
+    }
   }
 }
 
