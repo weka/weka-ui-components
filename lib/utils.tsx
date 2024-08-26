@@ -15,6 +15,10 @@ interface CustomEventPayload {
   message: string
 }
 
+interface Error {
+  data: { error?: string } | { message?: string } | string | unknown
+}
+
 const utils = {
   insensitiveSort,
   isEllipsisActive(element: HTMLElement): boolean {
@@ -103,25 +107,29 @@ const utils = {
     }
     return result
   },
-  toastError: (
-    err?: string | Error | { data: string } | unknown,
-    showDialog?: boolean
-  ) => {
-    let message: string
+  toastError: (err?: string | Error | unknown, showDialog?: boolean) => {
+    let message = 'Something went wrong'
 
     if (typeof err === 'string') {
       message = err
-    } else if (err instanceof Error) {
+    } else if (
+      err &&
+      typeof err === 'object' &&
+      'message' in err &&
+      typeof err.message === 'string'
+    ) {
       message = err.message
     } else if (err && typeof err === 'object' && 'data' in err) {
-      const errorWithData = err as { data: unknown }
-      if (typeof errorWithData.data === 'string') {
-        message = errorWithData.data
-      } else {
-        message = 'Something went wrong'
+      if (typeof err.data === 'string') {
+        message = err.data
+      } else if (
+        err.data &&
+        typeof err.data === 'object' &&
+        'error' in err.data &&
+        typeof err.data.error === 'string'
+      ) {
+        message = err.data.error
       }
-    } else {
-      message = 'Something went wrong'
     }
 
     if (message.length < 75 && !showDialog) {
