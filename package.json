@@ -9,8 +9,8 @@
   },
   "type": "module",
   "version": "3.35.0",
-  "module": "lib/main.ts",
-  "types": "lib/main.ts",
+  "module": "main.ts",
+  "types": "main.ts",
   "scripts": {
     "build": "vite build",
     "prepare-for-release": "python scripts/prepare-for-release.py",
