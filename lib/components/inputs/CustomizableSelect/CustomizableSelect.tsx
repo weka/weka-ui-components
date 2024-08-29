@@ -35,6 +35,7 @@ interface CustomizableSelectProps {
   createLabel?: string
   getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
   optionsUrl?: string
+  tooltip?: string | ReactElement
 }
 
 function CustomizableSelect(props: CustomizableSelectProps) {
@@ -57,6 +58,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     createLabel = 'Create',
     getAsyncOptions,
     optionsUrl,
+    tooltip,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
@@ -111,79 +113,81 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     'no-label': !label
   })
   return (
-    <FormControl variant='outlined' className={wrapperClasses}>
-      <span className='creatable-select-label field-1-label-content'>
-        {label}
-        {isRequired && <span className='required-star'>*</span>}
-        {!!info && (
-          <Tooltip data={info}>
-            <Info />
-          </Tooltip>
-        )}
-      </span>
-      <CreatableSelect
-        {...rest}
-        isLoading={isLoadingOptions && !editValue && !value}
-        menuPosition='fixed'
-        createOptionPosition='first'
-        styles={getStyle(!!error, !!label)}
-        onMenuOpen={() => setMenuIsOpen(true)}
-        onMenuClose={() => setMenuIsOpen(false)}
-        menuIsOpen={isMenuOpen}
-        value={
-          options?.find((option) => option.value === value) ||
-          (value
-            ? {
-                label: value,
-                value
-              }
-            : EMPTY_STRING)
-        }
-        isClearable={isClearable}
-        inputValue={editValue}
-        onInputChange={setEditValue}
-        onCreateOption={(inputValue) => {
-          if (customValueValidation(inputValue)) {
-            onChange(inputValue)
+    <Tooltip data={tooltip}>
+      <FormControl variant='outlined' className={wrapperClasses}>
+        <span className='creatable-select-label field-1-label-content'>
+          {label}
+          {isRequired && <span className='required-star'>*</span>}
+          {!!info && (
+            <Tooltip data={info}>
+              <Info />
+            </Tooltip>
+          )}
+        </span>
+        <CreatableSelect
+          {...rest}
+          isLoading={isLoadingOptions && !editValue && !value}
+          menuPosition='fixed'
+          createOptionPosition='first'
+          styles={getStyle(!!error, !!label)}
+          onMenuOpen={() => setMenuIsOpen(true)}
+          onMenuClose={() => setMenuIsOpen(false)}
+          menuIsOpen={isMenuOpen}
+          value={
+            options?.find((option) => option.value === value) ||
+            (value
+              ? {
+                  label: value,
+                  value
+                }
+              : EMPTY_STRING)
           }
-        }}
-        onKeyDown={onKeyDown}
-        isDisabled={disabled}
-        placeholder={placeholder}
-        onChange={(newVal: Option | null) => {
-          const newValue = newVal?.value ?? EMPTY_STRING
-          onChange(newValue)
-        }}
-        options={
-          sortOptions && options
-            ? Utils.insensitiveSort(options, 'label')
-            : options || []
-        }
-        classNamePrefix='react-creatable-select'
-        components={{
-          Option: SelectOption,
-          SingleValue,
-          ClearIndicator,
-          MenuList
-        }}
-        formatCreateLabel={(inputValue) => (
-          <div
-            onClick={(event) => onMouseClick(event, inputValue)}
-            className='new-option-input-preview'
-          >
-            {`${createLabel} '${inputValue}'`}
-            {!customValueValidation(inputValue) && (
-              <span className='new-option-invalid'>
-                {` - ${customValueError || 'Invalid value'}`}
-              </span>
-            )}
-          </div>
-        )}
-      />
-      <span className='creatable-select-error capitalize-first-letter'>
-        {error || redInfo(value)}
-      </span>
-    </FormControl>
+          isClearable={isClearable}
+          inputValue={editValue}
+          onInputChange={setEditValue}
+          onCreateOption={(inputValue) => {
+            if (customValueValidation(inputValue)) {
+              onChange(inputValue)
+            }
+          }}
+          onKeyDown={onKeyDown}
+          isDisabled={disabled}
+          placeholder={placeholder}
+          onChange={(newVal: Option | null) => {
+            const newValue = newVal?.value ?? EMPTY_STRING
+            onChange(newValue)
+          }}
+          options={
+            sortOptions && options
+              ? Utils.insensitiveSort(options, 'label')
+              : options || []
+          }
+          classNamePrefix='react-creatable-select'
+          components={{
+            Option: SelectOption,
+            SingleValue,
+            ClearIndicator,
+            MenuList
+          }}
+          formatCreateLabel={(inputValue) => (
+            <div
+              onClick={(event) => onMouseClick(event, inputValue)}
+              className='new-option-input-preview'
+            >
+              {`${createLabel} '${inputValue}'`}
+              {!customValueValidation(inputValue) && (
+                <span className='new-option-invalid'>
+                  {` - ${customValueError || 'Invalid value'}`}
+                </span>
+              )}
+            </div>
+          )}
+        />
+        <span className='creatable-select-error capitalize-first-letter'>
+          {error || redInfo(value)}
+        </span>
+      </FormControl>
+    </Tooltip>
   )
 }
 
