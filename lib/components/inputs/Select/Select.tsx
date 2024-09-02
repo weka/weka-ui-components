@@ -108,6 +108,7 @@ interface SelectProps {
   expandInputOnFocus?: boolean
   getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
   optionsUrl?: string
+  tooltip?: string | ReactElement
 }
 
 function Select(props: SelectProps) {
@@ -132,6 +133,7 @@ function Select(props: SelectProps) {
     expandInputOnFocus,
     getAsyncOptions,
     optionsUrl,
+    tooltip,
     ...rest
   } = props
   const isAsync = !!getAsyncOptions
@@ -226,46 +228,48 @@ function Select(props: SelectProps) {
   })
 
   return (
-    <FormControl variant='outlined' className={wrapperClasses}>
-      <span className='select-label field-1-label-content'>
-        {label}
-        {isRequired && <span className='required-star'>*</span>}
-        {!!info && (
-          <Tooltip data={info}>
-            <Info />
-          </Tooltip>
-        )}
-      </span>
-      <ReactSelect
-        {...rest}
-        isLoading={isAsync && !saveOptions}
-        menuPosition='fixed'
-        isDisabled={disabled}
-        styles={getStyle(!!error, !!label)}
-        autoFocus={autoFocus}
-        value={currentValue}
-        options={saveOptions || []}
-        autosize
-        isMulti={isMulti}
-        isClearable={(isMulti && isClearable) || isSingleClearable}
-        onChange={onSelectChange}
-        classNamePrefix='react-select'
-        dropdownAlign={{ offset: [0, 0] }}
-        components={{
-          Option: SelectOption,
-          SingleValue,
-          MultiValue,
-          ClearIndicator,
-          MenuList
-        }}
-        menuPortalTarget={document.body}
-        closeMenuOnSelect={!isMulti}
-        placeholder={placeholder}
-      />
-      <span className='select-error capitalize-first-letter'>
-        {error || redInfo(value)}
-      </span>
-    </FormControl>
+    <Tooltip data={tooltip}>
+      <FormControl variant='outlined' className={wrapperClasses}>
+        <span className='select-label field-1-label-content'>
+          {label}
+          {isRequired && <span className='required-star'>*</span>}
+          {!!info && (
+            <Tooltip data={info}>
+              <Info />
+            </Tooltip>
+          )}
+        </span>
+        <ReactSelect
+          {...rest}
+          isLoading={isAsync && !saveOptions}
+          menuPosition='fixed'
+          isDisabled={disabled}
+          styles={getStyle(!!error, !!label)}
+          autoFocus={autoFocus}
+          value={currentValue}
+          options={saveOptions || []}
+          autosize
+          isMulti={isMulti}
+          isClearable={(isMulti && isClearable) || isSingleClearable}
+          onChange={onSelectChange}
+          classNamePrefix='react-select'
+          dropdownAlign={{ offset: [0, 0] }}
+          components={{
+            Option: SelectOption,
+            SingleValue,
+            MultiValue,
+            ClearIndicator,
+            MenuList
+          }}
+          menuPortalTarget={document.body}
+          closeMenuOnSelect={!isMulti}
+          placeholder={placeholder}
+        />
+        <span className='select-error capitalize-first-letter'>
+          {error || redInfo(value)}
+        </span>
+      </FormControl>
+    </Tooltip>
   )
 }
 
