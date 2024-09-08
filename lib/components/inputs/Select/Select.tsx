@@ -11,6 +11,7 @@ import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 import Tooltip from '../../Tooltip'
 import MenuList from './MenuList'
+import InputLoader from '../../InputLoader'
 
 import './select.scss'
 
@@ -72,10 +73,6 @@ export const getStyle = (hasError, hasLabel) => ({
     },
     '>svg': { transform: state.selectProps.menuIsOpen && 'rotate(180deg)' }
   }),
-  loadingIndicator: (base) => ({
-    ...base,
-    color: 'var(--main-color)'
-  }),
   option: (base, { isDisabled }) => ({
     ...base,
     color: 'var(--text-color)',
@@ -109,6 +106,14 @@ interface SelectProps {
   getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
   optionsUrl?: string
   tooltip?: string | ReactElement
+}
+
+export const CommonSelectComponents = {
+  Option: SelectOption,
+  SingleValue,
+  ClearIndicator,
+  MenuList,
+  LoadingIndicator: InputLoader
 }
 
 function Select(props: SelectProps) {
@@ -254,13 +259,7 @@ function Select(props: SelectProps) {
           onChange={onSelectChange}
           classNamePrefix='react-select'
           dropdownAlign={{ offset: [0, 0] }}
-          components={{
-            Option: SelectOption,
-            SingleValue,
-            MultiValue,
-            ClearIndicator,
-            MenuList
-          }}
+          components={{ ...CommonSelectComponents, MultiValue }}
           menuPortalTarget={document.body}
           closeMenuOnSelect={!isMulti}
           placeholder={placeholder}

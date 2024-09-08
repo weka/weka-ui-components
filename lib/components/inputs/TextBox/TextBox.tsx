@@ -1,4 +1,4 @@
-import React, { ReactElement, ChangeEvent } from 'react'
+import React, { ReactElement, ChangeEvent, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS } from '../../../consts'
@@ -6,6 +6,7 @@ import useToggle from '../../../hooks/useToggle'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 import { useAutosizeWidth } from './hooks'
+import InputLoader from '../../InputLoader'
 
 import './textBox.scss'
 
@@ -26,6 +27,7 @@ interface TextBoxProps {
   autosize?: boolean
   maxLength?: number
   autofill?: boolean
+  getAsyncDefaultValue?: () => Promise<string>
 }
 
 const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
@@ -45,10 +47,23 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     autosize,
     autofill,
     allowNegative,
+    getAsyncDefaultValue,
     ...rest
   } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
   const inputRef = React.useRef<HTMLInputElement | null>(null)
+  const [isLoadingValue, setLoadingValue] = useState(false)
+  const isAsync = !!getAsyncDefaultValue
+
+  useEffect(() => {
+    if (isAsync) {
+      setLoadingValue(true)
+      getAsyncDefaultValue().then((defaultValue) => {
+        onChange(defaultValue ?? EMPTY_STRING)
+        setLoadingValue(false)
+      })
+    }
+  }, [])
 
   function onTextChange(event: ChangeEvent<HTMLInputElement>) {
     if (!Number.isNaN(event.target.valueAsNumber)) {
@@ -138,6 +153,11 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
         {type === 'password' && (
           <span className='password-icon'>
             {Utils.getPasswordIcon(showPassword, toggleShowPassword)}
+          </span>
+        )}
+        {isLoadingValue && (
+          <span className='loader-wrapper'>
+            <InputLoader />
           </span>
         )}
         <span className='field__label-wrap'>
