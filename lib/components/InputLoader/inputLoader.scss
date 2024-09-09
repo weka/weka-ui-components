@@ -1,0 +1,39 @@
+.input-loader {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  width: 36px;
+  height: 20px;
+}
+
+.loader-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: dots-opacity 1s linear infinite;
+  background-color: var(--main-color);
+}
+
+.loader-dot:nth-child(1) {
+  left: 8px;
+}
+
+.loader-dot:nth-child(2) {
+  left: 16px;
+  animation-delay: 0.2s;
+}
+
+.loader-dot:nth-child(3) {
+  left: 24px;
+  animation-delay: 0.4s;
+}
+
+@keyframes dots-opacity {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}

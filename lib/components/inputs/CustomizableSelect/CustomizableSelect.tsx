@@ -5,11 +5,7 @@ import { EMPTY_STRING, EVENT_KEYS, NOP } from '../../../consts'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
-import SelectOption from '../Select/SelectOption'
-import SingleValue from '../Select/SingleValue'
-import ClearIndicator from '../Select/ClearIndicator'
-import MenuList from '../Select/MenuList'
-import { getStyle } from '../Select/Select'
+import { CommonSelectComponents, getStyle } from '../Select/Select'
 import Utils from '../../../utils'
 
 import './customizableSelect.scss'
@@ -33,9 +29,11 @@ interface CustomizableSelectProps {
   customValueValidation?: (val: string) => boolean
   customValueError?: string
   createLabel?: string
-  getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
+  getAsyncOptions?: (optionsUrl?: string) => Promise<Option[]>
   optionsUrl?: string
   tooltip?: string | ReactElement
+  defaultValueIndex?: number
+  defaultValueKey?: string
 }
 
 function CustomizableSelect(props: CustomizableSelectProps) {
@@ -59,6 +57,8 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     getAsyncOptions,
     optionsUrl,
     tooltip,
+    defaultValueIndex,
+    defaultValueKey,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
@@ -69,12 +69,22 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   const options = isAsync ? asyncOptions : localOptions
 
   useEffect(() => {
-    if (isAsync && optionsUrl) {
+    if (isAsync) {
+      const optionsFunc = optionsUrl
+        ? getAsyncOptions(optionsUrl)
+        : getAsyncOptions()
       onChange(EMPTY_STRING)
       setLoadingOptions(true)
-      getAsyncOptions(optionsUrl).then((asyncOptions) => {
+      optionsFunc.then((asyncOptions) => {
         setAsyncOptions(asyncOptions)
         setLoadingOptions(false)
+        if (!Utils.isEmpty(defaultValueIndex)) {
+          onChange(
+            typeof asyncOptions[defaultValueIndex] === 'string'
+              ? asyncOptions[defaultValueIndex]
+              : asyncOptions[defaultValueIndex].value
+          )
+        }
       })
     }
   }, [optionsUrl])
@@ -163,12 +173,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
               : options || []
           }
           classNamePrefix='react-creatable-select'
-          components={{
-            Option: SelectOption,
-            SingleValue,
-            ClearIndicator,
-            MenuList
-          }}
+          components={CommonSelectComponents}
           formatCreateLabel={(inputValue) => (
             <div
               onClick={(event) => onMouseClick(event, inputValue)}
