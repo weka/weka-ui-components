@@ -103,9 +103,11 @@ interface SelectProps {
   groupedOptions?: boolean
   isSingleClearable?: boolean
   expandInputOnFocus?: boolean
-  getAsyncOptions?: (optionsUrl: string) => Promise<Option[]>
+  getAsyncOptions?: (optionsUrl?: string) => Promise<Option[]>
   optionsUrl?: string
   tooltip?: string | ReactElement
+  defaultValueIndex?: number
+  defaultValueKey?: string
 }
 
 export const CommonSelectComponents = {
@@ -139,15 +141,28 @@ function Select(props: SelectProps) {
     getAsyncOptions,
     optionsUrl,
     tooltip,
+    defaultValueIndex,
+    defaultValueKey,
     ...rest
   } = props
   const isAsync = !!getAsyncOptions
   const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
 
   useEffect(() => {
-    if (isAsync && optionsUrl) {
-      getAsyncOptions(optionsUrl).then((asyncOptions) => {
+    if (isAsync) {
+      const optionsFunc = optionsUrl
+        ? getAsyncOptions(optionsUrl)
+        : getAsyncOptions()
+      optionsFunc.then((asyncOptions) => {
         initialOptionsSetup(asyncOptions)
+        if (!Utils.isEmpty(defaultValueIndex)) {
+          onChange(asyncOptions[defaultValueIndex].value)
+        } else if (!Utils.isEmpty(defaultValueKey)) {
+          onChange(
+            asyncOptions.find((option) => option.value === defaultValueKey)
+              ?.value || EMPTY_STRING
+          )
+        }
       })
     } else {
       initialOptionsSetup(options)
