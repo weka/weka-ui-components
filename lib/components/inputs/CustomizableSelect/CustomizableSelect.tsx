@@ -79,10 +79,11 @@ function CustomizableSelect(props: CustomizableSelectProps) {
         setAsyncOptions(asyncOptions)
         setLoadingOptions(false)
         if (!Utils.isEmpty(defaultValueIndex)) {
+          onChange(asyncOptions[defaultValueIndex].value)
+        } else if (!Utils.isEmpty(defaultValueKey)) {
           onChange(
-            typeof asyncOptions[defaultValueIndex] === 'string'
-              ? asyncOptions[defaultValueIndex]
-              : asyncOptions[defaultValueIndex].value
+            asyncOptions.find((option) => option.value === defaultValueKey)
+              ?.value || EMPTY_STRING
           )
         }
       })

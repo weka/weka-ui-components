@@ -76,6 +76,11 @@
     color: var(--focus-key);
     white-space: nowrap;
   }
+
+  .input-loader {
+    right: 40px;
+  }
+
 }
 
 .select-wrapper-is-multi {
@@ -166,9 +171,5 @@
       .react-select__value-container--is-multi {
       max-height: 196px !important;
     }
-  }
-
-  .input-loader {
-    right: 40px;
   }
 }
