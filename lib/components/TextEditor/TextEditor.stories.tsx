@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from 'storybook-solidjs'
-import { fn } from '@storybook/test'
-import { default as TextEditorComponent } from './components/TextEditorFull/TextEditorFull'
+import { default as TextEditorComponent } from './TextEditor'
 import React from 'react'
 
 const meta: Meta<typeof TextEditorComponent> = {
@@ -12,10 +11,7 @@ type Story = StoryObj<typeof TextEditorComponent>
 
 export const Default: Story = {
   args: {
-    value: JSON.stringify({ key: 'test' }),
-    onClick: fn(),
-    onChange: fn(),
-    onValidate: fn()
+    value: JSON.stringify({ key: 'test' })
   },
   render: (args: object) => (
     <div style={{ height: '500px', display: 'flex' }}>
