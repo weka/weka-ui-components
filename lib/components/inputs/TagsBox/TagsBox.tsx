@@ -51,7 +51,7 @@ function TagsBox(props: TagsBoxProps) {
     invalidTagText,
     disabled,
     isClearable,
-    expandInputOnFocus,
+    expandInputOnFocus = true,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
