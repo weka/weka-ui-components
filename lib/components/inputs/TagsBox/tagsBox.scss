@@ -150,6 +150,21 @@
      color: var(--focus-key);
     font-size: 12px;
   }
+
+  &.expand-input-on-focus {
+    .react-tagsbox__value-container,
+    .react-tagsbox__single-value {
+      max-height: 31px;
+      transition: max-height 0.3s ease;
+    }
+
+    &:focus-within {
+      .react-tagsbox__value-container,
+      .react-tagsbox__single-value {
+        max-height: 196px;
+      }
+    }
+  }
 }
 
 

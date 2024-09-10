@@ -84,7 +84,7 @@ export const getStyle = (hasError, hasLabel) => ({
   })
 })
 
-interface SelectProps {
+export interface SelectProps {
   onChange?: (newVal: any) => void
   isMulti?: boolean
   sortOptions?: boolean
@@ -93,7 +93,7 @@ interface SelectProps {
   value?: any
   info?: any
   wrapperClass?: string
-  error?: any
+  error?: string
   label?: string | ReactElement
   options: any[]
   redInfo?: any

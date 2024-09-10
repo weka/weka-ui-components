@@ -52,7 +52,7 @@ import { customSortingFns } from './tableUtils'
 
 import './table.scss'
 
-interface TableProps<Data, Value> {
+export interface TableProps<Data, Value> {
   columns: ExtendedColumnDef<Data, Value>[]
   data: Data[]
   filterCategory: string

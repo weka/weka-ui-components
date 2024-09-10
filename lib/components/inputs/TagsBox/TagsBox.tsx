@@ -6,16 +6,18 @@ import React, {
   useState
 } from 'react'
 import CreatableSelect from 'react-select/creatable'
+import { MultiValue, MenuPosition } from 'react-select'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
 import { EMPTY_STRING, EVENT_KEYS, TAG_SEPARATOR } from '../../../consts'
 import Utils from '../../../utils'
 import Tooltip from '../../Tooltip'
 import { Info } from '../../../svgs'
+import Option from '../../../types/global'
 
 import './tagsBox.scss'
 
-interface TagsBoxProps {
+export interface TagsBoxProps {
   onChange: (newVal: any) => void
   value: any
   wrapperClass?: string
@@ -29,6 +31,9 @@ interface TagsBoxProps {
   invalidTagText?: string
   disabled?: boolean
   isClearable?: boolean
+  menuPortalTarget?: HTMLElement
+  menuPosition?: MenuPosition
+  expandInputOnFocus?: boolean
 }
 
 function TagsBox(props: TagsBoxProps) {
@@ -46,6 +51,7 @@ function TagsBox(props: TagsBoxProps) {
     invalidTagText,
     disabled,
     isClearable,
+    expandInputOnFocus,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
@@ -64,7 +70,8 @@ function TagsBox(props: TagsBoxProps) {
   const wrapperClasses = clsx({
     [wrapperClass]: true,
     'tagsbox-wrapper': true,
-    'has-error': !!error
+    'has-error': !!error,
+    'expand-input-on-focus': expandInputOnFocus
   })
 
   function onKeyDown(event: KeyboardEvent) {
@@ -106,8 +113,8 @@ function TagsBox(props: TagsBoxProps) {
     }
   }
 
-  function onChangeWrapper(data) {
-    onChange(data.map((val) => val.label))
+  function onChangeWrapper(newValue: MultiValue<Option>) {
+    onChange(newValue.map((val) => val.label))
   }
 
   return (
@@ -137,9 +144,9 @@ function TagsBox(props: TagsBoxProps) {
           <div onClick={onMouseClick} className='tags-user-input-preview'>
             {`'${userInput}'`}
             {editValueError && (
-              <span className='tags-invalid'>{` - ${
-                invalidTagText || 'Invalid value'
-              }`}</span>
+              <span className='tags-invalid'>
+                {` - ${invalidTagText || 'Invalid value'}`}
+              </span>
             )}
           </div>
         )}
@@ -155,4 +162,5 @@ function TagsBox(props: TagsBoxProps) {
     </FormControl>
   )
 }
+
 export default TagsBox
