@@ -15,7 +15,6 @@ import React, { useEffect } from 'react'
 import { useLinesCount, useTags } from './hooks'
 import { useHideContent } from './components/TextEditorFull/hooks'
 
-const maximumCharacters = 10 ** 7
 export const DEFAULT_FONT_SIZE = 16
 
 interface TextEditorProps {
@@ -38,7 +37,7 @@ interface TextEditorProps {
 }
 
 function TextEditor(props: TextEditorProps) {
-  const { value, maxLines, liteMode: outerLiteMode, loading } = props
+  const { value, maxLines, liteMode, loading } = props
   const context = useTextEditorContext(true)
   const setTextEditorContext = context?.setTextEditorContext
   const fontSize = context?.value.fontSize ?? DEFAULT_FONT_SIZE
@@ -46,16 +45,6 @@ function TextEditor(props: TextEditorProps) {
   const filteredValue = useHideContent({ value })
 
   const lines = useTags({ value: filteredValue })
-
-  const isLiteMode =
-    outerLiteMode ?? !!(value && value.length > maximumCharacters)
-
-  useEffect(() => {
-    setTextEditorContext?.((prev) => ({
-      ...prev,
-      isLiteMode
-    }))
-  }, [setTextEditorContext, isLiteMode])
 
   useEffect(() => {
     setTextEditorContext?.((prev) => ({
@@ -70,7 +59,7 @@ function TextEditor(props: TextEditorProps) {
     filteredValue
   })
 
-  return isLiteMode ? (
+  return liteMode ? (
     <TextViewerLite
       key={fontSize}
       value={filteredValue}
