@@ -40,6 +40,7 @@
   "dependencies": {
     "@tanstack/react-table": "^8.14.0",
     "@tanstack/react-virtual": "3.0.0-beta.60",
+    "ace-builds": "^1.36.2",
     "check-password-strength": "^2.0.7",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.3",
