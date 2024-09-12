@@ -244,7 +244,7 @@ function Select(props: SelectProps) {
     'select-wrapper-is-multi': isMulti,
     'has-error': error,
     'no-label': !label,
-    'expand-input-on-focus': expandInputOnFocus ?? isMulti
+    'expand-input-on-focus': expandInputOnFocus
   })
 
   return (
