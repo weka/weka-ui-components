@@ -265,12 +265,16 @@ const utils = {
     if (bytes === 0) {
       return { value: 0, text: 'Bytes' }
     }
+
+    const dm = decimals < 0 ? 0 : decimals
     const isNegative = bytes < 0
     if (isNegative) {
       bytes *= -1
+    } else if (bytes < 1) {
+      return { value: bytes.toFixed(dm), text: 'Bytes' }
     }
+
     const k = 1000
-    const dm = decimals < 0 ? 0 : decimals
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return {
