@@ -108,6 +108,7 @@ export interface SelectProps {
   tooltip?: string | ReactElement
   defaultValueIndex?: number
   defaultValueKey?: string
+  preventCall?: boolean
 }
 
 export const CommonSelectComponents = {
@@ -143,13 +144,14 @@ function Select(props: SelectProps) {
     tooltip,
     defaultValueIndex,
     defaultValueKey,
+    preventCall,
     ...rest
   } = props
   const isAsync = !!getAsyncOptions
   const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
 
   useEffect(() => {
-    if (isAsync) {
+    if (isAsync && !preventCall) {
       const optionsFunc = optionsUrl
         ? getAsyncOptions(optionsUrl)
         : getAsyncOptions()
@@ -167,7 +169,7 @@ function Select(props: SelectProps) {
     } else {
       initialOptionsSetup(options)
     }
-  }, [JSON.stringify(options), optionsUrl])
+  }, [JSON.stringify(options), optionsUrl, preventCall])
 
   const formattedGroupedOptions = useMemo(() => {
     if (groupedOptions) {

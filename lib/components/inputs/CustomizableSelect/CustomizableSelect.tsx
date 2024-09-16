@@ -34,6 +34,7 @@ interface CustomizableSelectProps {
   tooltip?: string | ReactElement
   defaultValueIndex?: number
   defaultValueKey?: string
+  preventCall?: boolean
 }
 
 function CustomizableSelect(props: CustomizableSelectProps) {
@@ -59,6 +60,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     tooltip,
     defaultValueIndex,
     defaultValueKey,
+    preventCall,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
@@ -69,7 +71,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   const options = isAsync ? asyncOptions : localOptions
 
   useEffect(() => {
-    if (isAsync) {
+    if (isAsync && !preventCall) {
       const optionsFunc = optionsUrl
         ? getAsyncOptions(optionsUrl)
         : getAsyncOptions()
@@ -88,7 +90,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
         }
       })
     }
-  }, [optionsUrl])
+  }, [optionsUrl, preventCall])
 
   const onMouseClick = (event: MouseEvent, userInput: string) => {
     event.stopPropagation()
