@@ -82,6 +82,9 @@ function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
             target: '_blank',
             rel: 'noopener noreferrer'
           })}
+          onClick={(e) => {
+            e.stopPropagation()
+          }}
         >
           {cellContent}
         </Link>

@@ -134,6 +134,9 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
         rel: 'noopener noreferrer'
       })}
       className='blocks-cell-link-wrapper'
+      onClick={(e) => {
+        e.stopPropagation()
+      }}
     >
       {cellContent}
     </Link>
