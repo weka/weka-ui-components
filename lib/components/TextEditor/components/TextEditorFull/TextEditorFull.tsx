@@ -33,7 +33,7 @@ export interface TextEditorFullProps {
   extraClass?: string
   allowSearch?: boolean
   allowCopy?: boolean
-  shouldFoldAll?: boolean
+  shouldFoldAll?: boolean | number
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
   mode?: 'text' | 'json'

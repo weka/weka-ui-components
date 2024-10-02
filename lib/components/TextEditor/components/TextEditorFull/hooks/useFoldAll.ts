@@ -7,7 +7,7 @@ function useFoldAll({
   value
 }: {
   editor?: IAceEditor
-  shouldFoldAll: boolean
+  shouldFoldAll: boolean | number
   value: string
 }) {
   useEffect(() => {
@@ -16,7 +16,13 @@ function useFoldAll({
     }
 
     if (shouldFoldAll) {
-      editor.getSession().foldAll(1, editor.getSession().getLength())
+      editor
+        .getSession()
+        .foldAll(
+          1,
+          editor.getSession().getLength(),
+          typeof shouldFoldAll === 'number' ? shouldFoldAll : Infinity
+        )
     } else {
       editor.execCommand('unfoldall')
       editor.scrollToLine(0)
