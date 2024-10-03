@@ -33,7 +33,7 @@ export interface TextEditorFullProps {
   extraClass?: string
   allowSearch?: boolean
   allowCopy?: boolean
-  shouldFoldAll?: boolean | number
+  foldAll?: boolean | number
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
   mode?: 'text' | 'json'
@@ -55,7 +55,7 @@ function TextEditorFull(props: TextEditorFullProps) {
     onValidate,
     allowSearch = false,
     allowCopy = false,
-    shouldFoldAll = false,
+    foldAll = false,
     extraClass = EMPTY_STRING,
     valueForMatched,
     isValueForMatchedLoading = false,
@@ -92,17 +92,17 @@ function TextEditorFull(props: TextEditorFullProps) {
     () => ({
       mode,
       disableFolding: false,
-      shouldFoldAll: editorContextValue?.shouldFoldAll ?? shouldFoldAll,
+      foldAll: editorContextValue?.foldAll ?? foldAll,
       allowSearch: editorContextValue?.allowSearch ?? allowSearch,
       value: lines?.map((line) => line.text).join('\n') ?? value
     }),
     [
       allowSearch,
       editorContextValue?.allowSearch,
-      editorContextValue?.shouldFoldAll,
+      editorContextValue?.foldAll,
       lines,
       mode,
-      shouldFoldAll,
+      foldAll,
       value
     ]
   )
@@ -124,7 +124,7 @@ function TextEditorFull(props: TextEditorFullProps) {
 
   useFoldAll({
     editor,
-    shouldFoldAll: options.shouldFoldAll,
+    foldAll: options.foldAll,
     value: options.value
   })
 

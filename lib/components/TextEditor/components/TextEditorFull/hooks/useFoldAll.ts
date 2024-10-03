@@ -3,11 +3,11 @@ import { IAceEditor } from 'react-ace/lib/types'
 
 function useFoldAll({
   editor,
-  shouldFoldAll,
+  foldAll,
   value
 }: {
   editor?: IAceEditor
-  shouldFoldAll: boolean | number
+  foldAll: boolean | number
   value: string
 }) {
   useEffect(() => {
@@ -15,19 +15,19 @@ function useFoldAll({
       return
     }
 
-    if (shouldFoldAll) {
+    if (foldAll) {
       editor
         .getSession()
         .foldAll(
           1,
           editor.getSession().getLength(),
-          typeof shouldFoldAll === 'number' ? shouldFoldAll : Infinity
+          typeof foldAll === 'number' ? foldAll : Infinity
         )
     } else {
       editor.execCommand('unfoldall')
       editor.scrollToLine(0)
     }
-  }, [editor, shouldFoldAll, value])
+  }, [editor, foldAll, value])
 }
 
 export default useFoldAll

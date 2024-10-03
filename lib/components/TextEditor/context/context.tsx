@@ -10,7 +10,7 @@ import { DEFAULT_FONT_SIZE } from '../TextEditor'
 
 type TextEditorContextValue = {
   mode?: 'json' | 'text'
-  shouldFoldAll?: boolean
+  foldAll?: boolean
   allowSearch?: boolean
   tags?: string[]
   fontSize: number

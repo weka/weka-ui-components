@@ -6,7 +6,7 @@ import { EMPTY_STRING } from '../../../../consts'
 
 function FoldAllButton() {
   const {
-    value: { mode, shouldFoldAll, tags, isLiteMode },
+    value: { mode, foldAll, tags, isLiteMode },
     setTextEditorContext
   } = useTextEditorContext('ExpandCollapseBtn')
 
@@ -15,10 +15,8 @@ function FoldAllButton() {
   let disabled: string | boolean = false
 
   if (isLiteMode) {
-    // TODO: review text
     disabled = 'Code folding is not supported for large files'
   } else if (tags && tags.length > 0) {
-    // TODO: review text
     disabled = 'Code folding is not supported when tags are present'
   }
   return (
@@ -27,11 +25,11 @@ function FoldAllButton() {
         <ExpandCollapseButton
           tooltip={disabled || EMPTY_STRING}
           disabled={!!disabled}
-          shouldCollapse={!!shouldFoldAll}
+          shouldCollapse={!!foldAll}
           onChange={(newVal) =>
             setTextEditorContext((prev) => ({
               ...prev,
-              shouldFoldAll: newVal
+              foldAll: newVal
             }))
           }
         />
