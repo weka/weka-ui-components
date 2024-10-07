@@ -25,7 +25,11 @@ interface TextEditorProps {
   extraClass?: string
   allowSearch?: boolean
   allowCopy?: boolean
-  shouldFoldAll?: boolean | number
+  /**
+   * Determines whether to fold all lines or not. If `true`, all lines will be folded.
+   * If a number, it represents the depth of folding. If `false`, all lines will be unfolded.
+   */
+  foldAll?: boolean | number
   valueForMatched?: ParsedData
   isValueForMatchedLoading?: boolean
   mode?: 'text' | 'json'
