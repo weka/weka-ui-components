@@ -75,7 +75,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
       const optionsFunc = optionsUrl
         ? getAsyncOptions(optionsUrl)
         : getAsyncOptions()
-      onChange(EMPTY_STRING)
+      onChange(value || EMPTY_STRING)
       setLoadingOptions(true)
       optionsFunc.then((asyncOptions) => {
         setAsyncOptions(asyncOptions)
