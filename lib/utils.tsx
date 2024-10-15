@@ -261,7 +261,13 @@ const utils = {
     const [ipVal, subnet] = string.split('/')
     return utils.isIp(ipVal) && SubnetMaskRegex.test(subnet)
   },
-  formatBytes: (bytes: number, decimals = 2) => {
+  getUnitsFromBase(base: number) {
+    if (base === 1024) {
+      return ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+    }
+    return ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  },
+  formatBytes: (bytes: number, decimals = 2, k = 1000) => {
     if (bytes === 0) {
       return { value: 0, text: 'Bytes' }
     }
@@ -274,19 +280,18 @@ const utils = {
       return { value: bytes.toFixed(dm), text: 'Bytes' }
     }
 
-    const k = 1000
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const sizes = utils.getUnitsFromBase(k)
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return {
       value: ((isNegative ? bytes * -1 : bytes) / k ** i).toFixed(dm),
       text: `${sizes[i]}`
     }
   },
-  formatBytesToString: (bytes: number, decimals?: number) => {
+  formatBytesToString: (bytes: number, decimals?: number, k = 1000) => {
     if (utils.isEmpty(bytes)) {
       return null
     }
-    const { value, text } = utils.formatBytes(bytes, decimals)
+    const { value, text } = utils.formatBytes(bytes, decimals, k)
     return `${value} ${text}`
   },
   getTimeDiffObject: (time: string) =>
