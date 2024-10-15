@@ -18,6 +18,7 @@ export interface CapacityCellValue {
   maxThin: number
   minThin: number
   caution: boolean
+  base: number
 }
 
 function getBarColor(used: number, total: number, caution = false) {
@@ -55,9 +56,9 @@ function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>) {
 
   const { noDataLabel = 'Unknown' } = cellDef?.options ?? {}
 
-  const { used, total, isThin, maxThin, minThin, caution } = value
-  const formatTotal = Utils.formatBytes(total, 2)
-  const formatUsed = Utils.formatBytes(used, 2)
+  const { used, total, isThin, maxThin, minThin, caution, base } = value
+  const formatTotal = Utils.formatBytes(total, 2, base)
+  const formatUsed = Utils.formatBytes(used, 2, base)
 
   const text = total
     ? `${formatUsed.value} ${formatUsed.text} out of ${formatTotal.value} ${
@@ -72,8 +73,10 @@ function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>) {
         {isThin && (
           <Tooltip
             data={`Thinly Provisioned Filesystem\nMax SSD: ${Utils.formatBytesToString(
-              maxThin
-            )}\nMin SSD: ${Utils.formatBytesToString(minThin)}`}
+              maxThin,
+              2,
+              base
+            )}\nMin SSD: ${Utils.formatBytesToString(minThin, 2, base)}`}
           >
             <div className='thin-provision' />
           </Tooltip>
