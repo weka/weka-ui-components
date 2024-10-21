@@ -267,9 +267,9 @@ const utils = {
     }
     return ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   },
-  formatBytes: (bytes: number, decimals = 2, k = 1000) => {
-    if (bytes === 0) {
-      return { value: 0, text: 'Bytes' }
+  formatBytes: (bytes: number | null, decimals = 2, k = 1000) => {
+    if (bytes === 0 || bytes === null) {
+      return { value: 0, text: utils.getUnitsFromBase(k)[0] }
     }
 
     const dm = decimals < 0 ? 0 : decimals
