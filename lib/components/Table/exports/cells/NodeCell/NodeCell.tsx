@@ -8,7 +8,8 @@ import { ExtendedCellProps } from '../../../types'
 
 export type NodeCellValue = {
   nid: string
-  isBackend?: boolean
+  isBackend: boolean
+  showIsBackend: boolean
   roles?: string[]
 }
 
@@ -17,11 +18,11 @@ function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
 
   const value = customValue !== undefined ? customValue : cell.getValue()
 
-  const { nid, isBackend, roles } = value
+  const { nid, isBackend, showIsBackend, roles } = value
 
   const isBackendClasses = clsx({
-    'is-backend': isBackend === true,
-    'is-client': isBackend === false
+    'is-backend': isBackend,
+    'is-client': isBackend
   })
 
   const formattedRoles = roles?.length
@@ -35,12 +36,12 @@ function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
 
   return (
     <Tooltip
-      data={`${nid} ${formattedRoles} ${isBackend === true ? '(Backend)' : (isBackend === false ? '(Client)' : EMPTY_STRING)}`}
+      data={`${nid} ${formattedRoles} ${showIsBackend ? (isBackend ? '(Backend)' : '(Client)') : EMPTY_STRING}`}
     >
       <div className='node-cell'>
         <span>{nid} </span>
         {isBackend && <span>{formattedRoles}</span>}
-        {isBackend !== undefined && <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>}
+        {showIsBackend && <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>}
       </div>
     </Tooltip>
   )
