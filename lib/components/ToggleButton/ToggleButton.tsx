@@ -1,66 +1,104 @@
 import React, { useEffect, useRef } from 'react'
 import clsx from 'clsx'
+import { EMPTY_STRING } from '../../consts'
 
 import './ToggleButton.scss'
 
-type Option = {
+export type Option = {
   label: string
   value: string
 }
 
 interface ToggleButtonProps {
   options: Option[]
-  value: string
+  value: string | Array<string | null>
   onChange: (newVal: any) => void
   small?: boolean
+  isDisabled?: boolean
   wrapperClass?: string
 }
 
 function ToggleButton(props: ToggleButtonProps) {
-  const { options, value, onChange, small, wrapperClass } = props
-  const elementsList = useRef<HTMLHeadingElement>(null)
+  const {
+    options,
+    value,
+    onChange,
+    small,
+    wrapperClass = EMPTY_STRING,
+    isDisabled
+  } = props
+  const elementsList = useRef<HTMLDivElement>(null)
+  const instanceId = useRef(
+    `toggle-button-${Math.random().toString(36).slice(2, 11)}`
+  )
 
-  function selectElement(option: HTMLElement) {
-    if (option) {
-      const pad: HTMLElement | null =
-        option &&
-        option.parentNode &&
-        option.parentNode.parentNode &&
-        (option.parentNode.parentNode.firstChild as HTMLElement)
-      if (pad) {
-        pad.style.width = `${option.offsetWidth}px`
-        pad.style.height = `${option.offsetHeight + 5}px`
-        pad.style.transform = `translateX(${option.offsetLeft}px)`
-        pad.style.display = 'block'
-        Array.from(
-          (option.parentNode as HTMLElement)
-            .children as HTMLCollectionOf<HTMLElement>
-        ).forEach((e: HTMLElement) =>
-          e.classList.remove('toggle-button-option-selected')
-        )
-        option.classList.add('toggle-button-option-selected')
+  function selectElement(option: HTMLElement, pad: HTMLElement) {
+    if (option && pad) {
+      const optionRect = option.getBoundingClientRect()
+      const parentRect = option.parentElement?.getBoundingClientRect()
+      pad.style.width = `${optionRect.width}px`
+      pad.style.height = `${optionRect.height}px`
+      pad.style.transform = `translateX(${
+        optionRect.left - (parentRect?.left || 0)
+      }px) translateY(${optionRect.top - (parentRect?.top || 0)}px)`
+      pad.style.display = 'block'
+
+      if (option.matches(':last-child')) {
+        pad.style.borderRadius = '0 5px 5px 0'
+      } else if (option.matches(':first-child')) {
+        pad.style.borderRadius = '5px 0 0 5px'
+      } else {
+        pad.style.borderRadius = '0'
       }
+
+      option.classList.add('toggle-button-option-selected')
     }
   }
 
   useEffect(() => {
-    if (elementsList.current) {
-      Array.from(elementsList.current.children).forEach((element) => {
-        if (element.getAttribute('data-value') === value) {
-          selectElement(element as HTMLElement)
+    const instanceElement = document.getElementById(instanceId.current)
+    if (elementsList.current && instanceElement) {
+      Array.from(
+        elementsList.current.children as HTMLCollectionOf<HTMLElement>
+      ).forEach((e: HTMLElement) =>
+        e.classList.remove('toggle-button-option-selected')
+      )
+
+      const values = Array.isArray(value) ? value : [value]
+      const pads = Array.from(
+        instanceElement.querySelectorAll('.toggle-button-pad')
+      ) as HTMLElement[]
+
+      values.forEach((val, index) => {
+        const element = Array.from(elementsList.current!.children).find(
+          (child) => child.getAttribute('data-value') === val
+        ) as HTMLElement
+        const pad = pads[index]
+        if (element && pad) {
+          selectElement(element, pad)
         }
       })
     }
   }, [value])
+
   return (
     <div
+      id={instanceId.current}
       className={clsx({
         'toggle-button': true,
         'toggle-button-small': small,
-        [wrapperClass]: true
+        [wrapperClass]: true,
+        'multi-select': Array.isArray(value),
+        'toggle-button-disabled': isDisabled
       })}
     >
-      <div className='toggle-button-pad' />
+      {Array.isArray(value) ? (
+        value.map((_, index) => (
+          <div key={index} className='toggle-button-pad' />
+        ))
+      ) : (
+        <div className='toggle-button-pad toggle-button-pad-transition' />
+      )}
       <div className='toggle-button-options' ref={elementsList}>
         {options.map((option) => (
           <span

@@ -8,6 +8,7 @@ import {
 } from './svgs'
 
 export const EMPTY_STRING = ''
+export const ZERO_STRING = '0'
 export const NOP = () => {}
 export const TAG_SEPARATOR = ','
 

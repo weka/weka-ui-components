@@ -24,6 +24,7 @@
 
       & + .checkmark {
         border: 1px solid var(--ironhide-s1);
+        background-color: var(--ironhide-t2);
 
         &:after {
           border: solid var(--ironhide-s1);
@@ -58,7 +59,7 @@
   }
 
   &:hover .checkbox-input[disabled] ~ .checkmark {
-    background-color: transparent;
+    background-color: var(--ironhide-t2)
   }
 
   /* When the checkbox is checked, add a blue background */

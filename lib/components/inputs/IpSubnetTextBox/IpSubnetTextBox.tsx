@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { EMPTY_STRING, EVENT_KEYS, NOP } from '../../../consts'
+import { EMPTY_STRING, EVENT_KEYS, NOP, ZERO_STRING } from '../../../consts'
 import Utils from '../../../utils'
 import { Info } from '../../../svgs'
 import Copy from '../../Copy'
@@ -17,7 +17,10 @@ function keyDown(event: React.KeyboardEvent) {
   ) {
     event.preventDefault()
   }
-  if (event.key === '0' && event.target.value?.startsWith('0')) {
+  if (
+    event.key === ZERO_STRING &&
+    event.target.value?.startsWith(ZERO_STRING)
+  ) {
     event.preventDefault()
   }
   if (event.key === EVENT_KEYS.DOT || event.key === EVENT_KEYS.ARROW_RIGHT) {
@@ -58,7 +61,9 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     ...rest
   } = props
   const { disabled } = rest
-  const [ipVal, subnet] = value ? value.split('/') : ['...', fixedSubnet ?? EMPTY_STRING]
+  const [ipVal, subnet] = value
+    ? value.split('/')
+    : ['...', fixedSubnet ?? EMPTY_STRING]
   const [ipParts, setIpParts] = useState<any[]>(
     shouldConvertSubnet2Mask
       ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
