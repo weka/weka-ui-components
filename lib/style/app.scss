@@ -114,6 +114,12 @@
   font-family: var(--bold-font);
 }
 
+.bold-main {
+  font-weight: bold;
+  font-family: var(--bold-font);
+  color: var(--main-color) !important;
+}
+
 .pointer {
   cursor: pointer;
 
