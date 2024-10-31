@@ -208,3 +208,5 @@ export const DIALOG_STATUSES = {
 } as const
 
 export const TOASTER_DIALOG = 'toasterDialog'
+
+export const DEFAULT_DEBOUNCE_DELAY = 700

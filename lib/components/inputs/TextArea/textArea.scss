@@ -95,4 +95,15 @@
     color: var(--focus-key);
     white-space: nowrap;
   }
+
+  &-inset-label {
+    padding-top: 0;
+    .field__input {
+      padding-top: 18px;
+      padding-left: 11px;
+    }
+    .field__label {
+      top: 4px;
+    }
+  }
 }
