@@ -17,6 +17,7 @@ export interface TextAreaProps {
   error?: any
   tooltip?: string
   disabled?: boolean
+  insetLabel?: boolean
 }
 const TextArea = (props: TextAreaProps) => {
   const {
@@ -25,11 +26,12 @@ const TextArea = (props: TextAreaProps) => {
     value,
     error,
     placeholder,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     isRequired,
     info,
     tooltip = EMPTY_STRING,
     disabled = false,
+    insetLabel = false,
     ...rest
   } = props
 
@@ -40,7 +42,8 @@ const TextArea = (props: TextAreaProps) => {
   const wrapperClasses = clsx({
     [wrapperClass]: true,
     'text-area-field': true,
-    'has-error': !!error
+    'has-error': !!error,
+    'text-area-field-inset-label': insetLabel
   })
 
   return (
