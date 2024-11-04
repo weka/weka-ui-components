@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import MenuPopper, { menuItem } from '../MenuPopper/MenuPopper'
 import useToggle from '../../hooks/useToggle'
 import clsx from 'clsx'
@@ -18,7 +18,7 @@ export interface SideBlockProps {
   actions?: (menuItem & { Icon: React.ReactNode })[]
   description?: string
   extraClass?: string
-  SubComponent?: React.ReactNode
+  children: ReactNode
   info?: string
 }
 function SideBlock(props: SideBlockProps) {
@@ -31,7 +31,7 @@ function SideBlock(props: SideBlockProps) {
     isSelected = false,
     actions = [],
     extraClass = EMPTY_STRING,
-    SubComponent,
+    children,
     info
   } = props
   const shownActions = actions.filter((action) => !action.hideMenu)
@@ -60,7 +60,7 @@ function SideBlock(props: SideBlockProps) {
         </SpanTooltip>
         {info && <Info data={info} />}
       </div>
-      {SubComponent}
+      {children}
       <div className='dropdown-lines-2 side-block-description'>
         {description}
       </div>
@@ -69,7 +69,14 @@ function SideBlock(props: SideBlockProps) {
           {actions.map((action) => (
             <Tooltip data={action.text} key={action.text}>
               <div>
-                <IconButton onClick={action.onClick}>{action.Icon}</IconButton>
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    action.onClick()
+                  }}
+                >
+                  {action.Icon}
+                </IconButton>
               </div>
             </Tooltip>
           ))}

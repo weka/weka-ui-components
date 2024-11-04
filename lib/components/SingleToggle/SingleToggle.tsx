@@ -1,5 +1,4 @@
-import React from 'react'
-import { useToggle } from '../../hooks'
+import React, { ChangeEvent } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../Tooltip'
 
@@ -7,28 +6,49 @@ import './singleToggle.scss'
 
 export interface SingleToggleProps {
   isEnabled: boolean
+  onChange: (newValue: ChangeEvent<HTMLInputElement>) => void
   enabledText?: string
   disabledText?: string
   tooltip?: string
+  isToggleDisabled?: boolean
 }
 
 function SingleToggle({
   isEnabled,
+  onChange,
   enabledText = 'Enabled',
   disabledText = 'Disabled',
-  tooltip
+  tooltip,
+  isToggleDisabled = false,
+  ...rest
 }: SingleToggleProps) {
-  const [enabled, toggleEnabled] = useToggle(isEnabled)
+  function onClick(val: ChangeEvent<HTMLInputElement>) {
+    if (!isToggleDisabled) {
+      onChange(val)
+    }
+  }
+
   return (
     <Tooltip data={tooltip}>
       <div
         className={clsx({
           'single-toggle': true,
-          'single-toggle-enabled': enabled
+          'single-toggle-enabled': isEnabled,
+          'single-toggle-btn-disabled': isToggleDisabled
         })}
-        onClick={toggleEnabled}
       >
-        <span className='label-8'>{enabled ? enabledText : disabledText}</span>
+        <input
+          type='checkbox'
+          checked={isEnabled}
+          onChange={(e) => {
+            e.stopPropagation()
+            onClick(e)
+          }}
+          {...rest}
+        />
+        <span className='label-8'>
+          {isEnabled ? enabledText : disabledText}
+        </span>
       </div>
     </Tooltip>
   )
