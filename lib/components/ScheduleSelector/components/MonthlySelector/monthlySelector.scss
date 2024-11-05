@@ -1,7 +1,13 @@
 .monthly-selector-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
+    justify-content: space-between;
+
+  .monthly-selector-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
   .toggle-button-options {
     display: grid;
@@ -10,7 +16,7 @@
 
   .toggle-button.multi-select {
     .toggle-button-option {
-      min-width: 35px;
+      min-width: 28px;
       padding: 1px 3px;
 
       &:nth-child(14) {

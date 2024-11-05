@@ -101,28 +101,31 @@ const PeriodicSelector: FC<PeriodicSelectorProps> = ({
 
   return (
     <div className='periodic-selector-container'>
-      <span className='label-2'>Every</span>
-      <div className='input-number'>
-        <input
-          type='number'
-          max={60}
-          disabled={isDisabled}
-          value={periodicData.interval || 30}
-          onChange={(e) => handleChangeInterval(Number(e.target.value))}
+      <div className='periodic-selector-container-content'>
+        <span className='label-2'>Every</span>
+        <div className='input-number'>
+          <input
+            type='number'
+            max={60}
+            disabled={isDisabled}
+            value={periodicData.interval || 30}
+            onChange={(e) => handleChangeInterval(Number(e.target.value))}
+          />
+        </div>
+        <span className='label-2'>minutes between</span>
+        <TimePicker
+          value={startTime}
+          onChange={handleStartTimeChange}
+          isDisabled={isDisabled}
         />
+        <span className='label-2'>to</span>
+        <TimePicker
+          value={endTime}
+          onChange={handleEndTimeChange}
+          isDisabled={isDisabled}
+        />
+        <span className='label-2'>on</span>
       </div>
-      <span className='label-2'>minutes between</span>
-      <TimePicker
-        value={startTime}
-        onChange={handleStartTimeChange}
-        isDisabled={isDisabled}
-      />
-      <span className='label-2'>to</span>
-      <TimePicker
-        value={endTime}
-        onChange={handleEndTimeChange}
-        isDisabled={isDisabled}
-      />
       <DayPicker
         days={days}
         onChange={handleChangeDays}

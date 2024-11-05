@@ -1,6 +1,12 @@
 .periodic-selector-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 10px;
+
+  .periodic-selector-container-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
