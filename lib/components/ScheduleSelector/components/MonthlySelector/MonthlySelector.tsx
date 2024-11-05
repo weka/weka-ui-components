@@ -82,19 +82,21 @@ const MonthlySelector: FC<MonthlySelectorProps> = ({
   return (
     <>
       <div className='monthly-selector-wrapper'>
-        <Select
-          options={selectOptions}
-          value={everyMonth ? EVERY_MONTH.value : SPECIFIC_MONTH.value}
-          onChange={handleSelectChange}
-          disabled={isDisabled}
-        />
-        <span className='label-2'>at</span>
-        <TimePicker
-          value={time}
-          onChange={handleTimeChange}
-          isDisabled={isDisabled}
-        />
-        <span className='label-2'>on</span>
+        <div className='monthly-selector-content'>
+          <Select
+            options={selectOptions}
+            value={everyMonth ? EVERY_MONTH.value : SPECIFIC_MONTH.value}
+            onChange={handleSelectChange}
+            disabled={isDisabled}
+          />
+          <span className='label-2'>at</span>
+          <TimePicker
+            value={time}
+            onChange={handleTimeChange}
+            isDisabled={isDisabled}
+          />
+          <span className='label-2'>on</span>
+        </div>
         <DayPicker
           days={monthlyData.days}
           onChange={handleDateChange}
