@@ -1,7 +1,7 @@
 .monthly-selector-wrapper {
   display: flex;
   align-items: center;
-    justify-content: space-between;
+  gap: 10px;
 
   .monthly-selector-content {
     display: flex;
@@ -9,15 +9,22 @@
     gap: 10px;
   }
 
+  .toggle-button {
+    flex-grow: 1;
+  }
+
   .toggle-button-options {
     display: grid;
     grid-template-columns: repeat(14, auto);
+    width: 100%;
   }
 
   .toggle-button.multi-select {
     .toggle-button-option {
-      min-width: 28px;
-      padding: 1px 3px;
+      min-width: unset;
+      padding: 2px;
+      box-sizing: border-box;
+      flex: 1;
 
       &:nth-child(14) {
         border-radius: 0 5px 5px 0;

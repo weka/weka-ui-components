@@ -1,11 +1,11 @@
 import React, { useState, FC, useEffect, useCallback } from 'react'
 import { DayPicker, HourPicker } from '../'
-import { EMPTY_STRING } from '../../../../consts'
 import { Select } from '../../../inputs'
 import {
   SPECIFIC_HOURS,
   EVERY_HOUR,
-  SELECT_ALL
+  SELECT_ALL,
+  DEFAULT_HOUR
 } from '../../ScheduleSelectorConsts'
 
 import './hourlySelector.scss'
@@ -36,7 +36,7 @@ const HourlySelector: FC<HourlySelectorProps> = ({
   isDisabled
 }) => {
   const [specificHours, setSpecificHours] = useState<string[]>(
-    hourlyData.hours ? hourlyData.hours.split(',') : []
+    hourlyData.hours ? hourlyData.hours.split(',') : [DEFAULT_HOUR]
   )
   const [isEveryHour, setIsEveryHour] = useState(
     hourlyData.hours === SELECT_ALL
@@ -44,7 +44,9 @@ const HourlySelector: FC<HourlySelectorProps> = ({
 
   useEffect(() => {
     setSpecificHours(
-      hourlyData.hours ? hourlyData.hours.split(',').map((d) => d.trim()) : []
+      hourlyData.hours && hourlyData.hours !== ''
+        ? hourlyData.hours.split(',').map((d) => d.trim())
+        : [DEFAULT_HOUR]
     )
     setIsEveryHour(hourlyData.hours === SELECT_ALL)
   }, [hourlyData])
@@ -53,7 +55,7 @@ const HourlySelector: FC<HourlySelectorProps> = ({
     (value: string) => {
       setIsEveryHour(value === EVERY_HOUR.value)
       onChange({
-        hours: value === EVERY_HOUR.value ? SELECT_ALL : EMPTY_STRING,
+        hours: value === EVERY_HOUR.value ? SELECT_ALL : DEFAULT_HOUR,
         minuteOffset: hourlyData.minuteOffset,
         days: hourlyData.days
       })
@@ -120,7 +122,7 @@ const HourlySelector: FC<HourlySelectorProps> = ({
       {!isEveryHour && (
         <div className='hourly-picker-wrapper'>
           <HourPicker
-            hours={hourlyData.hours}
+            hours={hourlyData.hours !== '' ? hourlyData.hours : DEFAULT_HOUR}
             onChange={handleHourToggle}
             minuteOffset={Number(hourlyData.minuteOffset)}
             selectedHours={specificHours}
