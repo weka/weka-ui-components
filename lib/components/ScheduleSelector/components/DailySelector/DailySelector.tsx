@@ -59,21 +59,19 @@ const DailySelector: FC<DailySelectorProps> = ({
   )
 
   return (
-    <>
-      <div className='daily-selector-wrapper'>
-        <Select
-          options={selectOptions}
-          value={isEveryDay ? EVERY_DAY.value : SPECIFIC_DAYS.value}
-          onChange={handleSelectChange}
-          disabled={isDisabled}
-        />
-        <span className='label-2'>at</span>
-        <TimePicker
-          value={dailyData.time || MIDNIGHT}
-          onChange={handleSelectedTime}
-          isDisabled={isDisabled}
-        />
-      </div>
+    <div className='daily-selector-wrapper'>
+      <Select
+        options={selectOptions}
+        value={isEveryDay ? EVERY_DAY.value : SPECIFIC_DAYS.value}
+        onChange={handleSelectChange}
+        disabled={isDisabled}
+      />
+      <span className='label-2'>at</span>
+      <TimePicker
+        value={dailyData.time || MIDNIGHT}
+        onChange={handleSelectedTime}
+        isDisabled={isDisabled}
+      />
       {!isEveryDay && (
         <div className='specific-days-wrapper'>
           <span className='label-2'>On</span>
@@ -84,7 +82,7 @@ const DailySelector: FC<DailySelectorProps> = ({
           />
         </div>
       )}
-    </>
+    </div>
   )
 }
 

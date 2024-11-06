@@ -3,17 +3,14 @@
   align-items: center;
   gap: 10px;
 
-  .day-picker-wrapper {
-     .toggle-button-option {
-       min-width: 93px;
-       padding: 3px;
-     }
-   }
-}
+  .specific-days-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-grow: 1;
 
-.specific-days-wrapper {
-  padding-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    .toggle-button {
+      flex-grow: 1;
+    }
+  }
 }
