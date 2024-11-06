@@ -1,6 +1,11 @@
 .hour-picker-wrapper {
+  .toggle-button-options {
+   width: 100%;
+  }
   .toggle-button-option {
-    min-width: 19px;
+    flex: 1;
+    box-sizing: border-box;
+    min-width: unset;
     padding: 2px;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import clsx from 'clsx'
 import { EMPTY_STRING } from '../../consts'
 
@@ -27,12 +27,13 @@ function ToggleButton(props: ToggleButtonProps) {
     wrapperClass = EMPTY_STRING,
     isDisabled
   } = props
+
   const elementsList = useRef<HTMLDivElement>(null)
   const instanceId = useRef(
     `toggle-button-${Math.random().toString(36).slice(2, 11)}`
   )
 
-  function selectElement(option: HTMLElement, pad: HTMLElement) {
+  const selectElement = useCallback((option: HTMLElement, pad: HTMLElement) => {
     if (option && pad) {
       const optionRect = option.getBoundingClientRect()
       const parentRect = option.parentElement?.getBoundingClientRect()
@@ -53,16 +54,16 @@ function ToggleButton(props: ToggleButtonProps) {
 
       option.classList.add('toggle-button-option-selected')
     }
-  }
+  }, [])
 
-  useEffect(() => {
+  const updatePadPosition = useCallback(() => {
     const instanceElement = document.getElementById(instanceId.current)
     if (elementsList.current && instanceElement) {
       Array.from(
         elementsList.current.children as HTMLCollectionOf<HTMLElement>
-      ).forEach((e: HTMLElement) =>
+      ).forEach((e) => {
         e.classList.remove('toggle-button-option-selected')
-      )
+      })
 
       const values = Array.isArray(value) ? value : [value]
       const pads = Array.from(
@@ -79,7 +80,18 @@ function ToggleButton(props: ToggleButtonProps) {
         }
       })
     }
-  }, [value])
+  }, [value, selectElement])
+
+  useEffect(() => {
+    updatePadPosition()
+    const handleResize = () => {
+      updatePadPosition()
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [updatePadPosition])
 
   return (
     <div

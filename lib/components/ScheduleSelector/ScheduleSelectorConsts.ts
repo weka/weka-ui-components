@@ -107,4 +107,6 @@ export const MINUTES_OFFSETS = {
   DEFAULT: 30
 }
 
+export const DEFAULT_HOUR = '09'
+
 export const DEFAULT_INTERVAL = 30
