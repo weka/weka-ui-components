@@ -1,7 +1,6 @@
 import React from 'react'
 import { Meta, StoryFn } from '@storybook/react'
 import { useToggle } from '../../hooks'
-import { ThinArrow } from '../../svgs'
 import Collapsible from './Collapsible'
 
 export default {
@@ -14,30 +13,15 @@ const Template: StoryFn = () => {
 
   return (
     <div style={{ height: '150px' }}>
-      <div
-        className='collapsible-header'
-        onClick={toggleExpanded}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '8px 16px',
-          backgroundColor: '#f0f0f0',
-          borderRadius: '4px'
-        }}
+      <Collapsible
+        expanded={expanded}
+        onToggle={toggleExpanded}
+        label='Collapsible'
+        extraClass='collapsible-content'
+        headerRightContent={
+          <div style={{ paddingLeft: '10px' }}>Click to get more content</div>
+        }
       >
-        <ThinArrow
-          style={{
-            width: '16px',
-            height: '16px',
-            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.3s ease'
-          }}
-        />
-        Click Here To Toggle!
-      </div>
-      <Collapsible expanded={expanded} extraClass='collapsible-content'>
         <div style={{ padding: '16px' }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad

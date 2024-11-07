@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import clsx from 'clsx'
+import { Info } from '../index'
 import { EMPTY_STRING } from '../../consts'
+import { ThinArrow } from '../../svgs'
 
 import './collapsible.scss'
 
@@ -8,12 +10,20 @@ interface CollapsibleProps {
   children: React.ReactNode
   expanded?: boolean
   extraClass?: string
+  label?: string
+  info?: string
+  onToggle?: () => void
+  headerRightContent?: React.ReactNode
 }
 
 function Collapsible({
   expanded,
   children,
   extraClass,
+  label,
+  info,
+  onToggle,
+  headerRightContent,
   ...props
 }: CollapsibleProps) {
   const [{ motion, height }, setState] = useState({
@@ -73,6 +83,18 @@ function Collapsible({
         extraClass
       )}
     >
+      <div className='collapsible-header'>
+        <div className='collapsible-titles' onClick={onToggle}>
+          <ThinArrow className={clsx('arrow-icon', { collapsed: !expanded })} />
+          {label && (
+            <label className='collapsible-label page-headline'>{label}</label>
+          )}
+          {info && <Info data={info} />}
+        </div>
+        {headerRightContent && (
+          <div className='collapsible-header-right'>{headerRightContent}</div>
+        )}
+      </div>
       {!hasNoChildren && (
         <div className='collapsible-content-wrapper' style={{ height }}>
           <div ref={contentRef}>{children}</div>
