@@ -74,7 +74,7 @@ const DailySelector: FC<DailySelectorProps> = ({
       />
       {!isEveryDay && (
         <div className='specific-days-wrapper'>
-          <span className='label-2'>On</span>
+          <span className='label-2'>on</span>
           <DayPicker
             days={days}
             onChange={handleSelectedDays}
