@@ -209,5 +209,9 @@ export const DIALOG_STATUSES = {
 } as const
 
 export const TOASTER_DIALOG = 'toasterDialog'
+export const TOASTER_TYPES = {
+  TOAST: 'toast',
+  DIALOG: 'dialog'
+} as const
 
 export const DEFAULT_DEBOUNCE_DELAY = 700

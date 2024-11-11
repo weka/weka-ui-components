@@ -5,7 +5,8 @@ import {
   DIALOG_STATUSES,
   EMPTY_STRING,
   TIME_PARTS_SHORTENINGS,
-  TOASTER_DIALOG
+  TOASTER_DIALOG,
+  TOASTER_TYPES
 } from './consts'
 import { DateTime, DurationUnits } from 'luxon'
 import { Toast, Tooltip } from './components'
@@ -95,7 +96,7 @@ const utils = {
     typeof value === 'string' || value instanceof String,
   isObject: (value: any): value is Record<string, unknown> =>
     typeof value === 'object' && value !== null && !Array.isArray(value),
-  range(startOrEnd: number, end?: number, step: number = 1): number[] {
+  range(startOrEnd: number, end?: number, step = 1): number[] {
     let newStartOrEnd = startOrEnd
     if (!end) {
       end = newStartOrEnd
@@ -107,7 +108,10 @@ const utils = {
     }
     return result
   },
-  toastError: (err?: string | Error | unknown, showDialog?: boolean) => {
+  toastError: (
+    err?: string | Error | unknown,
+    type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES]
+  ) => {
     let message = 'Something went wrong'
 
     if (typeof err === 'string') {
@@ -132,7 +136,10 @@ const utils = {
       }
     }
 
-    if (message.length < 75 && !showDialog) {
+    if (
+      (type !== TOASTER_TYPES.DIALOG && message.length < 75) ||
+      type === TOASTER_TYPES.TOAST
+    ) {
       toast.error(<Toast message={message} icon={<Warning />} />, {
         position: toast.POSITION.BOTTOM_CENTER,
         icon: false
@@ -144,8 +151,14 @@ const utils = {
       })
     }
   },
-  toastSuccess: (message: string, showDialog?: boolean) => {
-    if (message.length < 100 && !showDialog) {
+  toastSuccess: (
+    message: string,
+    type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES]
+  ) => {
+    if (
+      (type !== TOASTER_TYPES.DIALOG && message.length < 100) ||
+      type === TOASTER_TYPES.TOAST
+    ) {
       toast.success(<Toast message={message} icon={<Approve />} />, {
         position: toast.POSITION.BOTTOM_CENTER,
         icon: false
