@@ -1,6 +1,7 @@
 import React, { useState, FC, useEffect, useCallback } from 'react'
 import { DayPicker, HourPicker } from '../'
 import { Select } from '../../../inputs'
+import { EMPTY_STRING } from '../../../../consts'
 import {
   SPECIFIC_HOURS,
   EVERY_HOUR,
@@ -86,12 +87,6 @@ const HourlySelector: FC<HourlySelectorProps> = ({
     [hourlyData.hours, hourlyData.minuteOffset, onChange]
   )
 
-  const handleMinuteOffset = useCallback(
-    () =>
-      hourlyData.minuteOffset ? parseInt(hourlyData.minuteOffset, 10) % 60 : 0,
-    [hourlyData.minuteOffset]
-  )
-
   return (
     <>
       <div className='hourly-selector-wrapper'>
@@ -107,13 +102,17 @@ const HourlySelector: FC<HourlySelectorProps> = ({
             type='number'
             disabled={isDisabled}
             value={hourlyData.minuteOffset || 0}
-            onChange={(e) =>
+            onChange={(e) => {
+              const minuteOffset =
+                e.target.value === EMPTY_STRING
+                  ? 0
+                  : Math.min(parseInt(e.target.value, 10), 59)
               onChange({
                 hours: hourlyData.hours,
-                minuteOffset: e.target.value,
+                minuteOffset: String(minuteOffset),
                 days: hourlyData.days
               })
-            }
+            }}
           />
         </div>
         <span className='label-2'>minutes</span>
@@ -131,7 +130,7 @@ const HourlySelector: FC<HourlySelectorProps> = ({
           <HourPicker
             hours={hourlyData.hours !== '' ? hourlyData.hours : DEFAULT_HOUR}
             onChange={handleHourToggle}
-            minuteOffset={handleMinuteOffset()}
+            minuteOffset={parseInt(hourlyData.minuteOffset, 10)}
             selectedHours={specificHours}
             isDisabled={isDisabled}
           />
