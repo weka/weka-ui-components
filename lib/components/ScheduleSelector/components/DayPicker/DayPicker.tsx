@@ -30,6 +30,10 @@ const DayPicker = ({ days, onChange, options, isDisabled }: DayPickerProps) => {
   )
 
   useEffect(() => {
+    setSelectedDays(days.split(',').map((day) => day.trim()))
+  }, [days])
+
+  useEffect(() => {
     onChange(selectedDays.join(', '))
   }, [selectedDays])
 

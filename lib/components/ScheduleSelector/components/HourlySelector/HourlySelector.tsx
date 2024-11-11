@@ -86,6 +86,12 @@ const HourlySelector: FC<HourlySelectorProps> = ({
     [hourlyData.hours, hourlyData.minuteOffset, onChange]
   )
 
+  const handleMinuteOffset = useCallback(
+    () =>
+      hourlyData.minuteOffset ? parseInt(hourlyData.minuteOffset, 10) % 60 : 0,
+    [hourlyData.minuteOffset]
+  )
+
   return (
     <>
       <div className='hourly-selector-wrapper'>
@@ -95,12 +101,12 @@ const HourlySelector: FC<HourlySelectorProps> = ({
           value={isEveryHour ? EVERY_HOUR.value : SPECIFIC_HOURS.value}
           onChange={handleSelectChange}
         />
-        <span className='label-2'>with offset of</span>
+        <span className='label-2'>with an offset of</span>
         <div className='input-number'>
           <input
             type='number'
             disabled={isDisabled}
-            value={hourlyData.minuteOffset || 1}
+            value={hourlyData.minuteOffset || 0}
             onChange={(e) =>
               onChange({
                 hours: hourlyData.hours,
@@ -111,20 +117,21 @@ const HourlySelector: FC<HourlySelectorProps> = ({
           />
         </div>
         <span className='label-2'>minutes</span>
-        {hourlyData.days && (
+        <div className='specific-days-wrapper'>
+          <span className='label-2'>on</span>
           <DayPicker
+            days={hourlyData.days || SELECT_ALL}
             onChange={handleDaysChanged}
-            days={hourlyData.days}
             isDisabled={isDisabled}
           />
-        )}
+        </div>
       </div>
       {!isEveryHour && (
         <div className='hourly-picker-wrapper'>
           <HourPicker
             hours={hourlyData.hours !== '' ? hourlyData.hours : DEFAULT_HOUR}
             onChange={handleHourToggle}
-            minuteOffset={Number(hourlyData.minuteOffset)}
+            minuteOffset={handleMinuteOffset()}
             selectedHours={specificHours}
             isDisabled={isDisabled}
           />

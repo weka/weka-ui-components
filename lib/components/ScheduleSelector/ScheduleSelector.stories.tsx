@@ -15,7 +15,8 @@ const initialScheduleData: ScheduleData = {
   },
   hourly: {
     hours: '09, 10, 11, 12, 13, 14, 15, 16, 17, 18',
-    minuteOffset: 5
+    minuteOffset: 5,
+    days: 'monday, tuesday, wednesday, thursday, friday'
   },
   monthly: {
     days: '07',
