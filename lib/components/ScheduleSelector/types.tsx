@@ -6,6 +6,7 @@ interface DailySchedule {
 interface HourlySchedule {
   hours: string
   minuteOffset: number
+  days: string
 }
 
 interface MonthlySchedule {
