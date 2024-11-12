@@ -22,8 +22,10 @@ interface Error {
 
 const utils = {
   insensitiveSort,
-  isEllipsisActive(element: HTMLElement): boolean {
-    return element.offsetWidth < element.scrollWidth
+  isEllipsisActive(element: HTMLElement, isMultiLine = false): boolean {
+    return isMultiLine
+      ? element.scrollHeight > element.clientHeight
+      : element.offsetWidth < element.scrollWidth
   },
   getPasswordIcon(
     showPassword: boolean,
