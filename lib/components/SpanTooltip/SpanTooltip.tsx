@@ -7,11 +7,12 @@ import Utils from '../../utils'
 
 import './spanTooltip.scss'
 
-type SpanTooltipProps = {
+export type SpanTooltipProps = {
   children: number | string
   extraClasses?: string
   style?: object
   additionalData?: string
+  isMultiLine?: boolean
 } & Omit<TooltipProps, 'children' | 'data'>
 
 function SpanTooltip({
@@ -19,6 +20,7 @@ function SpanTooltip({
   extraClasses = EMPTY_STRING,
   style = {},
   additionalData = EMPTY_STRING,
+  isMultiLine = false,
   ...tooltipProps
 }: SpanTooltipProps) {
   const ref = useRef<HTMLSpanElement | null>(null)
@@ -26,7 +28,7 @@ function SpanTooltip({
 
   useEffect(() => {
     const compareSize = () => {
-      if (ref.current && Utils.isEllipsisActive(ref.current)) {
+      if (ref.current && Utils.isEllipsisActive(ref.current, isMultiLine)) {
         setTooltip(children)
       } else {
         setTooltip(EMPTY_STRING)

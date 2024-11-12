@@ -21,13 +21,14 @@ export interface SideBlockProps {
   children: ReactNode
   info?: string
 }
+
 function SideBlock(props: SideBlockProps) {
   const [isPopperOpen, togglePopper] = useToggle(false)
   const anchorRef = useRef<HTMLDivElement | null>(null)
   const {
     name,
     onSelect,
-    description,
+    description = EMPTY_STRING,
     isSelected = false,
     actions = [],
     extraClass = EMPTY_STRING,
@@ -40,6 +41,7 @@ function SideBlock(props: SideBlockProps) {
     hasActions &&
     shownActions.every((action) => action.Icon) &&
     shownActions.length < 4
+
   return (
     <div
       className={clsx({
@@ -61,9 +63,12 @@ function SideBlock(props: SideBlockProps) {
         {info && <Info data={info} />}
       </div>
       {children}
-      <div className='dropdown-lines-2 side-block-description'>
+      <SpanTooltip
+        extraClasses='side-block-description dropdown-lines-2'
+        isMultiLine
+      >
         {description}
-      </div>
+      </SpanTooltip>
       {showActionsAsIcons ? (
         <div className='side-block-actions'>
           {actions.map((action) => (

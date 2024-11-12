@@ -1,5 +1,5 @@
 .collapsible {
-  --duration: 700ms;
+  --duration: 300ms;
   --expanded: initial;
 
   display: flex;
@@ -39,6 +39,7 @@
 
     .collapsible-label {
       cursor: pointer;
+      user-select: none;
     }
   }
 
