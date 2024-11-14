@@ -1,0 +1,12 @@
+.char-counter {
+  width: 100%;
+  padding-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--ironhide-s3);
+
+  &-no-max {
+    justify-content: flex-end;
+  }
+}
