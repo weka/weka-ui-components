@@ -51,7 +51,7 @@
       left: -2px;
       height: 100%;
       width: 1px;
-      background-color: var(--white);
+      background-color: var(--neutral-t3);
       z-index: 3;
       transition: background-color 0.3s ease;
     }
@@ -71,10 +71,6 @@
     padding: 4px 8px;
     position: relative;
     transition: color 0.3s ease;
-
-    &:not(:first-child) {
-      margin-left: -1px;
-    }
 
     &:first-child {
       border-radius: 5px 0 0 5px;

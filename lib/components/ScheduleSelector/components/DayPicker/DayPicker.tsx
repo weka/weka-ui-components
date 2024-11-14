@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useMemo } from 'react'
 import { ToggleButton } from '../../../index'
 import { Option } from '../../../ToggleButton/ToggleButton'
 import { DAYS_OF_WEEK, SELECT_ALL } from '../../ScheduleSelectorConsts'
@@ -13,29 +13,26 @@ interface DayPickerProps {
 }
 
 const DayPicker = ({ days, onChange, options, isDisabled }: DayPickerProps) => {
-  const [selectedDays, setSelectedDays] = useState<string[]>(
-    days.split(',').map((day) => day.trim())
-  )
-  const toggleDaySelection = useCallback(
-    (day: string): void => {
-      if (selectedDays.includes(SELECT_ALL)) {
-        setSelectedDays([day])
-        return
-      }
-      setSelectedDays((prev) =>
-        prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-      )
-    },
-    [selectedDays]
+  const allDays = useMemo(
+    () => (options || DAYS_OF_WEEK).map((day) => day.value),
+    [options]
   )
 
-  useEffect(() => {
-    setSelectedDays(days.split(',').map((day) => day.trim()))
-  }, [days])
+  const selectedDays =
+    days === SELECT_ALL ? allDays : days.split(',').map((day) => day.trim())
 
-  useEffect(() => {
-    onChange(selectedDays.join(', '))
-  }, [selectedDays])
+  const toggleDaySelection = (day: string): void => {
+    if (selectedDays.includes(SELECT_ALL)) {
+      onChange(day)
+      return
+    }
+
+    const updatedDays = selectedDays.includes(day)
+      ? selectedDays.filter((d) => d !== day)
+      : [...selectedDays, day]
+
+    onChange(updatedDays.join(', '))
+  }
 
   return (
     <ToggleButton
