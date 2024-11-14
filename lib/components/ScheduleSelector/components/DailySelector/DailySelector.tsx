@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { DayPicker, TimePicker } from '../index'
 import { Select } from '../../../inputs'
 import {
@@ -30,12 +30,10 @@ const DailySelector: FC<DailySelectorProps> = ({
   onChange,
   isDisabled
 }) => {
-  const days = dailyData.days || WEEK_DAYS.MONDAY
-  const [isEveryDay, setIsEveryDay] = useState(dailyData.days === SELECT_ALL)
+  const isEveryDay = dailyData.days === SELECT_ALL
 
   const handleSelectChange = useCallback(
     (value: string) => {
-      setIsEveryDay(value === EVERY_DAY.value)
       onChange({
         days: value === EVERY_DAY.value ? SELECT_ALL : WEEK_DAYS.MONDAY,
         time: dailyData.time
@@ -76,7 +74,7 @@ const DailySelector: FC<DailySelectorProps> = ({
         <div className='specific-days-wrapper'>
           <span className='label-2'>on</span>
           <DayPicker
-            days={days}
+            days={dailyData.days || WEEK_DAYS.MONDAY}
             onChange={handleSelectedDays}
             isDisabled={isDisabled}
           />

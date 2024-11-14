@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC, useMemo, useCallback } from 'react'
 import { ToggleButton } from '../../../index'
 import { MONTHS_OPTIONS } from '../../ScheduleSelectorConsts'
 
@@ -20,13 +20,16 @@ const MonthPicker: FC<MonthPickerProps> = ({
     [months]
   )
 
-  const toggleMonthSelection = (month: string): void => {
-    const updatedMonths = selectedMonths.includes(month)
-      ? selectedMonths.filter((m) => m !== month)
-      : [...selectedMonths, month]
+  const toggleMonthSelection = useCallback(
+    (month: string): void => {
+      const updatedMonths = selectedMonths.includes(month)
+        ? selectedMonths.filter((m) => m !== month)
+        : [...selectedMonths, month]
 
-    onChange(updatedMonths.join(', '))
-  }
+      onChange(updatedMonths.join(', '))
+    },
+    [selectedMonths, onChange]
+  )
 
   return (
     <ToggleButton
