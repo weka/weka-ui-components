@@ -1,4 +1,4 @@
-import React, { useState, FC, useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { TimePicker, DayPicker } from '../index'
 import { EMPTY_STRING, ZERO_STRING } from '../../../../consts'
 import {
@@ -26,52 +26,21 @@ const PeriodicSelector: FC<PeriodicSelectorProps> = ({
   onChange,
   isDisabled
 }) => {
-  const [startTime, setStartTime] = useState(
-    periodicData.start_time || EMPTY_STRING
-  )
-  const [endTime, setEndTime] = useState(periodicData.end_time || EMPTY_STRING)
-
   const days = periodicData.days || WORK_DAYS
-
-  const handleStartTimeChange = useCallback(
-    (time: string) => {
-      setStartTime(time)
-      const interval = periodicData.interval || DEFAULT_INTERVAL
-      const [hours, minutes] = time.split(':').map(Number)
-      const newMinutes = minutes + interval
-
-      const adjustedHours = (hours + Math.floor(newMinutes / 60)) % 24
-      const adjustedMinutes = newMinutes % 60
-
-      setEndTime(
-        `${String(adjustedHours).padStart(2, ZERO_STRING)}:${String(
-          adjustedMinutes
-        ).padStart(2, ZERO_STRING)}`
-      )
-      onChange({
-        days,
-        interval,
-        start_time: time,
-        end_time: endTime
-      })
-    },
-    [periodicData.interval, days, endTime, onChange]
-  )
 
   const handleChangeInterval = useCallback(
     (interval: number) => {
       if (interval > MINUTES_OFFSETS.MAX) {
         interval = MINUTES_OFFSETS.MAX
       }
-      handleStartTimeChange(startTime)
       onChange({
         days,
         interval,
-        start_time: startTime,
-        end_time: endTime
+        start_time: periodicData.start_time || EMPTY_STRING,
+        end_time: periodicData.end_time || EMPTY_STRING
       })
     },
-    [days, endTime, handleStartTimeChange, onChange, startTime]
+    [days, onChange]
   )
 
   const handleChangeDays = useCallback(
@@ -79,24 +48,35 @@ const PeriodicSelector: FC<PeriodicSelectorProps> = ({
       onChange({
         days,
         interval: periodicData.interval || MINUTES_OFFSETS.DEFAULT,
-        start_time: startTime,
-        end_time: endTime
+        start_time: periodicData.start_time || EMPTY_STRING,
+        end_time: periodicData.end_time || EMPTY_STRING
       })
     },
-    [periodicData.interval, startTime, endTime, onChange]
+    [periodicData.interval, onChange]
   )
 
   const handleEndTimeChange = useCallback(
     (time: string) => {
-      setEndTime(time)
       onChange({
         days,
         interval: periodicData.interval || DEFAULT_INTERVAL,
-        start_time: startTime,
+        start_time: periodicData.start_time || EMPTY_STRING,
         end_time: time
       })
     },
-    [days, periodicData.interval, startTime, onChange]
+    [days, periodicData.interval, onChange]
+  )
+
+  const handleStartTimeChange = useCallback(
+    (time: string) => {
+      onChange({
+        days,
+        interval: periodicData.interval || DEFAULT_INTERVAL,
+        start_time: time,
+        end_time: periodicData.end_time || EMPTY_STRING
+      })
+    },
+    [days, periodicData.interval, onChange]
   )
 
   return (
@@ -114,13 +94,13 @@ const PeriodicSelector: FC<PeriodicSelectorProps> = ({
         </div>
         <span className='label-2'>minutes between</span>
         <TimePicker
-          value={startTime}
+          value={periodicData.start_time || ZERO_STRING}
           onChange={handleStartTimeChange}
           isDisabled={isDisabled}
         />
         <span className='label-2'>to</span>
         <TimePicker
-          value={endTime}
+          value={periodicData.end_time || ZERO_STRING}
           onChange={handleEndTimeChange}
           isDisabled={isDisabled}
         />

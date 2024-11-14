@@ -12,6 +12,8 @@ export type TooltipProps = {
   data?: ReactElement | string
   extraClass?: string
   extraPopperClass?: string
+  enterDelay?: number
+  followCursor?: boolean
 } & Pick<MuiTooltipProps, 'open' | 'onClose' | 'onOpen'>
 
 function Tooltip({
@@ -19,7 +21,9 @@ function Tooltip({
   clear = false,
   data = EMPTY_STRING,
   extraClass = EMPTY_STRING,
-  extraPopperClass,
+  extraPopperClass = EMPTY_STRING,
+  enterDelay = 400,
+  followCursor = false,
   ...rest
 }: TooltipProps) {
   const classes = clsx({
@@ -30,8 +34,9 @@ function Tooltip({
   return (
     <MuiTooltip
       enterNextDelay={400}
-      enterDelay={400}
+      enterDelay={enterDelay}
       title={data}
+      followCursor={followCursor}
       classes={{
         tooltip: classes,
         arrow: 'tooltip-arrow',
