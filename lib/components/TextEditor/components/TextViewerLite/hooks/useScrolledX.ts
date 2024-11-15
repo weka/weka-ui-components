@@ -1,5 +1,5 @@
-import { debounce } from 'lodash'
 import { useEffect, useState } from 'react'
+import debounce from 'lodash/debounce'
 
 function useScrolledX({ element }: { element: HTMLDivElement | null }) {
   const [isScrolledX, setScrolledX] = useState<boolean>(false)

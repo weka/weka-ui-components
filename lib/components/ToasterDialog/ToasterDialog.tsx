@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import clsx from 'clsx'
-import { capitalize } from 'lodash'
+import capitalize from 'lodash/capitalize'
 import { DIALOG_STATUSES, TOASTER_DIALOG } from 'consts'
-import { useDialog } from '../../context'
+import { useDialog } from 'context'
 import Utils from 'utils'
 import { Approve, Warning } from 'svgs'
 
