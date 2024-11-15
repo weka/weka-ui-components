@@ -1,7 +1,7 @@
 import React, { useState, FC, useEffect, useCallback } from 'react'
 import { DayPicker, HourPicker } from '../'
 import { Select } from '../../../inputs'
-import { EMPTY_STRING } from '../../../../consts'
+import { EMPTY_STRING } from 'consts'
 import {
   SPECIFIC_HOURS,
   EVERY_HOUR,

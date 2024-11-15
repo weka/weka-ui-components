@@ -1,5 +1,5 @@
 import { default as ToggleButtonComponent } from './ToggleButton'
-import Utils from '../../utils'
+import Utils from 'utils'
 import React, { useState } from 'react'
 
 export default {

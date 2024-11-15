@@ -1,7 +1,7 @@
 import React from 'react'
 import Tooltip from '../../../../Tooltip'
 import { IconButton } from '@mui/material'
-import { EMPTY_STRING } from '../../../../../consts'
+import { EMPTY_STRING } from 'consts'
 import clsx from 'clsx'
 import { ExtendedCellProps } from '../../../types'
 

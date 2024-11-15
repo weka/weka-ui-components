@@ -1,12 +1,12 @@
 import React, { MouseEvent, ReactElement, useEffect, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
-import { EMPTY_STRING, EVENT_KEYS, NOP } from '../../../consts'
+import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { Info } from '../../../svgs'
+import { Info } from 'svgs'
 import { CommonSelectComponents, getStyle } from '../Select/Select'
-import Utils from '../../../utils'
+import Utils from 'utils'
 
 import './customizableSelect.scss'
 

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import Select from '../../../../inputs/Select'
-import Utils from '../../../../../utils'
+import Utils from 'utils'
 import FilterWrapper from '../../FilterWrapper'
 import { ExtendedFilterProps } from '../../../types'
 

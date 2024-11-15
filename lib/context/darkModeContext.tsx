@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import { SCHEME_CHANGE, STORAGE } from '../consts'
+import { SCHEME_CHANGE, STORAGE } from 'consts'
 
 type Theme = {
   isDarkMode: boolean

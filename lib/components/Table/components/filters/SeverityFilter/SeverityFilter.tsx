@@ -1,8 +1,8 @@
 import React from 'react'
 import clsx from 'clsx'
 import FilterWrapper from '../../FilterWrapper'
-import { SEVERITIES, SEVERITIES_ICONS } from '../../../../../consts'
-import useToggle from '../../../../../hooks/useToggle'
+import { SEVERITIES, SEVERITIES_ICONS } from 'consts'
+import { useToggle } from 'hooks'
 import { ExtendedFilterProps } from '../../../types'
 
 import './severityFilter.scss'

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { EMPTY_STRING } from '../../../../../consts'
+import { EMPTY_STRING } from 'consts'
 import { IAceEditor } from 'react-ace/lib/types'
 
 function useSearch({

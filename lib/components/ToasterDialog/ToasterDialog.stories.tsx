@@ -4,7 +4,7 @@ import { default as ToasterDialogComponent } from './ToasterDialog'
 import ToasterContainer from '../Toast/ToasterContainer'
 import { DialogProvider } from '../../context'
 import React from 'react'
-import Utils from '../../utils'
+import Utils from 'utils'
 import Button from '../Button'
 
 interface DialogStoryArgs {

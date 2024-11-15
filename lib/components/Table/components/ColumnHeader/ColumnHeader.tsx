@@ -3,10 +3,10 @@ import { ExtendedHeaderGroup, ExtendedTable, RowAction } from '../../types'
 import { flexRender } from '@tanstack/react-table'
 import Tooltip from '../../../Tooltip'
 import clsx from 'clsx'
-import { LongArrow } from '../../../../svgs'
+import { LongArrow } from 'svgs'
 import TableFilter from '../TableFilter'
 import { Utils } from '../../../../main'
-import { EMPTY_STRING } from '../../../../consts'
+import { EMPTY_STRING } from 'consts'
 
 interface HeaderGroupProps<Data> {
   headerGroup: ExtendedHeaderGroup<Data>

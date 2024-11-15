@@ -1,6 +1,6 @@
 import React from 'react'
 import Tooltip from '../../../../Tooltip'
-import { EMPTY_STRING, SHORT_ROLES } from '../../../../../consts'
+import { EMPTY_STRING, SHORT_ROLES } from 'consts'
 import clsx from 'clsx'
 
 import './nodeCell.scss'
@@ -36,12 +36,16 @@ function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
 
   return (
     <Tooltip
-      data={`${nid} ${formattedRoles} ${showIsBackend ? (isBackend ? '(Backend)' : '(Client)') : EMPTY_STRING}`}
+      data={`${nid} ${formattedRoles} ${
+        showIsBackend ? (isBackend ? '(Backend)' : '(Client)') : EMPTY_STRING
+      }`}
     >
       <div className='node-cell'>
         <span>{nid} </span>
         {isBackend && <span>{formattedRoles}</span>}
-        {showIsBackend && <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>}
+        {showIsBackend && (
+          <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>
+        )}
       </div>
     </Tooltip>
   )

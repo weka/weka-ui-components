@@ -1,7 +1,7 @@
 import React from 'react'
 import Tooltip from '../../../../Tooltip'
-import { User, Weka } from '../../../../../svgs'
-import { ORIGIN_OPTIONS } from '../../../../../consts'
+import { User, Weka } from 'svgs'
+import { ORIGIN_OPTIONS } from 'consts'
 import { ExtendedCellProps } from '../../../types'
 
 import './entityCell.scss'

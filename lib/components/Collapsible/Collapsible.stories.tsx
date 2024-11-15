@@ -1,6 +1,6 @@
 import React from 'react'
 import { Meta, StoryFn } from '@storybook/react'
-import { useToggle } from '../../hooks'
+import { useToggle } from 'hooks'
 import Collapsible from './Collapsible'
 
 export default {

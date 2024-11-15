@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { capitalize } from 'lodash'
-import { DIALOG_STATUSES, TOASTER_DIALOG } from '../../consts'
+import { DIALOG_STATUSES, TOASTER_DIALOG } from 'consts'
 import { useDialog } from '../../context'
-import Utils from '../../utils'
-import { Approve, Warning } from '../../svgs'
+import Utils from 'utils'
+import { Approve, Warning } from 'svgs'
 
 import './toasterDialog.scss'
 
@@ -35,8 +35,7 @@ function ToasterDialog() {
         title: (
           <div
             className={clsx({
-              isToasterDialogSuccess:
-                status === DIALOG_STATUSES.SUCCESS,
+              isToasterDialogSuccess: status === DIALOG_STATUSES.SUCCESS,
               isToasterDialogError: status === DIALOG_STATUSES.ERROR
             })}
           >

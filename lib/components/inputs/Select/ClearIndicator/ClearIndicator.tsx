@@ -1,10 +1,10 @@
 import React from 'react'
 import { components, ClearIndicatorProps } from 'react-select'
 import Tooltip from '../../../Tooltip'
-import { EMPTY_STRING } from '../../../../consts'
+import { EMPTY_STRING } from 'consts'
 
 interface ClearIndicatorProp extends ClearIndicatorProps {
-    selectProps: any
+  selectProps: any
 }
 function ClearIndicator(props: ClearIndicatorProp) {
   const { selectProps } = props
@@ -17,6 +17,5 @@ function ClearIndicator(props: ClearIndicatorProp) {
     </Tooltip>
   )
 }
-
 
 export default ClearIndicator

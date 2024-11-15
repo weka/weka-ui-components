@@ -1,12 +1,6 @@
 import React from 'react'
-import {
-  StatusOk,
-  Propeller,
-  Ellipses,
-  FullWarning,
-  StatusError
-} from '../../../../../svgs'
-import { DRIVES_STATUSES, STATUS } from '../../../../../consts'
+import { StatusOk, Propeller, Ellipses, FullWarning, StatusError } from 'svgs'
+import { DRIVES_STATUSES, STATUS } from 'consts'
 import Tooltip from '../../../../Tooltip'
 import { ExtendedCellProps } from '../../../types'
 

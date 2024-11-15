@@ -5,7 +5,7 @@ import {
   RowAction,
   TableExtraClasses
 } from '../../types'
-import { Arrow } from '../../../../svgs'
+import { Arrow } from 'svgs'
 import React from 'react'
 import TableCell from '../TableCell'
 import ActionsCell from '../ActionsCell'

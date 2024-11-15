@@ -3,9 +3,9 @@ import { DateTime } from 'luxon'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import clsx from 'clsx'
 import DateTimeLabel from './components/DateTimeLabel'
-import { Arrow, EmptyCalendar } from '../../svgs'
+import { Arrow, EmptyCalendar } from 'svgs'
 import DateTimeCalendar from './components/DateTimeCalendar'
-import { EMPTY_STRING } from '../../consts'
+import { EMPTY_STRING } from 'consts'
 
 import './DateTimePicker.scss'
 
@@ -29,8 +29,24 @@ interface DateTimePickerProps {
 }
 
 function DateTimePicker(props: DateTimePickerProps) {
-  const { onChange, value, label = EMPTY_STRING, minDate, maxDate, showSeconds, isRequired, error,
-    disablePortal, showTime, showCalendarIcon = false, disabled = false, canClear = true, showNow, enableCustomFormat, customFormat } = props
+  const {
+    onChange,
+    value,
+    label = EMPTY_STRING,
+    minDate,
+    maxDate,
+    showSeconds,
+    isRequired,
+    error,
+    disablePortal,
+    showTime,
+    showCalendarIcon = false,
+    disabled = false,
+    canClear = true,
+    showNow,
+    enableCustomFormat,
+    customFormat
+  } = props
   const [isOpen, setOpen] = useState(false)
   const ref = useRef(null)
 

@@ -3,7 +3,7 @@ import React from 'react'
 import { useTextEditorContext } from '../../context'
 import Tooltip from '../../../Tooltip'
 import { IconButton } from '@mui/material'
-import { Search } from '../../../../svgs'
+import { Search } from 'svgs'
 
 import './searchButton.scss'
 

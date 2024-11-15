@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
-import { MONTHS, SHORT_DAY_OF_WEEK } from '../../../../consts'
-import { Arrow } from '../../../../svgs'
+import { MONTHS, SHORT_DAY_OF_WEEK } from 'consts'
+import { Arrow } from 'svgs'
 import DayCell from '../DayCell/DayCell'
 
 import './DateSelector.scss'
@@ -11,18 +11,23 @@ interface DateSelectorProps {
   onSubmit: (val?: any) => void
   maxDate?: DateTime | null
   minDate?: DateTime | null
-
 }
 
 function getDaysOfTheMonth(referenceDate) {
   const startDate = DateTime.local(referenceDate.year, referenceDate.month)
   let fromDate = startDate.minus({ day: startDate.weekday - 1 })
-  const endDate = DateTime.local(referenceDate.year, referenceDate.month).plus({ month: 1 })
+  const endDate = DateTime.local(referenceDate.year, referenceDate.month).plus({
+    month: 1
+  })
   const toDate = endDate.plus({ day: 7 - endDate.weekday })
   const monthDaysByWeek = []
   let daysOfWeek = []
   while (fromDate <= toDate) {
-    const appendDate = fromDate.set({ hour: referenceDate.hour, minute: referenceDate.minute, second: referenceDate.second })
+    const appendDate = fromDate.set({
+      hour: referenceDate.hour,
+      minute: referenceDate.minute,
+      second: referenceDate.second
+    })
     daysOfWeek.push(appendDate)
     if (fromDate.weekday === 7) {
       monthDaysByWeek.push(daysOfWeek)
@@ -34,14 +39,11 @@ function getDaysOfTheMonth(referenceDate) {
 }
 
 function DateSelector(props: DateSelectorProps) {
-  const {
-    date,
-    onSubmit,
-    maxDate = null,
-    minDate = null
-  } = props
+  const { date, onSubmit, maxDate = null, minDate = null } = props
 
-  const [currentMonthYear, setCurrentMonthYear] = useState(date || DateTime.now())
+  const [currentMonthYear, setCurrentMonthYear] = useState(
+    date || DateTime.now()
+  )
 
   useEffect(() => {
     setCurrentMonthYear(date || DateTime.now())
@@ -56,7 +58,9 @@ function DateSelector(props: DateSelectorProps) {
   }
 
   const allDays = getDaysOfTheMonth(currentMonthYear)
-  const dateString = `${MONTHS[currentMonthYear.month - 1].toUpperCase()} ${currentMonthYear.year}`
+  const dateString = `${MONTHS[currentMonthYear.month - 1].toUpperCase()} ${
+    currentMonthYear.year
+  }`
 
   function isSelected(d) {
     return d.day === date.day && d.year === date.year && d.month === date.month
@@ -65,7 +69,9 @@ function DateSelector(props: DateSelectorProps) {
   return (
     <div className='datetime-calendar'>
       <div className='date-toolbar'>
-        <div className='date-controller' onClick={monthBackward}><Arrow className='rotate90' /></div>
+        <div className='date-controller' onClick={monthBackward}>
+          <Arrow className='rotate90' />
+        </div>
         <div>{dateString}</div>
         <div className='date-controller' onClick={monthForward}>
           <Arrow className='rotate270' />
@@ -73,7 +79,9 @@ function DateSelector(props: DateSelectorProps) {
       </div>
       <div className='calendar-days-of-week'>
         {SHORT_DAY_OF_WEEK.map((txt) => (
-          <div key={txt} className='day-of-week'>{txt.toUpperCase()}</div>
+          <div key={txt} className='day-of-week'>
+            {txt.toUpperCase()}
+          </div>
         ))}
       </div>
       {allDays.map((w) => (

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../Tooltip'
-import { Info as InfoSvg } from '../../svgs'
+import { Info as InfoSvg } from 'svgs'
 import clsx from 'clsx'
 
 import './info.scss'

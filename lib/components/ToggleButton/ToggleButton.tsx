@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import clsx from 'clsx'
-import { EMPTY_STRING } from '../../consts'
+import { EMPTY_STRING } from 'consts'
 
 import './ToggleButton.scss'
 

@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../Tooltip'
 import type { TooltipProps } from '../Tooltip'
-import { EMPTY_STRING } from '../../consts'
-import Utils from '../../utils'
+import { EMPTY_STRING } from 'consts'
+import Utils from 'utils'
 
 import './spanTooltip.scss'
 

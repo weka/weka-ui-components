@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { EMPTY_STRING } from '../consts'
+import { EMPTY_STRING } from 'consts'
 
 function useToggle(initialState: boolean): [boolean, () => void]
 
@@ -16,7 +16,7 @@ function useToggle(
   const [value, setValue] = useState<string | boolean>(initialState)
   const toggle = useCallback(() => {
     setValue((state) => {
-      if(options) {
+      if (options) {
         const foundOption = options.find((option) => option !== state)
         return foundOption || EMPTY_STRING
       }
