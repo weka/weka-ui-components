@@ -72,6 +72,10 @@
     position: relative;
     transition: color 0.3s ease;
 
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+
     &:first-child {
       border-radius: 5px 0 0 5px;
       border-left: 1px solid;
