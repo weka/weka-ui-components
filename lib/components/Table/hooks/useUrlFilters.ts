@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Utils } from '../../../main'
-import { SAVED_FILTERS } from '../../../consts'
+import { SAVED_FILTERS } from 'consts'
 import localStorageService from '../../../localStorageService'
-import useStaticProps from '../../../hooks/useStaticProps'
+import { useStaticProps } from 'hooks'
 import { ExtendedColumnFilter, UrlFilterParser } from '../types'
 import { urlFilterParsers } from '../tableUtils'
 

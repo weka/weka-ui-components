@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import clsx from 'clsx'
 import { Info } from '../index'
-import { EMPTY_STRING } from '../../consts'
-import { ThinArrow } from '../../svgs'
+import { EMPTY_STRING } from 'consts'
+import { ThinArrow } from 'svgs'
 
 import './collapsible.scss'
 

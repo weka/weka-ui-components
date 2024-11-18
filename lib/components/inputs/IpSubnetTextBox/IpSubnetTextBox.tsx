@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { EMPTY_STRING, EVENT_KEYS, NOP, ZERO_STRING } from '../../../consts'
-import Utils from '../../../utils'
-import { Info } from '../../../svgs'
+import { EMPTY_STRING, EVENT_KEYS, NOP, ZERO_STRING } from 'consts'
+import Utils from 'utils'
+import { Info } from 'svgs'
 import Copy from '../../Copy'
 
 import './ipSubnetTextBox.scss'

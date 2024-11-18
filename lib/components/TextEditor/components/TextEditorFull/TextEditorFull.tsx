@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useId, useMemo, useRef, useState } from 'react'
 import AceEditor from 'react-ace'
-import { EMPTY_STRING } from '../../../../consts'
+import { EMPTY_STRING } from 'consts'
 import Copy from '../../../Copy'
-import { useToggle } from '../../../../hooks'
+import { useToggle } from 'hooks'
 import { Checkbox } from '../../../inputs'
 import { CircularProgress } from '@mui/material'
 import {

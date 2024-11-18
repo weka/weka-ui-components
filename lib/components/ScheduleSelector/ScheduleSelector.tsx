@@ -9,7 +9,7 @@ import {
 } from './components'
 import { ScheduleData } from './types'
 import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'
-import { EMPTY_STRING } from '../../consts'
+import { EMPTY_STRING } from 'consts'
 
 interface ScheduleSelectorProps {
   type: string

@@ -1,8 +1,8 @@
 import React from 'react'
 import { DateTime } from 'luxon'
 import Tooltip from '../../../../Tooltip'
-import Utils from '../../../../../utils'
-import { TIME_FORMATS } from '../../../../../consts'
+import Utils from 'utils'
+import { TIME_FORMATS } from 'consts'
 import clsx from 'clsx'
 import { ExtendedCellProps } from '../../../types'
 

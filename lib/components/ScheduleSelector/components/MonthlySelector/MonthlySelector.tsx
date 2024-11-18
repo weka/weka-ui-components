@@ -8,7 +8,7 @@ import {
   MONTHS,
   SPECIFIC_MONTH
 } from '../../ScheduleSelectorConsts'
-import { ZERO_STRING } from '../../../../consts'
+import { ZERO_STRING } from 'consts'
 
 import './monthlySelector.scss'
 

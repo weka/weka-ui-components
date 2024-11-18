@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import Utils from '../../../../../utils'
-import { Close } from '../../../../../svgs'
+import Utils from 'utils'
+import { Close } from 'svgs'
 import { ExtendedFilterProps } from '../../../types'
 import FilterWrapper from '../../FilterWrapper'
 import { Select } from '../../../../inputs'

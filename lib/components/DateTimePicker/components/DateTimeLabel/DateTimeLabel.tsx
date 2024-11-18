@@ -1,8 +1,8 @@
 import React from 'react'
 import { DateTime } from 'luxon'
-import Utils from '../../../../utils'
+import Utils from 'utils'
 import clsx from 'clsx'
-import { EMPTY_STRING, TIME_FORMATS } from '../../../../consts'
+import { EMPTY_STRING, TIME_FORMATS } from 'consts'
 
 import './DateTimeLabel.scss'
 

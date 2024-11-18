@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { EMPTY_STRING } from '../../../consts'
+import { EMPTY_STRING } from 'consts'
 
 import './textField.scss'
 

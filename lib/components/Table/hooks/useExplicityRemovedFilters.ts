@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { EXPLICITLY_REMOVED_FILTERS } from '../../../consts'
+import { EXPLICITLY_REMOVED_FILTERS } from 'consts'
 import localStorageService from '../../../localStorageService'
 import { ExtendedColumnFilter } from '../types'
 

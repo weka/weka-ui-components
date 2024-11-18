@@ -1,7 +1,7 @@
 import React from 'react'
 import { Duration } from 'luxon'
 import Tooltip from '../../../../Tooltip'
-import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from '../../../../../consts'
+import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from 'consts'
 import { ExtendedCellProps } from '../../../types'
 
 export type TimeCellValue = number
