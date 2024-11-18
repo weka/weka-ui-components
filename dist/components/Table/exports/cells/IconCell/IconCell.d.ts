@@ -1,0 +1,11 @@
+import { default as React } from 'react';
+import { ExtendedCellProps } from '../../../types';
+export interface IconCellOptions<Data> {
+    Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    extraClass?: string | ((values: Data) => string);
+    tooltipText?: string | ((values: Data) => string);
+}
+export type IconCellValue = string | boolean | null | undefined;
+export declare const IconCellName = "IconCell";
+declare function IconCell<Data>(props: ExtendedCellProps<Data, IconCellValue>): React.JSX.Element;
+export default IconCell;
