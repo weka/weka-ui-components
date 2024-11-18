@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import debounce from 'lodash/debounce'
+import Utils from '../../../utils'
 import { ExtendedTable } from '../types'
 import { ROWS_PER_PAGE_RATIO, ROW_HEIGHT } from '../tableConsts'
 
@@ -27,7 +27,7 @@ function usePageSize<Data>({
       return
     }
 
-    const calcNumberOfRows = debounce(() => {
+    const calcNumberOfRows = Utils.debounce(() => {
       const tableHeight = tableRef.current?.clientHeight
       if (tableHeight) {
         table.setPageSize(tableHeight / (ROW_HEIGHT / ROWS_PER_PAGE_RATIO))

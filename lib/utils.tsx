@@ -389,6 +389,26 @@ const utils = {
       }
     })
     return isPast ? `${stringToShow} ago` : `in ${stringToShow}`
+  },
+
+  capitalize: (str: string) => {
+    const separator = ', '
+
+    return str
+      .split(separator)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(separator)
+  },
+
+  debounce: (callback: any, wait = 0) => {
+    let timer: ReturnType<typeof setTimeout> | -1 = -1
+
+    return (...args) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        callback.apply(this, args)
+      }, wait)
+    }
   }
 }
 
