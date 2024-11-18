@@ -17,19 +17,19 @@ interface UploadFieldProps {
   error?: string
   disabled?: boolean
   tooltipText?: string
-  shouldBeBinary?: boolean
+  encoding: 'text' | 'binary' | 'base64'
 }
 function UploadField(props: UploadFieldProps) {
   const {
     label,
     onChange = NOP,
     disabled,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     placeholder,
     error,
     onReadError,
     tooltipText = EMPTY_STRING,
-    shouldBeBinary = false,
+    encoding,
     ...rest
   } = props
   const id = useId()
@@ -40,20 +40,34 @@ function UploadField(props: UploadFieldProps) {
     'upload-wrapper-disabled': disabled
   })
 
-  const onFileChange = (file) => {
-    if (shouldBeBinary) {
+  const onFileChange = (file: File) => {
+    if (encoding === 'binary') {
       onChange(file)
       return
     }
+
     try {
+      const isText = encoding === 'text'
       const reader = new FileReader()
-      reader.onload = (event) => {
+
+      reader.onload = (event: ProgressEvent<FileReader>) => {
         setFileName(file.name)
-        onChange(event.target.result)
+        const result = event.target?.result
+
+        const value = isText
+          ? (result as string)
+          : (result as string).split(',')[1]
+
+        onChange(value)
       }
-      reader.readAsText(file)
+
+      reader.onerror = () => {
+        onReadError?.()
+      }
+
+      isText ? reader.readAsText(file) : reader.readAsDataURL(file)
     } catch (e) {
-      onReadError()
+      onReadError?.()
     }
   }
 
