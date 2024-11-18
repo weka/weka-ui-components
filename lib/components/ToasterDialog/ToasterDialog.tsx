@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import clsx from 'clsx'
-import { capitalize } from 'lodash'
 import { DIALOG_STATUSES, TOASTER_DIALOG } from 'consts'
-import { useDialog } from '../../context'
+import { useDialog } from 'context'
 import Utils from 'utils'
 import { Approve, Warning } from 'svgs'
 
@@ -40,7 +39,7 @@ function ToasterDialog() {
             })}
           >
             {status === DIALOG_STATUSES.SUCCESS ? <Approve /> : <Warning />}
-            {capitalize(status)}
+            {Utils.capitalize(status)}
           </div>
         ),
         body: message,
