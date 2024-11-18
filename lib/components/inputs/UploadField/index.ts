@@ -1,3 +1,1 @@
-export {default} from './UploadField'
-
-
+export { default } from './UploadField'

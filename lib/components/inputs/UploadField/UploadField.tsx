@@ -7,17 +7,18 @@ import { Close } from 'svgs'
 import Tooltip from '../../Tooltip'
 
 import './uploadField.scss'
+const ENCODING_TYPES = { text: 'text', binary: 'binary', base64: 'base64' }
 
 interface UploadFieldProps {
   onChange?: (newVal: any) => void
-  onReadError?: () => void
+  onReadError?: (error?: Error) => void
   wrapperClass?: string
   placeholder?: string
   label: string
   error?: string
   disabled?: boolean
   tooltipText?: string
-  encoding: 'text' | 'binary' | 'base64'
+  encoding: keyof typeof ENCODING_TYPES
 }
 function UploadField(props: UploadFieldProps) {
   const {
@@ -41,33 +42,40 @@ function UploadField(props: UploadFieldProps) {
   })
 
   const onFileChange = (file: File) => {
-    if (encoding === 'binary') {
+    if (file.size === 0) {
+      onReadError?.(new Error('File is empty'))
+      return
+    }
+    if (encoding === ENCODING_TYPES.binary) {
       onChange(file)
       return
     }
 
     try {
-      const isText = encoding === 'text'
+      const isText = encoding === ENCODING_TYPES.text
       const reader = new FileReader()
 
       reader.onload = (event: ProgressEvent<FileReader>) => {
         setFileName(file.name)
-        const result = event.target?.result
+        const result = event.target?.result as string | null
 
-        const value = isText
-          ? (result as string)
-          : (result as string).split(',')[1]
+        if (!result) {
+          onReadError?.(new Error('Failed to read file content'))
+          return
+        }
+
+        const value = isText ? result : result?.split(',')[1]
 
         onChange(value)
       }
 
       reader.onerror = () => {
-        onReadError?.()
+        onReadError?.(new Error('Something went wrong'))
       }
 
       isText ? reader.readAsText(file) : reader.readAsDataURL(file)
-    } catch (e) {
-      onReadError?.()
+    } catch (error) {
+      onReadError?.(error as Error)
     }
   }
 
