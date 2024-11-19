@@ -170,8 +170,13 @@ const MonthlySelector: FC<MonthlySelectorProps> = ({
     if (daysInSelectedMonths.includes(31)) {
       return 'specific-month-31-days'
     }
-    return 'specific-month-days'
+    return 'every-month-days'
   }
+
+  const breakpointIndex = useMemo(
+    () => Math.ceil(daysOfMonth.length / 2),
+    [daysOfMonth]
+  )
 
   return (
     <>
@@ -202,6 +207,7 @@ const MonthlySelector: FC<MonthlySelectorProps> = ({
             onChange={handleDateChange}
             options={daysOfMonth}
             isDisabled={isDisabled}
+            breakpointIndex={breakpointIndex}
           />
         </div>
       </div>

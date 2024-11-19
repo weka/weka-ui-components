@@ -16,6 +16,7 @@ interface ToggleButtonProps {
   small?: boolean
   isDisabled?: boolean
   wrapperClass?: string
+  breakpointIndex?: number
 }
 
 function ToggleButton(props: ToggleButtonProps) {
@@ -25,7 +26,8 @@ function ToggleButton(props: ToggleButtonProps) {
     onChange,
     small,
     wrapperClass = EMPTY_STRING,
-    isDisabled
+    isDisabled,
+    breakpointIndex
   } = props
 
   const elementsList = useRef<HTMLDivElement>(null)
@@ -33,28 +35,38 @@ function ToggleButton(props: ToggleButtonProps) {
     `toggle-button-${Math.random().toString(36).slice(2, 11)}`
   )
 
-  const selectElement = useCallback((option: HTMLElement, pad: HTMLElement) => {
-    if (option && pad) {
-      const optionRect = option.getBoundingClientRect()
-      const parentRect = option.parentElement?.getBoundingClientRect()
-      pad.style.width = `${optionRect.width}px`
-      pad.style.height = `${optionRect.height}px`
-      pad.style.transform = `translateX(${
-        optionRect.left - (parentRect?.left || 0)
-      }px) translateY(${optionRect.top - (parentRect?.top || 0)}px)`
-      pad.style.display = 'block'
+  const selectElement = useCallback(
+    (option: HTMLElement, pad: HTMLElement) => {
+      if (option && pad) {
+        const optionRect = option.getBoundingClientRect()
+        const parentRect = option.parentElement?.getBoundingClientRect()
+        pad.style.width = `${optionRect.width}px`
+        pad.style.height = `${optionRect.height}px`
+        pad.style.transform = `translateX(${
+          optionRect.left - (parentRect?.left || 0)
+        }px) translateY(${optionRect.top - (parentRect?.top || 0)}px)`
+        pad.style.display = 'block'
 
-      if (option.matches(':last-child')) {
-        pad.style.borderRadius = '0 5px 5px 0'
-      } else if (option.matches(':first-child')) {
-        pad.style.borderRadius = '5px 0 0 5px'
-      } else {
-        pad.style.borderRadius = '0'
+        if (
+          option.matches(':last-child') ||
+          option.getAttribute('data-value') === breakpointIndex?.toString()
+        ) {
+          pad.style.borderRadius = '0 5px 5px 0'
+        } else if (
+          option.matches(':first-child') ||
+          option.getAttribute('data-value') ===
+            ((breakpointIndex || 0) + 1)?.toString()
+        ) {
+          pad.style.borderRadius = '5px 0 0 5px'
+        } else {
+          pad.style.borderRadius = '0'
+        }
+
+        option.classList.add('toggle-button-option-selected')
       }
-
-      option.classList.add('toggle-button-option-selected')
-    }
-  }, [])
+    },
+    [breakpointIndex]
+  )
 
   const updatePadPosition = useCallback(() => {
     const instanceElement = document.getElementById(instanceId.current)
