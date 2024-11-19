@@ -4,6 +4,7 @@
   white-space: nowrap;
   display: inline-block;
   width: 100%;
-  word-break: break-all;
-  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
 }
