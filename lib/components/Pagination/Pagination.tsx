@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Tooltip from '../Tooltip'
-import { Arrow, LastArrow } from 'svgs'
+import { Arrow, LastArrow } from '~svgs'
 import { IconButton } from '@mui/material'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 import './pagination.scss'
-import { useStaticProps } from 'hooks'
+import { useStaticProps } from '~hooks'
 import { TextBox } from '../inputs'
 
 type PaginationProps = {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
-import { ThinClose } from 'svgs'
+import { ThinClose } from '~svgs'
 
 import './closeButton.scss'
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../../../Tooltip'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 import { ExtendedCellProps } from '../../../types'
-import { StatusOk } from 'svgs'
+import { StatusOk } from '~svgs'
 
 import './iconCell.scss'
 

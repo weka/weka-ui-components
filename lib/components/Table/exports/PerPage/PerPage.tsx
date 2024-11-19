@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import Select from '../../../inputs/Select'
-import { PER_PAGE_OPTIONS } from 'consts'
+import { PER_PAGE_OPTIONS } from '~consts'
 
 import './perPage.scss'
 

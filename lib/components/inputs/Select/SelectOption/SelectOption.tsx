@@ -1,7 +1,7 @@
 import React from 'react'
 import { components, OptionProps } from 'react-select'
 import Tooltip from '../../../Tooltip'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 import './selectOption.scss'
 

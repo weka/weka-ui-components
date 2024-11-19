@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import { IconButton } from '@mui/material'
 import MenuPopper from '../../../MenuPopper'
-import { MenuDots } from 'svgs'
-import { useToggle } from 'hooks'
+import { MenuDots } from '~svgs'
+import { useToggle } from '~hooks'
 import { menuItem } from '../../../MenuPopper/MenuPopper'
 import { ExtendedRow, RowAction } from '../../types'
 

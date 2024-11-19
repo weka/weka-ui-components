@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import clsx from 'clsx'
 
-import { EMPTY_STRING } from 'consts'
-import { useToggle } from 'hooks'
-import Utils from 'utils'
+import { EMPTY_STRING } from '~consts'
+import { useToggle } from '~hooks'
+import Utils from '~utils'
 import Info from '../../Info/Info'
 
 import './loginField.scss'

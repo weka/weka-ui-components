@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { Tooltip as MuiTooltip } from '@mui/material'
 import type { TooltipProps as MuiTooltipProps } from '@mui/material'
 import clsx from 'clsx'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 import './tooltip.scss'
 

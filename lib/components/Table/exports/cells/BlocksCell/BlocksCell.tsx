@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
-import { DRIVES_STATUSES, NODES_STATUSES } from 'consts'
+import { DRIVES_STATUSES, NODES_STATUSES } from '~consts'
 import { Link } from 'react-router-dom'
 
 import './blocksCell.scss'

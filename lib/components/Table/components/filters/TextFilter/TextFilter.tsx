@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ExtendedFilterProps } from '../../../types'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 import FilterWrapper from '../../FilterWrapper'
 
 import './textFilter.scss'

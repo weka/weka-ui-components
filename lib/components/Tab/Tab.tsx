@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import clsx from 'clsx'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 import { Link } from 'react-router-dom'
 import Tooltip from '../Tooltip'
-import { Info } from 'svgs'
+import { Info } from '~svgs'
 import ValidityIndicator from './ValidityIndicator'
 
 import './tab.scss'

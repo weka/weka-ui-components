@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { CheckmarkSmall } from 'svgs'
+import { CheckmarkSmall } from '~svgs'
 
 import './validityIndicator.scss'
 

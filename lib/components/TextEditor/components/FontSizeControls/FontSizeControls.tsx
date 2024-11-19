@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useTextEditorContext } from '../../context'
 import { useLocalStorage } from 'react-use'
-import { FontSizeEnlarge, FontSizeReduce } from 'svgs'
+import { FontSizeEnlarge, FontSizeReduce } from '~svgs'
 import { IconButton } from '@mui/material'
 import Tooltip from '../../../Tooltip/Tooltip'
 import { DEFAULT_FONT_SIZE } from '../../TextEditor'

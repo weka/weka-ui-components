@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { IAceEditor } from 'react-ace/lib/types'
-import { NOP } from 'consts'
-import { useStaticProps } from 'hooks'
+import { NOP } from '~consts'
+import { useStaticProps } from '~hooks'
 
 function useLinePosition({
   initialLine,

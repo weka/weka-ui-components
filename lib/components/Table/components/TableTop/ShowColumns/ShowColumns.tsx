@@ -8,7 +8,7 @@ import {
   Paper,
   Popper
 } from '@mui/material'
-import { Show } from 'svgs'
+import { Show } from '~svgs'
 import { ExtendedTable, TData } from '../../../types'
 import { tableUtils } from '../../../tableUtils'
 

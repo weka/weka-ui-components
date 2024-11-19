@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useTextEditorContext } from '../../context'
 import ExpandCollapseButton from '../../../ExpandCollapseButton'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 function FoldAllButton() {
   const {

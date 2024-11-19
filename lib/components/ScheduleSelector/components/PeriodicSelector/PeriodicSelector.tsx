@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { TimePicker, DayPicker } from '../index'
-import { EMPTY_STRING, ZERO_STRING } from 'consts'
+import { EMPTY_STRING, ZERO_STRING } from '~consts'
 import {
   WORK_DAYS,
   MINUTES_OFFSETS,

@@ -1,7 +1,7 @@
 import React from 'react'
 import Tooltip from '../../../../Tooltip'
 import CapacityBar from '../../../../CapacityBar'
-import Utils from 'utils'
+import Utils from '~utils'
 import SpanTooltip from '../../../../SpanTooltip'
 import { ExtendedCellProps } from '../../../types'
 

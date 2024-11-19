@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react'
 import { Radio } from '@mui/material'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { Info } from 'svgs'
+import { Info } from '~svgs'
 
 import './radioSwitch.scss'
 

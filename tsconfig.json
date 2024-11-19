@@ -19,12 +19,12 @@
     "allowSyntheticDefaultImports": true,
     "emitDeclarationOnly": true,
     "paths": {
-      "context": ["./lib/context/index.ts"],
-      "consts": ["./lib/consts.ts"],
-      "svgs": ["./lib/svgs/index.ts"],
-      "hooks": ["./lib/hooks/index.ts"],
-      "utils": ["./lib/utils.tsx"],
-      "types": ["./lib/types/global.d.ts"]
+      "~context": ["./lib/context/index.ts"],
+      "~consts": ["./lib/consts.ts"],
+      "~svgs": ["./lib/svgs/index.ts"],
+      "~hooks": ["./lib/hooks/index.ts"],
+      "~utils": ["./lib/utils.tsx"],
+      "~types": ["./lib/types/global.d.ts"]
     }
   },
   "include": ["lib"]

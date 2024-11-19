@@ -11,7 +11,7 @@ import {
   NOP,
   SAVED_RESIZED,
   SAVED_RESIZING_ENABLED
-} from 'consts'
+} from '~consts'
 import clsx from 'clsx'
 import {
   useReactTable,
@@ -26,7 +26,7 @@ import {
   ColumnFilter,
   FilterFn
 } from '@tanstack/react-table'
-import Utils from 'utils'
+import Utils from '~utils'
 import localStorageService from '../../localStorageService'
 import Loader from '../Loader'
 import {
@@ -37,7 +37,7 @@ import {
   usePrepareColumnDefs,
   useFiltersChangeListener
 } from './hooks'
-import { useToggle } from 'hooks'
+import { useToggle } from '~hooks'
 import {
   ExtendedColumnFilter,
   ExtendedColumnDef,

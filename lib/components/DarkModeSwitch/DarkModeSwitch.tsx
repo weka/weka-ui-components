@@ -1,6 +1,6 @@
 import React, { useId, useState } from 'react'
 import clsx from 'clsx'
-import { useDarkMode } from 'context'
+import { useDarkMode } from '~context'
 
 import './darkModeSwitch.scss'
 import Tooltip from '../Tooltip'

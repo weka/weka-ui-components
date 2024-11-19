@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from 'react'
 import clsx from 'clsx'
 import { CircularProgress } from '@mui/material'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 import './button.scss'
 

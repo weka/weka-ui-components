@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import clsx from 'clsx'
 import TextBox from '../TextBox'
 import Select from '../Select'
-import Utils from 'utils'
+import Utils from '~utils'
 import Info from '../../Info'
 
 import './textSelectBox.scss'

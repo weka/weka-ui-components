@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { ExtendedRow, TableExtraClasses, ExtendedCell } from '../../types'
-import { Arrow } from 'svgs'
+import { Arrow } from '~svgs'
 import { flexRender } from '@tanstack/react-table'
 import React, { FC, useMemo } from 'react'
 

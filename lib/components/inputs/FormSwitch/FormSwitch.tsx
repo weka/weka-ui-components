@@ -1,8 +1,8 @@
 import React from 'react'
 import Tooltip from '../../Tooltip'
 import Switch from '../../Switch'
-import { EMPTY_STRING } from 'consts'
-import { Info } from 'svgs'
+import { EMPTY_STRING } from '~consts'
+import { Info } from '~svgs'
 
 import './FormSwitch.scss'
 

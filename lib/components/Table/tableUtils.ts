@@ -1,6 +1,6 @@
 import { Utils } from '../../main'
-import { EMPTY_STRING, SEVERITIES, Severities } from 'consts'
-import utils from 'utils'
+import { EMPTY_STRING, SEVERITIES, Severities } from '~consts'
+import utils from '~utils'
 import { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
 
 export const tableUtils = {

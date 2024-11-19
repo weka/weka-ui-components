@@ -1,8 +1,8 @@
 import React from 'react'
 import Button from '../Button'
 import Tooltip from '../Tooltip'
-import { Filter } from 'svgs'
-import { EMPTY_STRING } from 'consts'
+import { Filter } from '~svgs'
+import { EMPTY_STRING } from '~consts'
 import clsx from 'clsx'
 
 import './filterButton.scss'

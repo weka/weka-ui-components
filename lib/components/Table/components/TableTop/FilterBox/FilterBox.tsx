@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { DateTime } from 'luxon'
-import { Close } from 'svgs'
-import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from 'consts'
-import utils from 'utils'
+import { Close } from '~svgs'
+import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from '~consts'
+import utils from '~utils'
 import { ExtendedColumn } from '../../../types'
 import { tableUtils } from '../../../tableUtils'
 

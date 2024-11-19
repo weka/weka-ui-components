@@ -4,7 +4,7 @@ import {
 } from './SingleToggle'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import { useToggle } from 'hooks'
+import { useToggle } from '~hooks'
 
 export default {
   title: 'Components/SingleToggle',

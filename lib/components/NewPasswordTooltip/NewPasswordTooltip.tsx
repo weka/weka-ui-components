@@ -1,6 +1,6 @@
 import React from 'react'
 import { passwordStrength } from 'check-password-strength'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 import './newPasswordTooltip.scss'
 

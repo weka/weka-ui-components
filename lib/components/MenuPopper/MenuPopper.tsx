@@ -9,8 +9,8 @@ import {
   Divider
 } from '@mui/material'
 import Tooltip from '../Tooltip'
-import Utils from 'utils'
-import { EMPTY_STRING } from 'consts'
+import Utils from '~utils'
+import { EMPTY_STRING } from '~consts'
 import clsx from 'clsx'
 
 import './menuPopper.scss'

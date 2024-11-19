@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import { ToggleButton } from '../../../index'
-import { ZERO_STRING } from 'consts'
+import { ZERO_STRING } from '~consts'
 
 import './hourPicker.scss'
 

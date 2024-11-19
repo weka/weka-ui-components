@@ -2,9 +2,9 @@ import React, { useRef } from 'react'
 import clsx from 'clsx'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import Tooltip from '../../../../Tooltip'
-import { Filter as FilterIcon } from 'svgs'
-import { useToggle } from 'hooks'
-import { EMPTY_STRING } from 'consts'
+import { Filter as FilterIcon } from '~svgs'
+import { useToggle } from '~hooks'
+import { EMPTY_STRING } from '~consts'
 
 import './filterHeader.scss'
 

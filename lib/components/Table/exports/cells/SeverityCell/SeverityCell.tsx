@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../../../Tooltip'
-import { SEVERITIES_ICONS } from 'consts'
+import { SEVERITIES_ICONS } from '~consts'
 import { ExtendedCellProps } from '../../../types'
 
 import './severityCell.scss'

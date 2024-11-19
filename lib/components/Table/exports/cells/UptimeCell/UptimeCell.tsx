@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Tooltip from '../../../../Tooltip'
-import Utils from 'utils'
+import Utils from '~utils'
 import { ExtendedCellProps } from '../../../types'
 
 export type UptimeCellValue = string

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
-import { MONTHS, SHORT_DAY_OF_WEEK } from 'consts'
-import { Arrow } from 'svgs'
+import { MONTHS, SHORT_DAY_OF_WEEK } from '~consts'
+import { Arrow } from '~svgs'
 import DayCell from '../DayCell/DayCell'
 
 import './DateSelector.scss'

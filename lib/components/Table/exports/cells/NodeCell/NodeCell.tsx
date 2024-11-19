@@ -1,6 +1,6 @@
 import React from 'react'
 import Tooltip from '../../../../Tooltip'
-import { EMPTY_STRING, SHORT_ROLES } from 'consts'
+import { EMPTY_STRING, SHORT_ROLES } from '~consts'
 import clsx from 'clsx'
 
 import './nodeCell.scss'

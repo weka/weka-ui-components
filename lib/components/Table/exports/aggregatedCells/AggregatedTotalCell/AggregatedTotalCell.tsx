@@ -1,5 +1,5 @@
 import { Utils } from '../../../../../main'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 import { ExtendedCellProps, TData } from '../../../types'
 
 function AggregatedTotalCell<Data>(props: ExtendedCellProps<Data>) {

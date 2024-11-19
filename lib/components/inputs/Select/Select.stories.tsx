@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import React, { useState } from 'react'
 import Select from './Select'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 const meta: Meta<typeof Select> = {
   title: 'Components/inputs/Select',

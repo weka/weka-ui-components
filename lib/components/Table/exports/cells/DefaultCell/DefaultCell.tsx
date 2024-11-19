@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Tooltip from '../../../../Tooltip'
-import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from 'consts'
-import Utils from 'utils'
+import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from '~consts'
+import Utils from '~utils'
 import { Link } from 'react-router-dom'
 import { ExtendedCell, ExtendedCellProps } from '../../../types'
 

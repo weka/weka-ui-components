@@ -4,7 +4,7 @@ import Tooltip from '../Tooltip'
 import copy from 'copy-to-clipboard'
 import clsx from 'clsx'
 
-import { Copy as CopyIcon, CheckMark } from 'svgs'
+import { Copy as CopyIcon, CheckMark } from '~svgs'
 
 import './copy.scss'
 

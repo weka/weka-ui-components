@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SpanTooltip from '../../../../SpanTooltip'
 import Spinner from '../../../../Spinner'
 import { ExtendedCell, ExtendedCellProps } from '../../../types'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 export interface ApiCallCellOptions<Data, Value> {
   apiCall: (cell: ExtendedCell<Data, Value>) => Promise<string>

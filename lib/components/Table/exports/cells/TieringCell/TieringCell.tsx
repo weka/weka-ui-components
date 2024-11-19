@@ -1,8 +1,8 @@
 import React from 'react'
 import CircularProgress from '../../../../CircularProgress'
 import Tooltip from '../../../../Tooltip'
-import { OBS_IS_DETACHING, OBS_MODES } from 'consts'
-import { RemoteTiering, Tiering } from 'svgs'
+import { OBS_IS_DETACHING, OBS_MODES } from '~consts'
+import { RemoteTiering, Tiering } from '~svgs'
 
 import './tieringCell.scss'
 import { ExtendedCellProps } from '../../../types'

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import Button from '../../../Button'
 import { DateTime } from 'luxon'
 import NumInput from '../NumInput'
-import { TIME_PARTS } from 'consts'
+import { TIME_PARTS } from '~consts'
 
 import './TimeSelector.scss'
 

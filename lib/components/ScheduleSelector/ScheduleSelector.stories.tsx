@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/react'
 import ScheduleSelector from './ScheduleSelector'
 
 import { Select } from '../inputs'
-import Utils from 'utils'
+import Utils from '~utils'
 import { TextEditor } from '../index'
 import { ScheduleData } from './types'
 import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
-import Utils from 'utils'
-import { Info } from 'svgs'
+import { EMPTY_STRING, EVENT_KEYS, NOP } from '~consts'
+import Utils from '~utils'
+import { Info } from '~svgs'
 import Copy from '../../Copy'
 
 import './ipTextBox.scss'

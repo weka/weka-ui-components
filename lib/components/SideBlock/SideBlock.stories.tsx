@@ -2,7 +2,7 @@ import { default as SideBlockComponent, SideBlockProps } from './SideBlock'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import React from 'react'
-import { useToggle } from 'hooks'
+import { useToggle } from '~hooks'
 
 export default {
   title: 'Components/SideBlock',

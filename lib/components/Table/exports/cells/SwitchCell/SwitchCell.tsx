@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react'
 import Switch from '../../../../Switch'
 import Tooltip from '../../../../Tooltip'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '~consts'
 
 import './switchCell.scss'
 import { ExtendedCellProps, ExtendedRow } from '../../../types'
