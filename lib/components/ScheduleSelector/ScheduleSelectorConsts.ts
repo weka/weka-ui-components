@@ -32,18 +32,18 @@ export const MONTHS = {
 }
 
 export const MONTHS_OPTIONS = [
-  { label: 'JANUARY', value: MONTHS.JANUARY },
-  { label: 'FEBRUARY', value: MONTHS.FEBRUARY },
-  { label: 'MARCH', value: MONTHS.MARCH },
-  { label: 'APRIL', value: MONTHS.APRIL },
-  { label: 'MAY', value: MONTHS.MAY },
-  { label: 'JUNE', value: MONTHS.JUNE },
-  { label: 'JULY', value: MONTHS.JULY },
-  { label: 'AUGUST', value: MONTHS.AUGUST },
-  { label: 'SEPTEMBER', value: MONTHS.SEPTEMBER },
-  { label: 'OCTOBER', value: MONTHS.OCTOBER },
-  { label: 'NOVEMBER', value: MONTHS.NOVEMBER },
-  { label: 'DECEMBER', value: MONTHS.DECEMBER }
+  { label: 'JANUARY', value: MONTHS.JANUARY, days: 31 },
+  { label: 'FEBRUARY', value: MONTHS.FEBRUARY, days: 28 },
+  { label: 'MARCH', value: MONTHS.MARCH, days: 31 },
+  { label: 'APRIL', value: MONTHS.APRIL, days: 30 },
+  { label: 'MAY', value: MONTHS.MAY, days: 31 },
+  { label: 'JUNE', value: MONTHS.JUNE, days: 30 },
+  { label: 'JULY', value: MONTHS.JULY, days: 31 },
+  { label: 'AUGUST', value: MONTHS.AUGUST, days: 31 },
+  { label: 'SEPTEMBER', value: MONTHS.SEPTEMBER, days: 30 },
+  { label: 'OCTOBER', value: MONTHS.OCTOBER, days: 31 },
+  { label: 'NOVEMBER', value: MONTHS.NOVEMBER, days: 30 },
+  { label: 'DECEMBER', value: MONTHS.DECEMBER, days: 31 }
 ]
 
 export const DAYS_OPTIONS = [
@@ -110,3 +110,5 @@ export const MINUTES_OFFSETS = {
 export const DEFAULT_HOUR = '09'
 
 export const DEFAULT_INTERVAL = 30
+
+export const MINIMAL_DAYS_OF_MONTH = 28

@@ -15,33 +15,76 @@
 
   .toggle-button-options {
     display: grid;
-    grid-template-columns: repeat(14, auto);
-    width: 100%;
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
   }
 
-  .toggle-button.multi-select {
-    .toggle-button-option {
-      min-width: unset;
-      padding: 2px;
-      box-sizing: border-box;
-      flex: 1;
+  .day-picker-wrapper {
+    flex: 1;
 
-      &:nth-child(14) {
-        border-radius: 0 5px 5px 0;
-      }
+    &.every-month-days .toggle-button-options {
+      grid-template-columns: repeat(14, auto);
+    }
 
-      &:nth-child(15) {
-        border-radius: 5px 0 0 5px;
+    &.specific-month-31-days .toggle-button-options {
+      grid-template-columns: repeat(16, auto);
+    }
+
+    &.specific-month-30-days .toggle-button-options {
+      grid-template-columns: repeat(15, auto);
+    }
+
+    .toggle-button.multi-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    &.specific-month-31-days .toggle-button.multi-select {
+      .toggle-button-option {
+        &:nth-child(16) {
+          border-radius: 0 5px 5px 0;
+        }
+        &:nth-child(17) {
+          border-radius: 5px 0 0 5px;
+          &:not(.toggle-button-option-selected) {
+            margin-left: 0;
+          }
+        }
       }
     }
 
-    .toggle-button-option:not(.toggle-button-option-selected):nth-child(15) {
-      margin-left: 0;
+    &.specific-month-30-days .toggle-button.multi-select {
+      .toggle-button-option {
+        &:nth-child(15) {
+          border-radius: 0 5px 5px 0;
+        }
+        &:nth-child(16) {
+          border-radius: 5px 0 0 5px;
+          &:not(.toggle-button-option-selected) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    &.every-month-days .toggle-button.multi-select {
+      .toggle-button-option {
+        &:nth-child(14) {
+          border-radius: 0 5px 5px 0;
+        }
+        &:nth-child(15) {
+          border-radius: 5px 0 0 5px;
+          &:not(.toggle-button-option-selected) {
+            margin-left: 0;
+          }
+        }
+      }
     }
   }
 }
 
-
-  .monthly-picker-wrapper {
+.monthly-picker-wrapper {
   margin-top: 10px;
 }
