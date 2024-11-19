@@ -14,9 +14,16 @@ interface DayPickerProps {
   onChange: (days: string) => void
   options?: Option[]
   isDisabled?: boolean
+  breakpointIndex?: number
 }
 
-const DayPicker = ({ days, onChange, options, isDisabled }: DayPickerProps) => {
+const DayPicker = ({
+  days,
+  onChange,
+  options,
+  isDisabled,
+  breakpointIndex
+}: DayPickerProps) => {
   const allDays = useMemo(
     () => (options || DAYS_OF_WEEK).map((day) => day.value),
     [options]
@@ -64,6 +71,7 @@ const DayPicker = ({ days, onChange, options, isDisabled }: DayPickerProps) => {
       wrapperClass='day-picker-wrapper'
       isDisabled={isDisabled}
       small
+      breakpointIndex={breakpointIndex}
     />
   )
 }
