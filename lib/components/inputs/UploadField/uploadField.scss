@@ -3,18 +3,16 @@
   display: flex;
   align-items: center;
   height: 32px;
-  position: absolute;
-  left: 250px;
-  bottom: 5px;
+  position: relative;
   label {
-    margin-right: 20px;
+    margin-right: 4px;
   }
 
-  input[type="file"] {
-      display: none;
+  input[type='file'] {
+    display: none;
   }
 
-  input[type="file"]:disabled+label {
+  input[type='file']:disabled + label {
     pointer-events: none;
     background: var(--ironhide-key);
   }
@@ -28,9 +26,9 @@
     display: flex;
     text-align: center;
   }
-   &-disabled {
-     cursor: default;
-   }
+  &-disabled {
+    cursor: default;
+  }
 
   .file-name-wrapper {
     display: flex;
@@ -47,6 +45,19 @@
     svg {
       width: 8px;
       height: 8px;
+    }
+  }
+
+  .upload-field-info {
+    box-sizing: border-box;
+    margin-right: 16px;
+    white-space: nowrap;
+
+    svg {
+      height: 12px;
+      path {
+        fill: currentColor;
+      }
     }
   }
 }

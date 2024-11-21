@@ -1,9 +1,9 @@
-import React, { useId, useState } from 'react'
+import React, { ReactElement, useId, useState } from 'react'
 import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
 import { EMPTY_STRING, NOP } from 'consts'
-import { Close } from 'svgs'
+import { Close, Info } from 'svgs'
 import Tooltip from '../../Tooltip'
 
 import './uploadField.scss'
@@ -14,11 +14,13 @@ interface UploadFieldProps {
   onReadError?: (error?: Error) => void
   wrapperClass?: string
   placeholder?: string
-  label: string
+  label?: string | ReactElement
   error?: string
   disabled?: boolean
   tooltipText?: string
   encoding: keyof typeof ENCODING_TYPES
+  info?: any
+  isRequired?: boolean
 }
 function UploadField(props: UploadFieldProps) {
   const {
@@ -31,13 +33,13 @@ function UploadField(props: UploadFieldProps) {
     onReadError,
     tooltipText = EMPTY_STRING,
     encoding,
+    info,
+    isRequired,
     ...rest
   } = props
   const id = useId()
   const [fileName, setFileName] = useState(EMPTY_STRING)
-  const uploadWrapperClasses = clsx({
-    'upload-wrapper': true,
-    [wrapperClass]: true,
+  const uploadWrapperClasses = clsx('upload-wrapper', wrapperClass, {
     'upload-wrapper-disabled': disabled
   })
 
@@ -101,7 +103,17 @@ function UploadField(props: UploadFieldProps) {
           onClick={(e) => e.stopPropagation()}
         >
           {label}
+          {isRequired && <span className='required-star'>*</span>}
         </label>
+
+        <span className='upload-field-info'>
+          {!!info && (
+            <Tooltip data={info}>
+              <Info />
+            </Tooltip>
+          )}
+        </span>
+
         <span className='upload-field-error capitalize-first-letter'>
           {error}
         </span>
