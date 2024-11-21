@@ -7,29 +7,30 @@ import { Close } from 'svgs'
 import Tooltip from '../../Tooltip'
 
 import './uploadField.scss'
+const ENCODING_TYPES = { text: 'text', binary: 'binary', base64: 'base64' }
 
 interface UploadFieldProps {
   onChange?: (newVal: any) => void
-  onReadError?: () => void
+  onReadError?: (error?: Error) => void
   wrapperClass?: string
   placeholder?: string
   label: string
   error?: string
   disabled?: boolean
   tooltipText?: string
-  shouldBeBinary?: boolean
+  encoding: keyof typeof ENCODING_TYPES
 }
 function UploadField(props: UploadFieldProps) {
   const {
     label,
     onChange = NOP,
     disabled,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     placeholder,
     error,
     onReadError,
     tooltipText = EMPTY_STRING,
-    shouldBeBinary = false,
+    encoding,
     ...rest
   } = props
   const id = useId()
@@ -40,20 +41,41 @@ function UploadField(props: UploadFieldProps) {
     'upload-wrapper-disabled': disabled
   })
 
-  const onFileChange = (file) => {
-    if (shouldBeBinary) {
+  const onFileChange = (file: File) => {
+    if (file.size === 0) {
+      onReadError?.(new Error('File is empty'))
+      return
+    }
+    if (encoding === ENCODING_TYPES.binary) {
       onChange(file)
       return
     }
+
     try {
+      const isText = encoding === ENCODING_TYPES.text
       const reader = new FileReader()
-      reader.onload = (event) => {
+
+      reader.onload = (event: ProgressEvent<FileReader>) => {
         setFileName(file.name)
-        onChange(event.target.result)
+        const result = event.target?.result as string | null
+
+        if (!result) {
+          onReadError?.(new Error('Failed to read file content'))
+          return
+        }
+
+        const value = isText ? result : result?.split(',')[1]
+
+        onChange(value)
       }
-      reader.readAsText(file)
-    } catch (e) {
-      onReadError()
+
+      reader.onerror = () => {
+        onReadError?.(new Error('Something went wrong'))
+      }
+
+      isText ? reader.readAsText(file) : reader.readAsDataURL(file)
+    } catch (error) {
+      onReadError?.(error as Error)
     }
   }
 
