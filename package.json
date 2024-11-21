@@ -20,7 +20,8 @@
     "deploy-storybook": "gh-pages -d storybook-static"
   },
   "files": [
-    "dist"
+    "dist",
+    ".eslintrc"
   ],
   "eslintConfig": {
     "extends": [
