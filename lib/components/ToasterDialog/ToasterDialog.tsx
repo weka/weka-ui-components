@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { DIALOG_STATUSES, TOASTER_DIALOG } from 'consts'
-import { useDialog } from 'context'
 import Utils from 'utils'
 import { Approve, Warning } from 'svgs'
+import { useDialog } from '../../context'
 
 import './toasterDialog.scss'
 
