@@ -3,8 +3,9 @@ import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
 import { EMPTY_STRING, NOP } from 'consts'
-import { Close, Info } from 'svgs'
+import { Close } from 'svgs'
 import Tooltip from '../../Tooltip'
+import Info from '../../Info'
 
 import './uploadField.scss'
 const ENCODING_TYPES = { text: 'text', binary: 'binary', base64: 'base64' }
@@ -103,15 +104,11 @@ function UploadField(props: UploadFieldProps) {
           onClick={(e) => e.stopPropagation()}
         >
           {label}
-          {isRequired && <span className='required-star'>*</span>}
+          {isRequired && !disabled && <span className='required-star'>*</span>}
         </label>
 
         <span className='upload-field-info'>
-          {!!info && (
-            <Tooltip data={info}>
-              <Info />
-            </Tooltip>
-          )}
+          {!!info && <Info data={info} extraClass='upload-field-info-icon' />}
         </span>
 
         <span className='upload-field-error capitalize-first-letter'>
