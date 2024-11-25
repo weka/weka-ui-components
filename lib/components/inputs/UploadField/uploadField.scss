@@ -50,13 +50,11 @@
 
   .upload-field-info {
     box-sizing: border-box;
+    margin-right: 8px;
     white-space: nowrap;
 
     svg {
       height: 12px;
-      path {
-        fill: currentColor;
-      }
     }
 
     .upload-field-info-icon {
