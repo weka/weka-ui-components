@@ -13,7 +13,7 @@ export const Default: Story = {
     label: 'Browse',
     info: 'Browse files',
     isRequired: true,
-    error: 'woot'
+    error: 'Error'
   }
 }
 
