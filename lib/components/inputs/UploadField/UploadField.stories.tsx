@@ -11,6 +11,18 @@ type Story = StoryObj<typeof UploadField>
 export const Default: Story = {
   args: {
     label: 'Browse',
-    info: 'Browse files'
+    info: 'Browse files',
+    isRequired: true,
+    error: 'woot'
+  }
+}
+
+export const WithDescription: Story = {
+  args: {
+    label: 'Browse',
+    info: 'Browse files',
+    isRequired: true,
+    description: 'Description',
+    error: 'Error'
   }
 }

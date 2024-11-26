@@ -22,6 +22,7 @@ interface UploadFieldProps {
   encoding: keyof typeof ENCODING_TYPES
   info?: any
   isRequired?: boolean
+  description?: string | ReactElement
 }
 function UploadField(props: UploadFieldProps) {
   const {
@@ -36,6 +37,7 @@ function UploadField(props: UploadFieldProps) {
     encoding,
     info,
     isRequired,
+    description,
     ...rest
   } = props
   const id = useId()
@@ -85,6 +87,15 @@ function UploadField(props: UploadFieldProps) {
   return (
     <Tooltip data={tooltipText}>
       <div className={uploadWrapperClasses}>
+        {description && (
+          <span className='field__description-wrap'>
+            <span className='field__description field-1-description-content'>
+              {description}
+              {isRequired && <span className='required-star'>*</span>}
+              {!!info && <Info data={info} />}
+            </span>
+          </span>
+        )}
         <input
           id={id}
           disabled={disabled}
@@ -104,11 +115,15 @@ function UploadField(props: UploadFieldProps) {
           onClick={(e) => e.stopPropagation()}
         >
           {label}
-          {isRequired && !disabled && <span className='required-star'>*</span>}
+          {isRequired && !disabled && !description && (
+            <span className='required-star'>*</span>
+          )}
         </label>
 
         <span className='upload-field-info'>
-          {!!info && <Info data={info} extraClass='upload-field-info-icon' />}
+          {!!info && !description && (
+            <Info data={info} extraClass='upload-field-info-icon' />
+          )}
         </span>
 
         <span className='upload-field-error capitalize-first-letter'>
