@@ -92,7 +92,9 @@ function UploadField(props: UploadFieldProps) {
             <span className='field__description field-1-description-content'>
               {description}
               {isRequired && <span className='required-star'>*</span>}
-              {!!info && <Info data={info} />}
+              {!!info && (
+                <Info data={info} extraClass='upload-field-info-icon' />
+              )}
             </span>
           </span>
         )}
