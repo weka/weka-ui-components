@@ -1,4 +1,4 @@
-import React, { ReactElement, useId, useState } from 'react'
+import React, { ReactNode, useId, useState } from 'react'
 import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
@@ -15,14 +15,14 @@ interface UploadFieldProps {
   onReadError?: (error?: Error) => void
   wrapperClass?: string
   placeholder?: string
-  label?: string | ReactElement
+  label?: string
   error?: string
   disabled?: boolean
   tooltipText?: string
   encoding: keyof typeof ENCODING_TYPES
   info?: any
   isRequired?: boolean
-  description?: string | ReactElement
+  description?: ReactNode
 }
 function UploadField(props: UploadFieldProps) {
   const {
