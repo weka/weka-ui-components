@@ -1,14 +1,13 @@
-import React, { ReactNode, useId, useState } from 'react'
+import React, { ReactElement, ReactNode, useId, useState } from 'react'
 import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
-import { EMPTY_STRING, NOP } from 'consts'
+import { EMPTY_STRING, NOP, ENCODING_TYPES } from 'consts'
 import { Close } from 'svgs'
 import Tooltip from '../../Tooltip'
 import Info from '../../Info'
 
 import './uploadField.scss'
-const ENCODING_TYPES = { text: 'text', binary: 'binary', base64: 'base64' }
 
 interface UploadFieldProps {
   onChange?: (newVal: any) => void
@@ -20,7 +19,7 @@ interface UploadFieldProps {
   disabled?: boolean
   tooltipText?: string
   encoding: keyof typeof ENCODING_TYPES
-  info?: any
+  info?: ReactElement | string
   isRequired?: boolean
   description?: ReactNode
 }
