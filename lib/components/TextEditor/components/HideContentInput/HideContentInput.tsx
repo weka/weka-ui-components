@@ -31,7 +31,7 @@ function HideContentInput(props: HideContentInputProps) {
     )
   }
 
-  const [hideContent = [], setHideContent] = useLocalStorage<string[]>(
+  const [hideContent, setHideContent] = useLocalStorage<string[]>(
     `${HIDE_CONTENT_STORAGE_KEY}-${pageStorageKey}`
   )
 
@@ -55,10 +55,10 @@ function HideContentInput(props: HideContentInputProps) {
   return (
     <TagsBox
       value={hideContent}
-      info='Enter regular expression to hide specific text' // TODO:
-      placeholder='Add a RegExp' // TODO:
+      info='Enter regular expression to hide specific text'
+      placeholder='Add a RegExp'
       onChange={setHideContent}
-      label='Hide Content' // TODO:
+      label='Hide Content'
       tagsValidation={(regExpsArr) =>
         regExpsArr.filter((regExp) => {
           try {
