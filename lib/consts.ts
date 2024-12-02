@@ -215,3 +215,9 @@ export const TOASTER_TYPES = {
 } as const
 
 export const DEFAULT_DEBOUNCE_DELAY = 700
+
+export const ENCODING_TYPES = {
+  text: 'text',
+  binary: 'binary',
+  base64: 'base64'
+}

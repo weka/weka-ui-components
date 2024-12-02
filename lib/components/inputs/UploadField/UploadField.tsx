@@ -1,24 +1,27 @@
-import React, { useId, useState } from 'react'
+import React, { ReactElement, ReactNode, useId, useState } from 'react'
 import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
-import { EMPTY_STRING, NOP } from 'consts'
+import { EMPTY_STRING, NOP, ENCODING_TYPES } from 'consts'
 import { Close } from 'svgs'
 import Tooltip from '../../Tooltip'
+import Info from '../../Info'
 
 import './uploadField.scss'
-const ENCODING_TYPES = { text: 'text', binary: 'binary', base64: 'base64' }
 
 interface UploadFieldProps {
   onChange?: (newVal: any) => void
   onReadError?: (error?: Error) => void
   wrapperClass?: string
   placeholder?: string
-  label: string
+  label?: string
   error?: string
   disabled?: boolean
   tooltipText?: string
   encoding: keyof typeof ENCODING_TYPES
+  info?: ReactElement | string
+  isRequired?: boolean
+  description?: ReactNode
 }
 function UploadField(props: UploadFieldProps) {
   const {
@@ -31,13 +34,14 @@ function UploadField(props: UploadFieldProps) {
     onReadError,
     tooltipText = EMPTY_STRING,
     encoding,
+    info,
+    isRequired,
+    description,
     ...rest
   } = props
   const id = useId()
   const [fileName, setFileName] = useState(EMPTY_STRING)
-  const uploadWrapperClasses = clsx({
-    'upload-wrapper': true,
-    [wrapperClass]: true,
+  const uploadWrapperClasses = clsx('upload-wrapper', wrapperClass, {
     'upload-wrapper-disabled': disabled
   })
 
@@ -82,6 +86,17 @@ function UploadField(props: UploadFieldProps) {
   return (
     <Tooltip data={tooltipText}>
       <div className={uploadWrapperClasses}>
+        {description && (
+          <span className='field__description-wrap'>
+            <span className='field__description field-1-description-content'>
+              {description}
+              {isRequired && <span className='required-star'>*</span>}
+              {!!info && (
+                <Info data={info} extraClass='upload-field-info-icon' />
+              )}
+            </span>
+          </span>
+        )}
         <input
           id={id}
           disabled={disabled}
@@ -101,7 +116,17 @@ function UploadField(props: UploadFieldProps) {
           onClick={(e) => e.stopPropagation()}
         >
           {label}
+          {isRequired && !disabled && !description && (
+            <span className='required-star'>*</span>
+          )}
         </label>
+
+        <span className='upload-field-info'>
+          {!!info && !description && (
+            <Info data={info} extraClass='upload-field-info-icon' />
+          )}
+        </span>
+
         <span className='upload-field-error capitalize-first-letter'>
           {error}
         </span>
