@@ -112,7 +112,8 @@ const utils = {
   },
   toastError: (
     err?: string | Error | unknown,
-    type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES]
+    type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES],
+    toastId?: string
   ) => {
     let message = 'Something went wrong'
 
@@ -142,10 +143,20 @@ const utils = {
       (type !== TOASTER_TYPES.DIALOG && message.length < 75) ||
       type === TOASTER_TYPES.TOAST
     ) {
-      toast.error(<Toast message={message} icon={<Warning />} />, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        icon: false
-      })
+      if (toastId) {
+        if (!toast.isActive(toastId)) {
+          toast.error(<Toast message={message} icon={<Warning />} />, {
+            position: toast.POSITION.BOTTOM_CENTER,
+            icon: false,
+            toastId
+          })
+        }
+      } else {
+        toast.error(<Toast message={message} icon={<Warning />} />, {
+          position: toast.POSITION.BOTTOM_CENTER,
+          icon: false
+        })
+      }
     } else {
       utils.dispatchCustomEvent(TOASTER_DIALOG, {
         status: DIALOG_STATUSES.ERROR,
