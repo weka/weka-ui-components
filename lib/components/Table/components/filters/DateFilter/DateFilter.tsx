@@ -12,6 +12,7 @@ import './dateFilter.scss'
 export type DateFilterOptions = {
   enableCustomFormat?: boolean
   customFormat?: string
+  timezone?: string
 }
 
 export interface DateFilterValue {
@@ -32,7 +33,7 @@ function DateFilter<Data>({
     throw new Error('DateFilter: Invalid filter value')
   }
 
-  const { enableCustomFormat, customFormat } = filterOptions
+  const { enableCustomFormat, customFormat, timezone } = filterOptions
 
   const [from, onFromChange] = useState(
     filterValue?.startTime ? DateTime.fromISO(filterValue.startTime) : undefined
@@ -50,6 +51,9 @@ function DateFilter<Data>({
     }
   }, [filterValue])
 
+  const fromLabel = timezone ? `FROM (${timezone})` : 'FROM'
+  const toLabel = timezone ? `TO (${timezone})` : 'TO'
+
   return (
     <FilterWrapper
       column={column}
@@ -62,7 +66,7 @@ function DateFilter<Data>({
           <DateTimePicker
             onChange={onFromChange}
             value={from}
-            label='FROM'
+            label={fromLabel}
             maxDate={to ? to.endOf('day') : DateTime.now()}
             showSeconds
             enableCustomFormat={enableCustomFormat}
@@ -73,7 +77,7 @@ function DateFilter<Data>({
           <DateTimePicker
             onChange={onToChange}
             value={to}
-            label='TO'
+            label={toLabel}
             minDate={from && from.startOf('day')}
             showSeconds
             enableCustomFormat={enableCustomFormat}
