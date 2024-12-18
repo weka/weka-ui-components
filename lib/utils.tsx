@@ -194,6 +194,17 @@ const utils = {
       .join('.')
   },
   formatStringOption: (option: string) => ({ label: option, value: option }),
+  formatIconStringOption: ({
+    value,
+    label,
+    icon
+  }: {
+    value: string | number
+    label: string
+    icon?: React.ReactNode
+  }) => {
+    return { label: label || value, value, icon }
+  },
   parseParamsToQuery: (params: { [key: string]: any }) => {
     if (!params) {
       return {}
@@ -419,6 +430,11 @@ const utils = {
       timer = setTimeout(() => {
         callback.apply(this, args)
       }, wait)
+    }
+  },
+  closeDialogOnEscape(reason, func) {
+    if (reason === 'escapeKeyDown') {
+      func()
     }
   }
 }

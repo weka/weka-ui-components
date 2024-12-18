@@ -6,6 +6,7 @@ import {
   AccidentMajor,
   AccidentCritical
 } from './svgs'
+import utils from './utils'
 
 export const EMPTY_STRING = ''
 export const ZERO_STRING = '0'
@@ -220,4 +221,111 @@ export const ENCODING_TYPES = {
   text: 'text',
   binary: 'binary',
   base64: 'base64'
+}
+
+const FORMULA_TYPES = {
+  EQUALS: 'equals',
+  RANGE: 'range',
+  GREATER_THAN: 'greater_than',
+  LESS_THAN: 'less_than'
+} as const
+
+export type Formula =
+  | {
+      type:
+        | typeof FORMULA_TYPES.EQUALS
+        | typeof FORMULA_TYPES.GREATER_THAN
+        | typeof FORMULA_TYPES.LESS_THAN
+      value: number
+    }
+  | { type: typeof FORMULA_TYPES.RANGE; from: number; to: number }
+
+export const FORM_VALIDATIONS = {
+  REQUIRED: 'required',
+  POSITIVE: 'positive',
+  NOT_NEGATIVE: 'not-negative',
+  VALID_RANGE: (value: string) => {
+    if (!value?.includes('-')) {
+      return true
+    }
+    const range = value.split('.')[3]
+    const [start, end] = range.split('-')
+    if (parseInt(start, 10) > parseInt(end, 10)) {
+      return 'Not a valid IP range'
+    }
+    return false
+  },
+  MAX_VALUE: (max: number, customErrorMsg?: string) => (val: number) => {
+    if (val > max) {
+      return customErrorMsg || `The maximum value is ${max}`
+    }
+    return false
+  },
+  MIN_VALUE: (min: number, customErrorMsg?: string) => (val: number) => {
+    if (!utils.isEmpty(val) && val < min) {
+      return customErrorMsg || `The minimum value is ${min}`
+    }
+    return false
+  },
+  MAX_LENGTH:
+    (max: number, customErrorMsg?: string) => (val: string | string[]) => {
+      if (val?.length > max) {
+        return customErrorMsg || `The maximum length is ${max}`
+      }
+      return false
+    },
+  MIN_LENGTH:
+    (min: number, customErrorMsg?: string) => (val: string | string[]) => {
+      if (val?.length < min) {
+        return customErrorMsg || `The minimum length is ${min}`
+      }
+      return false
+    },
+  REGEX_TEST: (regex: RegExp, customErrorMsg?: string) => (val: string) => {
+    if (!utils.isEmpty(val) && !val?.match(regex)) {
+      return customErrorMsg || `Expected format: ${regex}`
+    }
+    return false
+  },
+  MATCH_FORMULA:
+    (restrictions: Formula[], customErrorMsg?: string) => (value: number) => {
+      if (
+        !restrictions.length ||
+        restrictions.some(
+          (restriction) =>
+            ((restriction.type === FORMULA_TYPES.EQUALS ||
+              restriction.type === FORMULA_TYPES.GREATER_THAN ||
+              restriction.type === FORMULA_TYPES.LESS_THAN) &&
+              utils.isEmpty(restriction.value)) ||
+            (restriction.type === FORMULA_TYPES.RANGE &&
+              utils.isEmpty(restriction.from) &&
+              utils.isEmpty(restriction.to))
+        )
+      ) {
+        return false
+      }
+      const getRestrictionFunc = (restriction: Formula) => {
+        switch (restriction.type) {
+          case FORMULA_TYPES.EQUALS:
+            return value === restriction.value
+          case FORMULA_TYPES.RANGE:
+            return value >= restriction.from && value <= restriction.to
+          case FORMULA_TYPES.GREATER_THAN:
+            return value > restriction.value
+          case FORMULA_TYPES.LESS_THAN:
+            return value < restriction.value
+          default:
+            throw new Error(
+              `Unknown restriction type: ${(restriction as Formula).type}`
+            )
+        }
+      }
+      const isInvalid = restrictions.every(
+        (restriction) => !getRestrictionFunc(restriction)
+      )
+      if (!utils.isEmpty(value) && isInvalid) {
+        return customErrorMsg || 'Invalid value'
+      }
+      return false
+    }
 }

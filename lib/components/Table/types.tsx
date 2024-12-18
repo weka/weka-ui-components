@@ -20,6 +20,7 @@ import {
   SwitchCellOptions,
   StatusCellOptions,
   IconButtonCellOptions,
+  CopyCellOptions,
   ApiCallCellName,
   CapacityCellName,
   StatusCellName,
@@ -28,7 +29,8 @@ import {
   IconCellName,
   DefaultCellName,
   IconButtonCellName,
-  BlocksCellName
+  BlocksCellName,
+  CopyCellName
 } from './exports'
 
 import {
@@ -112,6 +114,7 @@ declare module '@tanstack/react-table' {
       | CellDef<TData, TValue, typeof StatusCellName, StatusCellOptions<TData>>
       | CellDef<TData, TValue, typeof BlocksCellName, BlocksCellOptions<TData>>
       | CellDef<TData, TValue, typeof DateCellName, DateCellOptions>
+      | CellDef<TData, TValue, typeof CopyCellName, CopyCellOptions>
       | CellDef<TData, TValue, typeof SwitchCellName, SwitchCellOptions<TData>>
       | CellDef<TData, TValue, typeof IconCellName, IconCellOptions<TData>>
       | CellDef<
