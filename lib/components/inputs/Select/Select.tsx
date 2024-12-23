@@ -10,7 +10,7 @@ import ClearIndicator from './ClearIndicator'
 import Utils from 'utils'
 import { Info } from 'svgs'
 import Tooltip from '../../Tooltip'
-import MenuList from './MenuList'
+import VirtualMenuList from './VirtualMenuList'
 import InputLoader from '../../InputLoader'
 
 import './select.scss'
@@ -19,7 +19,7 @@ export const getStyle = (hasError, hasLabel) => ({
   menuPortal: (provided, state) => {
     return {
       ...provided,
-      zIndex: 9999,
+      zIndex: 1500,
       top: state.offset === state.rect.top ? state.offset + 6 : state.offset - 6
     }
   },
@@ -27,6 +27,11 @@ export const getStyle = (hasError, hasLabel) => ({
     ...base,
     boxShadow: '0 0 0 2px var(--main-color)',
     backgroundColor: 'var(--neutral-t4)'
+  }),
+  menuList: (base) => ({
+    ...base,
+    height: '100%',
+    maxHeight: '300px'
   }),
   control: (base, state) => ({
     ...base,
@@ -75,9 +80,14 @@ export const getStyle = (hasError, hasLabel) => ({
   }),
   option: (base, { isDisabled }) => ({
     ...base,
+    willChange: 'transform',
     color: 'var(--text-color)',
     opacity: isDisabled && '.5',
     backgroundColor: isDisabled ? 'transparent' : 'var(--neutral-t4)',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    padding: '8px 12px',
     ':hover': {
       backgroundColor: isDisabled ? 'transparent' : 'var(--ironhide-t3)'
     }
@@ -115,7 +125,7 @@ export const CommonSelectComponents = {
   Option: SelectOption,
   SingleValue,
   ClearIndicator,
-  MenuList,
+  MenuList: VirtualMenuList,
   LoadingIndicator: InputLoader
 }
 

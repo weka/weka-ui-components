@@ -53,7 +53,7 @@
     transition: all 0.2s ease;
   }
 
-  &:hover .side-block-actions, &:hover .component-info {
+  &:hover .side-block-actions, &:hover .component-info, .side-block-actions-menu-open {
     opacity: 1;
     visibility: visible;
   }

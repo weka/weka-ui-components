@@ -37,11 +37,11 @@ function SideBlock(props: SideBlockProps) {
   } = props
   const shownActions = actions.filter((action) => !action.hideMenu)
   const hasActions = shownActions.length > 0
+
   const showActionsAsIcons =
     hasActions &&
     shownActions.every((action) => action.Icon) &&
     shownActions.length < 4
-
   return (
     <div
       className={clsx({
@@ -87,7 +87,13 @@ function SideBlock(props: SideBlockProps) {
           ))}
         </div>
       ) : hasActions ? (
-        <div ref={anchorRef} className='side-block-actions'>
+        <div
+          ref={anchorRef}
+          className={clsx({
+            'side-block-actions': true,
+            'side-block-actions-menu-open': isPopperOpen
+          })}
+        >
           <IconButton
             onClick={(e) => {
               e.stopPropagation()

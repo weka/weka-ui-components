@@ -22,6 +22,24 @@
   .option-wrapper {
     display: flex;
     align-items: center;
+    width: 100%;
+    min-width: 0;
+
+    .icon-wrapper {
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+
+    .label-wrapper {
+      min-width: 0;
+      flex: 1;
+
+      .main-label, .sub-label{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
 
     .sub-label {
       margin-top: 4px;
