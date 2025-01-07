@@ -22,7 +22,7 @@ function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
 
   const isBackendClasses = clsx({
     'is-backend': isBackend,
-    'is-client': isBackend
+    'is-client': !isBackend
   })
 
   const formattedRoles = roles?.length
