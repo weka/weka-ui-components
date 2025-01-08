@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, forwardRef } from 'react'
 import Tooltip from '../Tooltip'
 import { Info as InfoSvg } from 'svgs'
 import clsx from 'clsx'
@@ -10,10 +10,19 @@ export interface InfoProps {
   extraClass?: string
 }
 
+const InfoSvgWrapper = forwardRef<HTMLSpanElement, { className?: string }>(
+  ({ className, ...props }, ref) => (
+    <span ref={ref} {...props} className={clsx('component-info', className)}>
+      <InfoSvg />
+    </span>
+  )
+)
+InfoSvgWrapper.displayName = 'InfoSvgWrapper'
+
 function Info({ data, extraClass }: InfoProps) {
   return (
     <Tooltip data={data}>
-      <InfoSvg className={clsx('component-info', extraClass)} />
+      <InfoSvgWrapper className={extraClass} />
     </Tooltip>
   )
 }
