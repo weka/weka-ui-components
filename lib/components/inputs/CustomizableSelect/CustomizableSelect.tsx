@@ -166,6 +166,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
           onKeyDown={onKeyDown}
           isDisabled={disabled}
           placeholder={placeholder}
+          menuPortalTarget={document.body}
           onChange={(newVal: Option | null) => {
             const newValue = newVal?.value ?? EMPTY_STRING
             onChange(newValue)
