@@ -1,0 +1,23 @@
+.google-login-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 68px;
+}
+
+.google-button {
+  width: 55%;
+  height: 36px !important;
+  margin-top: 8px;
+}
+
+.google-btn-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.google-logo {
+  width: 30px;
+}
