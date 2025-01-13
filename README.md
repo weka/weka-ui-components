@@ -35,9 +35,8 @@ We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.
 1. Open a pull request to the `weka-ui-components`.
 2. Inside parent repositories where you want to update the components, run `yarn add @weka.io/weka-ui-components@https://github.com/weka/weka-ui-components#<pr_branch_name>` with your PR branch name instead of `<pr_branch_name>`.
 3. Open a PR for the parent repository.
-4. After merging the components PR, wait a few minutes for release and get the latest tag from [here](https://github.com/weka/weka-ui-components/tags).
-5. Inside parent repositories where you want to update the components, run `yarn add @weka.io/weka-ui-components@https://github.com/weka/weka-ui-components#<latest_tag>` with the tag instead of `<latest_tag>` .
-6. Update PRs for parent repositories.
+4. After merging the components PR, inside parent repositories where you want to update the components, run `yarn add @weka.io/weka-ui-components@https://github.com/weka/weka-ui-components#<latest_tag>` with the tag instead of `<latest_tag>` .
+5. Update PRs for parent repositories.
 
 ## Dark Mode
 
