@@ -233,7 +233,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     columns: columnDefs,
     data,
     manualSorting,
-    manualFilters,
+    manualFiltering: manualFilters,
     initialState: {
       columnVisibility: hiddenInLocalStorage,
       columnSizing: initialResizing,
