@@ -413,7 +413,7 @@ const utils = {
     return isPast ? `${stringToShow} ago` : `in ${stringToShow}`
   },
 
-  capitalize: (str: string) => {
+  capitalize: (str = '') => {
     const separator = ', '
 
     return str
