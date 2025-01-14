@@ -33,7 +33,7 @@ function UploadField(props: UploadFieldProps) {
     error,
     onReadError,
     tooltipText = EMPTY_STRING,
-    encoding,
+    encoding = ENCODING_TYPES.text,
     info,
     isRequired,
     description,
