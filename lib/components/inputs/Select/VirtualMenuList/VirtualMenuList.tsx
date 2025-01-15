@@ -1,5 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React, { ReactNode, useRef } from 'react'
+import { EMPTY_STRING } from 'consts'
 
 import './virtualMenuList.scss'
 
@@ -15,16 +16,50 @@ const VirtualMenuList: React.FC<VirtualMenuListProps> = ({
   const parentRef = useRef<HTMLDivElement>(null)
   const childrenArray = React.Children.toArray(children)
 
-  const hasSubLabel = childrenArray.some(
-    (child: any) => child.props?.data?.subLabel
+  const isGroup = (child: any) => {
+    return child.props?.children && Array.isArray(child.props.children)
+  }
+
+  const getItemHeight = (item: any) => {
+    return item.props?.data?.subLabel ? 56 : 36
+  }
+
+  const flattenedItems = childrenArray.reduce<
+    { item: ReactNode; height: number }[]
+  >((acc, child: any) => {
+    if (isGroup(child)) {
+      if (child.props?.label !== EMPTY_STRING) {
+        acc.push({
+          item: React.cloneElement(child, { children: [] }),
+          height: 32
+        })
+      }
+
+      const groupChildren = React.Children.toArray(child.props.children)
+      groupChildren.forEach((option: any) => {
+        acc.push({
+          item: option,
+          height: getItemHeight(option)
+        })
+      })
+    } else {
+      acc.push({
+        item: child,
+        height: getItemHeight(child)
+      })
+    }
+    return acc
+  }, [])
+
+  const totalHeight = Math.min(
+    maxHeight,
+    flattenedItems.reduce((sum, item) => sum + item.height + 1, 0)
   )
-  const itemHeight = hasSubLabel ? 56 : 36
-  const totalHeight = Math.min(maxHeight, childrenArray.length * itemHeight) + 5
 
   const rowVirtualizer = useVirtualizer({
-    count: childrenArray.length,
+    count: flattenedItems.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => itemHeight,
+    estimateSize: (index) => flattenedItems[index].height,
     overscan: 5
   })
 
@@ -45,21 +80,24 @@ const VirtualMenuList: React.FC<VirtualMenuListProps> = ({
             position: 'relative'
           }}
         >
-          {rowVirtualizer.getVirtualItems().map((virtualItem) => (
-            <div
-              key={virtualItem.key}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: `${itemHeight}px`,
-                transform: `translateY(${virtualItem.start}px)`
-              }}
-            >
-              {childrenArray[virtualItem.index]}
-            </div>
-          ))}
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const currentItem = flattenedItems[virtualItem.index]
+            return (
+              <div
+                key={virtualItem.key}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${currentItem.height}px`,
+                  transform: `translateY(${virtualItem.start}px)`
+                }}
+              >
+                {currentItem.item}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
