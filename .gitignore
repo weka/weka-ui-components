@@ -3,3 +3,4 @@ node_modules
 .idea
 storybook-static
 .DS_Store
+.yarn/install-state.gz
