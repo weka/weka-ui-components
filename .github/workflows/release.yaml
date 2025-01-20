@@ -52,7 +52,7 @@ jobs:
       - run: git status
 
       - name: Bump minor version
-        run: yarn version --minor --no-git-tag-version
+        run: yarn version minor
 
       - run: echo "tag=$(jq .version package.json -r)" >> $GITHUB_OUTPUT
         name: Print future release version
@@ -70,7 +70,7 @@ jobs:
 
       - run: git checkout main
 
-      - run: yarn version --minor --no-git-tag-version
+      - run: yarn version minor
 
       - run: git add package.json
 
