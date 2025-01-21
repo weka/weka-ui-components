@@ -51,8 +51,10 @@ function TextViewerLite(props: TextViewerLiteProps) {
     overscan: 5
   })
 
-  const gutterWidth =
-    getLineNumber(rowVirtualizer.range.endIndex).length * charWidth
+  // numbers on the left side of viewer
+  const gutterWidth = rowVirtualizer.range
+    ? getLineNumber(rowVirtualizer.range.endIndex).length * charWidth
+    : 0
 
   const columnsCount = useMemo(
     () =>
