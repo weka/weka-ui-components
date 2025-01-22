@@ -1,5 +1,13 @@
-import React, { memo, useEffect, useId, useMemo, useRef, useState } from 'react'
-import AceEditor from 'react-ace'
+import React, {
+  lazy,
+  memo,
+  Suspense,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { EMPTY_STRING } from 'consts'
 import Copy from '../../../Copy'
 import { useToggle } from 'hooks'
@@ -20,8 +28,19 @@ import clsx from 'clsx'
 import { useTextEditorContext } from '../../context'
 import Loader from '../../../Loader'
 
-import 'ace-builds/src-noconflict/mode-json'
-import 'ace-builds/src-min-noconflict/ext-searchbox'
+// import 'ace-builds/src-noconflict/mode-json'
+// import 'ace-builds/src-min-noconflict/ext-searchbox'
+
+const AceEditor = lazy(async () => {
+  const Component = await import('react-ace')
+
+  await Promise.all([
+    import('ace-builds/src-noconflict/mode-json'),
+    import('ace-builds/src-noconflict/ext-searchbox')
+  ])
+
+  return Component
+})
 
 import './textEditorFull.scss'
 
@@ -176,23 +195,25 @@ function TextEditorFull(props: TextEditorFullProps) {
           )}
         </div>
       )}
-      <AceEditor
-        ref={editorRef}
-        mode={mode}
-        height='100%'
-        fontSize={fontSize}
-        width='99%'
-        showPrintMargin={false}
-        highlightActiveLine={false}
-        name={id}
-        editorProps={{ $blockScrolling: true }}
-        readOnly={readOnly}
-        value={onlyMatching ? jsonValue : options.value}
-        onChange={onChange}
-        onValidate={onValidate}
-        onLoad={handleLoad}
-        {...rest}
-      />
+      <Suspense fallback={<Loader />}>
+        <AceEditor
+          ref={editorRef}
+          mode={mode}
+          height='100%'
+          fontSize={fontSize}
+          width='99%'
+          showPrintMargin={false}
+          highlightActiveLine={false}
+          name={id}
+          editorProps={{ $blockScrolling: true }}
+          readOnly={readOnly}
+          value={onlyMatching ? jsonValue : options.value}
+          onChange={onChange}
+          onValidate={onValidate}
+          onLoad={handleLoad}
+          {...rest}
+        />
+      </Suspense>
     </div>
   )
 }
