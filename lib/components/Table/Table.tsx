@@ -265,6 +265,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     getRowCanExpand: () => rowCanExpand,
     autoResetExpanded:
       collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
+    autoResetPageIndex: false,
     autoResetPage: false,
     paginateExpandedRows: false,
     getRowId,
