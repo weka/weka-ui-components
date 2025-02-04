@@ -9,6 +9,7 @@ interface TableCellProps<Data, Value> {
   row: ExtendedRow<Data>
   extraClasses?: TableExtraClasses
   onRowClick?: (values: Data) => void
+  onToggleExpand?: (row: ExtendedRow<Data>) => void
   RowSubComponent?: FC
   grouping?: string[]
   rowIndex: number
@@ -20,6 +21,7 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
     row,
     extraClasses,
     onRowClick,
+    onToggleExpand,
     RowSubComponent,
     grouping,
     rowIndex
@@ -42,6 +44,14 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
 
   const isActionCell = cell.column.columnDef.meta?._type === 'action'
 
+  const handleToggleExpand = () => {
+    if (onToggleExpand) {
+      onToggleExpand(row)
+    } else {
+      row.toggleExpanded()
+    }
+  }
+
   return (
     <td
       key={cell.id}
@@ -57,14 +67,14 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
         },
         onClick: () => {
           if (row.getIsGrouped()) {
-            row.toggleExpanded()
+            handleToggleExpand()
           } else {
             const onCellClick = cell.column.columnDef.meta?.cell?.onClick
 
             if (onCellClick) {
               onCellClick(cell)
             } else if (RowSubComponent) {
-              row.toggleExpanded()
+              handleToggleExpand()
             } else if (onRowClick) {
               onRowClick(row.original)
             }

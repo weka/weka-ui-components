@@ -81,7 +81,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
         setAsyncOptions(asyncOptions)
         setLoadingOptions(false)
         if (!Utils.isEmpty(defaultValueIndex)) {
-          onChange(asyncOptions[defaultValueIndex].value)
+          onChange(asyncOptions[defaultValueIndex]?.value)
         } else if (!Utils.isEmpty(defaultValueKey)) {
           onChange(
             asyncOptions.find((option) => option.value === defaultValueKey)
@@ -147,7 +147,7 @@ function CustomizableSelect(props: CustomizableSelectProps) {
           onMenuClose={() => setMenuIsOpen(false)}
           menuIsOpen={isMenuOpen}
           value={
-            options?.find((option) => option.value === value) ||
+            options?.find((option) => option?.value === value) ||
             (value
               ? {
                   label: value,

@@ -16,8 +16,9 @@ interface TableRowProps<Data, Value> {
   columns: ExtendedColumn<Data, Value>[]
   isExpandable?: boolean
   grouping?: string[]
-  RowSubComponent?: React.FC
+  RowSubComponent?: React.FC<{ row: ExtendedRow<Data> }>
   onRowClick?: (row: Data) => void
+  onToggleExpand?: (row: ExtendedRow<Data>) => void
   checkRowSelected?: (row: Data) => boolean
   checkRowHighlighted?: (row: Data) => boolean
   rowActions?: RowAction<Data>[]
@@ -26,6 +27,7 @@ interface TableRowProps<Data, Value> {
   disableActionsPortal?: boolean
   extraClasses?: TableExtraClasses
   rowCanExpand?: boolean
+  expandedRows?: Record<string, boolean>
 }
 
 function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
@@ -35,6 +37,7 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
     grouping,
     RowSubComponent,
     onRowClick,
+    onToggleExpand,
     checkRowSelected,
     checkRowHighlighted,
     rowActions,
@@ -42,9 +45,13 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
     isResizable,
     disableActionsPortal,
     rowCanExpand,
-    extraClasses
+    extraClasses,
+    expandedRows = null
   } = props
 
+  const isRowExpanded = expandedRows
+    ? expandedRows[row.original.uuid]
+    : row.getIsExpanded()
   const classes = clsx({
     'table-line': true,
     clickable: onRowClick || isExpandable,
@@ -64,7 +71,7 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
             className={clsx('expand-cell', extraClasses?.expandCell)}
             onClick={row.getToggleExpandedHandler()}
           >
-            {row.getIsExpanded() ? <Arrow /> : <Arrow className='rotate270' />}
+            {isRowExpanded ? <Arrow /> : <Arrow className='rotate270' />}
           </td>
         )}
         {row.getVisibleCells().map((cell, index) => (
@@ -74,6 +81,7 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
             row={row}
             extraClasses={extraClasses}
             onRowClick={onRowClick}
+            onToggleExpand={onToggleExpand}
             RowSubComponent={RowSubComponent}
             grouping={grouping}
             rowIndex={index}
@@ -91,7 +99,7 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
             </td>
           )}
       </tr>
-      {row.getIsExpanded() && !row.getIsGrouped() && RowSubComponent ? (
+      {isRowExpanded && !row.getIsGrouped() && RowSubComponent ? (
         <tr className='sub-table-line'>
           <td colSpan={row.getVisibleCells().length}>
             <RowSubComponent row={row} />
