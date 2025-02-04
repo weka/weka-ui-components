@@ -76,12 +76,15 @@ export interface TableProps<Data, Value> {
   RowSubComponent?: React.FC<{ row: any }>
   listenerPrefix?: string
   onRowClick?: (values?: Data) => void
+  onToggleExpand?: (row: ExtendedRow<Data>) => void
   miniTable?: boolean
   fixedPageSize?: number
   disableActionsPortal?: boolean
   manualPagination?: boolean
   itemsAmount?: number
   canExpandAll?: boolean
+  getRowCanExpand?: (row: Data) => boolean
+  expandedRows?: Record<string, boolean>
   loading?: boolean
   onFiltersChanged?: (newFilters: ExtendedColumnFilter[]) => void
   defaultDescendingSort?: boolean
@@ -119,6 +122,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     RowSubComponent,
     listenerPrefix,
     onRowClick = NOP,
+    onToggleExpand,
     miniTable,
     filterCategory,
     fixedPageSize,
@@ -141,7 +145,9 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     customDateFormat,
     hasResizableColumns = false,
     hasEmptyActionsCell = false,
-    collapseRowsOnLeavingPage = false
+    collapseRowsOnLeavingPage = false,
+    getRowCanExpand,
+    expandedRows
   } = props
 
   const rowCanExpand = !!RowSubComponent
@@ -422,6 +428,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
                   grouping={grouping}
                   RowSubComponent={RowSubComponent}
                   onRowClick={onRowClick}
+                  onToggleExpand={onToggleExpand}
                   checkRowSelected={checkRowSelected}
                   checkRowHighlighted={checkRowHighlighted}
                   rowActions={rowActions}
@@ -429,7 +436,12 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
                   isResizable={isResizable}
                   disableActionsPortal={disableActionsPortal}
                   extraClasses={extraClasses}
-                  rowCanExpand={rowCanExpand}
+                  rowCanExpand={
+                    rowCanExpand && getRowCanExpand
+                      ? getRowCanExpand(row.original)
+                      : rowCanExpand
+                  }
+                  expandedRows={expandedRows}
                 />
               ))}
             </tbody>
