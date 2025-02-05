@@ -55,7 +55,7 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
   const classes = clsx({
     'table-line': true,
     clickable: onRowClick || isExpandable,
-    'is-expand': !row.getIsGrouped() && row.getIsExpanded(),
+    'is-expand': !row.getIsGrouped() && isRowExpanded,
     'is-selected': checkRowSelected?.(row.original),
     'is-highlighted': checkRowHighlighted?.(row.original),
     ...(extraClasses?.tableLine && {
@@ -66,12 +66,15 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
   return (
     <React.Fragment key={row.id}>
       <tr className={classes}>
-        {rowCanExpand && !grouping && (
-          <td
-            className={clsx('expand-cell', extraClasses?.expandCell)}
-            onClick={row.getToggleExpandedHandler()}
-          >
-            {isRowExpanded ? <Arrow /> : <Arrow className='rotate270' />}
+        {!grouping && (
+          <td className={clsx('expand-cell', extraClasses?.expandCell)}>
+            {rowCanExpand ? (
+              <div onClick={row.getToggleExpandedHandler()}>
+                {isRowExpanded ? <Arrow /> : <Arrow className='rotate270' />}
+              </div>
+            ) : (
+              <div className='expand-placeholder' />
+            )}
           </td>
         )}
         {row.getVisibleCells().map((cell, index) => (
