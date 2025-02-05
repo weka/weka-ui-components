@@ -11116,9 +11116,9 @@ __metadata:
   linkType: hard
 
 "store2@npm:^2.12.0":
-  version: 2.14.1
-  resolution: "store2@npm:2.14.1"
-  checksum: 10c0/d3043159494fb9cdb70611c381277ded873bff2b7840aab72a1f2f04a45442c09856563546250a64b0b036a5389268259eb4ce048ec52aff1c314d04651274e7
+  version: 2.14.4
+  resolution: "store2@npm:2.14.4"
+  checksum: 10c0/3453c9c8c153c760e6290395a7bc23669df5dc8a6e8a49f9b3187dbb9f86d14b58705aa4f17fad6b536d4b04fe3e66ea5bde12c1352abd52c6b303bbf5757ab6
   languageName: node
   linkType: hard
 
