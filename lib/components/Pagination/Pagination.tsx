@@ -3,10 +3,10 @@ import Tooltip from '../Tooltip'
 import { Arrow, LastArrow } from 'svgs'
 import { IconButton } from '@mui/material'
 import { EMPTY_STRING } from 'consts'
-
-import './pagination.scss'
 import { useStaticProps } from 'hooks'
 import { TextBox } from '../inputs'
+
+import './pagination.scss'
 
 type PaginationProps = {
   onPageChange: (page: number) => void
@@ -40,6 +40,16 @@ function Pagination(props: PaginationProps) {
   const pageInputValueRef = useRef(pageInputValue)
   pageInputValueRef.current = pageInputValue
 
+  const numberOfPages = outerNumberOfPages ?? Math.ceil(totalRows / rowsPerPage)
+
+  useEffect(() => {
+    setCurrentPage((prevPage) => {
+      const pageToUpdate = Math.min(prevPage, numberOfPages)
+      setInputPageValue(pageToUpdate.toString())
+      return pageToUpdate
+    })
+  }, [numberOfPages])
+
   const handlePageChange: typeof setCurrentPage = (newPageRaw) => {
     setCurrentPage((prevPage) => {
       const newPageVal =
@@ -52,8 +62,6 @@ function Pagination(props: PaginationProps) {
       return newPageVal
     })
   }
-
-  const numberOfPages = outerNumberOfPages ?? Math.ceil(totalRows / rowsPerPage)
   const onNextPage = () => handlePageChange((prev) => prev + 1)
   const onPrevPage = () => handlePageChange((prev) => prev - 1)
 

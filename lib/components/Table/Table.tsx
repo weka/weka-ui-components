@@ -346,10 +346,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     onVisibilityChange(allColumns, columnVisibility)
   }, [onVisibilityChange, allColumns, columnVisibility])
 
-  useEffect(() => {
-    setDefaultCurrentPage(pageCount)
-  }, [pageCount, table])
-
   useLayoutEffect(() => {
     if (!miniTable) {
       tableRef.current?.scrollTo(0, 0)
@@ -463,7 +459,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
             onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
             numberOfPages={pageCount}
             isLoading={loading}
-            defaultCurrentPage={defaultCurrentPage}
           />
         </div>
       )}
