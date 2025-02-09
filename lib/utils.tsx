@@ -3,13 +3,22 @@ import { toast } from 'react-toastify'
 import { Approve, Hide, Show, Warning } from './svgs'
 import {
   DIALOG_STATUSES,
+  DOWNLOAD_FAILED,
   EMPTY_STRING,
   TIME_PARTS_SHORTENINGS,
   TOASTER_DIALOG,
   TOASTER_TYPES
-} from './consts'
+} from 'consts'
 import { DateTime, DurationUnits } from 'luxon'
 import { Toast, Tooltip } from './components'
+
+export const MIME_TYPES = {
+  CSV: 'text/csv',
+  PLAIN: 'text/plain',
+  GZIP: 'application/x-gzip',
+  OCTET_STREAM: 'application/octet-stream',
+  JSON: 'application/json'
+} as const
 
 interface CustomEventPayload {
   status: string
@@ -435,6 +444,27 @@ const utils = {
   closeDialogOnEscape(reason, func) {
     if (reason === 'escapeKeyDown') {
       func()
+    }
+  },
+  downloadFile(
+    content: string | Blob,
+    fileName: string,
+    type: (typeof MIME_TYPES)[keyof typeof MIME_TYPES] = MIME_TYPES.PLAIN,
+    shouldStringify = true
+  ) {
+    try {
+      const formattedContent = shouldStringify
+        ? JSON.stringify(content)
+        : content
+      const downloadLink = document.createElement('a')
+      const file = new Blob([formattedContent], { type })
+      downloadLink.href = URL.createObjectURL(file)
+      downloadLink.download = fileName
+      document.body.appendChild(downloadLink)
+      downloadLink.click()
+      downloadLink.parentNode?.removeChild(downloadLink)
+    } catch (e) {
+      utils.toastError(DOWNLOAD_FAILED)
     }
   }
 }

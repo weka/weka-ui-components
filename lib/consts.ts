@@ -215,6 +215,8 @@ export const TOASTER_TYPES = {
   DIALOG: 'dialog'
 } as const
 
+export const DOWNLOAD_FAILED = 'Download failed'
+
 export const DEFAULT_DEBOUNCE_DELAY = 700
 
 export const ENCODING_TYPES = {
