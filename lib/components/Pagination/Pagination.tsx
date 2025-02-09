@@ -114,7 +114,9 @@ function Pagination(props: PaginationProps) {
           <div className='page-number-wrapper'>
             <TextBox
               onChange={(val) =>
-                setInputPageValue(val.toString().replace(/[^0-9]/g, ''))
+                setInputPageValue(
+                  val.toString().replace(/[^0-9]/g, EMPTY_STRING)
+                )
               }
               value={pageInputValue}
               maxLength={15}

@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useRef
+  useRef,
+  useState
 } from 'react'
 import {
   COLUMN_RESIZING_LISTENER,
@@ -234,6 +235,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     columns: columnDefs,
     filterCategory
   })
+  const [defaultCurrentPage, setDefaultCurrentPage] = useState(1)
 
   const table = useReactTable<Data>({
     columns: columnDefs,
@@ -345,7 +347,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   }, [onVisibilityChange, allColumns, columnVisibility])
 
   useEffect(() => {
-    table.setPageIndex(0)
+    setDefaultCurrentPage(pageCount)
   }, [pageCount, table])
 
   useLayoutEffect(() => {
@@ -461,6 +463,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
             onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
             numberOfPages={pageCount}
             isLoading={loading}
+            defaultCurrentPage={defaultCurrentPage}
           />
         </div>
       )}
