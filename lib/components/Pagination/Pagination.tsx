@@ -44,7 +44,7 @@ function Pagination(props: PaginationProps) {
 
   useEffect(() => {
     setCurrentPage((prevPage) => {
-      const pageToUpdate = Math.min(prevPage, numberOfPages)
+      const pageToUpdate = Math.min(prevPage, numberOfPages) || prevPage
       setInputPageValue(pageToUpdate.toString())
       return pageToUpdate
     })
