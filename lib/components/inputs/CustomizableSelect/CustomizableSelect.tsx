@@ -102,8 +102,8 @@ function CustomizableSelect(props: CustomizableSelectProps) {
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === EVENT_KEYS.ENTER) {
-      event.preventDefault()
       if (!!editValue && customValueValidation(editValue)) {
+        event.preventDefault()
         onChange(editValue)
         setMenuIsOpen(false)
       }
