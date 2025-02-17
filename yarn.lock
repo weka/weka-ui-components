@@ -4931,7 +4931,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^5.53.0"
     "@typescript-eslint/parser": "npm:5.60.1"
     "@vitejs/plugin-react": "npm:^4.3.1"
-    ace-builds: "npm:^1.36.2"
+    ace-builds: "npm:^1.36.3"
     babel-loader: "npm:^9.1.3"
     check-password-strength: "npm:^2.0.7"
     clsx: "npm:^2.0.0"
@@ -4951,7 +4951,7 @@ __metadata:
     luxon: "npm:^3.4.4"
     prettier: "npm:^2.8.4"
     react: "npm:^18.2.0"
-    react-ace: "npm:^12.0.0"
+    react-ace: "npm:^13.0.0"
     react-dom: "npm:^18.2.0"
     react-hook-form: "npm:^7.53.2"
     react-router-dom: "npm:^6.25.0"
@@ -4974,7 +4974,7 @@ __metadata:
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
     "@mui/material": ^5.11.1
-    luxon: ^3.2.1
+    luxon: ^3.4.4
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.6.2
@@ -5009,17 +5009,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ace-builds@npm:^1.32.8":
-  version: 1.36.2
-  resolution: "ace-builds@npm:1.36.2"
-  checksum: 10c0/86b4e6d5f7342418e3c9d66d817c6bd3e23f3925392a5098b0b15e6c3189ad163b5e177e1729ca15744cb0772b8333780deea7a42d1a6c88010ef8b97bad90ce
-  languageName: node
-  linkType: hard
-
-"ace-builds@npm:^1.36.2":
-  version: 1.36.4
-  resolution: "ace-builds@npm:1.36.4"
-  checksum: 10c0/f36dacc2099559a1c3ba4622bfca627072b030c04776c96bcc482e4bccb32550d9631c225b174c4df127e1086c2e534669f8aad3bbe2fb1c48a10b9395f9f205
+"ace-builds@npm:^1.36.3":
+  version: 1.37.5
+  resolution: "ace-builds@npm:1.37.5"
+  checksum: 10c0/6279b4e41088d7fca39f8c1764358ea0910af88c7a78027ba51fd9e8699bdc9b4108684638adf86d3b0eaa917eec8cefde1530f2c1a0f0a63119d88ae21ce4e5
   languageName: node
   linkType: hard
 
@@ -10095,11 +10088,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-ace@npm:^12.0.0":
-  version: 12.0.0
-  resolution: "react-ace@npm:12.0.0"
+"react-ace@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "react-ace@npm:13.0.0"
   dependencies:
-    ace-builds: "npm:^1.32.8"
+    ace-builds: "npm:^1.36.3"
     diff-match-patch: "npm:^1.0.5"
     lodash.get: "npm:^4.4.2"
     lodash.isequal: "npm:^4.5.0"
@@ -10107,7 +10100,7 @@ __metadata:
   peerDependencies:
     react: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/e7f33d4f0910f482e939f321db8f5a8bb7fe0bf40a9db0cde12ed2b368e8c77fc2683b2fb0737cd88216f732258e363705f2c6cfbbcaabced3fba8eff7fb43ad
+  checksum: 10c0/adbe485de187b69ca493bc986b587bf76222cf7eedfba53afd33deba7310cf094baf0fe8c42b4833e1fb7e26144d916797fe482137d563d15d91314d5292d8cc
   languageName: node
   linkType: hard
 
