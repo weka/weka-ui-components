@@ -29,8 +29,14 @@ interface Error {
   data: { error?: string } | { message?: string } | string | unknown
 }
 
+let uniqueIdCache = 0
+
 const utils = {
   insensitiveSort,
+  uniqueId: () => {
+    uniqueIdCache += 1
+    return uniqueIdCache.toString()
+  },
   isEllipsisActive(element: HTMLElement, isMultiLine = false): boolean {
     return isMultiLine
       ? element.scrollHeight > element.clientHeight
@@ -422,7 +428,7 @@ const utils = {
     return isPast ? `${stringToShow} ago` : `in ${stringToShow}`
   },
 
-  capitalize: (str: string) => {
+  capitalize: (str = EMPTY_STRING) => {
     const separator = ', '
 
     return str
