@@ -26,9 +26,15 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           ref: main
 
+      - name: Install Yarn 4.6
+        run: corepack enable && corepack prepare yarn@4.6.0 --activate
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'yarn'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@weka'
 
       - run: |
           git config --global user.name 'github-actions'
