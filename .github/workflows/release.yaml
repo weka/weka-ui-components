@@ -26,15 +26,9 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           ref: main
 
-      - name: Install Yarn 4.6
-        run: corepack enable && corepack prepare yarn@4.6.0 --activate
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
-          registry-url: https://npm.pkg.github.com/
-          scope: '@weka'
 
       - run: |
           git config --global user.name 'github-actions'
@@ -42,16 +36,19 @@ jobs:
 
       - run: git checkout main
 
-      - run: yarn version minor
+      - name: Bump minor version
+        run: yarn version minor
 
-      - run: git tag ${{ steps.version_bump.outputs.tag }}
+      - run: echo "tag=$(jq .version package.json -r)" >> $GITHUB_OUTPUT
+        name: Print future release version
+        id: version_bump
 
       - run: git add package.json
 
       - run: git commit -m 'publish ${{ steps.version_bump.outputs.tag }}'
 
-      - run: git push origin main
-
       - run: git tag ${{ steps.version_bump.outputs.tag }}
+
+      - run: git push origin main
 
       - run: git push origin tag ${{ steps.version_bump.outputs.tag }}
