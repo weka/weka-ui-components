@@ -4951,7 +4951,7 @@ __metadata:
     luxon: "npm:^3.4.4"
     prettier: "npm:^2.8.4"
     react: "npm:^18.2.0"
-    react-ace: "npm:^13.0.0"
+    react-ace: "npm:^14.0.1"
     react-dom: "npm:^18.2.0"
     react-hook-form: "npm:^7.53.2"
     react-router-dom: "npm:^6.25.0"
@@ -10088,9 +10088,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-ace@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "react-ace@npm:13.0.0"
+"react-ace@npm:^14.0.1":
+  version: 14.0.1
+  resolution: "react-ace@npm:14.0.1"
   dependencies:
     ace-builds: "npm:^1.36.3"
     diff-match-patch: "npm:^1.0.5"
@@ -10098,9 +10098,9 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     prop-types: "npm:^15.8.1"
   peerDependencies:
-    react: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/adbe485de187b69ca493bc986b587bf76222cf7eedfba53afd33deba7310cf094baf0fe8c42b4833e1fb7e26144d916797fe482137d563d15d91314d5292d8cc
+    react: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/dbc77970836f13bad88365903d077edd68cc1955857290475bc067e0b801181c1d60a9ee08cf89b20895fe312dbb169c072c5b23338d7176f9f658db7929732f
   languageName: node
   linkType: hard
 

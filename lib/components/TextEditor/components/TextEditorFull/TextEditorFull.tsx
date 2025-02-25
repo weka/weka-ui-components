@@ -46,7 +46,12 @@ const AceEditor = lazy(() =>
       import('ace-builds/src-noconflict/ext-searchbox')
     ])
 
-    return module
+    // vite bug: when the components installed as module, vite wraps async import in additional object, but for `yarn link` it doesn't
+    return (
+      typeof module.default !== 'function' // if it's a module
+        ? module.default
+        : module
+    ) as typeof module
   })
 )
 
