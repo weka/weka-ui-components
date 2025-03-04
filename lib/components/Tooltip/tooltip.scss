@@ -24,6 +24,12 @@
       box-shadow: 0 2px 2px var(--accent-t3) !important;
     }
   }
+
+  .tooltip-markdown-wrapper {
+    > p {
+        margin: 0;
+    }
+  }
 }
 
 @mixin tooltip-wrapper-dark {

@@ -8,24 +8,27 @@ import './collapsible.scss'
 
 interface CollapsibleProps {
   children: React.ReactNode
+  onToggle: () => void
   expanded?: boolean
   extraClass?: string
-  label?: string
+  label?: string | React.ReactNode
   info?: string
-  onToggle?: () => void
   headerRightContent?: React.ReactNode
+  expandOnHeaderClick?: boolean
 }
 
-function Collapsible({
-  expanded,
-  children,
-  extraClass,
-  label,
-  info,
-  onToggle,
-  headerRightContent,
-  ...props
-}: CollapsibleProps) {
+function Collapsible(props: CollapsibleProps) {
+  const {
+    expanded,
+    children,
+    extraClass,
+    label,
+    info,
+    onToggle,
+    headerRightContent,
+    expandOnHeaderClick,
+    ...rest
+  } = props
   const [{ motion, height }, setState] = useState({
     motion: EMPTY_STRING,
     height: expanded ? 'auto' : 0
@@ -75,7 +78,7 @@ function Collapsible({
 
   return (
     <div
-      {...props}
+      {...rest}
       className={clsx(
         'collapsible',
         motion,
@@ -83,11 +86,17 @@ function Collapsible({
         extraClass
       )}
     >
-      <div className='collapsible-header'>
-        <div className='collapsible-titles' onClick={onToggle}>
+      <div
+        className='collapsible-header'
+        onClick={expandOnHeaderClick ? onToggle : undefined}
+      >
+        <div
+          className='collapsible-titles'
+          onClick={!expandOnHeaderClick ? onToggle : undefined}
+        >
           <ThinArrow className={clsx('arrow-icon', { collapsed: !expanded })} />
           {label && (
-            <label className='collapsible-label page-headline'>{label}</label>
+            <div className='collapsible-label page-headline'>{label}</div>
           )}
           {info && <Info data={info} />}
         </div>
