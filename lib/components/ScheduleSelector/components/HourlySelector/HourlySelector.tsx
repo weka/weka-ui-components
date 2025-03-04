@@ -115,7 +115,11 @@ const HourlySelector: FC<HourlySelectorProps> = ({
       {!isEveryHour && (
         <div className='hourly-picker-wrapper'>
           <HourPicker
-            hours={hourlyData.hours !== '' ? hourlyData.hours : DEFAULT_HOUR}
+            hours={
+              hourlyData.hours !== EMPTY_STRING
+                ? hourlyData.hours
+                : DEFAULT_HOUR
+            }
             onChange={handleHourToggle}
             minuteOffset={parseInt(hourlyData.minuteOffset, 10)}
             selectedHours={specificHours}

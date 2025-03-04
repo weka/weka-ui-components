@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import TextBox from '../TextBox'
 import Select from '../Select'
 import Utils from 'utils'
+import { EMPTY_STRING } from 'consts'
 import Info from '../../Info'
 
 import './textSelectBox.scss'
@@ -24,7 +25,7 @@ function TextSelectBox(props: TextSelectBoxProps) {
     label,
     onChange,
     value,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     options,
     formatFunc,
     info,

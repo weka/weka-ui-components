@@ -6,7 +6,7 @@ import React, {
   useState
 } from 'react'
 import CreatableSelect from 'react-select/creatable'
-import { MultiValue, MenuPosition } from 'react-select'
+import { type MultiValue, type MenuPosition } from 'react-select'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
 import { EMPTY_STRING, EVENT_KEYS, TAG_SEPARATOR } from 'consts'
@@ -43,7 +43,7 @@ function TagsBox(props: TagsBoxProps) {
     value = [],
     error,
     placeholder,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     tagsValidation = (val) => val,
     warning,
     isRequired,

@@ -44,7 +44,7 @@ function MenuPopper(props: MenuPopperProps) {
     extraPopperClass = EMPTY_STRING
   } = props
 
-  const getTooltipData = (disabled = '', tooltip = '') => {
+  const getTooltipData = (disabled = EMPTY_STRING, tooltip = EMPTY_STRING) => {
     if (Utils.isString(disabled) && !Utils.isEmpty(disabled)) {
       return disabled
     }

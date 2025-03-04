@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+import { EMPTY_STRING } from 'consts'
 import Tooltip from '../../Tooltip'
 import JsonEditor from '../../TextEditor'
 import { Info } from 'svgs'
@@ -19,7 +20,7 @@ function JsonBox(props: JsonBoxProps) {
   const {
     label,
     error,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     info,
     isRequired,
     disabled,

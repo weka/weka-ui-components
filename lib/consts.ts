@@ -8,8 +8,10 @@ import {
 } from './svgs'
 import utils from './utils'
 
+// eslint-disable-next-line
 export const EMPTY_STRING = ''
 export const ZERO_STRING = '0'
+// eslint-disable-next-line
 export const NOP = () => {}
 export const TAG_SEPARATOR = ','
 

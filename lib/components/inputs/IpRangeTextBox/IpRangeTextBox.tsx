@@ -59,7 +59,7 @@ function IpRangeTextBox(props: IpRangeTextBoxProps) {
     onChange,
     value,
     error,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     subnet,
     disabled,
     isRequired,
@@ -70,7 +70,12 @@ function IpRangeTextBox(props: IpRangeTextBoxProps) {
   const mask = getFormatMask(subnet)
   const [ipVal, range] = value
     ? value.split('-')
-    : [[...mask, '', '', '', ''].slice(0, 4).join('.'), '']
+    : [
+        [...mask, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING]
+          .slice(0, 4)
+          .join('.'),
+        EMPTY_STRING
+      ]
   const [ipParts, setIpParts] = useState([...ipVal.split('.'), range])
   const wrapperClasses = clsx({
     [wrapperClass]: true,
