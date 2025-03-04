@@ -4,7 +4,7 @@ import { EMPTY_STRING } from 'consts'
 import { Link } from 'react-router-dom'
 import Tooltip from '../Tooltip'
 import { Info } from 'svgs'
-import ValidityIndicator from './ValidityIndicator'
+import ValidityIndicator from '../ValidityIndicator'
 
 import './tab.scss'
 
