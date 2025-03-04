@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
 import Tooltip from '../../../../Tooltip'
 import Utils from 'utils'
@@ -14,6 +14,7 @@ export interface DateCellOptions {
   relativeOnly?: boolean
   enableCustomFormat?: boolean
   customFormat?: string
+  refreshInterval?: number
 }
 
 export type DateCellValue = string
@@ -22,6 +23,7 @@ export const DateCellName = 'DateCell'
 
 function DateCell<Data>(props: ExtendedCellProps<Data, DateCellValue>) {
   const { cell, column, customValue } = props
+  const [, forceUpdate] = useState(0)
 
   const cellDef = column.columnDef.meta?.cell
   if (cellDef && cellDef.type !== DateCellName) {
@@ -41,8 +43,20 @@ function DateCell<Data>(props: ExtendedCellProps<Data, DateCellValue>) {
     showRelative,
     relativeOnly,
     enableCustomFormat = false,
-    customFormat = defaultCustomFormat
+    customFormat = defaultCustomFormat,
+    refreshInterval = 0
   } = cellDef?.options ?? {}
+
+  useEffect(() => {
+    if (refreshInterval <= 0 || (!showRelative && !relativeOnly)) {
+      return
+    }
+    const intervalId = setInterval(() => {
+      forceUpdate((prev) => prev + 1)
+    }, refreshInterval)
+
+    return () => clearInterval(intervalId)
+  }, [refreshInterval, showRelative, relativeOnly])
 
   const valueToDate = DateTime.fromISO(value)
   const valueToShow = enableCustomFormat
