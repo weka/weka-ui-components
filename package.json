@@ -8,19 +8,20 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "3.123.0",
+  "version": "3.115.0",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
   "scripts": {
     "build": "vite build",
+    "prepare-for-release": "python scripts/prepare-for-release.py",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -c .storybook",
     "predeploy-storybook": "yarn run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static",
-    "lint": "eslint ./lib"
+    "deploy-storybook": "gh-pages -d storybook-static"
   },
   "files": [
-    "lib"
+    "lib",
+    ".eslintrc"
   ],
   "eslintConfig": {
     "extends": [
@@ -63,7 +64,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.11.1",
-    "luxon": "^3.4.4",
+    "luxon": "^3.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.2"
@@ -118,5 +119,5 @@
     "vite": "^6.1.0",
     "vite-plugin-svgr": "^4.2.0"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.6.0+sha512.5383cc12567a95f1d668fbe762dfe0075c595b4bfff433be478dbbe24e05251a8e8c3eb992a986667c1d53b6c3a9c85b8398c35a960587fbd9fa3a0915406728"
 }
