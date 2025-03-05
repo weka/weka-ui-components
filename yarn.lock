@@ -5323,9 +5323,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@weka/eslint-plugin-weka@git@github.com:weka/eslint-plugin-weka.git":
+"@weka/eslint-plugin-weka@https://github.com/weka/eslint-plugin-weka":
   version: 1.0.5
-  resolution: "@weka/eslint-plugin-weka@git@github.com:weka/eslint-plugin-weka.git#commit=4b8d0b3c4b3177e6565742841310b97c19f97bf1"
+  resolution: "@weka/eslint-plugin-weka@https://github.com/weka/eslint-plugin-weka.git#commit=4b8d0b3c4b3177e6565742841310b97c19f97bf1"
   checksum: 10c0/57ffef2145c100f34b29b6f5f47c83722cf15c13b5ef0ccc372b0c81853ee8f3087a50c950efd1c8dc3ecec2c00bde56ae013ceca77a6ec30da3a1978e2e7bdd
   languageName: node
   linkType: hard
@@ -5360,7 +5360,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^5.53.0"
     "@typescript-eslint/parser": "npm:5.60.1"
     "@vitejs/plugin-react": "npm:^4.3.1"
-    "@weka/eslint-plugin-weka": "git@github.com:weka/eslint-plugin-weka.git"
+    "@weka/eslint-plugin-weka": "https://github.com/weka/eslint-plugin-weka"
     ace-builds: "npm:^1.36.3"
     babel-loader: "npm:^9.1.3"
     check-password-strength: "npm:^2.0.7"

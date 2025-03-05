@@ -40,7 +40,7 @@
   "dependencies": {
     "@tanstack/react-table": "^8.14.0",
     "@tanstack/react-virtual": "^3.11.2",
-    "@weka/eslint-plugin-weka": "git@github.com:weka/eslint-plugin-weka.git",
+    "@weka/eslint-plugin-weka": "https://github.com/weka/eslint-plugin-weka",
     "ace-builds": "^1.36.3",
     "check-password-strength": "^2.0.7",
     "clsx": "^2.0.0",
