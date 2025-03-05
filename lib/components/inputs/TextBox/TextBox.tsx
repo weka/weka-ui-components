@@ -37,7 +37,7 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     value = EMPTY_STRING,
     error,
     placeholder,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     tooltip,
     Icon,
     type,

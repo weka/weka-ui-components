@@ -16,7 +16,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -c .storybook",
     "predeploy-storybook": "yarn run build-storybook",
-    "deploy-storybook": "gh-pages -d storybook-static"
+    "deploy-storybook": "gh-pages -d storybook-static",
+    "lint": "eslint ./lib"
   },
   "files": [
     "lib"
@@ -39,6 +40,7 @@
   "dependencies": {
     "@tanstack/react-table": "^8.14.0",
     "@tanstack/react-virtual": "^3.11.2",
+    "@weka/eslint-plugin-weka": "git@github.com:weka/eslint-plugin-weka.git",
     "ace-builds": "^1.36.3",
     "check-password-strength": "^2.0.7",
     "clsx": "^2.0.0",

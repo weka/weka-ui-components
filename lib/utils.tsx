@@ -91,7 +91,7 @@ const utils = {
             0
           )
           .toString()
-      : ''
+      : EMPTY_STRING
   },
   formatOption(label: string, value?: any): { label: string; value: any } {
     return value !== undefined ? { label, value } : { label, value: label }
@@ -354,9 +354,9 @@ const utils = {
     }
     const keys = ['days', 'hours', 'minutes']
     const diffObject: { [key: string]: any } = utils.getTimeDiffObject(time)
-    let ans = ''
+    let ans = EMPTY_STRING
     keys.forEach((key) => {
-      if (!largest || (largest && ans === '' && diffObject[key])) {
+      if (!largest || (largest && ans === EMPTY_STRING && diffObject[key])) {
         if (diffObject[key] < 0) {
           ans = `${ans} ${Math.round(diffObject[key]) * -1}${key.charAt(0)}`
         } else {

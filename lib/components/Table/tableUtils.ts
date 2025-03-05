@@ -57,13 +57,13 @@ export const customSortingFns = {
         a
           .split('.')
           .map((num: string) => `000${num}`.slice(-3))
-          .join('')
+          .join(EMPTY_STRING)
       )
       const num2 = Number(
         b
           .split('.')
           .map((num: string) => `000${num}`.slice(-3))
-          .join('')
+          .join(EMPTY_STRING)
       )
       return num1 - num2
     }

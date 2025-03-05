@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { IAceEditor } from 'react-ace/lib/types'
+import { EMPTY_STRING } from 'consts'
 
 function useForcedLineNumbers({
   editor,
@@ -25,7 +26,7 @@ function useForcedLineNumbers({
 
     editor.session.gutterRenderer = {
       getText: function (_session: unknown, row: number) {
-        return lines[row]?.number || ''
+        return lines[row]?.number || EMPTY_STRING
       },
       getWidth: function (
         _session: unknown,

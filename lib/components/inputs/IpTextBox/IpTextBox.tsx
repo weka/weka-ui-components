@@ -36,7 +36,7 @@ function IpTextBox(props: IpTextBoxProps) {
     onChange = NOP,
     value,
     error,
-    wrapperClass = '',
+    wrapperClass = EMPTY_STRING,
     isRequired,
     info,
     allowCopy,
@@ -44,7 +44,9 @@ function IpTextBox(props: IpTextBoxProps) {
   } = props
   const { disabled } = rest
   const [ipParts, setIpParts] = useState(
-    value ? value.split('.') : ['', '', '', '']
+    value
+      ? value.split('.')
+      : [EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING]
   )
   const wrapperClasses = clsx({
     [wrapperClass]: true,

@@ -22,7 +22,15 @@
       "version": "detect"
     }
   },
-  "plugins": ["babel", "react", "promise", "unused-imports", "prettier", "react-hooks"],
+  "plugins": [
+    "babel",
+    "react",
+    "promise",
+    "unused-imports",
+    "prettier",
+    "react-hooks",
+    "@weka/weka"
+  ],
   "env": {
     "browser": true
   },
@@ -127,6 +135,7 @@
     "no-plusplus": [0],
     "curly": "warn",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn" 
+    "react-hooks/exhaustive-deps": "warn",
+    "@weka/weka/no-empty-strings": "error"
   }
 }

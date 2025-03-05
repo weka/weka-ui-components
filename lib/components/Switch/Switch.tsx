@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import clsx from 'clsx'
+import { EMPTY_STRING } from 'consts'
 import Tooltip from '../Tooltip'
 
 import './switch.scss'
@@ -16,7 +17,7 @@ function Switch(props: SwitchProps) {
     oneColor = false,
     checked,
     disabled = false,
-    tooltip = '',
+    tooltip = EMPTY_STRING,
     ...rest
   } = props
   const classes = clsx({
