@@ -61,6 +61,9 @@ function Tooltip({
       }}
       placement='top'
       arrow
+      // when "title" prop is jsx, but not string, the component can't automatically set aria-label
+      // so we need to set it manually
+      {...(typeof data === 'string' && { 'aria-label': data })}
       {...rest}
     >
       {children}
