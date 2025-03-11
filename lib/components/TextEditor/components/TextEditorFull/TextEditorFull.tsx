@@ -76,6 +76,7 @@ export interface TextEditorFullProps {
     text: string
   }[]
   fontSize?: number
+  editorOptions?: Record<string, unknown>
 }
 function TextEditorFull(props: TextEditorFullProps) {
   const {
@@ -96,6 +97,7 @@ function TextEditorFull(props: TextEditorFullProps) {
     loading,
     lines,
     fontSize,
+    editorOptions = {},
     ...rest
   } = props
 
@@ -176,7 +178,6 @@ function TextEditorFull(props: TextEditorFullProps) {
 
   useEditor({
     editor,
-    maxLines,
     onlyMatching,
     value: options.value
   })
@@ -222,6 +223,7 @@ function TextEditorFull(props: TextEditorFullProps) {
           onChange={onChange}
           onValidate={onValidate}
           onLoad={handleLoad}
+          setOptions={{ maxLines, ...editorOptions }}
           {...rest}
         />
       </Suspense>
