@@ -17,6 +17,7 @@ interface TextBoxProps {
   placeholder?: string | number
   label?: string | ReactElement
   tooltip?: string | ReactElement
+  passwordTooltip?: string | ReactElement
   error?: any
   Icon?: ReactElement
   type?: string
@@ -39,6 +40,7 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     placeholder,
     wrapperClass = EMPTY_STRING,
     tooltip,
+    passwordTooltip,
     Icon,
     type,
     info,
@@ -152,7 +154,11 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
         ></input>
         {type === 'password' && (
           <span className='password-icon'>
-            {Utils.getPasswordIcon(showPassword, toggleShowPassword)}
+            {Utils.getPasswordIcon(
+              showPassword,
+              toggleShowPassword,
+              passwordTooltip
+            )}
           </span>
         )}
         {isLoadingValue && (
