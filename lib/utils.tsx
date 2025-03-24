@@ -44,17 +44,18 @@ const utils = {
   },
   getPasswordIcon(
     showPassword: boolean,
-    toggleShowPassword: () => void
+    toggleShowPassword: () => void,
+    passwordTooltip = 'password'
   ): React.ReactElement {
     if (showPassword) {
       return (
-        <Tooltip data='Hide password' placement='right'>
+        <Tooltip data={`Hide ${passwordTooltip}`} placement='right'>
           <Show onClick={toggleShowPassword} />
         </Tooltip>
       )
     }
     return (
-      <Tooltip data='Show password' placement='right'>
+      <Tooltip data={`Show ${passwordTooltip}`} placement='right'>
         <Hide onClick={toggleShowPassword} />
       </Tooltip>
     )
