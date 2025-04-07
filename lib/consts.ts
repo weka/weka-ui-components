@@ -106,9 +106,7 @@ export const OBS_MODES = {
 
 // TIMES
 
-interface TimeShortenings {
-  [key: string]: any
-}
+type TimeShortenings = Record<string, unknown>
 
 export const TIME_PARTS_SHORTENINGS: TimeShortenings = {
   years: 'y',
@@ -150,9 +148,7 @@ export const TIME_FORMATS = {
   DATE_TIME_SECONDS_MS: 'yyyy-MM-dd HH:mm:ss.SSS'
 }
 
-interface SeverityIcons {
-  [key: string]: any
-}
+type SeverityIcons = Record<string, unknown>
 
 export const SEVERITY_DEBUG = 'DEBUG'
 export const SEVERITY_INFO = 'INFO'
@@ -180,9 +176,7 @@ export const SEVERITIES_ICONS: SeverityIcons = {
   CRITICAL: AccidentCritical
 } as const
 
-interface ShortRoles {
-  [key: string]: any
-}
+type ShortRoles = Record<string, unknown>
 
 export const SHORT_ROLES: ShortRoles = {
   FRONTEND: 'FE',
