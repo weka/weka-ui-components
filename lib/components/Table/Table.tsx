@@ -87,6 +87,7 @@ export interface TableProps<Data, Value> {
   getRowCanExpand?: (row: Data) => boolean
   expandedRows?: Record<string, boolean>
   loading?: boolean
+  filters: ExtendedColumnFilter[]
   onFiltersChanged?: (newFilters: ExtendedColumnFilter[]) => void
   defaultDescendingSort?: boolean
   manualFilters?: boolean
@@ -134,6 +135,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     itemsAmount,
     canExpandAll = false,
     loading,
+    filters: userColumnFilters,
     onFiltersChanged,
     defaultDescendingSort = false,
     onSortChanged,
@@ -255,6 +257,10 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
         pageSize: fixedPageSize || 50
       }
     },
+    state: {
+      ...(userColumnFilters && { columnFilters: userColumnFilters })
+    },
+    ...(userColumnFilters && { onColumnFiltersChange: onFiltersChanged }),
     defaultColumn: {
       cell: DefaultCell,
       size: 100,
@@ -336,7 +342,9 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   const isExpandable = !!RowSubComponent
 
   useEffect(() => {
-    onFiltersChanged?.(columnFilters)
+    if (!userColumnFilters) {
+      onFiltersChanged?.(columnFilters)
+    }
     if (addFilterToUrl) {
       setUrlFilters(columnFilters)
     }
