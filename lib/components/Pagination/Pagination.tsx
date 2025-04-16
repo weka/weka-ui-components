@@ -12,6 +12,7 @@ type PaginationProps = {
   onPageChange: (page: number) => void
   defaultCurrentPage?: number
   isLoading?: boolean
+  disablePageInput?: boolean
 } & (
   | { totalRows: number; rowsPerPage: number; numberOfPages?: undefined }
   | {
@@ -28,7 +29,8 @@ function Pagination(props: PaginationProps) {
     isLoading,
     totalRows,
     rowsPerPage,
-    numberOfPages: outerNumberOfPages
+    numberOfPages: outerNumberOfPages,
+    disablePageInput = false
   } = props
   const staticProps = useStaticProps({ onPageChange })
 
@@ -135,7 +137,7 @@ function Pagination(props: PaginationProps) {
                 }
               }}
               autosize
-              disabled={numberOfPages <= 1}
+              disabled={numberOfPages <= 1 || disablePageInput}
             />
             <span className='note'>{`/ ${numberOfPages || 1} `}</span>
           </div>
