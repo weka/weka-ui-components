@@ -11,3 +11,4 @@ export {
   SHORT_ROLES
 } from './consts'
 export * from './hooks'
+export { default as localStorageService } from './localStorageService'
