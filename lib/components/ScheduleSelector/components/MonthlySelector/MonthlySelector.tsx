@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react'
+import React, { FC, useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
 import { Select } from '../../../inputs'
 import { TimePicker, DayPicker, MonthPicker } from '../index'
@@ -91,37 +91,41 @@ const MonthlySelector: FC<MonthlySelectorProps> = ({
     [monthlyData.days, time, onChange]
   )
 
+  const applyDaysChange = (days: string) => {
+    const selectedDays = days
+      .split(',')
+      .map((day) => day.trim())
+      .filter(Boolean)
+
+    const months = monthlyData.months
+      .split(',')
+      .map((month) => month.trim().toLowerCase())
+    const maxDays = everyMonth
+      ? MINIMAL_DAYS_OF_MONTH
+      : Math.min(
+          ...months.map(
+            (month) =>
+              MONTHS_OPTIONS.find((m) => m.value === month)?.days ||
+              MINIMAL_DAYS_OF_MONTH
+          )
+        )
+    const validDays = selectedDays.filter((day) => parseInt(day, 10) <= maxDays)
+    const finalDays = validDays.length > 0 ? validDays : ['01']
+
+    onChange({
+      months: monthlyData.months,
+      time,
+      days: finalDays.join(',')
+    })
+  }
+
+  useEffect(() => {
+    applyDaysChange(monthlyData.days)
+  }, [monthlyData.months])
+
   const handleDateChange = useCallback(
     (days: string) => {
-      const selectedDays = days
-        .split(',')
-        .map((day) => day.trim())
-        .filter(Boolean)
-
-      const months = monthlyData.months
-        .split(',')
-        .map((month) => month.trim().toLowerCase())
-      const maxDays = everyMonth
-        ? MINIMAL_DAYS_OF_MONTH
-        : Math.min(
-            ...months.map(
-              (month) =>
-                MONTHS_OPTIONS.find((m) => m.value === month)?.days ||
-                MINIMAL_DAYS_OF_MONTH
-            )
-          )
-
-      const validDays = selectedDays.filter(
-        (day) => parseInt(day, 10) <= maxDays
-      )
-
-      const finalDays = validDays.length > 0 ? validDays : ['01']
-
-      onChange({
-        months: monthlyData.months,
-        time,
-        days: finalDays.join(',')
-      })
+      applyDaysChange(days)
     },
     [monthlyData.months, time, everyMonth, onChange]
   )
