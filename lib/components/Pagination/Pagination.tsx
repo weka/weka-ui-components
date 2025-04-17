@@ -3,7 +3,6 @@ import Tooltip from '../Tooltip'
 import { Arrow, LastArrow } from 'svgs'
 import { IconButton } from '@mui/material'
 import { EMPTY_STRING } from 'consts'
-import { useStaticProps } from 'hooks'
 import { TextBox } from '../inputs'
 
 import './pagination.scss'
@@ -32,7 +31,6 @@ function Pagination(props: PaginationProps) {
     numberOfPages: outerNumberOfPages,
     disablePageInput = false
   } = props
-  const staticProps = useStaticProps({ onPageChange })
 
   const [currentPage, setCurrentPage] = useState(defaultCurrentPage)
   const [canPreviousPage, setCanPreviousPage] = useState(false)
@@ -79,8 +77,9 @@ function Pagination(props: PaginationProps) {
   }, [defaultCurrentPage])
 
   useEffect(() => {
-    staticProps.onPageChange(currentPage)
-  }, [currentPage, staticProps])
+    onPageChange(currentPage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage])
 
   useEffect(() => {
     if (numberOfPages === currentPage || !numberOfPages) {
