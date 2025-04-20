@@ -2,7 +2,7 @@ import React, { ReactElement, ChangeEvent, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import { useToggle } from 'hooks'
+import { useHighlightInput, useToggle } from '../../../hooks'
 import Utils from 'utils'
 import { Info } from 'svgs'
 import { useAutosizeWidth } from './hooks'
@@ -11,24 +11,26 @@ import InputLoader from '../../InputLoader'
 import './textBox.scss'
 
 interface TextBoxProps {
-  onChange: (newVal: any) => void
+  onChange: (newVal: string | number) => void
   value: string | number
   wrapperClass?: string
   placeholder?: string | number
   label?: string | ReactElement
   tooltip?: string | ReactElement
   passwordTooltip?: string | ReactElement
-  error?: any
+  error?: string | ReactElement
   Icon?: ReactElement
   type?: string
   isRequired?: boolean
-  info?: any
+  info?: string | ReactElement
   allowDecimal?: boolean
   allowNegative?: boolean
   autosize?: boolean
   maxLength?: number
   autofill?: boolean
   getAsyncDefaultValue?: () => Promise<string>
+  isHighlighted?: boolean
+  isScrolledInto?: boolean
 }
 
 const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
@@ -50,12 +52,20 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     autofill,
     allowNegative,
     getAsyncDefaultValue,
+    isHighlighted,
+    isScrolledInto,
     ...rest
   } = props
   const [showPassword, toggleShowPassword] = useToggle(false)
   const inputRef = React.useRef<HTMLInputElement | null>(null)
+  const textBoxRef = React.useRef<HTMLInputElement | null>(null)
   const [isLoadingValue, setLoadingValue] = useState(false)
   const isAsync = !!getAsyncDefaultValue
+  const highlighted = useHighlightInput({
+    inputRef: textBoxRef,
+    isHighlighted,
+    isScrolledInto
+  })
 
   useEffect(() => {
     if (isAsync) {
@@ -84,7 +94,8 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
     'text-box-field': true,
     'has-error': !!error,
     'no-label': !label,
-    'has-icon': !!Icon
+    'has-icon': !!Icon,
+    'is-highlighted': highlighted
   })
 
   const inputClasses = clsx({
@@ -103,6 +114,7 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
       <div
         className={wrapperClasses}
         style={autosize ? { width: `${inputWidth}px` } : {}}
+        ref={textBoxRef}
       >
         {autosize && (
           <div ref={calculationBoxRef} className='calculation-box'>

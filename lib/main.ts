@@ -1,6 +1,7 @@
 import './style/theme.scss'
 import './style/app.scss'
 import './style/fonts.scss'
+import './style/animations.scss'
 export * from './components'
 export { default as Utils } from './utils'
 export * from './context'

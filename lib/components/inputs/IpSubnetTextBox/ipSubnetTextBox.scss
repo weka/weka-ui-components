@@ -10,6 +10,10 @@
   height: 48px;
   padding-bottom: 2px;
 
+  &.is-highlighted {
+    animation: blinkInputAnimation 2s infinite;
+  }
+
 
   &.disabled {
     background-color: var(--ironhide-t3);

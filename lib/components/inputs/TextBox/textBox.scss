@@ -26,6 +26,12 @@
     }
   }
 
+  &.is-highlighted {
+    .field__input {
+      animation: blinkInputAnimation 2s infinite;
+    }
+  }
+
   .text-box-icon {
     position: absolute;
     height: 16px;

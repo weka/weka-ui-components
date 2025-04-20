@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState, useMemo } from 'react'
+import React, { ReactElement, useEffect, useState, useMemo, useRef } from 'react'
 import { FormControl } from '@mui/material'
 import ReactSelect from 'react-select'
 import clsx from 'clsx'
@@ -12,6 +12,7 @@ import { Info } from 'svgs'
 import Tooltip from '../../Tooltip'
 import VirtualMenuList from './VirtualMenuList'
 import InputLoader from '../../InputLoader'
+import { useHighlightInput } from '../../../hooks'
 
 import './select.scss'
 
@@ -119,6 +120,8 @@ export interface SelectProps {
   defaultValueIndex?: number
   defaultValueKey?: string
   preventCall?: boolean
+  isHighlighted?: boolean
+  isScrolledInto?: boolean
 }
 
 export const CommonSelectComponents = {
@@ -155,10 +158,15 @@ function Select(props: SelectProps) {
     defaultValueIndex,
     defaultValueKey,
     preventCall,
+    isHighlighted,
+    isScrolledInto,
     ...rest
   } = props
   const isAsync = !!getAsyncOptions
   const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
+  const selectRef = useRef<HTMLInputElement | null>(null)
+  const highlighted = useHighlightInput({ inputRef: selectRef, isHighlighted, isScrolledInto })
+
 
   useEffect(() => {
     if (isAsync && !preventCall) {
@@ -256,12 +264,17 @@ function Select(props: SelectProps) {
     'select-wrapper-is-multi': isMulti,
     'has-error': error,
     'no-label': !label,
-    'expand-input-on-focus': expandInputOnFocus
+    'expand-input-on-focus': expandInputOnFocus,
+    'is-highlighted': highlighted
   })
 
   return (
     <Tooltip data={tooltip}>
-      <FormControl variant='outlined' className={wrapperClasses}>
+      <FormControl
+        variant='outlined'
+        className={wrapperClasses}
+        ref={selectRef}
+      >
         <span className='select-label field-1-label-content'>
           {label}
           {isRequired && <span className='required-star'>*</span>}

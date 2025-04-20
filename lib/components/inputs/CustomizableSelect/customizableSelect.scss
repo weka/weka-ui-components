@@ -91,4 +91,14 @@
   .input-loader {
     right: 40px;
   }
+
+  &.is-highlighted {
+    .react-creatable-select {
+      &__control {
+        border-radius: 4px;
+        animation: blinkInputAnimation 2s infinite;
+      }
+    }
+  }
+
 }

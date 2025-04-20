@@ -7,6 +7,7 @@ import Tooltip from '../../Tooltip'
 import { Info } from 'svgs'
 import { CommonSelectComponents, getStyle } from '../Select/Select'
 import Utils from 'utils'
+import { useHighlightInput } from '../../../hooks'
 
 import './customizableSelect.scss'
 
@@ -35,6 +36,8 @@ interface CustomizableSelectProps {
   defaultValueIndex?: number
   defaultValueKey?: string
   preventCall?: boolean
+  isHighlighted?: boolean
+  isScrolledInto?: boolean
 }
 
 function CustomizableSelect(props: CustomizableSelectProps) {
@@ -61,6 +64,8 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     defaultValueIndex,
     defaultValueKey,
     preventCall,
+    isHighlighted,
+    isScrolledInto,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
@@ -69,6 +74,8 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   const isAsync = !!getAsyncOptions
   const [isLoadingOptions, setLoadingOptions] = useState(false)
   const options = isAsync ? asyncOptions : localOptions
+  const selectRef = React.useRef<HTMLInputElement | null>(null)
+  const highlighted = useHighlightInput({ inputRef: selectRef, isHighlighted, isScrolledInto })
 
   useEffect(() => {
     if (isAsync && !preventCall) {
@@ -123,11 +130,16 @@ function CustomizableSelect(props: CustomizableSelectProps) {
     'creatable-select-wrapper': true,
     [wrapperClass]: true,
     'has-error': error,
-    'no-label': !label
+    'no-label': !label,
+    'is-highlighted': highlighted
   })
   return (
     <Tooltip data={tooltip}>
-      <FormControl variant='outlined' className={wrapperClasses}>
+      <FormControl
+        variant='outlined'
+        className={wrapperClasses}
+        ref={selectRef}
+      >
         <span className='creatable-select-label field-1-label-content'>
           {label}
           {isRequired && <span className='required-star'>*</span>}

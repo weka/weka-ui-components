@@ -14,6 +14,7 @@ import Utils from 'utils'
 import Tooltip from '../../Tooltip'
 import { Info } from 'svgs'
 import Option from 'types'
+import { useHighlightInput } from '../../../hooks'
 
 import './tagsBox.scss'
 
@@ -34,6 +35,8 @@ export interface TagsBoxProps {
   menuPortalTarget?: HTMLElement
   menuPosition?: MenuPosition
   expandInputOnFocus?: boolean
+  isHighlighted?: boolean
+  isScrolledInto?: boolean
 }
 
 function TagsBox(props: TagsBoxProps) {
@@ -52,11 +55,19 @@ function TagsBox(props: TagsBoxProps) {
     disabled,
     isClearable,
     expandInputOnFocus = true,
+    isHighlighted,
+    isScrolledInto,
     ...rest
   } = props
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [editValueError, setEditErrorValue] = useState(false)
   const [displayValue, setDisplayValue] = useState([])
+  const tagsBoxRef = React.useRef<HTMLInputElement | null>(null)
+  const highlighted = useHighlightInput({
+    inputRef: tagsBoxRef,
+    isHighlighted,
+    isScrolledInto
+  })
   useEffect(() => {
     setDisplayValue(value?.map(Utils.formatOption))
   }, [JSON.stringify(value)])
@@ -71,7 +82,8 @@ function TagsBox(props: TagsBoxProps) {
     [wrapperClass]: true,
     'tagsbox-wrapper': true,
     'has-error': !!error,
-    'expand-input-on-focus': expandInputOnFocus
+    'expand-input-on-focus': expandInputOnFocus,
+    'is-highlighted': highlighted
   })
 
   function onKeyDown(event: KeyboardEvent) {
@@ -118,7 +130,7 @@ function TagsBox(props: TagsBoxProps) {
   }
 
   return (
-    <FormControl className={wrapperClasses}>
+    <FormControl className={wrapperClasses} ref={tagsBoxRef}>
       <span className='tags-label field-1-label-content'>
         {label}
         {isRequired && <span className='required-star'>*</span>}

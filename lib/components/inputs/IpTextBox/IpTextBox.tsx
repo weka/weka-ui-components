@@ -5,6 +5,7 @@ import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
 import Utils from 'utils'
 import { Info } from 'svgs'
 import Copy from '../../Copy'
+import { useHighlightInput } from '../../../hooks'
 
 import './ipTextBox.scss'
 
@@ -28,6 +29,8 @@ interface IpTextBoxProps {
   error?: string
   info?: string
   allowCopy?: boolean
+  isHighlighted?: boolean
+  isScrolledInto?: boolean
 }
 
 function IpTextBox(props: IpTextBoxProps) {
@@ -40,19 +43,28 @@ function IpTextBox(props: IpTextBoxProps) {
     isRequired,
     info,
     allowCopy,
+    isHighlighted,
+    isScrolledInto,
     ...rest
   } = props
   const { disabled } = rest
+  const ipBoxRef = React.useRef<HTMLInputElement | null>(null)
   const [ipParts, setIpParts] = useState(
     value
       ? value.split('.')
       : [EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING]
   )
+  const highlighted = useHighlightInput({
+    inputRef: ipBoxRef,
+    isHighlighted,
+    isScrolledInto
+  })
   const wrapperClasses = clsx({
     [wrapperClass]: true,
     'ip-text-box-field': true,
     'ip-text-box-disabled': disabled,
-    'has-error': !!error
+    'has-error': !!error,
+    'is-highlighted': highlighted
   })
 
   function setIpPart(index, val) {
@@ -72,7 +84,7 @@ function IpTextBox(props: IpTextBoxProps) {
   }
 
   return (
-    <div className={wrapperClasses}>
+    <div className={wrapperClasses} ref={ipBoxRef}>
       <div className='value-container'>
         {Utils.range(4).map((inputIndex) => (
           <div className='ip-part-value-edit' key={`input_${inputIndex}`}>
