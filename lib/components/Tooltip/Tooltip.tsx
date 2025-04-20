@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ForwardedRef, ReactElement } from 'react'
 import { Tooltip as MuiTooltip } from '@mui/material'
 import type { TooltipProps as MuiTooltipProps } from '@mui/material'
 import clsx from 'clsx'
@@ -40,19 +40,41 @@ function Tooltip({
     'clear-tooltip': clear,
     [extraClass]: true
   })
-  return (
-    <MuiTooltip
-      enterNextDelay={400}
-      enterDelay={enterDelay}
-      title={
-        data && typeof data === 'string' ? (
+
+  if (!data) {
+    return children
+  }
+
+  const TooltipContent = React.forwardRef(function TooltipContent(
+    props,
+    ref: ForwardedRef<HTMLDivElement>
+  ) {
+    return (
+      <div
+        {...props}
+        ref={ref}
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onMouseUp={(e) => e.stopPropagation()}
+      >
+        {typeof data === 'string' ? (
           <div className='tooltip-markdown-wrapper'>
             <Markdown components={{ a: LinkRenderer }}>{data}</Markdown>
           </div>
         ) : (
           data
-        )
-      }
+        )}
+      </div>
+    )
+  })
+
+  TooltipContent.displayName = 'TooltipContent'
+
+  return (
+    <MuiTooltip
+      enterNextDelay={400}
+      enterDelay={enterDelay}
+      title={<TooltipContent />}
       followCursor={followCursor}
       classes={{
         tooltip: classes,
@@ -70,4 +92,5 @@ function Tooltip({
     </MuiTooltip>
   )
 }
+
 export default Tooltip
