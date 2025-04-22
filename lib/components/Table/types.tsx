@@ -30,7 +30,9 @@ import {
   DefaultCellName,
   IconButtonCellName,
   BlocksCellName,
-  CopyCellName
+  CopyCellName,
+  AggregatedTotalCellOptions,
+  AggregatedTotalCellName
 } from './exports'
 
 import {
@@ -114,7 +116,7 @@ declare module '@tanstack/react-table' {
       | CellDef<TData, TValue, typeof StatusCellName, StatusCellOptions<TData>>
       | CellDef<TData, TValue, typeof BlocksCellName, BlocksCellOptions<TData>>
       | CellDef<TData, TValue, typeof DateCellName, DateCellOptions>
-      | CellDef<TData, TValue, typeof CopyCellName, CopyCellOptions>
+      | CellDef<TData, TValue, typeof CopyCellName, CopyCellOptions<TData>>
       | CellDef<TData, TValue, typeof SwitchCellName, SwitchCellOptions<TData>>
       | CellDef<TData, TValue, typeof IconCellName, IconCellOptions<TData>>
       | CellDef<
@@ -129,6 +131,12 @@ declare module '@tanstack/react-table' {
           typeof IconButtonCellName,
           IconButtonCellOptions<TData>
         >
+    aggregatedCell?: CellDef<
+      TData,
+      TValue,
+      typeof AggregatedTotalCellName,
+      AggregatedTotalCellOptions<TData, TValue>
+    >
     columnTitle?: string
     _type?: 'column' | 'action'
   }

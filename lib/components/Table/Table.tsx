@@ -47,7 +47,7 @@ import {
   ExtendedRow
 } from './types'
 import { ColumnHeader, TableRow, Pagination, TableTop } from './components'
-import { DefaultCell } from './exports'
+import { AggregatedTotalCell, DefaultCell } from './exports'
 import { TABLE_FILTERS_MAP } from './tableConsts'
 import { customSortingFns } from './tableUtils'
 
@@ -263,6 +263,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     ...(userColumnFilters && { onColumnFiltersChange: onFiltersChanged }),
     defaultColumn: {
       cell: DefaultCell,
+      aggregatedCell: AggregatedTotalCell,
       size: 100,
       sortingFn: 'stringSort'
     },
