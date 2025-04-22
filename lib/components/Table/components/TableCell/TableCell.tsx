@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { ExtendedRow, TableExtraClasses, ExtendedCell } from '../../types'
 import { Arrow } from 'svgs'
 import { flexRender } from '@tanstack/react-table'
-import React, { FC, useMemo } from 'react'
+import React, { FC, useMemo, useCallback } from 'react'
 
 interface TableCellProps<Data, Value> {
   cell: ExtendedCell<Data, Value>
@@ -44,13 +44,45 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
 
   const isActionCell = cell.column.columnDef.meta?._type === 'action'
 
-  const handleToggleExpand = () => {
+  const handleToggleExpand = useCallback(() => {
     if (onToggleExpand) {
       onToggleExpand(row)
     } else {
       row.toggleExpanded()
     }
-  }
+  }, [onToggleExpand, row])
+
+  const handleCellClick = useCallback(
+    (e: React.MouseEvent) => {
+      const selection = window.getSelection()
+      if (selection && selection.toString().length > 0) {
+        e.stopPropagation()
+        return
+      }
+
+      if (row.getIsGrouped()) {
+        handleToggleExpand()
+      } else {
+        const onCellClick = cell.column.columnDef.meta?.cell?.onClick
+
+        if (onCellClick) {
+          onCellClick(cell)
+        } else if (RowSubComponent) {
+          handleToggleExpand()
+        } else if (onRowClick) {
+          onRowClick(row.original)
+        }
+      }
+    },
+    [cell, row, onRowClick, RowSubComponent, handleToggleExpand]
+  )
+
+  const handleMouseUp = useCallback((e: React.MouseEvent) => {
+    const selection = window.getSelection()
+    if (selection && selection.toString().length > 0) {
+      e.stopPropagation()
+    }
+  }, [])
 
   return (
     <td
@@ -65,29 +97,24 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
           width: cell.column.getSize(),
           flex: `${cell.column.getSize()} 0 auto`
         },
-        onClick: () => {
-          if (row.getIsGrouped()) {
-            handleToggleExpand()
-          } else {
-            const onCellClick = cell.column.columnDef.meta?.cell?.onClick
-
-            if (onCellClick) {
-              onCellClick(cell)
-            } else if (RowSubComponent) {
-              handleToggleExpand()
-            } else if (onRowClick) {
-              onRowClick(row.original)
-            }
-          }
-        }
+        onClick: handleCellClick,
+        onMouseUp: handleMouseUp
       })}
     >
       {cell.getIsGrouped() ? (
         <>
-          <span className='expand-cell expand-group'>
+          <span
+            className='expand-cell expand-group'
+            onClick={(e) => {
+              e.stopPropagation()
+              handleToggleExpand()
+            }}
+          >
             {row.getIsExpanded() ? <Arrow /> : <Arrow className='rotate270' />}
           </span>
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          <span>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </span>
         </>
       ) : shouldShowAggregated ? (
         flexRender(cell.column.columnDef.aggregatedCell, cell.getContext())
@@ -98,7 +125,13 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
             !row.getIsGrouped() &&
             (rowIndex === 0 ||
               row.getVisibleCells()[rowIndex - 1].getIsPlaceholder()) && (
-              <span className='expand-cell expand-group'>
+              <span
+                className='expand-cell expand-group'
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleToggleExpand()
+                }}
+              >
                 {row.getIsExpanded() ? (
                   <Arrow />
                 ) : (
