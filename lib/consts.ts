@@ -223,20 +223,36 @@ export const ENCODING_TYPES = {
 
 const FORMULA_TYPES = {
   EQUALS: 'equals',
+  NOT_EQUAL: 'not_equal',
   RANGE: 'range',
   GREATER_THAN: 'greater_than',
   LESS_THAN: 'less_than'
+} as const
+
+export const STRING_RESTRICTION_TYPES = {
+  EQUALS: 'equals',
+  NOT_EQUAL: 'not_equal'
 } as const
 
 export type Formula =
   | {
       type:
         | typeof FORMULA_TYPES.EQUALS
+        | typeof FORMULA_TYPES.NOT_EQUAL
         | typeof FORMULA_TYPES.GREATER_THAN
         | typeof FORMULA_TYPES.LESS_THAN
       value: number
     }
   | { type: typeof FORMULA_TYPES.RANGE; from: number; to: number }
+
+export type StringRestrictionType =
+  (typeof STRING_RESTRICTION_TYPES)[keyof typeof STRING_RESTRICTION_TYPES]
+
+export type StringRestriction = {
+  type: StringRestrictionType
+  value: string
+  customErrorMsg?: string
+}
 
 export const FORM_VALIDATIONS = {
   REQUIRED: 'required',
@@ -292,6 +308,7 @@ export const FORM_VALIDATIONS = {
         restrictions.some(
           (restriction) =>
             ((restriction.type === FORMULA_TYPES.EQUALS ||
+              restriction.type === FORMULA_TYPES.NOT_EQUAL ||
               restriction.type === FORMULA_TYPES.GREATER_THAN ||
               restriction.type === FORMULA_TYPES.LESS_THAN) &&
               utils.isEmpty(restriction.value)) ||
@@ -302,10 +319,12 @@ export const FORM_VALIDATIONS = {
       ) {
         return false
       }
-      const getRestrictionFunc = (restriction: Formula) => {
+      const getFormulaRestrictionFunc = (restriction: Formula) => {
         switch (restriction.type) {
           case FORMULA_TYPES.EQUALS:
             return value === restriction.value
+          case FORMULA_TYPES.NOT_EQUAL:
+            return value !== restriction.value
           case FORMULA_TYPES.RANGE:
             return value >= restriction.from && value <= restriction.to
           case FORMULA_TYPES.GREATER_THAN:
@@ -319,10 +338,52 @@ export const FORM_VALIDATIONS = {
         }
       }
       const isInvalid = restrictions.every(
-        (restriction) => !getRestrictionFunc(restriction)
+        (restriction) => !getFormulaRestrictionFunc(restriction)
       )
       if (!utils.isEmpty(value) && isInvalid) {
         return customErrorMsg || 'Invalid value'
+      }
+      return false
+    },
+  STRING_RESTRICTIONS:
+    (restrictions: StringRestriction[]) => (value: string) => {
+      if (
+        !restrictions.length ||
+        restrictions.some(
+          (restriction) =>
+            (restriction.type === STRING_RESTRICTION_TYPES.EQUALS ||
+              restriction.type === STRING_RESTRICTION_TYPES.NOT_EQUAL) &&
+            utils.isEmpty(restriction.value)
+        )
+      ) {
+        return false
+      }
+      let errorMsg = EMPTY_STRING
+      const getStringRestrictionFunc = (restriction: StringRestriction) => {
+        switch (restriction.type) {
+          case FORMULA_TYPES.EQUALS:
+            errorMsg =
+              restriction.customErrorMsg ||
+              'Value must be equal to one of the fields'
+            return value === restriction.value
+          case FORMULA_TYPES.NOT_EQUAL:
+            errorMsg =
+              restriction.customErrorMsg ||
+              "Value can't be equal to one of the fields"
+            return value !== restriction.value
+          default:
+            throw new Error(
+              `Unknown restriction type: ${
+                (restriction as StringRestriction).type
+              }`
+            )
+        }
+      }
+      const isInvalid = restrictions.every(
+        (restriction) => !getStringRestrictionFunc(restriction)
+      )
+      if (!utils.isEmpty(value) && isInvalid) {
+        return errorMsg || 'Invalid value'
       }
       return false
     }
