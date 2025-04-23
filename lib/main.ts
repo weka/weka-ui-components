@@ -9,7 +9,11 @@ export {
   TOASTER_TYPES,
   ENCODING_TYPES,
   FORM_VALIDATIONS,
-  SHORT_ROLES
+  SHORT_ROLES,
+  STRING_RESTRICTION_TYPES
 } from './consts'
+import type { Formula, StringRestriction, StringRestrictionType } from 'consts'
+
+export type { Formula, StringRestriction, StringRestrictionType }
 export * from './hooks'
 export { default as localStorageService } from './localStorageService'
