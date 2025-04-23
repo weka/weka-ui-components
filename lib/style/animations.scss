@@ -1,0 +1,10 @@
+@keyframes blinkInputAnimation {
+  0%, 50%, 100% {
+    border: 1px solid var(--accent-key);
+    box-shadow: 0 0 0 1px var(--accent-key);
+  }
+  25%, 75% {
+    border: 1px solid var(--ironhide-t1);
+    box-shadow: none;
+  }
+}

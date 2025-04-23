@@ -4,8 +4,8 @@ import { DEFAULT_DEBOUNCE_DELAY, EMPTY_STRING } from 'consts'
 import { useDebounce } from 'hooks'
 
 export interface SearchFieldProps {
-  label: string
   onValueUpdate: (value: string) => void
+  label?: string
   debounceDelay?: number
   shouldUpdateTerm?: boolean
 }

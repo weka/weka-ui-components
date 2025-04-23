@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
 import SimpleBar from 'simplebar-react'
 
@@ -13,8 +13,18 @@ function ScrollBar({
   children: ReactNode
   extraClass?: string
 }) {
+  const scrollableNodeRef = React.useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (scrollableNodeRef.current) {
+      scrollableNodeRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [])
   return (
-    <SimpleBar className={clsx('scrollbar-wrapper', extraClass)} {...rest}>
+    <SimpleBar
+      className={clsx('scrollbar-wrapper', extraClass)}
+      scrollableNodeProps={{ ref: scrollableNodeRef }}
+      {...rest}
+    >
       {children}
     </SimpleBar>
   )

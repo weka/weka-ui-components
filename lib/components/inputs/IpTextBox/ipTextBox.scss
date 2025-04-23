@@ -8,6 +8,10 @@
   width: var(--input-width);
   height: 48px;
 
+  &.is-highlighted {
+    animation: blinkInputAnimation 2s infinite;
+  }
+
 
   .ip-text-box-disabled {
     background-color: var(--ironhide-t3);

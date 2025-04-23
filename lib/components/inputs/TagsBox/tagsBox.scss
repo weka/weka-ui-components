@@ -24,6 +24,12 @@
       }
     }
 
+  &.is-highlighted {
+      .react-tagsbox__control {
+        animation: blinkInputAnimation 2s infinite;
+      }
+    }
+
 
   .react-tagsbox {
     &__control:focus-within {

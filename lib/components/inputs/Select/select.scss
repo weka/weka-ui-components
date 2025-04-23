@@ -80,7 +80,6 @@
   .input-loader {
     right: 40px;
   }
-
 }
 
 .select-wrapper-is-multi {
@@ -175,4 +174,14 @@
     }
   }
 
+}
+
+.select-wrapper.is-highlighted,
+.select-wrapper-is-multi.is-highlighted {
+  .react-select {
+    &__control {
+      border-radius: 4px;
+      animation: blinkInputAnimation 2s infinite;
+    }
+  }
 }

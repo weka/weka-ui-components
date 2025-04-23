@@ -5,6 +5,7 @@ import { EMPTY_STRING, EVENT_KEYS, NOP, ZERO_STRING } from 'consts'
 import Utils from 'utils'
 import { Info } from 'svgs'
 import Copy from '../../Copy'
+import { useHighlightInput } from '../../../hooks'
 
 import './ipSubnetTextBox.scss'
 
@@ -44,6 +45,8 @@ interface IpSubnetTextBoxProps {
   shouldConvertSubnet2Mask?: boolean
   fixedSubnet?: number
   allowCopy?: boolean
+  isHighlighted?: boolean
+  isScrolledInto?: boolean
 }
 
 function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
@@ -58,6 +61,8 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     shouldConvertSubnet2Mask = true,
     fixedSubnet,
     allowCopy,
+    isHighlighted,
+    isScrolledInto,
     ...rest
   } = props
   const { disabled } = rest
@@ -69,11 +74,18 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
       ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
       : [...ipVal.split('.'), subnet]
   )
+  const ipSubnetBoxRef = React.useRef<HTMLInputElement | null>(null)
+  const highlighted = useHighlightInput({
+    inputRef: ipSubnetBoxRef,
+    isHighlighted,
+    isScrolledInto
+  })
   const wrapperClasses = clsx({
     [wrapperClass]: true,
     'ip-subnet-text-box-field': true,
     disabled,
-    'has-error': !!error
+    'has-error': !!error,
+    'is-highlighted': highlighted
   })
 
   function setIpPart(index: number, val: ChangeEvent<HTMLInputElement>) {
@@ -121,7 +133,7 @@ function IpSubnetTextBox(props: IpSubnetTextBoxProps) {
     }
   }, [inputsRef.current])
   return (
-    <div className={wrapperClasses}>
+    <div className={wrapperClasses} ref={ipSubnetBoxRef}>
       <div ref={inputsRef} className='value-container'>
         {Utils.range(5).map((inputIndex) => (
           <div className='ip-part-value-edit' key={`input_${inputIndex}`}>
