@@ -1,1 +1,1 @@
-export { default } from './FormWrapperDialog'
+export { default, type FormDialogProps } from './FormWrapperDialog'
