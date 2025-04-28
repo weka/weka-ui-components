@@ -38,7 +38,10 @@ export { default as ScheduleSelector } from './ScheduleSelector'
 export { default as Collapsible } from './Collapsible'
 export { default as CursorTooltip } from './CursorTooltip'
 export { default as CharCounter } from './CharCounter'
-export { default as FormWrapperDialog } from './FormWrapperDialog'
+export {
+  default as FormWrapperDialog,
+  type FormDialogProps
+} from './FormWrapperDialog'
 export * from './FormWrapperDialog/ControlInputs'
 export { default as JsonSubRow } from './JsonSubRow'
 export { default as SignInWithGoogle } from './SignInWithGoogle'

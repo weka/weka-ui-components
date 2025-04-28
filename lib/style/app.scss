@@ -41,8 +41,8 @@
 .dialog-wrapper {
   max-width: 95vw !important;
   min-width: 300px;
-  background-color: var(--neutral-t4);
-  color: var(--text-color);
+  background-color: var(--neutral-t4) !important;
+  color: var(--text-color) !important;
 
   .dialog-title {
     padding: 0 16px;
