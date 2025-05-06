@@ -112,7 +112,7 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
           >
             {row.getIsExpanded() ? <Arrow /> : <Arrow className='rotate270' />}
           </span>
-          <span>
+          <span className='table-first-cell-content'>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </span>
         </>
