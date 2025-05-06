@@ -19,7 +19,7 @@ import './dialogContext.scss'
 
 const DialogContext = createContext<DialogContextType | null>(null)
 
-interface Dialog {
+export interface Dialog {
   title: ReactNode
   body: ReactNode
   type?: 'info' | 'success' | 'error'
@@ -36,8 +36,7 @@ interface DialogProps {
 
 interface DialogProviderProps {
   children: ReactNode
-
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface DialogContextType {
