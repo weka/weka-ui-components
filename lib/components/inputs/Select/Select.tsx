@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, useState, useMemo, useRef } from 'react'
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  useMemo,
+  useRef
+} from 'react'
 import { FormControl } from '@mui/material'
 import ReactSelect from 'react-select'
 import clsx from 'clsx'
@@ -165,8 +171,11 @@ function Select(props: SelectProps) {
   const isAsync = !!getAsyncOptions
   const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
   const selectRef = useRef<HTMLInputElement | null>(null)
-  const highlighted = useHighlightInput({ inputRef: selectRef, isHighlighted, isScrolledInto })
-
+  const highlighted = useHighlightInput({
+    inputRef: selectRef,
+    isHighlighted,
+    isScrolledInto
+  })
 
   useEffect(() => {
     if (isAsync && !preventCall) {
@@ -244,9 +253,14 @@ function Select(props: SelectProps) {
     const currentOptions = isAsync ? saveOptions : options
     if (isMulti) {
       if (value && currentOptions) {
-        return value.map((val: string | number) =>
-          currentOptions.find((option) => option.value === val)
-        )
+        return value.map((val: string | number) => {
+          if (groupedOptions) {
+            return formattedGroupedOptions.find(
+              (option) => option.value === val
+            )
+          }
+          return currentOptions.find((option) => option.value === val)
+        })
       }
       return EMPTY_STRING
     }
@@ -258,9 +272,7 @@ function Select(props: SelectProps) {
     )
   }, [isAsync, value, saveOptions])
 
-  const wrapperClasses = clsx({
-    'select-wrapper': true,
-    [wrapperClass]: true,
+  const wrapperClasses = clsx('select-wrapper', wrapperClass, {
     'select-wrapper-is-multi': isMulti,
     'has-error': error,
     'no-label': !label,
