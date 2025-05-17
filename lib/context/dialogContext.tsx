@@ -27,6 +27,7 @@ export interface Dialog {
   confirmText?: string
   onConfirm?: () => void
   onCancel?: () => void
+  shouldConfirmBtnLoading?: boolean
 }
 
 interface DialogProps {
@@ -45,6 +46,8 @@ interface DialogContextType {
 }
 
 const Dialog = ({ dialog, unSetDialog }: DialogProps) => {
+  const [isClickLoading, setIsClickLoading] = useState(false)
+
   return (
     <div>
       <MuiDialog open={!!dialog} classes={{ paper: 'dialog' }}>
@@ -76,9 +79,18 @@ const Dialog = ({ dialog, unSetDialog }: DialogProps) => {
           {!!dialog.onConfirm && (
             <Button
               onClick={() => {
-                dialog.onConfirm?.()
-                unSetDialog()
+                if (dialog.shouldConfirmBtnLoading) {
+                  setIsClickLoading(true)
+                  dialog.onConfirm?.().finally(() => {
+                    setIsClickLoading(false)
+                    unSetDialog()
+                  })
+                } else {
+                  dialog.onConfirm?.()
+                  unSetDialog()
+                }
               }}
+              isLoading={isClickLoading}
               data-testid='confirm_button'
             >
               {dialog.confirmText || 'Confirm'}
