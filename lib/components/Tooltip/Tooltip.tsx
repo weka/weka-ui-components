@@ -3,7 +3,7 @@ import { Tooltip as MuiTooltip } from '@mui/material'
 import type { TooltipProps as MuiTooltipProps } from '@mui/material'
 import clsx from 'clsx'
 import { EMPTY_STRING } from 'consts'
-import Markdown from 'react-markdown'
+import Markdown from '../Markdown'
 
 import './tooltip.scss'
 
@@ -16,14 +16,6 @@ export type TooltipProps = {
   enterDelay?: number
   followCursor?: boolean
 } & Pick<MuiTooltipProps, 'open' | 'onClose' | 'onOpen'>
-
-function LinkRenderer(props: { href: string; children: ReactElement }) {
-  return (
-    <a href={props.href} target='_blank' rel='noreferrer'>
-      {props.children}
-    </a>
-  )
-}
 
 function Tooltip({
   children,
@@ -58,9 +50,7 @@ function Tooltip({
         onMouseUp={(e) => e.stopPropagation()}
       >
         {typeof data === 'string' ? (
-          <div className='tooltip-markdown-wrapper'>
-            <Markdown components={{ a: LinkRenderer }}>{data}</Markdown>
-          </div>
+         <Markdown>{data}</Markdown>
         ) : (
           data
         )}
