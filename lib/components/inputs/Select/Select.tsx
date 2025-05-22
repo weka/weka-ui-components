@@ -219,9 +219,14 @@ function Select(props: SelectProps) {
     )
     if (isMulti) {
       if (value) {
-        const valuesInOptions = value.filter((val: string | number) =>
-          currentOptions.find((option) => option.value === val)
-        )
+        const valuesInOptions = value.filter((val: string | number) => {
+          if (groupedOptions) {
+            return formattedGroupedOptions.find(
+              (option) => option.value === val
+            )
+          }
+          return currentOptions.find((option) => option.value === val)
+        })
         if (Utils.isEmpty(valuesInOptions)) {
           onChange([])
         } else if (valuesInOptions.length !== value.length) {
