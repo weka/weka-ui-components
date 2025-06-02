@@ -2,6 +2,7 @@ import { Utils } from '../../main'
 import { EMPTY_STRING, SEVERITIES, Severities } from 'consts'
 import utils from 'utils'
 import { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
+import { DateTime, Duration } from 'luxon'
 
 export const tableUtils = {
   getColumnTitle: <Data, Value>(column: ExtendedColumn<Data, Value>) => {
@@ -139,7 +140,13 @@ export const urlFilterParsers = {
   severity: (rawValue: Parameters<UrlFilterParser>[0]) =>
     Array.isArray(rawValue) && SEVERITIES.includes(rawValue[0])
       ? rawValue
-      : null
+      : null,
+  duration: (rawValue: Parameters<UrlFilterParser>[0]) => {
+    if (Array.isArray(rawValue) && rawValue[0]) {
+      return rawValue[0]
+    }
+    return null
+  }
 } as const
 
 export const filterFns = {
@@ -218,5 +225,47 @@ export const filterFns = {
     const selectedSeverityIndex = SEVERITIES.indexOf(filterValue)
 
     return rowSeverityIndex >= selectedSeverityIndex
+  },
+  duration<Data>(
+    row: ExtendedRow<Data>,
+    columnId: string,
+    filterValue: { duration: string; operator: '<' | '>' | '=' }
+  ): boolean {
+    const valueTime = row.getValue(columnId) as number
+
+    const parts = filterValue.duration.split(' ')
+    const durationObj: Record<string, number> = {}
+
+    for (const part of parts) {
+      const value = parseInt(part)
+      const unit = part.replace(/[0-9]/g, EMPTY_STRING)
+
+      const unitMap: Record<string, string> = {
+        y: 'years',
+        mon: 'months',
+        w: 'weeks',
+        d: 'days',
+        h: 'hours',
+        min: 'minutes',
+        sec: 'seconds'
+      }
+
+      if (unitMap[unit]) {
+        durationObj[unitMap[unit]] = value
+      }
+    }
+
+    const duration = Duration.fromObject(durationObj)
+    const filterSeconds = duration.as('seconds')
+
+    const operators = {
+      '<': (a: number, b: number) => a < b,
+      '>': (a: number, b: number) => a > b,
+      '=': (a: number, b: number) => a === b
+    }
+
+    const compare = operators[filterValue.operator]
+
+    return compare(valueTime, filterSeconds)
   }
 } as const
