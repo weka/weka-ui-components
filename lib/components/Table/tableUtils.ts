@@ -2,7 +2,11 @@ import { Utils } from '../../main'
 import { EMPTY_STRING, SEVERITIES, Severities } from 'consts'
 import utils from 'utils'
 import { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
-import { DateTime, Duration } from 'luxon'
+import {
+  type CompareOperator,
+  COMPARE_OPERATORS
+} from './components/filters/DurationFilter'
+import { Duration } from 'luxon'
 
 export const tableUtils = {
   getColumnTitle: <Data, Value>(column: ExtendedColumn<Data, Value>) => {
@@ -142,10 +146,16 @@ export const urlFilterParsers = {
       ? rawValue
       : null,
   duration: (rawValue: Parameters<UrlFilterParser>[0]) => {
-    if (Array.isArray(rawValue) && rawValue[0]) {
-      return rawValue[0]
+    if (
+      !Utils.isObject(rawValue) ||
+      (!rawValue?.duration?.[0] && !rawValue?.operator?.[0])
+    ) {
+      return null
     }
-    return null
+    return {
+      duration: rawValue?.duration?.[0],
+      operator: rawValue?.operator?.[0]
+    }
   }
 } as const
 
@@ -229,7 +239,7 @@ export const filterFns = {
   duration<Data>(
     row: ExtendedRow<Data>,
     columnId: string,
-    filterValue: { duration: string; operator: '<' | '>' | '=' }
+    filterValue: { duration: string; operator: CompareOperator }
   ): boolean {
     const valueTime = row.getValue(columnId) as number
 
@@ -259,9 +269,9 @@ export const filterFns = {
     const filterSeconds = duration.as('seconds')
 
     const operators = {
-      '<': (a: number, b: number) => a < b,
-      '>': (a: number, b: number) => a > b,
-      '=': (a: number, b: number) => a === b
+      [COMPARE_OPERATORS['<']]: (a: number, b: number) => a < b,
+      [COMPARE_OPERATORS['>']]: (a: number, b: number) => a > b,
+      [COMPARE_OPERATORS['=']]: (a: number, b: number) => a === b
     }
 
     const compare = operators[filterValue.operator]

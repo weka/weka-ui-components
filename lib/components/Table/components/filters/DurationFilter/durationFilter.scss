@@ -11,12 +11,29 @@
   }
 
   .text-field {
-    width: 120px;
+    width: 110px;
+    height: 38px;
+
+    .field__input {
+      height: 38px;
+      margin-left: 0;
+      margin-right: 0;
+      background-color: var(--input-background);
+      color: var(--text-color);
+
+      &:focus {
+        border: 2px solid var(--main-color);
+      }
+    }
   }
 
   .duration-filter-inputs {
     display: flex;
     justify-content: space-between;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ironhide-t1);
+    margin-bottom: 12px;
   }
 
   .duration-filter-controller {
