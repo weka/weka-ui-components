@@ -11,6 +11,7 @@ interface TextFieldProps {
   error?: any
   label: string
   secondLabel?: string
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 function TextField(props: TextFieldProps) {
   const { label, onChange, value, error, wrapperClass, secondLabel, ...rest } =
@@ -24,9 +25,7 @@ function TextField(props: TextFieldProps) {
     )
   }
 
-  const wrapperClasses = clsx({
-    [wrapperClass]: true,
-    'text-field': true,
+  const wrapperClasses = clsx(wrapperClass, 'text-field', {
     'has-error': !!error
   })
 
