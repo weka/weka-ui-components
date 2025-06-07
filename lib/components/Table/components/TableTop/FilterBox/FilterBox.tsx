@@ -7,7 +7,11 @@ import { ExtendedColumn } from '../../../types'
 import { tableUtils } from '../../../tableUtils'
 
 import './filterBox.scss'
-import { DateFilterValue, isDateFilterValue } from '../../filters'
+import {
+  DateFilterValue,
+  isDateFilterValue,
+  isDurationFilterValue
+} from '../../filters'
 
 const filterFormatters = {
   dateFilter: (
@@ -66,6 +70,10 @@ function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
         hasCustomDateFormat,
         customDateFormat
       )
+    }
+
+    if (isDurationFilterValue(filterValue)) {
+      return `${filterValue.operator} ${filterValue.duration}`
     }
 
     throw new Error('Unknown filter value!')

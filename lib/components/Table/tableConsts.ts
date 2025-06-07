@@ -3,7 +3,8 @@ import {
   MultiSelectFilter,
   SelectFilter,
   SeverityFilter,
-  TextFilter
+  TextFilter,
+  DurationFilter
 } from './components'
 import { filterFns, urlFilterParsers } from './tableUtils'
 
@@ -35,5 +36,10 @@ export const TABLE_FILTERS_MAP = {
     component: SeverityFilter,
     parser: urlFilterParsers.severity,
     filterFn: filterFns.severity
+  },
+  duration: {
+    component: DurationFilter,
+    parser: urlFilterParsers.duration,
+    filterFn: filterFns.duration
   }
 } as const
