@@ -12,3 +12,6 @@ export type * from './SeverityFilter'
 
 export { default as TextFilter } from './TextFilter'
 export type * from './TextFilter'
+
+export { default as DurationFilter } from './DurationFilter'
+export * from './DurationFilter'
