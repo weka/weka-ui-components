@@ -76,6 +76,7 @@ function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
       return `${filterValue.operator} ${filterValue.duration}`
     }
 
+    console.error('Filter value:', filterValue)
     throw new Error('Unknown filter value!')
   }, [customDateFormat, hasCustomDateFormat, filterValue])
 
