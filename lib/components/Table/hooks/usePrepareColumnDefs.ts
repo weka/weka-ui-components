@@ -1,8 +1,8 @@
-import { ExtendedColumnDef, ExtendedColumnDefWithId } from '../../types'
-import { Utils } from '../../../../main'
+import { ExtendedColumnDef, ExtendedColumnDefWithId } from '../types'
+import { Utils } from '../../../main'
 import { useMemo } from 'react'
-import { TABLE_FILTERS_MAP } from '../../tableConsts'
-import * as Cells from '../../exports/cells'
+import { TABLE_FILTERS_MAP } from '../tableConsts'
+import * as Cells from '../exports/cells'
 
 function addId<Data, Value>({
   columnDefs

@@ -4,6 +4,7 @@ import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from 'consts'
 import Utils from 'utils'
 import { Link } from 'react-router-dom'
 import { ExtendedCell, ExtendedCellProps } from '../../../types'
+import clsx from 'clsx'
 
 import './defaultCell.scss'
 
@@ -11,6 +12,7 @@ export interface DefaultCellOptions<Data, Value> {
   getUrl?: (values: Data) => string
   openInNewTab?: boolean
   tooltipText?: string | ((cell: ExtendedCell<Data, Value>) => string)
+  isMultiline?: boolean
 }
 
 export type DefaultCellValue = string | number | string[] | null | undefined
@@ -36,7 +38,8 @@ function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
   const {
     getUrl,
     openInNewTab,
-    tooltipText: customTooltipText
+    tooltipText: customTooltipText,
+    isMultiline = false
   } = cellDef?.options ?? {}
 
   const ref = useRef<null | HTMLDivElement>(null)
@@ -61,7 +64,12 @@ function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
   }, [formattedValue])
 
   const cellContent = (
-    <div className='table-default-cell' ref={ref}>
+    <div
+      className={clsx({
+        'table-default-cell-one-line': !isMultiline
+      })}
+      ref={ref}
+    >
       {formattedValue}
     </div>
   )

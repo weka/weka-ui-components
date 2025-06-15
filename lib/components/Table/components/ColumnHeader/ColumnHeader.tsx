@@ -7,6 +7,7 @@ import { LongArrow } from 'svgs'
 import TableFilter from '../TableFilter'
 import { Utils } from '../../../../main'
 import { EMPTY_STRING } from 'consts'
+import ScrollToTop from '../ScrollToTop'
 
 interface HeaderGroupProps<Data> {
   headerGroup: ExtendedHeaderGroup<Data>
@@ -15,6 +16,8 @@ interface HeaderGroupProps<Data> {
   rowActions?: RowAction<Data>[]
   hasEmptyActionsCell?: boolean
   isResizable: boolean
+  scrollElement: HTMLElement | null
+  showScrollToTop: boolean
 }
 
 function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
@@ -24,7 +27,9 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
     isExpandable,
     rowActions,
     hasEmptyActionsCell,
-    isResizable
+    isResizable,
+    scrollElement,
+    showScrollToTop
   } = props
 
   const toggleSortBy = (columnId: string) => {
@@ -42,7 +47,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
         <th className='table-header header-cell-for-expandable' />
       )}
 
-      {headerGroup.headers.map((header) => {
+      {headerGroup.headers.map((header, index) => {
         const column = header.column
         const isHeaderEmpty = column.columnDef.header === EMPTY_STRING
 
@@ -67,11 +72,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
               }
             })}
           >
-            <div
-              style={{
-                display: 'flex'
-              }}
-            >
+            <div className='table-header-content'>
               <Tooltip data={column.columnDef.meta?.headerTooltip}>
                 <span
                   className={clsx({
@@ -115,6 +116,10 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
                   })}
                 />
               )}
+
+              {showScrollToTop && index === headerGroup.headers.length - 1 ? (
+                <ScrollToTop scrollElement={scrollElement} />
+              ) : null}
             </div>
           </th>
         )

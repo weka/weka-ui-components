@@ -24,7 +24,9 @@ export interface DurationFilterValue {
   duration?: string
 }
 
-export const isDurationFilterValue = (obj: unknown) => {
+export const isDurationFilterValue = (
+  obj: unknown
+): obj is { operator: string; duration: string } => {
   return utils.isObject(obj) && ('operator' in obj || 'duration' in obj)
 }
 
