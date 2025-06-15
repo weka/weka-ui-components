@@ -10,6 +10,8 @@ import React from 'react'
 import TableCell from '../TableCell'
 import ActionsCell from '../ActionsCell'
 import { Utils } from '../../../../main'
+import { VirtualItem } from '@tanstack/react-virtual'
+import { ROW_HEIGHT } from '../../tableConsts'
 
 interface TableRowProps<Data, Value> {
   row: ExtendedRow<Data>
@@ -28,6 +30,8 @@ interface TableRowProps<Data, Value> {
   extraClasses?: TableExtraClasses
   rowCanExpand?: boolean
   expandedRows?: Record<string, boolean>
+  virtualRow?: VirtualItem
+  getInfScrollPropsRow?: (virtualRow: VirtualItem) => Record<string, any>
 }
 
 function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
@@ -46,7 +50,9 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
     disableActionsPortal,
     rowCanExpand,
     extraClasses,
-    expandedRows = null
+    expandedRows = null,
+    virtualRow,
+    getInfScrollPropsRow
   } = props
 
   const isRowExpanded = expandedRows
@@ -60,13 +66,29 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
     'is-highlighted': checkRowHighlighted?.(row.original),
     ...(extraClasses?.tableLine && {
       [extraClasses.tableLine]: true
-    })
+    }),
+    ...(virtualRow &&
+      (row.index % 2 == 0
+        ? {
+            'first-line': true
+          }
+        : {
+            'second-line': true
+          }))
   })
 
   return (
     <React.Fragment key={row.id}>
-      <tr className={classes}>
-        {!grouping && (
+      <tr
+        className={classes}
+        style={{
+          minHeight: ROW_HEIGHT
+        }}
+        {...(virtualRow &&
+          getInfScrollPropsRow &&
+          getInfScrollPropsRow(virtualRow))}
+      >
+        {!grouping && isExpandable && (
           <td className={clsx('expand-cell', extraClasses?.expandCell)}>
             {rowCanExpand ? (
               <div onClick={row.getToggleExpandedHandler()}>
