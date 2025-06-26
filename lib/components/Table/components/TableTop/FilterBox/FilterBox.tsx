@@ -76,7 +76,7 @@ function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
       return `${filterValue.operator} ${filterValue.duration}`
     }
 
-    throw new Error('Unknown filter value!')
+    throw new Error(`Unknown filter value: ${JSON.stringify(filterValue)}`)
   }, [customDateFormat, hasCustomDateFormat, filterValue])
 
   const formattedName = useMemo(() => {

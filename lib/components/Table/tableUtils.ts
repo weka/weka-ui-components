@@ -143,7 +143,7 @@ export const urlFilterParsers = {
   },
   severity: (rawValue: Parameters<UrlFilterParser>[0]) =>
     Array.isArray(rawValue) && SEVERITIES.includes(rawValue[0])
-      ? rawValue
+      ? rawValue[0]
       : null,
   duration: (rawValue: Parameters<UrlFilterParser>[0]) => {
     if (
