@@ -1,9 +1,9 @@
 import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
 import { ROW_HEIGHT } from '../tableConsts'
-import type { CSSProperties, RefObject } from 'react'
+import { useEffect, type CSSProperties, type RefObject } from 'react'
 import { ExtendedRow } from '../types'
 
-const useInfinityScroll = <Data>({
+const useInfiniteScroll = <Data>({
   data,
   tableRef,
   infinityScrollConfig,
@@ -34,14 +34,16 @@ const useInfinityScroll = <Data>({
 
   const lastItem = rowVirtualizer.getVirtualItems().at(-1)
 
-  if (
-    !infinityScrollConfig?.isFetchingNextPage &&
-    infinityScrollConfig?.hasNextPage &&
-    lastItem &&
-    lastItem.index >= rows.length - 1
-  ) {
-    infinityScrollConfig.fetchNextPage()
-  }
+  useEffect(() => {
+    if (
+      !infinityScrollConfig?.isFetchingNextPage &&
+      infinityScrollConfig?.hasNextPage &&
+      lastItem &&
+      lastItem.index >= rows.length - 1
+    ) {
+      infinityScrollConfig.fetchNextPage()
+    }
+  }, [lastItem, infinityScrollConfig, rows])
 
   const getInfScrollPropsBody = () => ({
     style: {
@@ -76,4 +78,4 @@ const useInfinityScroll = <Data>({
   }
 }
 
-export default useInfinityScroll
+export default useInfiniteScroll

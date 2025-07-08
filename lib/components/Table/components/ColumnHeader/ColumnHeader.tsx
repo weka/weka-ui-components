@@ -54,7 +54,8 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
         const canSort = column.getCanSort()
         const columnSorted = column.getIsSorted()
 
-        const isActionCell = column.columnDef.meta?._type === 'action'
+        const columnMeta = column.columnDef.meta
+        const isActionCell = columnMeta?._type === 'action'
 
         return (
           <th
@@ -68,11 +69,23 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
               style: {
                 position: 'relative',
                 width: header.getSize(),
-                flex: `${header.getSize()} 0 auto`
+                ...(columnMeta?.columnSizeUnit === 'px'
+                  ? {
+                      paddingLeft: '0',
+                      paddingRight: '0'
+                    }
+                  : {
+                      flex: `${header.getSize()} 0 auto`
+                    })
               }
             })}
           >
-            <div className='table-header-content'>
+            <div
+              className={clsx({
+                ['table-header-content']: true,
+                'column-align-center': columnMeta?.columnAlign === 'center'
+              })}
+            >
               <Tooltip data={column.columnDef.meta?.headerTooltip}>
                 <span
                   className={clsx({

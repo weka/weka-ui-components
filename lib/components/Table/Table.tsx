@@ -36,7 +36,7 @@ import {
   usePageSize,
   usePrepareColumnDefs,
   useFiltersChangeListener,
-  useInfinityScroll
+  useInfiniteScroll
 } from './hooks'
 import { useToggle } from 'hooks'
 import {
@@ -386,7 +386,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   usePageSize<Data>({ table, tableRef, miniTable, fixedPageSize, data })
 
   const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
-    useInfinityScroll<Data>({
+    useInfiniteScroll<Data>({
       data,
       tableRef,
       rows,
@@ -426,9 +426,8 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
           ref={tableRef}
         >
           <table
-            className={clsx({
-              'empty-table': !rows.length,
-              'react-table': true
+            className={clsx('react-table', {
+              'empty-table': !rows.length
             })}
           >
             <thead className='sticky-header'>

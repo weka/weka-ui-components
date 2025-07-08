@@ -262,6 +262,7 @@
       position: relative;
       background-color: var(--neutral-t4);
       box-sizing: border-box;
+      min-height: 46px;
 
       &.clickable {
         cursor: pointer;
@@ -285,7 +286,7 @@
       }
 
       &.first-line {
-        background-color: white;
+        background-color: var(--neutral-t4);
       }
 
       &.second-line {
@@ -342,6 +343,10 @@
         border-top: none;
         display: block;
       }
+    }
+
+    .column-align-center {
+      justify-content: center;
     }
   }
 
