@@ -7,6 +7,7 @@ import {
   EMPTY_STRING,
   TIME_PARTS_SHORTENINGS,
   TOASTER_DIALOG,
+  TOASTER_DIALOG_DISMISS,
   TOASTER_TYPES
 } from 'consts'
 import { DateTime, DurationUnits } from 'luxon'
@@ -452,6 +453,9 @@ const utils = {
     if (reason === 'escapeKeyDown') {
       func()
     }
+  },
+  closeDialog: () => {
+    document.dispatchEvent(new CustomEvent(TOASTER_DIALOG_DISMISS))
   },
   downloadFile(
     content: string | Blob,
