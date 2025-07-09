@@ -206,6 +206,7 @@ export const DIALOG_STATUSES = {
 } as const
 
 export const TOASTER_DIALOG = 'toasterDialog'
+export const TOASTER_DIALOG_DISMISS = 'toasterDialogDismiss'
 export const TOASTER_TYPES = {
   TOAST: 'toast',
   DIALOG: 'dialog'

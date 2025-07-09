@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import clsx from 'clsx'
-import { DIALOG_STATUSES, TOASTER_DIALOG } from 'consts'
+import { DIALOG_STATUSES, TOASTER_DIALOG, TOASTER_DIALOG_DISMISS } from 'consts'
 import Utils from 'utils'
 import { Approve, Warning } from 'svgs'
 import { useDialog } from '../../context'
@@ -47,9 +47,16 @@ function ToasterDialog() {
       })
     }
 
+    function dismissToasterDialog() {
+      setDialog(null)
+    }
+
     document.addEventListener(TOASTER_DIALOG, setToasterDialog)
+    document.addEventListener(TOASTER_DIALOG_DISMISS, dismissToasterDialog)
+
     return () => {
       document.removeEventListener(TOASTER_DIALOG, setToasterDialog)
+      document.removeEventListener(TOASTER_DIALOG_DISMISS, dismissToasterDialog)
     }
   }, [])
 
