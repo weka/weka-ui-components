@@ -23,6 +23,7 @@ interface TableTopProps<Data> {
   hasCustomDateFormat?: boolean
   customDateFormat?: string
   toggleAllRowsExpanding: () => void
+  hideRowsCount?: boolean
 }
 
 export function TableTop<Data>(props: TableTopProps<Data>) {
@@ -39,7 +40,8 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
     toggleResizable,
     hasCustomDateFormat,
     customDateFormat,
-    toggleAllRowsExpanding
+    toggleAllRowsExpanding,
+    hideRowsCount
   } = props
 
   const { columnFilters } = table.getState()
@@ -50,11 +52,13 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
     <div className='table-top'>
       <div className='table-top-controls'>
         <span className='heading-4'>{title}</span>
-        <span className='sub-title bold'>
-          {`${itemsAmount || table.getRowCount()} ${
-            maxRows ? `(max ${maxRows})` : EMPTY_STRING
-          }`}
-        </span>
+        {!hideRowsCount && (
+          <span className='sub-title bold'>
+            {`${itemsAmount || table.getRowCount()} ${
+              maxRows ? `(max ${maxRows})` : EMPTY_STRING
+            }`}
+          </span>
+        )}
         {allColumns.length > 2 && <ShowColumns table={table} />}
         {canExpandAll && isExpandable && (
           <span className='table-manipulations-btn'>

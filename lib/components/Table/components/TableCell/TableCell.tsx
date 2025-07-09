@@ -42,7 +42,8 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
     return cellGroupIndex > currentGroupIndex && cell.row.depth < cellGroupIndex
   }, [cell, row, grouping])
 
-  const isActionCell = cell.column.columnDef.meta?._type === 'action'
+  const columnMeta = cell.column.columnDef.meta
+  const isActionCell = columnMeta?._type === 'action'
 
   const handleToggleExpand = useCallback(() => {
     if (onToggleExpand) {
@@ -63,7 +64,7 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
       if (row.getIsGrouped()) {
         handleToggleExpand()
       } else {
-        const onCellClick = cell.column.columnDef.meta?.cell?.onClick
+        const onCellClick = columnMeta?.cell?.onClick
 
         if (onCellClick) {
           onCellClick(cell)
@@ -74,7 +75,7 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
         }
       }
     },
-    [cell, row, onRowClick, RowSubComponent, handleToggleExpand]
+    [cell, row, onRowClick, RowSubComponent, handleToggleExpand, columnMeta]
   )
 
   const handleMouseUp = useCallback((e: React.MouseEvent) => {
@@ -89,13 +90,21 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
       key={cell.id}
       className={clsx(
         isActionCell ? 'td-actions' : 'table-cell',
+        columnMeta?.columnAlign === 'center' && 'column-align-center',
         extraClasses?.tableCell
       )}
       {...(!isActionCell && {
         style: {
           position: 'relative',
           width: cell.column.getSize(),
-          flex: `${cell.column.getSize()} 0 auto`
+          ...(columnMeta?.columnSizeUnit === 'px'
+            ? {
+                paddingLeft: '0',
+                paddingRight: '0'
+              }
+            : {
+                flex: `${cell.column.getSize()} 0 auto`
+              })
         },
         onClick: handleCellClick,
         onMouseUp: handleMouseUp

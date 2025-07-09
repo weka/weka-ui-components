@@ -99,6 +99,15 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
     defaultHidden?: boolean
     headerTooltip?: string
+    /**
+     * `px` - fixed width in pixels.
+     * `flex` - width in flex units compared to other columns. default is `flex`.
+     */
+    columnSizeUnit?: 'px' | 'flex'
+    /**
+     * `left` is default.
+     */
+    columnAlign?: 'left' | 'center'
     filter?:
       | FilterDef<TData, 'date', DateFilterOptions>
       | FilterDef<TData, 'multiSelect', MultiSelectFilterOptions>

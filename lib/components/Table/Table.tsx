@@ -3,8 +3,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useRef,
-  useState
+  useRef
 } from 'react'
 import {
   COLUMN_RESIZING_LISTENER,
@@ -36,7 +35,8 @@ import {
   useHiddenColumns,
   usePageSize,
   usePrepareColumnDefs,
-  useFiltersChangeListener
+  useFiltersChangeListener,
+  useInfiniteScroll
 } from './hooks'
 import { useToggle } from 'hooks'
 import {
@@ -104,6 +104,12 @@ export interface TableProps<Data, Value> {
   collapseRowsOnLeavingPage?: boolean
   onSortChanged?: (sort: { id: string; desc?: boolean }) => void
   manualSorting?: boolean
+  infinityScrollConfig?: {
+    hasNextPage: boolean
+    fetchNextPage: () => void
+    isFetchingNextPage: boolean
+  }
+  hideRowsCount?: boolean
 }
 
 function Table<Data, Value>(props: TableProps<Data, Value>) {
@@ -150,10 +156,10 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     hasEmptyActionsCell = false,
     collapseRowsOnLeavingPage = false,
     getRowCanExpand,
-    expandedRows
+    expandedRows,
+    infinityScrollConfig,
+    hideRowsCount = false
   } = props
-
-  const rowCanExpand = !!RowSubComponent
 
   const columnDefs = usePrepareColumnDefs({
     columnDefs: rawColumnDefs
@@ -237,7 +243,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     columns: columnDefs,
     filterCategory
   })
-  const [defaultCurrentPage, setDefaultCurrentPage] = useState(1)
 
   const table = useReactTable<Data>({
     columns: columnDefs,
@@ -258,6 +263,12 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       }
     },
     state: {
+      ...(infinityScrollConfig && {
+        pagination: {
+          pageSize: data.length,
+          pageIndex: 0
+        }
+      }),
       ...(userColumnFilters && { columnFilters: userColumnFilters })
     },
     ...(userColumnFilters && { onColumnFiltersChange: onFiltersChanged }),
@@ -277,7 +288,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     getExpandedRowModel: getExpandedRowModel(),
     enableColumnResizing: isResizable,
     columnResizeMode: 'onChange',
-    getRowCanExpand: () => rowCanExpand,
+    getRowCanExpand: () => isExpandable,
     autoResetExpanded:
       collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
     autoResetPageIndex: false,
@@ -308,7 +319,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   const pageCount = table.getPageCount()
   const isAllRowsExpanded = table.getIsAllRowsExpanded()
 
-  const rows = table.getRowModel().rows
+  const { rows } = table.getRowModel()
 
   const onSortChangedRef = useRef(onSortChanged)
   onSortChangedRef.current = onSortChanged
@@ -334,12 +345,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     }
   }, [isResizable, filterCategory, hasResizableColumns])
 
-  const isEmpty = !rows.length
-  const tableClass = clsx({
-    'empty-table': isEmpty,
-    'react-table': true
-  })
-  const tableRef = useRef<null | HTMLDivElement>(null)
+  const tableRef = useRef<HTMLDivElement>(null)
   const isExpandable = !!RowSubComponent
 
   useEffect(() => {
@@ -379,6 +385,18 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
 
   usePageSize<Data>({ table, tableRef, miniTable, fixedPageSize, data })
 
+  const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
+    useInfiniteScroll<Data>({
+      data,
+      tableRef,
+      rows,
+      infinityScrollConfig
+    })
+
+  const items = infinityScrollConfig
+    ? getVirtualRows()
+    : rows.map((_, index) => ({ index }))
+
   return (
     <div className={clsx('react-table-wrapper', extraClasses?.tableWrapper)}>
       {!miniTable && (
@@ -396,6 +414,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
           hasCustomDateFormat={hasCustomDateFormat}
           customDateFormat={customDateFormat}
           toggleAllRowsExpanding={toggleAllRowsExpanding}
+          hideRowsCount={hideRowsCount}
         />
       )}
       {!loading ? (
@@ -407,10 +426,9 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
           ref={tableRef}
         >
           <table
-            className={tableClass}
-            style={{
-              width: '100%'
-            }}
+            className={clsx('react-table', {
+              'empty-table': !rows.length
+            })}
           >
             <thead className='sticky-header'>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -422,35 +440,48 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
                   rowActions={rowActions}
                   hasEmptyActionsCell={hasEmptyActionsCell}
                   isResizable={isResizable}
+                  scrollElement={tableRef.current}
+                  showScrollToTop={!!infinityScrollConfig}
                 />
               ))}
             </thead>
-            <tbody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  row={row}
-                  columns={allColumns}
-                  isExpandable={isExpandable}
-                  grouping={grouping}
-                  RowSubComponent={RowSubComponent}
-                  onRowClick={onRowClick}
-                  onToggleExpand={onToggleExpand}
-                  checkRowSelected={checkRowSelected}
-                  checkRowHighlighted={checkRowHighlighted}
-                  rowActions={rowActions}
-                  hasEmptyActionsCell={hasEmptyActionsCell}
-                  isResizable={isResizable}
-                  disableActionsPortal={disableActionsPortal}
-                  extraClasses={extraClasses}
-                  rowCanExpand={
-                    rowCanExpand && getRowCanExpand
-                      ? getRowCanExpand(row.original)
-                      : rowCanExpand
-                  }
-                  expandedRows={expandedRows}
-                />
-              ))}
+            <tbody {...getInfScrollPropsBody()}>
+              {items.map((virtualRow) => {
+                const row = rows[virtualRow.index]
+                if (!row) {
+                  return null
+                }
+
+                return (
+                  <TableRow
+                    key={row.id}
+                    row={row}
+                    columns={allColumns}
+                    isExpandable={isExpandable}
+                    grouping={grouping}
+                    RowSubComponent={RowSubComponent}
+                    onRowClick={onRowClick}
+                    onToggleExpand={onToggleExpand}
+                    checkRowSelected={checkRowSelected}
+                    checkRowHighlighted={checkRowHighlighted}
+                    rowActions={rowActions}
+                    hasEmptyActionsCell={hasEmptyActionsCell}
+                    isResizable={isResizable}
+                    disableActionsPortal={disableActionsPortal}
+                    extraClasses={extraClasses}
+                    rowCanExpand={
+                      isExpandable && getRowCanExpand
+                        ? getRowCanExpand(row.original)
+                        : isExpandable
+                    }
+                    expandedRows={expandedRows}
+                    {...(infinityScrollConfig && {
+                      virtualRow,
+                      getInfScrollPropsRow
+                    })}
+                  />
+                )
+              })}
             </tbody>
           </table>
           {!rows.length && (
@@ -458,19 +489,26 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
               {emptyMessage || (title ? `No ${title}` : `No ${rows}`)}
             </span>
           )}
+          {infinityScrollConfig?.isFetchingNextPage && (
+            <div className='fetching-page-loader'>
+              <Loader />
+            </div>
+          )}
         </div>
       ) : (
         <Loader />
       )}
-      {(!miniTable || fixedPageSize) && !manualPagination && (
-        <div className='footer'>
-          <Pagination
-            onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
-            numberOfPages={pageCount}
-            isLoading={loading}
-          />
-        </div>
-      )}
+      {(!miniTable || fixedPageSize) &&
+        !manualPagination &&
+        !infinityScrollConfig && (
+          <div className='footer'>
+            <Pagination
+              onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
+              numberOfPages={pageCount}
+              isLoading={loading}
+            />
+          </div>
+        )}
     </div>
   )
 }
