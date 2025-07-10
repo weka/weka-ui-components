@@ -71,10 +71,17 @@ const useInfiniteScroll = <Data>({
       .getVirtualItems()
       .filter((virtualRow) => rows[virtualRow.index])
 
+  const scrollInfToTop = () => {
+    rowVirtualizer.scrollToOffset(0, {
+      behavior: 'smooth'
+    })
+  }
+
   return {
     getInfScrollPropsBody,
     getInfScrollPropsRow,
-    getVirtualRows
+    getVirtualRows,
+    scrollInfToTop
   }
 }
 
