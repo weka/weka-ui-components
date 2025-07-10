@@ -32,6 +32,11 @@ function ScrollToTop({ scrollElement }: ScrollToTopProps) {
     }
 
     scrollElement.scroll({ top: 0, left: 0, behavior: 'smooth' })
+
+    // due to virtualized scroll, sometimes the element isn't scrolled to the top
+    requestAnimationFrame(() => {
+      scrollElement.scrollTop = 0
+    })
   }
 
   return (
