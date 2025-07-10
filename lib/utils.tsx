@@ -130,7 +130,8 @@ const utils = {
   toastError: (
     err?: string | Error | unknown,
     type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES],
-    toastId?: string
+    toastId?: string,
+    autoClose = 5000
   ) => {
     let message = 'Something went wrong'
 
@@ -165,13 +166,15 @@ const utils = {
           toast.error(<Toast message={message} icon={<Warning />} />, {
             position: toast.POSITION.BOTTOM_CENTER,
             icon: false,
-            toastId
+            toastId,
+            autoClose
           })
         }
       } else {
         toast.error(<Toast message={message} icon={<Warning />} />, {
           position: toast.POSITION.BOTTOM_CENTER,
-          icon: false
+          icon: false,
+          autoClose
         })
       }
     } else {
@@ -183,16 +186,30 @@ const utils = {
   },
   toastSuccess: (
     message: string,
-    type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES]
+    type?: (typeof TOASTER_TYPES)[keyof typeof TOASTER_TYPES],
+    toastId?: string,
+    autoClose = 5000
   ) => {
     if (
       (type !== TOASTER_TYPES.DIALOG && message.length < 100) ||
       type === TOASTER_TYPES.TOAST
     ) {
-      toast.success(<Toast message={message} icon={<Approve />} />, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        icon: false
-      })
+      if (toastId) {
+        if (!toast.isActive(toastId)) {
+          toast.success(<Toast message={message} icon={<Approve />} />, {
+            position: toast.POSITION.BOTTOM_CENTER,
+            icon: false,
+            toastId,
+            autoClose
+          })
+        }
+      } else {
+        toast.success(<Toast message={message} icon={<Approve />} />, {
+          position: toast.POSITION.BOTTOM_CENTER,
+          icon: false,
+          autoClose
+        })
+      }
     } else {
       utils.dispatchCustomEvent(TOASTER_DIALOG, {
         status: DIALOG_STATUSES.SUCCESS,
