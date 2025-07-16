@@ -8,11 +8,13 @@ import {
   Paper,
   Popper
 } from '@mui/material'
-import { Show } from 'svgs'
-import { ExtendedTable, TData } from '../../../types'
+import svgs from 'svgs'
+import { ExtendedTable } from '../../../types'
 import { tableUtils } from '../../../tableUtils'
 
 import './showColumns.scss'
+
+const { View: Show } = svgs
 
 interface ShowColumnsProps<Data> {
   table: ExtendedTable<Data>

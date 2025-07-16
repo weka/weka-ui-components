@@ -4,11 +4,13 @@ import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
 import { useHighlightInput, useToggle } from '../../../hooks'
 import Utils from 'utils'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import { useAutosizeWidth } from './hooks'
 import InputLoader from '../../InputLoader'
 
 import './textBox.scss'
+
+const { Info } = svgs
 
 interface TextBoxProps {
   onChange: (newVal: string | number) => void

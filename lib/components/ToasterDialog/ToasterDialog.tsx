@@ -2,10 +2,12 @@ import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { DIALOG_STATUSES, TOASTER_DIALOG, TOASTER_DIALOG_DISMISS } from 'consts'
 import Utils from 'utils'
-import { Approve, Warning } from 'svgs'
+import svgs from 'svgs'
 import { useDialog } from '../../context'
 
 import './toasterDialog.scss'
+
+const { Approve, Warning } = svgs
 
 export type DialogStatus =
   (typeof DIALOG_STATUSES)[keyof typeof DIALOG_STATUSES]

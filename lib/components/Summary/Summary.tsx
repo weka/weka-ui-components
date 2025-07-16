@@ -1,10 +1,12 @@
 import React, { ReactNode } from 'react'
 import { useToggle } from 'hooks'
-
-import './summary.scss'
-import { Arrow } from 'svgs'
+import svgs from 'svgs'
 import clsx from 'clsx'
 import SpanTooltip from '../SpanTooltip/SpanTooltip'
+
+import './summary.scss'
+
+const { Arrow } = svgs
 
 interface SummaryProps {
   title: string

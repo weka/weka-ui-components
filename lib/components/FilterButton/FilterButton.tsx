@@ -1,11 +1,13 @@
 import React from 'react'
 import Button from '../Button'
 import Tooltip from '../Tooltip'
-import { Filter } from 'svgs'
+import svgs from 'svgs'
 import { EMPTY_STRING } from 'consts'
 import clsx from 'clsx'
 
 import './filterButton.scss'
+
+const { Filter } = svgs
 
 interface FilterButtonProps {
   onClick: () => void

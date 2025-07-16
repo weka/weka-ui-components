@@ -1,9 +1,11 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
 import copy from 'copy-to-clipboard'
-import { Copy } from 'svgs'
+import svgs from 'svgs'
 
 import './toast.scss'
+
+const { Copy } = svgs
 
 interface ToastProps {
   message: string

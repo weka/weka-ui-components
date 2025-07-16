@@ -1,17 +1,19 @@
 import React, { useMemo } from 'react'
 import { DateTime } from 'luxon'
-import { Close } from 'svgs'
+import svgs from 'svgs'
 import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from 'consts'
 import utils from 'utils'
 import { ExtendedColumn } from '../../../types'
 import { tableUtils } from '../../../tableUtils'
-
-import './filterBox.scss'
 import {
   DateFilterValue,
   isDateFilterValue,
   isDurationFilterValue
 } from '../../filters'
+
+import './filterBox.scss'
+
+const { Close } = svgs
 
 const filterFormatters = {
   dateFilter: (

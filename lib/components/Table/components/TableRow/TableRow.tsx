@@ -5,13 +5,15 @@ import {
   RowAction,
   TableExtraClasses
 } from '../../types'
-import { Arrow } from 'svgs'
+import svgs from 'svgs'
 import React from 'react'
 import TableCell from '../TableCell'
 import ActionsCell from '../ActionsCell'
 import { Utils } from '../../../../main'
 import { VirtualItem } from '@tanstack/react-virtual'
 import { ROW_HEIGHT } from '../../tableConsts'
+
+const { Arrow } = svgs
 
 interface TableRowProps<Data, Value> {
   row: ExtendedRow<Data>

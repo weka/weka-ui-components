@@ -3,11 +3,13 @@ import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import SpanTooltip from '../../SpanTooltip'
 import { EMPTY_STRING, NOP, ENCODING_TYPES } from 'consts'
-import { Close } from 'svgs'
+import svgs from 'svgs'
 import Tooltip from '../../Tooltip'
 import Info from '../../Info'
 
 import './uploadField.scss'
+
+const { Close } = svgs
 
 interface UploadFieldProps {
   onChange?: (newVal: any) => void

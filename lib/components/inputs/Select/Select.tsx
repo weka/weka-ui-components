@@ -14,13 +14,15 @@ import SingleValue from './SingleValue'
 import MultiValue from './MultiValue'
 import ClearIndicator from './ClearIndicator'
 import Utils from 'utils'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import Tooltip from '../../Tooltip'
 import VirtualMenuList from './VirtualMenuList'
 import InputLoader from '../../InputLoader'
 import { useHighlightInput } from '../../../hooks'
 
 import './select.scss'
+
+const { Info } = svgs
 
 export const getStyle = (hasError, hasLabel) => ({
   menuPortal: (provided, state) => {

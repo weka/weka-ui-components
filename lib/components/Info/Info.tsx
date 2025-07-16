@@ -1,9 +1,11 @@
 import React, { ReactElement, forwardRef } from 'react'
 import Tooltip from '../Tooltip'
-import { Info as InfoSvg } from 'svgs'
+import svgs from 'svgs'
 import clsx from 'clsx'
 
 import './info.scss'
+
+const { Info: InfoSvg } = svgs
 
 export interface InfoProps {
   data: ReactElement | string

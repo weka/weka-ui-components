@@ -1,12 +1,14 @@
-import {
+import svgs from 'svgs'
+import utils from './utils'
+
+const {
   EventInfo,
   Warning,
   DebugWarning,
   AccidentMinor,
   AccidentMajor,
   AccidentCritical
-} from './svgs'
-import utils from './utils'
+} = svgs
 
 // eslint-disable-next-line
 export const EMPTY_STRING = ''

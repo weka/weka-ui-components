@@ -4,12 +4,14 @@ import { FormControl } from '@mui/material'
 import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import { CommonSelectComponents, getStyle } from '../Select/Select'
 import Utils from 'utils'
 import { useHighlightInput } from '../../../hooks'
 
 import './customizableSelect.scss'
+
+const { Info } = svgs
 
 interface CustomizableSelectProps {
   onChange?: (newVal: unknown) => void

@@ -3,11 +3,13 @@ import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS, NOP, ZERO_STRING } from 'consts'
 import Utils from 'utils'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import Copy from '../../Copy'
 import { useHighlightInput } from '../../../hooks'
 
 import './ipSubnetTextBox.scss'
+
+const { Info } = svgs
 
 function keyDown(event: React.KeyboardEvent) {
   if (
