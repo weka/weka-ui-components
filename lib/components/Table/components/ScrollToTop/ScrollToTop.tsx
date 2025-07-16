@@ -6,9 +6,10 @@ import './scrollToTop.scss'
 
 interface ScrollToTopProps {
   scrollElement: HTMLElement | null
+  scrollInfToTop: () => void
 }
 
-function ScrollToTop({ scrollElement }: ScrollToTopProps) {
+function ScrollToTop({ scrollElement, scrollInfToTop }: ScrollToTopProps) {
   const [isHidden, setIsHidden] = useState(true)
 
   useEffect(() => {
@@ -31,7 +32,7 @@ function ScrollToTop({ scrollElement }: ScrollToTopProps) {
       return
     }
 
-    scrollElement.scroll({ top: 0, left: 0, behavior: 'smooth' })
+    scrollInfToTop()
   }
 
   return (

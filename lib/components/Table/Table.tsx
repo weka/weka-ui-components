@@ -385,13 +385,17 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
 
   usePageSize<Data>({ table, tableRef, miniTable, fixedPageSize, data })
 
-  const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
-    useInfiniteScroll<Data>({
-      data,
-      tableRef,
-      rows,
-      infinityScrollConfig
-    })
+  const {
+    getInfScrollPropsBody,
+    getInfScrollPropsRow,
+    getVirtualRows,
+    scrollInfToTop
+  } = useInfiniteScroll<Data>({
+    data,
+    tableRef,
+    rows,
+    infinityScrollConfig
+  })
 
   const items = infinityScrollConfig
     ? getVirtualRows()
@@ -442,6 +446,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
                   isResizable={isResizable}
                   scrollElement={tableRef.current}
                   showScrollToTop={!!infinityScrollConfig}
+                  scrollInfToTop={scrollInfToTop}
                 />
               ))}
             </thead>
