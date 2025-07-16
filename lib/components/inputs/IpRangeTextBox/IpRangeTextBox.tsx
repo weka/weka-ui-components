@@ -9,9 +9,11 @@ import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
 import Utils from 'utils'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 
 import './ipRangeTextBox.scss'
+
+const { Info } = svgs
 
 type Subnet = {
   ip: string

@@ -1,8 +1,10 @@
 import React from 'react'
 import clsx from 'clsx'
-import { CheckmarkSmall } from 'svgs'
+import svgs from 'svgs'
 
 import './validityIndicator.scss'
+
+const { CheckmarkSmall } = svgs
 
 interface ValidityIndicatorProps {
   invalidFieldsLength: number

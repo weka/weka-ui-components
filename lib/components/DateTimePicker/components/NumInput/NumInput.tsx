@@ -1,9 +1,11 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Arrow } from 'svgs'
+import svgs from 'svgs'
 import { EMPTY_STRING, NOP } from 'consts'
 
 import './NumInput.scss'
+
+const { Arrow } = svgs
 
 interface NumInputProps {
   max: number

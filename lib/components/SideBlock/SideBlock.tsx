@@ -4,12 +4,14 @@ import { useToggle } from 'hooks'
 import clsx from 'clsx'
 import { EMPTY_STRING } from 'consts'
 import Info from '../Info'
-import { MenuDots } from 'svgs'
+import svgs from 'svgs'
 import { IconButton } from '@mui/material'
 import Tooltip from '../Tooltip'
 import SpanTooltip from '../SpanTooltip'
 
 import './sideBlock.scss'
+
+const { MenuDots } = svgs
 
 export interface SideBlockProps {
   name: string

@@ -3,11 +3,13 @@ import { DateTime } from 'luxon'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import clsx from 'clsx'
 import DateTimeLabel from './components/DateTimeLabel'
-import { Arrow, EmptyCalendar } from 'svgs'
+import svgs from 'svgs'
 import DateTimeCalendar from './components/DateTimeCalendar'
 import { EMPTY_STRING } from 'consts'
 
 import './DateTimePicker.scss'
+
+const { Arrow, EmptyCalendar } = svgs
 
 interface DateTimePickerProps {
   onChange: (val?: any) => void

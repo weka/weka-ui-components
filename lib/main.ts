@@ -4,6 +4,7 @@ import './style/fonts.scss'
 import './style/animations.scss'
 export { default as MUItheme } from './style/MUItheme'
 export * from './components'
+export { default as svgs } from './svgs'
 export { default as Utils } from './utils'
 export * from './context'
 export {

@@ -1,12 +1,14 @@
 import React, { useRef } from 'react'
 import { IconButton } from '@mui/material'
 import MenuPopper from '../../../MenuPopper'
-import { MenuDots } from 'svgs'
+import svgs from 'svgs'
 import { useToggle } from 'hooks'
 import { menuItem } from '../../../MenuPopper/MenuPopper'
 import { ExtendedRow, RowAction } from '../../types'
 
 import './actionsCell.scss'
+
+const { MenuDots } = svgs
 
 interface ActionsCellProps<Data> {
   actions: RowAction<Data>[]

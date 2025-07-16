@@ -3,10 +3,12 @@ import clsx from 'clsx'
 import { EMPTY_STRING } from 'consts'
 import { Link } from 'react-router-dom'
 import Tooltip from '../Tooltip'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import ValidityIndicator from '../ValidityIndicator'
 
 import './tab.scss'
+
+const { Info } = svgs
 
 interface TabProps {
   title: ReactElement | string

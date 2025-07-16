@@ -2,9 +2,11 @@ import React from 'react'
 import clsx from 'clsx'
 import { IconButton } from '@mui/material'
 import Tooltip from '../Tooltip'
-import { Arrow } from 'svgs'
+import svgs from 'svgs'
 
 import './showMore.scss'
+
+const { Arrow } = svgs
 
 function ShowMore(props: {
   isClose: boolean

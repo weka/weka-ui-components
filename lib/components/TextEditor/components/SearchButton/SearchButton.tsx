@@ -3,9 +3,11 @@ import React from 'react'
 import { useTextEditorContext } from '../../context'
 import Tooltip from '../../../Tooltip'
 import { IconButton } from '@mui/material'
-import { Search } from 'svgs'
+import svgs from 'svgs'
 
 import './searchButton.scss'
+
+const { Search } = svgs
 
 function SearchButton() {
   const {

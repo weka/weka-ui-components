@@ -1,6 +1,6 @@
 import React from 'react'
 import { toast } from 'react-toastify'
-import { Approve, Hide, Show, Warning } from './svgs'
+import svgs from './svgs'
 import {
   DIALOG_STATUSES,
   DOWNLOAD_FAILED,
@@ -12,6 +12,8 @@ import {
 } from 'consts'
 import { DateTime, DurationUnits } from 'luxon'
 import { Toast, Tooltip } from './components'
+
+const { Approve, Hide, View: Show, Warning } = svgs
 
 export const MIME_TYPES = {
   CSV: 'text/csv',

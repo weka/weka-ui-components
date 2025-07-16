@@ -3,9 +3,11 @@ import clsx from 'clsx'
 import { EMPTY_STRING } from 'consts'
 import Tooltip from '../../Tooltip'
 import JsonEditor from '../../TextEditor'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 
 import './jsonBox.scss'
+
+const { Info } = svgs
 
 interface JsonBoxProps {
   value: string | undefined

@@ -4,9 +4,11 @@ import Tooltip from '../Tooltip'
 import copy from 'copy-to-clipboard'
 import clsx from 'clsx'
 
-import { Copy as CopyIcon, CheckMark } from 'svgs'
+import svgs from 'svgs'
 
 import './copy.scss'
+
+const { Copy: CopyIcon, Checkmark } = svgs
 
 interface CopyProps {
   text: string
@@ -36,7 +38,7 @@ function Copy(props: CopyProps) {
             {outerCopyIcon ?? <CopyIcon />}
           </IconButton>
         ) : (
-          <CheckMark className='copied' />
+          <Checkmark className='copied' />
         )}
       </div>
     </Tooltip>
