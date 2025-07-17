@@ -17,6 +17,7 @@ import './formWrapperDialog.scss'
 export interface FormDialogProps {
   isOpen: boolean
   toggleOpen: () => void
+  onCancel?: () => void
   title: string
   info?: string
   submitText?: string
@@ -37,6 +38,7 @@ function FormWrapperDialog(props: FormDialogProps) {
   const {
     isOpen,
     toggleOpen,
+    onCancel,
     title = EMPTY_STRING,
     info = EMPTY_STRING,
     children,
@@ -59,6 +61,10 @@ function FormWrapperDialog(props: FormDialogProps) {
     }
   }, [])
 
+  const handleCancel = () => {
+    toggleOpen()
+    onCancel?.()
+  }
 
   return (
     isOpen && (
@@ -97,7 +103,7 @@ function FormWrapperDialog(props: FormDialogProps) {
           </DialogContent>
           <DialogActions classes={{ root: 'dialog-actions general-actions' }}>
             {showCancel && (
-              <Button empty={showSubmit} onClick={toggleOpen}>
+              <Button empty={showSubmit} onClick={handleCancel}>
                 {cancelText || 'Cancel'}
               </Button>
             )}
