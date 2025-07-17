@@ -2,10 +2,12 @@ import { IconButton } from '@mui/material'
 import clsx from 'clsx'
 import React from 'react'
 import Tooltip from '../Tooltip'
-import { ThinArrow } from 'svgs'
+import svgs from 'svgs'
 import { EMPTY_STRING } from 'consts'
 
 import './expandCollapseButton.scss'
+
+const { ThinArrow } = svgs
 
 interface ExpandCollapseButtonProps {
   onChange: (shouldCollapse: boolean) => void

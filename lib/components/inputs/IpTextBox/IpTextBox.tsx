@@ -3,11 +3,13 @@ import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
 import Utils from 'utils'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import Copy from '../../Copy'
 import { useHighlightInput } from '../../../hooks'
 
 import './ipTextBox.scss'
+
+const { Info } = svgs
 
 function keyDown(event: React.KeyboardEvent) {
   if (event.key === EVENT_KEYS.DOT || event.key === EVENT_KEYS.ARROW_RIGHT) {

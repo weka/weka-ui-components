@@ -1,10 +1,12 @@
 import React from 'react'
 import Tooltip from '../../../../Tooltip'
-import { User, Weka } from 'svgs'
+import svgs from 'svgs'
 import { ORIGIN_OPTIONS } from 'consts'
 import { ExtendedCellProps } from '../../../types'
 
 import './entityCell.scss'
+
+const { User, Weka } = svgs
 
 export type EntityCellValue = string
 

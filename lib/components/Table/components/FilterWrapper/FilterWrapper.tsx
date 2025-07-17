@@ -2,15 +2,17 @@ import React, { ReactElement, useRef } from 'react'
 import Tooltip from '../../../Tooltip'
 import Button from '../../../Button'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
-import { Filter } from 'svgs'
+import svgs from 'svgs'
 import { useKeyEvent, useToggle } from 'hooks'
 import Utils from 'utils'
 import { EMPTY_STRING } from 'consts'
 import { ExtendedColumn } from '../../types'
 import clsx from 'clsx'
+import { tableUtils } from '../../tableUtils'
 
 import './filterWrapper.scss'
-import { tableUtils } from '../../tableUtils'
+
+const { Filter } = svgs
 
 interface FilterWrapperProps<Data, Value> {
   column: ExtendedColumn<Data, Value>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { TopArrow } from '../../../../svgs'
+import svgs from 'svgs'
 import Tooltip from '../../../Tooltip'
 
 import './scrollToTop.scss'
+
+const { TopArrow } = svgs
 
 interface ScrollToTopProps {
   scrollElement: HTMLElement | null

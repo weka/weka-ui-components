@@ -5,10 +5,12 @@ import Tooltip from '../../Tooltip'
 import Select from '../../inputs/Select'
 import TextBox from '../../inputs/TextBox'
 import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import Utils from 'utils'
 
 import './controlInputs.scss'
+
+const { Info } = svgs
 
 interface ControlTextSelectValue {
   number: string | number

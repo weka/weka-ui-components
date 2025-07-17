@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Tooltip from '../Tooltip'
-import { Arrow, LastArrow } from 'svgs'
+import svgs from 'svgs'
 import { IconButton } from '@mui/material'
 import { EMPTY_STRING } from 'consts'
 import { TextBox } from '../inputs'
 
 import './pagination.scss'
+
+const { Arrow, LastArrow } = svgs
 
 type PaginationProps = {
   onPageChange: (page: number) => void

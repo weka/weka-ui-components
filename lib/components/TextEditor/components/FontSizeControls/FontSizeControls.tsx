@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
 import { useTextEditorContext } from '../../context'
 import { useLocalStorage } from 'react-use'
-import { FontSizeEnlarge, FontSizeReduce } from 'svgs'
+import svgs from 'svgs'
 import { IconButton } from '@mui/material'
 import Tooltip from '../../../Tooltip/Tooltip'
 import { DEFAULT_FONT_SIZE } from '../../TextEditor'
 
 import './fontSizeControls.scss'
+
+const { FontSizeEnlarge, FontSizeReduce } = svgs
 
 const MIN_FONT_SIZE = 10
 const MAX_FONT_SIZE = 30

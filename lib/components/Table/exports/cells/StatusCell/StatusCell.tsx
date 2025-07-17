@@ -1,10 +1,12 @@
 import React from 'react'
-import { StatusOk, Propeller, Ellipses, FullWarning, StatusError } from 'svgs'
+import svgs from 'svgs'
 import { DRIVES_STATUSES, STATUS } from 'consts'
 import Tooltip from '../../../../Tooltip'
 import { ExtendedCellProps } from '../../../types'
 
 import './statusCell.scss'
+
+const { StatusOk, Propeller, Ellipses, FullWarning, StatusError } = svgs
 
 export interface StatusCellOptions<Data> {
   getTooltip?: (rowValues: Data) => string

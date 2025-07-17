@@ -12,11 +12,13 @@ import clsx from 'clsx'
 import { EMPTY_STRING, EVENT_KEYS, TAG_SEPARATOR } from 'consts'
 import Utils from 'utils'
 import Tooltip from '../../Tooltip'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 import Option from 'types'
 import { useHighlightInput } from '../../../hooks'
 
 import './tagsBox.scss'
+
+const { Info } = svgs
 
 export interface TagsBoxProps {
   onChange: (newVal: any) => void

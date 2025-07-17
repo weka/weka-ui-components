@@ -1,0 +1,4 @@
+<svg id="icn-status-connected" xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <circle id="Ellipse_338" data-name="Ellipse 338" cx="33.5" cy="33.5" r="33.5" transform="translate(27 27)" fill="#fff"/>
+  <path id="icn-status-connected-2" data-name="icn-status-connected" d="M60,0A60,60,0,1,1,0,60,60,60,0,0,1,60,0ZM56.091,80.045a5,5,0,0,0,3.74-1.8L84.888,48.153a5,5,0,0,0-7.684-6.4L55.832,67.421,44.661,55.075a5,5,0,1,0-7.415,6.709L52.281,78.4a5,5,0,0,0,3.707,1.645Z" fill="#efc68b"/>
+</svg>

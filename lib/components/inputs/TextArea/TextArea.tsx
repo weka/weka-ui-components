@@ -2,9 +2,11 @@ import React, { ReactElement } from 'react'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
 import { EMPTY_STRING } from 'consts'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 
 import './textArea.scss'
+
+const { Info } = svgs
 
 export interface TextAreaProps {
   onChange?: (newVal: any) => void

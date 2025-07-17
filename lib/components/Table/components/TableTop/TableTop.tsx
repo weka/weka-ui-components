@@ -3,11 +3,13 @@ import { ExtendedTable } from '../../types'
 import Tooltip from '../../../Tooltip'
 import ShowColumns from './ShowColumns'
 import { IconButton } from '@mui/material'
-import { ClearFilters, ColumnResize, ColumnResizeReset, ThinArrow } from 'svgs'
+import svgs from 'svgs'
 import { Utils } from '../../../../main'
 import FilterBox from './FilterBox'
 import { EMPTY_STRING } from 'consts'
 import clsx from 'clsx'
+
+const { ClearFilters, ColumnResize, ColumnResizeReset, ThinArrow } = svgs
 
 interface TableTopProps<Data> {
   table: ExtendedTable<Data>
