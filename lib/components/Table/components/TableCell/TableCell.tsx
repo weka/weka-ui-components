@@ -1,8 +1,10 @@
 import clsx from 'clsx'
 import { ExtendedRow, TableExtraClasses, ExtendedCell } from '../../types'
-import { Arrow } from 'svgs'
+import svgs from 'svgs'
 import { flexRender } from '@tanstack/react-table'
 import React, { FC, useMemo, useCallback } from 'react'
+
+const { Arrow } = svgs
 
 interface TableCellProps<Data, Value> {
   cell: ExtendedCell<Data, Value>

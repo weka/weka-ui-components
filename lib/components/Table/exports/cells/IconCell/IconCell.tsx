@@ -3,9 +3,11 @@ import clsx from 'clsx'
 import Tooltip from '../../../../Tooltip'
 import { EMPTY_STRING } from 'consts'
 import { ExtendedCellProps } from '../../../types'
-import { StatusOk } from 'svgs'
+import svgs from 'svgs'
 
 import './iconCell.scss'
+
+const { StatusOk } = svgs
 
 export interface IconCellOptions<Data> {
   Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>

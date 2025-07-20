@@ -105,6 +105,8 @@ function ToggleButton(props: ToggleButtonProps) {
     }
   }, [updatePadPosition])
 
+  console.log('oprion', options)
+
   return (
     <div
       id={instanceId.current}

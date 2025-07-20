@@ -2,9 +2,11 @@ import React, { ChangeEvent } from 'react'
 import { Radio } from '@mui/material'
 import clsx from 'clsx'
 import Tooltip from '../../Tooltip'
-import { Info } from 'svgs'
+import svgs from 'svgs'
 
 import './radioSwitch.scss'
+
+const { Info } = svgs
 
 interface RadioSwitchProps {
   label: string
