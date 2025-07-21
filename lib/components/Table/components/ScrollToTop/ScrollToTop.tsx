@@ -33,7 +33,7 @@ function ScrollToTop({ scrollElement }: ScrollToTopProps) {
       return
     }
 
-    scrollElement.scroll({ top: 0, left: 0, behavior: 'smooth' })
+    scrollElement.scrollTop = 0
   }
 
   return (
