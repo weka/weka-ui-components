@@ -8,10 +8,9 @@ const { TopArrow } = svgs
 
 interface ScrollToTopProps {
   scrollElement: HTMLElement | null
-  scrollInfToTop: () => void
 }
 
-function ScrollToTop({ scrollElement, scrollInfToTop }: ScrollToTopProps) {
+function ScrollToTop({ scrollElement }: ScrollToTopProps) {
   const [isHidden, setIsHidden] = useState(true)
 
   useEffect(() => {
@@ -34,7 +33,7 @@ function ScrollToTop({ scrollElement, scrollInfToTop }: ScrollToTopProps) {
       return
     }
 
-    scrollInfToTop()
+    scrollElement.scroll({ top: 0, left: 0, behavior: 'smooth' })
   }
 
   return (
