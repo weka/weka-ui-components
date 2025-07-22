@@ -20,7 +20,6 @@ interface HeaderGroupProps<Data> {
   isResizable: boolean
   scrollElement: HTMLElement | null
   showScrollToTop: boolean
-  scrollInfToTop: () => void
 }
 
 function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
@@ -32,8 +31,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
     hasEmptyActionsCell,
     isResizable,
     scrollElement,
-    showScrollToTop,
-    scrollInfToTop
+    showScrollToTop
   } = props
 
   const toggleSortBy = (columnId: string) => {
@@ -135,10 +133,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
               )}
 
               {showScrollToTop && index === headerGroup.headers.length - 1 ? (
-                <ScrollToTop
-                  scrollElement={scrollElement}
-                  scrollInfToTop={scrollInfToTop}
-                />
+                <ScrollToTop scrollElement={scrollElement} />
               ) : null}
             </div>
           </th>
