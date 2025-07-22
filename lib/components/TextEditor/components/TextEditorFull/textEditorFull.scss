@@ -181,7 +181,7 @@
   .matching-toggle {
     position: absolute;
     top: 100px;
-    right: 86px;
+    right: 87px;
     display: flex;
     align-items: center;
     width: 300px;
@@ -189,6 +189,10 @@
       margin: 0;
     }
     gap: 8px;
+
+    &.with-scrollbar {
+      right: 94px;
+    }
   }
 }
 
