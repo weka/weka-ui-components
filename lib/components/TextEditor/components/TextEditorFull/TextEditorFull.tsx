@@ -205,7 +205,7 @@ function TextEditorFull(props: TextEditorFullProps) {
         isScrollbarVisible !== null && (
           <div
             className={clsx('matching-toggle', {
-              ['with-scrollbar']: isScrollbarVisible
+              'with-scrollbar': isScrollbarVisible
             })}
           >
             <span>Show only matching lines</span>
