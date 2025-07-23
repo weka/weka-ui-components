@@ -23,7 +23,8 @@ import {
   useForcedLineNumbers,
   useEditor,
   ParsedData,
-  useDisableSyntaxCheck
+  useDisableSyntaxCheck,
+  useIsScrollbarVisible
 } from './hooks'
 import clsx from 'clsx'
 import { useTextEditorContext } from '../../context'
@@ -182,6 +183,8 @@ function TextEditorFull(props: TextEditorFullProps) {
     value: options.value
   })
 
+  const isScrollbarVisible = useIsScrollbarVisible({ editorReady })
+
   const classes = clsx({
     'text-editor-wrapper': true,
     'read-only': readOnly,
@@ -197,23 +200,29 @@ function TextEditorFull(props: TextEditorFullProps) {
   ) : (
     <div className={classes}>
       {allowCopy && <Copy text={jsonValue} extraClass='copy-btn' />}
-      {(valueForMatched || isValueForMatchedLoading) && options.allowSearch && (
-        <div className='matching-toggle'>
-          <span>Show only matching lines</span>
-          {isValueForMatchedLoading ? (
-            <CircularProgress size={16} />
-          ) : (
-            <Checkbox checked={onlyMatching} onChange={toggleOnlyMatching} />
-          )}
-        </div>
-      )}
+      {(valueForMatched || isValueForMatchedLoading) &&
+        options.allowSearch &&
+        isScrollbarVisible !== null && (
+          <div
+            className={clsx('matching-toggle', {
+              'with-scrollbar': isScrollbarVisible
+            })}
+          >
+            <span>Show only matching lines</span>
+            {isValueForMatchedLoading ? (
+              <CircularProgress size={16} />
+            ) : (
+              <Checkbox checked={onlyMatching} onChange={toggleOnlyMatching} />
+            )}
+          </div>
+        )}
       <Suspense fallback={<Loader />}>
         <AceEditor
           ref={editorRef}
           mode={mode}
           height='100%'
           fontSize={fontSize}
-          width='99%'
+          width='calc(100% - 16px)'
           showPrintMargin={false}
           highlightActiveLine={false}
           name={id}
