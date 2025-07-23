@@ -58,7 +58,7 @@ import Snapshot from './101-snapshot-16.svg?react'
 import Goto from './102-go-16.svg?react'
 import AddThin from './103-add-16.svg?react'
 import View from './104-view-16.svg?react'
-import Switch from './106-SMB-16.svg?react'
+import Switch from './106-switch-16.svg?react'
 import Expand from './107-expand-16.svg?react'
 import ExpandView from './126-expand-16.svg?react'
 import Contract from './108-contract-16.svg?react'
@@ -130,6 +130,9 @@ import CheckmarkSmall from './217-checkmark-10.svg?react'
 import NetworkIcon from './218-network-cloud-24.svg?react'
 import AdvancedConfig from './219-configure-24.svg?react'
 import S3 from './222-S3-24.svg?react'
+import Valid from './224-ok-16.svg?react'
+import Rocket from './225-rocket-16.svg?react'
+import Note from './239-note-16.svg?react'
 import Unlink from './244-unlink-16.svg?react'
 import AmazonS3 from './amazon-s3.svg?react'
 import Azure from './Azure.svg?react'
@@ -149,9 +152,38 @@ import WekaLogo from './weka-logo.svg?react'
 import ExpandAll from './227-expand-all-16.svg?react'
 import CollapseAll from './228-collapse-all-16.svg?react'
 import AzureCloud from './azure-cloud.svg?react'
+import DocumentView from './237-document-view-16.svg?react'
+import FilesystemCreate from './004-fileSystem-create-24.svg?react'
+import SnapshotTake from './005-snapshot-take-24.svg?react'
+import SnapshotUpload from './006-snapshot-upload-24.svg?react'
+import NotificationsPurple from './008-notificationsPurple-24.svg?react'
+import Insights from './010-insights-24.svg?react'
+import Server from './023-server-16.svg?react'
+import WarningSmall from './028-warning-8.svg?react'
+import CloudConnected from './039-cloud-connected-24.svg?react'
+import CloudPaused from './040-cloud-paused-24.svg?react'
+import CloudDisconnected from './041-cloud-disconnected-24.svg?react'
+import CloudConnecting from './042-cloud-connecting-24.svg?react'
+import FilterAlt from './044-filter-16.svg?react'
+import SearchSmall from './046-search-8.svg?react'
+import EditSmall from './058-edit-8.svg?react'
+import ViewLarge from './076-view-24.svg?react'
+import DeleteSmall from './078-delete-12.svg?react'
+import DeleteDetailed from './084-delete-16.svg?react'
+import S3Bucket from './095-s3Bucket.svg?react'
+import AttachBucket from './attachOBS.svg?react'
+import ApproveIcon from './icn-approve.svg?react'
+import ApproveCheckmark from './icn-checkmark-1.svg?react'
+import CloseLarge from './icn-error-lg.svg?react'
+import StatusConnecting from './icn-status-connecting.svg?react'
+import WekaLogoPurple from './weka-logo-purple.svg?react'
 
 const svgs = {
   Backends,
+  Valid,
+  Note,
+  Rocket,
+  DocumentView,
   AzureCloud,
   ExpandAll,
   CollapseAll,
@@ -301,7 +333,31 @@ const svgs = {
   StatusPaused,
   UserAvatar,
   Separator,
-  WekaLogo
+  WekaLogo,
+  FilesystemCreate,
+  SnapshotTake,
+  SnapshotUpload,
+  NotificationsPurple,
+  Insights,
+  Server,
+  WarningSmall,
+  CloudConnected,
+  CloudPaused,
+  CloudDisconnected,
+  CloudConnecting,
+  FilterAlt,
+  SearchSmall,
+  EditSmall,
+  ViewLarge,
+  DeleteSmall,
+  DeleteDetailed,
+  S3Bucket,
+  AttachBucket,
+  ApproveIcon,
+  ApproveCheckmark,
+  CloseLarge,
+  StatusConnecting,
+  WekaLogoPurple
 } as const
 
 export default svgs
