@@ -177,6 +177,7 @@ import ApproveCheckmark from './icn-checkmark-1.svg?react'
 import CloseLarge from './icn-error-lg.svg?react'
 import StatusConnecting from './icn-status-connecting.svg?react'
 import WekaLogoPurple from './weka-logo-purple.svg?react'
+import WekaLogo2025 from './weka-new-logo-2025.svg?react'
 
 const svgs = {
   Backends,
@@ -357,7 +358,8 @@ const svgs = {
   ApproveCheckmark,
   CloseLarge,
   StatusConnecting,
-  WekaLogoPurple
+  WekaLogoPurple,
+  WekaLogo2025
 } as const
 
 export default svgs
