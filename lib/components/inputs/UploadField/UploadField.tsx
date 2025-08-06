@@ -14,6 +14,7 @@ const { Close } = svgs
 interface UploadFieldProps {
   onChange?: (newVal: any) => void
   onReadError?: (error?: Error) => void
+  onClear?: (e: React.MouseEvent<HTMLButtonElement>) => void
   wrapperClass?: string
   placeholder?: string
   label?: string
@@ -29,6 +30,7 @@ function UploadField(props: UploadFieldProps) {
   const {
     label,
     onChange = NOP,
+    onClear = NOP,
     disabled,
     wrapperClass = EMPTY_STRING,
     placeholder,
@@ -136,7 +138,8 @@ function UploadField(props: UploadFieldProps) {
           <div className='file-name-wrapper'>
             <SpanTooltip extraClasses='file-name'>{fileName}</SpanTooltip>
             <IconButton
-              onClick={() => {
+              onClick={(e) => {
+                onClear(e)
                 setFileName(EMPTY_STRING)
                 onChange(EMPTY_STRING)
               }}
