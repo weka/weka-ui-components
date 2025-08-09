@@ -14,6 +14,8 @@ type PaginationProps = {
   defaultCurrentPage?: number
   isLoading?: boolean
   disablePageInput?: boolean
+  currentPage?: number
+  setCurrentPage?: (page: number) => void
 } & (
   | { totalRows: number; rowsPerPage: number; numberOfPages?: undefined }
   | {
@@ -31,10 +33,16 @@ function Pagination(props: PaginationProps) {
     totalRows,
     rowsPerPage,
     numberOfPages: outerNumberOfPages,
-    disablePageInput = false
+    disablePageInput = false,
+    currentPage: outsideCurrentPage,
+    setCurrentPage: setOutsideCurrentPage
   } = props
 
-  const [currentPage, setCurrentPage] = useState(defaultCurrentPage)
+  const [internalCurrentPage, setInternalCurrentPage] =
+    useState(defaultCurrentPage)
+  const currentPage = outsideCurrentPage ?? internalCurrentPage
+  const setCurrentPage = setOutsideCurrentPage ?? setInternalCurrentPage
+
   const [canPreviousPage, setCanPreviousPage] = useState(false)
   const [canNextPage, setCanNextPage] = useState(true)
 
@@ -73,6 +81,15 @@ function Pagination(props: PaginationProps) {
     handlePageChange(newPageNumber)
     setInputPageValue(newPageNumber.toString())
   }
+
+  useEffect(() => {
+    if (
+      outsideCurrentPage &&
+      outsideCurrentPage.toString() !== pageInputValue
+    ) {
+      setInputPageValue(currentPage.toString())
+    }
+  }, [currentPage])
 
   useEffect(() => {
     handlePageChange(defaultCurrentPage)

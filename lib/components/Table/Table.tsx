@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useRef
+  useRef,
+  useState
 } from 'react'
 import {
   COLUMN_RESIZING_LISTENER,
@@ -36,7 +37,8 @@ import {
   usePageSize,
   usePrepareColumnDefs,
   useFiltersChangeListener,
-  useInfiniteScroll
+  useInfiniteScroll,
+  useResetPagination
 } from './hooks'
 import { useToggle } from 'hooks'
 import {
@@ -110,6 +112,11 @@ export interface TableProps<Data, Value> {
     isFetchingNextPage: boolean
   }
   hideRowsCount?: boolean
+  /**
+   * Required to reset pagination when filters are changed outside of the table.
+   * Must be memoized
+   */
+  outsideFilters?: unknown
 }
 
 function Table<Data, Value>(props: TableProps<Data, Value>) {
@@ -158,7 +165,8 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     getRowCanExpand,
     expandedRows,
     infinityScrollConfig,
-    hideRowsCount = false
+    hideRowsCount = false,
+    outsideFilters
   } = props
 
   const columnDefs = usePrepareColumnDefs({
@@ -243,6 +251,8 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     columns: columnDefs,
     filterCategory
   })
+
+  const [currentPage, setCurrentPage] = useState(1)
 
   const table = useReactTable<Data>({
     columns: columnDefs,
@@ -385,6 +395,16 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
 
   usePageSize<Data>({ table, tableRef, miniTable, fixedPageSize, data })
 
+  useResetPagination({
+    table,
+    columnFilters,
+    manualPagination,
+    setCurrentPage,
+    sorting,
+    scrollElement: tableRef.current,
+    outsideFilters
+  })
+
   const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
     useInfiniteScroll<Data>({
       data,
@@ -506,6 +526,8 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
               onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
               numberOfPages={pageCount}
               isLoading={loading}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
             />
           </div>
         )}
