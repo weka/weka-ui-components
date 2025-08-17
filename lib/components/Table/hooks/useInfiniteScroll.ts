@@ -45,14 +45,14 @@ const useInfiniteScroll = <Data>({
     }
   }, [lastItem, infinityScrollConfig, rows])
 
-  const getInfScrollPropsBody = () => ({
+  const getInfScrollPropsBody = () => infinityScrollConfig ? ({
     style: {
       width: '100%',
       display: 'grid',
       height: `${rowVirtualizer.getTotalSize()}px`,
       position: 'relative'
     } as CSSProperties
-  })
+  }) : {}
 
   const getInfScrollPropsRow = (virtualRow: VirtualItem) => ({
     ref: (node: HTMLTableRowElement | null) =>
