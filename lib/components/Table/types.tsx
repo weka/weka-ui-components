@@ -152,6 +152,7 @@ declare module '@tanstack/react-table' {
 }
 
 export type BaseFilterProps<Data, Value> = {
+  table: ExtendedTable<Data>
   column: ExtendedColumn<Data, Value>
 }
 

@@ -6,7 +6,7 @@ import React from 'react'
 export type FilterTypes = keyof typeof TABLE_FILTERS_MAP
 
 function TableFilter<Data>(props: BaseFilterProps<Data, unknown>) {
-  const { column } = props
+  const { table, column } = props
 
   const filterDef = column.columnDef.meta?.filter
 
@@ -21,6 +21,7 @@ function TableFilter<Data>(props: BaseFilterProps<Data, unknown>) {
 
   return (
     <FilterComponent
+      table={table}
       column={column}
       filterOptions={
         typeof filterDef === 'object' && filterDef.options
