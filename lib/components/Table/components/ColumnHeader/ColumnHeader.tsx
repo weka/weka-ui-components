@@ -104,7 +104,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
                 </span>
               </Tooltip>
               {column.columnDef?.meta?.filter && (
-                <TableFilter column={column} />
+                <TableFilter table={table} column={column} />
               )}
               {canSort && (columnSorted || isHeaderEmpty) && (
                 <div

@@ -14,6 +14,7 @@ export interface MultiSelectFilterOptions {
 }
 
 function MultiSelectFilter<Data, Value>({
+  table,
   column,
   filterOptions
 }: ExtendedFilterProps<Data, Value, MultiSelectFilterOptions>) {
@@ -29,7 +30,13 @@ function MultiSelectFilter<Data, Value>({
       : [filterValue]
   const [value, setValue] = useState<string[]>(formatValue)
 
+  const visibleItems = table.getRowModel().rows.length
+
   const options = useMemo(() => {
+    if (visibleItems === 0) {
+      return []
+    }
+
     const optionsSet = new Set<string>()
 
     if (fixedOptions) {
@@ -61,7 +68,7 @@ function MultiSelectFilter<Data, Value>({
     return Utils.insensitiveSort([...optionsSet.values()]).map(
       Utils.formatStringOption
     )
-  }, [column, fixedOptions, value])
+  }, [column, fixedOptions, value, visibleItems])
 
   useEffect(() => {
     setValue(formatValue)

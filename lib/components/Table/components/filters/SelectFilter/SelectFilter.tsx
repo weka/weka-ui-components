@@ -11,6 +11,7 @@ export interface SelectFilterOptions {
 }
 
 function SelectFilter<Data, Value>({
+  table,
   column,
   filterOptions
 }: ExtendedFilterProps<Data, Value, SelectFilterOptions>) {
@@ -21,13 +22,19 @@ function SelectFilter<Data, Value>({
     Utils.isEmpty(filterValue) ? [] : filterValue
   )
 
+  const visibleItems = table.getRowModel().rows.length
+
   const options = useMemo(() => {
+    if (visibleItems === 0) {
+      return []
+    }
+
     const optionsValues: string[] = fixedOptions
       ? [...new Set<string>(fixedOptions)]
       : [...column.getFacetedUniqueValues().keys()]
 
     return Utils.insensitiveSort(optionsValues).map(Utils.formatStringOption)
-  }, [column, fixedOptions])
+  }, [column, fixedOptions, visibleItems])
 
   return (
     <FilterWrapper column={column} value={value}>
