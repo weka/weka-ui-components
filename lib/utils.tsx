@@ -496,6 +496,23 @@ const utils = {
     } catch (e) {
       utils.toastError(DOWNLOAD_FAILED)
     }
+  },
+  makeCssVarName(...parts: string[]) {
+    return (
+      '--' +
+      parts
+        .filter(Boolean)
+        .map((part) =>
+          String(part)
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9-_]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^[-_]+|[-_]+$/g, EMPTY_STRING)
+        )
+        .filter(Boolean)
+        .join('-')
+    )
   }
 }
 

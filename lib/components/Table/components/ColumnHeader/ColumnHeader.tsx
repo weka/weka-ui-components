@@ -70,14 +70,22 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
             {...(!isActionCell && {
               style: {
                 position: 'relative',
-                width: header.getSize(),
+                width: `calc(${Utils.makeCssVarName(
+                  'header',
+                  header.id,
+                  'size'
+                )} * 1px)`,
                 ...(columnMeta?.columnSizeUnit === 'px'
                   ? {
                       paddingLeft: '0',
                       paddingRight: '0'
                     }
                   : {
-                      flex: `${header.getSize()} 0 auto`
+                      flex: `var(${Utils.makeCssVarName(
+                        'header',
+                        header.id,
+                        'size'
+                      )}) 0 auto`
                     })
               }
             })}
