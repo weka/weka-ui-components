@@ -1,6 +1,6 @@
 import React from 'react'
 import { ExtendedHeaderGroup, ExtendedTable, RowAction } from '../../types'
-import { flexRender } from '@tanstack/react-table'
+import { ColumnMeta, flexRender } from '@tanstack/react-table'
 import Tooltip from '../../../Tooltip'
 import clsx from 'clsx'
 import svgs from 'svgs'
@@ -43,6 +43,35 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
     ])
   }
 
+  const getColumnStyle = <Data, Value>(
+    headerId: string,
+    columnMeta?: ColumnMeta<Data, Value>,
+    isActionCell?: boolean
+  ) => {
+    if (isActionCell) {
+      return {}
+    }
+
+    const sizeVar = `var(${Utils.makeCssVarName('header', headerId, 'size')})`
+    const baseStyle = {
+      position: 'relative',
+      width: `calc(${sizeVar} * 1px)`
+    }
+
+    if (columnMeta?.columnSizeUnit === 'px') {
+      return {
+        ...baseStyle,
+        paddingLeft: '0',
+        paddingRight: '0'
+      }
+    }
+
+    return {
+      ...baseStyle,
+      flex: `${sizeVar} 0 auto`
+    }
+  }
+
   return (
     <tr key={headerGroup.id}>
       {isExpandable && (
@@ -67,20 +96,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
               'table-header',
               isActionCell && 'table-header-actions'
             )}
-            {...(!isActionCell && {
-              style: {
-                position: 'relative',
-                width: header.getSize(),
-                ...(columnMeta?.columnSizeUnit === 'px'
-                  ? {
-                      paddingLeft: '0',
-                      paddingRight: '0'
-                    }
-                  : {
-                      flex: `${header.getSize()} 0 auto`
-                    })
-              }
-            })}
+            style={getColumnStyle(header.id, columnMeta, isActionCell)}
           >
             <div
               className={clsx({

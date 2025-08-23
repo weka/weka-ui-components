@@ -37,8 +37,8 @@ import {
   usePageSize,
   usePrepareColumnDefs,
   useFiltersChangeListener,
-  useInfiniteScroll,
-  useResetPagination
+  useResetPagination,
+  useColumnSizeVars
 } from './hooks'
 import { useToggle } from 'hooks'
 import {
@@ -48,7 +48,7 @@ import {
   TableExtraClasses,
   ExtendedRow
 } from './types'
-import { ColumnHeader, TableRow, Pagination, TableTop } from './components'
+import { ColumnHeader, Pagination, TableTop, TableBody } from './components'
 import { AggregatedTotalCell, DefaultCell } from './exports'
 import { TABLE_FILTERS_MAP } from './tableConsts'
 import { customSortingFns } from './tableUtils'
@@ -405,17 +405,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     outsideFilters
   })
 
-  const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
-    useInfiniteScroll<Data>({
-      data,
-      tableRef,
-      rows,
-      infinityScrollConfig
-    })
-
-  const items = infinityScrollConfig
-    ? getVirtualRows()
-    : rows.map((_, index) => ({ index }))
+  const columnSizeVars = useColumnSizeVars({ table })
 
   return (
     <div className={clsx('react-table-wrapper', extraClasses?.tableWrapper)}>
@@ -449,6 +439,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
             className={clsx('react-table', {
               'empty-table': !rows.length
             })}
+            style={columnSizeVars}
           >
             <thead className='sticky-header'>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -465,44 +456,25 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
                 />
               ))}
             </thead>
-            <tbody {...getInfScrollPropsBody()}>
-              {items.map((virtualRow) => {
-                const row = rows[virtualRow.index]
-                if (!row) {
-                  return null
-                }
-
-                return (
-                  <TableRow
-                    key={row.id}
-                    row={row}
-                    columns={allColumns}
-                    isExpandable={isExpandable}
-                    grouping={grouping}
-                    RowSubComponent={RowSubComponent}
-                    onRowClick={onRowClick}
-                    onToggleExpand={onToggleExpand}
-                    checkRowSelected={checkRowSelected}
-                    checkRowHighlighted={checkRowHighlighted}
-                    rowActions={rowActions}
-                    hasEmptyActionsCell={hasEmptyActionsCell}
-                    isResizable={isResizable}
-                    disableActionsPortal={disableActionsPortal}
-                    extraClasses={extraClasses}
-                    rowCanExpand={
-                      isExpandable && getRowCanExpand
-                        ? getRowCanExpand(row.original)
-                        : isExpandable
-                    }
-                    expandedRows={expandedRows}
-                    {...(infinityScrollConfig && {
-                      virtualRow,
-                      getInfScrollPropsRow
-                    })}
-                  />
-                )
-              })}
-            </tbody>
+            <TableBody
+              table={table}
+              isExpandable={isExpandable}
+              grouping={grouping}
+              RowSubComponent={RowSubComponent}
+              onRowClick={onRowClick}
+              onToggleExpand={onToggleExpand}
+              checkRowSelected={checkRowSelected}
+              checkRowHighlighted={checkRowHighlighted}
+              rowActions={rowActions}
+              hasEmptyActionsCell={hasEmptyActionsCell}
+              isResizable={isResizable}
+              disableActionsPortal={disableActionsPortal}
+              extraClasses={extraClasses}
+              getRowCanExpand={getRowCanExpand}
+              expandedRows={expandedRows}
+              infinityScrollConfig={infinityScrollConfig}
+              tableRef={tableRef}
+            />
           </table>
           {!rows.length && (
             <span className='empty-message'>

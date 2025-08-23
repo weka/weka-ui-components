@@ -1,8 +1,9 @@
 import clsx from 'clsx'
 import { ExtendedRow, TableExtraClasses, ExtendedCell } from '../../types'
 import svgs from 'svgs'
-import { flexRender } from '@tanstack/react-table'
+import { ColumnMeta, flexRender } from '@tanstack/react-table'
 import React, { FC, useMemo, useCallback } from 'react'
+import Utils from 'utils'
 
 const { Arrow } = svgs
 
@@ -87,6 +88,30 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
     }
   }, [])
 
+  const getCellStyle = <Data, Value>(
+    columnId: string,
+    columnMeta?: ColumnMeta<Data, Value>
+  ) => {
+    const sizeVar = `var(${Utils.makeCssVarName('col', columnId, 'size')})`
+    const baseStyle = {
+      position: 'relative',
+      width: `calc(${sizeVar} * 1px)`
+    }
+
+    if (columnMeta?.columnSizeUnit === 'px') {
+      return {
+        ...baseStyle,
+        paddingLeft: '0',
+        paddingRight: '0'
+      }
+    }
+
+    return {
+      ...baseStyle,
+      flex: `${sizeVar} 0 auto`
+    }
+  }
+
   return (
     <td
       key={cell.id}
@@ -96,18 +121,7 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
         extraClasses?.tableCell
       )}
       {...(!isActionCell && {
-        style: {
-          position: 'relative',
-          width: cell.column.getSize(),
-          ...(columnMeta?.columnSizeUnit === 'px'
-            ? {
-                paddingLeft: '0',
-                paddingRight: '0'
-              }
-            : {
-                flex: `${cell.column.getSize()} 0 auto`
-              })
-        },
+        style: getCellStyle(cell.column.id, columnMeta),
         onClick: handleCellClick,
         onMouseUp: handleMouseUp
       })}
