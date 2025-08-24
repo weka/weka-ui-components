@@ -3,6 +3,7 @@ import { ExtendedRow, TableExtraClasses, ExtendedCell } from '../../types'
 import svgs from 'svgs'
 import { flexRender } from '@tanstack/react-table'
 import React, { FC, useMemo, useCallback } from 'react'
+import Utils from 'utils'
 
 const { Arrow } = svgs
 
@@ -98,14 +99,22 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
       {...(!isActionCell && {
         style: {
           position: 'relative',
-          width: cell.column.getSize(),
+          width: `calc(var(${Utils.makeCssVarName(
+            'col',
+            cell.column.id,
+            'size'
+          )}) * 1px)`,
           ...(columnMeta?.columnSizeUnit === 'px'
             ? {
                 paddingLeft: '0',
                 paddingRight: '0'
               }
             : {
-                flex: `${cell.column.getSize()} 0 auto`
+                flex: `var(${Utils.makeCssVarName(
+                  'col',
+                  cell.column.id,
+                  'size'
+                )}) 0 auto`
               })
         },
         onClick: handleCellClick,
