@@ -106,4 +106,17 @@ function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
   )
 }
 
-export default React.memo(TableBodyComponent)
+// special memoized wrapper for our table body that we will use during column resizing
+export const MemoizedTableBody = React.memo(
+  TableBodyComponent
+) as typeof TableBody
+
+export const TableBody: typeof TableBodyComponent = ({ table, ...props }) => {
+  return table.getState().columnSizingInfo.isResizingColumn ? (
+    <MemoizedTableBody table={table} {...props} />
+  ) : (
+    <TableBodyComponent table={table} {...props} />
+  )
+}
+
+export default TableBody
