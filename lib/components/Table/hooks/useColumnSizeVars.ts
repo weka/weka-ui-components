@@ -11,11 +11,12 @@ import Utils from 'utils'
 function useColumnSizeVars<Data>({ table }: { table: ExtendedTable<Data> }) {
   const { columnSizingInfo, columnSizing } = table.getState()
 
+  const headers = table.getFlatHeaders()
+
   const columnSizeVars = useMemo(() => {
     void columnSizingInfo
     void columnSizing
 
-    const headers = table.getFlatHeaders()
     const colSizes: { [key: string]: number } = {}
 
     headers.forEach((header) => {
@@ -26,7 +27,7 @@ function useColumnSizeVars<Data>({ table }: { table: ExtendedTable<Data> }) {
     })
 
     return colSizes
-  }, [columnSizingInfo, columnSizing, table])
+  }, [columnSizingInfo, columnSizing, headers])
 
   return columnSizeVars
 }
