@@ -10,13 +10,13 @@
   padding-left: 2px;
   box-sizing: border-box;
   position: relative;
-   svg {
-     height: 16px;
-     margin-left: 4px;
-     path {
-       fill: var(--ironhide-s2);
-     }
+  svg {
+    height: 16px;
+    margin-left: 4px;
+    path {
+      fill: var(--ironhide-s2);
     }
+  }
   &-label {
     font-size: 14px;
     font-weight: bold;

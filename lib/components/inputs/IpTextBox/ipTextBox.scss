@@ -12,7 +12,6 @@
     animation: blinkInputAnimation 2s infinite;
   }
 
-
   .ip-text-box-disabled {
     background-color: var(--ironhide-t3);
   }
@@ -43,15 +42,15 @@
       font-size: 17px;
       color: var(--ironhide-s4);
 
-      &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
 
-      &[type=number] {
+      &[type='number'] {
         -moz-appearance: textfield;
       }
-
     }
 
     input:disabled {
@@ -114,10 +113,9 @@
         fill: currentColor;
       }
     }
-
   }
 
-.field__ip-input:focus {
+  .field__ip-input:focus {
     border: 1px solid var(--main-color);
     box-shadow: 0 0 0 1px var(--main-color);
     border-radius: 4px;
@@ -129,10 +127,9 @@
     border-radius: 4px;
   }
 
-   .field__ip-input:disabled {
+  .field__ip-input:disabled {
     background-color: var(--ironhide-t2);
     color: var(--ironhide-s1);
-
   }
 
   .ip-text-box-error {

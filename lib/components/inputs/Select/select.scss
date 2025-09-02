@@ -168,12 +168,11 @@
     }
 
     &.select-wrapper-is-multi
-    .react-select__control--is-focused
-    .react-select__value-container--is-multi {
+      .react-select__control--is-focused
+      .react-select__value-container--is-multi {
       max-height: 196px !important;
     }
   }
-
 }
 
 .select-wrapper.is-highlighted,

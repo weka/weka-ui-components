@@ -4,7 +4,7 @@
   position: relative;
 
   a {
-    color: var(--accent-key)
+    color: var(--accent-key);
   }
 }
 
@@ -25,7 +25,6 @@
   .Toastify__progress-bar {
     background: var(--complement-t2) 0% 0% no-repeat padding-box;
   }
-
 }
 
 .Toastify__toast--error {
@@ -45,7 +44,6 @@
   .Toastify__progress-bar {
     background: var(--focus-s1) 0% 0% no-repeat padding-box;
   }
-
 }
 
 .toast-wrapper {
@@ -62,7 +60,6 @@
     color: var(--toast-text);
     max-width: 210px;
   }
-
 
   .copy-btn-div {
     width: 20px;
@@ -88,6 +85,5 @@
         fill: var(--toast-text);
       }
     }
-
   }
 }

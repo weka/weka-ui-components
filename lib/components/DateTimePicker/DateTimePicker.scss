@@ -8,7 +8,6 @@
     height: 38px;
   }
 
-
   .picker-label {
     position: relative;
     padding: 3px 10px 6px 10px;
@@ -22,7 +21,7 @@
     cursor: pointer;
     box-sizing: border-box;
 
-    &.has-error{
+    &.has-error {
       border: 1px solid var(--focus-key);
     }
 

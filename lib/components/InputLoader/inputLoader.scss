@@ -30,7 +30,8 @@
 }
 
 @keyframes dots-opacity {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
   }
   50% {

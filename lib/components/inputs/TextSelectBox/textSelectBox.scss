@@ -26,7 +26,9 @@
     }
   }
 
-  .field__input, .field__input:focus, .react-select__control {
+  .field__input,
+  .field__input:focus,
+  .react-select__control {
     border: none !important;
     box-shadow: none !important;
   }

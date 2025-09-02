@@ -53,13 +53,13 @@
         }
       }
       .separator {
-          border: none;
+        border: none;
       }
     }
     .submenu-content {
       &:hover {
-          background-color: transparent !important;
-        }
+        background-color: transparent !important;
+      }
       .menu-popper-item {
         padding-top: 3px;
         padding-bottom: 4px;
@@ -67,21 +67,21 @@
           background-color: var(--ironhide-t3);
         }
         .locator-content {
-            padding-left: 20px;
-            color: var(--ironhide-s3);
-            display: flex;
-            justify-content: space-between;
-            .locator-path {
-              max-width: 100px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
+          padding-left: 20px;
+          color: var(--ironhide-s3);
+          display: flex;
+          justify-content: space-between;
+          .locator-path {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
+        }
       }
     }
     .no-border {
       .separator {
-          border: none;
+        border: none;
       }
     }
     &-calendar {

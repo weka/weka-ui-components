@@ -9,7 +9,6 @@
   -ms-user-select: none;
   user-select: none;
 
-
   .checkbox-input {
     position: absolute;
     opacity: 0;
@@ -39,7 +38,6 @@
         }
       }
     }
-
   }
 
   /* Create a custom checkbox */
@@ -68,7 +66,7 @@
 
   /* Create the checkmark/indicator (hidden when not checked)  */
   .checkmark:after {
-    content: "";
+    content: '';
     position: absolute;
     display: none;
   }

@@ -39,11 +39,17 @@
         background-color: var(--complement-t2);
       }
 
-      &.FENCING, &.JOINING, &.SYNCING, &.PHASING_IN, &.PHASING_OUT {
+      &.FENCING,
+      &.JOINING,
+      &.SYNCING,
+      &.PHASING_IN,
+      &.PHASING_OUT {
         background-color: var(--optimus-key);
       }
 
-      &.INACTIVE, &.DOWN, &.FAILED {
+      &.INACTIVE,
+      &.DOWN,
+      &.FAILED {
         background-color: var(--focus-key);
       }
     }

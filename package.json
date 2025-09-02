@@ -17,7 +17,8 @@
     "build-storybook": "storybook build -c .storybook",
     "predeploy-storybook": "yarn run build-storybook",
     "deploy-storybook": "gh-pages -d storybook-static",
-    "lint": "eslint ./lib"
+    "lint": "eslint ./lib",
+    "format": "prettier --write ."
   },
   "files": [
     "lib"
