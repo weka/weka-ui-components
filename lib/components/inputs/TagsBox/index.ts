@@ -1,3 +1,1 @@
-export {default} from './TagsBox'
-
-
+export { default } from './TagsBox'

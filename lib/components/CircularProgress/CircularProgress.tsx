@@ -3,12 +3,12 @@ import React, { useEffect, useRef } from 'react'
 import './circularProgress.scss'
 
 interface CircularProgressProps {
-  size?: number,
-  progress?: number,
-  trackColor?: string,
-  indicatorWidth?: number,
-  indicatorColor?: string,
-  indicatorCap?: "round" | "inherit" | "butt" | "square"
+  size?: number
+  progress?: number
+  trackColor?: string
+  indicatorWidth?: number
+  indicatorColor?: string
+  indicatorCap?: 'round' | 'inherit' | 'butt' | 'square'
 }
 function CircularProgress(props: CircularProgressProps) {
   const {
@@ -22,7 +22,8 @@ function CircularProgress(props: CircularProgressProps) {
 
   const trackWidth = indicatorWidth - 1
   const center = size / 2
-  const radius = center - (trackWidth > indicatorWidth ? trackWidth : indicatorWidth)
+  const radius =
+    center - (trackWidth > indicatorWidth ? trackWidth : indicatorWidth)
   const dashArray = 2 * Math.PI * radius
   const dashOffset = dashArray * ((100 - progress) / 100)
 

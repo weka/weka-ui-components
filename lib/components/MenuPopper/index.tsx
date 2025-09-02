@@ -1,3 +1,1 @@
-export {default} from './MenuPopper'
-
-
+export { default } from './MenuPopper'

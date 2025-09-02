@@ -1,3 +1,1 @@
-export {default} from './JsonBox'
-
-
+export { default } from './JsonBox'

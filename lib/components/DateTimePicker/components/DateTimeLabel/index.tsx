@@ -1,2 +1,1 @@
-export {default} from './DateTimeLabel'
-
+export { default } from './DateTimeLabel'

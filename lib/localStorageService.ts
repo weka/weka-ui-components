@@ -26,7 +26,11 @@ const localStorageService = {
       Reflect.deleteProperty(updatedFilters, key)
     }
     return Utils.isEmpty(updatedFilters)
-      ? localStorageService.removeItem(SAVED_FILTERS) : localStorageService.setItem(SAVED_FILTERS, JSON.stringify(updatedFilters))
+      ? localStorageService.removeItem(SAVED_FILTERS)
+      : localStorageService.setItem(
+          SAVED_FILTERS,
+          JSON.stringify(updatedFilters)
+        )
   },
   updateHidden(key: string, value: any) {
     const hiddenString = localStorageService.getItem(SAVED_HIDDEN) ?? '{}'

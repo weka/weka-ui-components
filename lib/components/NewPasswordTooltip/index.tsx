@@ -1,3 +1,1 @@
-export {default} from './NewPasswordTooltip'
-
-
+export { default } from './NewPasswordTooltip'

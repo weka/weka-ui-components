@@ -1,3 +1,1 @@
-export {default} from './DataInfo'
-
-
+export { default } from './DataInfo'

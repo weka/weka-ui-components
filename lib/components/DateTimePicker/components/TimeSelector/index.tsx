@@ -1,1 +1,1 @@
-export {default} from './TimeSelector'
+export { default } from './TimeSelector'

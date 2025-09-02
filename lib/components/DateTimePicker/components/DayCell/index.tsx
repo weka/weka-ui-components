@@ -1,1 +1,1 @@
-export {default} from './DayCell'
+export { default } from './DayCell'

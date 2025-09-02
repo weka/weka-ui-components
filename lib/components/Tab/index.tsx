@@ -1,3 +1,1 @@
-export {default} from './Tab'
-
-
+export { default } from './Tab'

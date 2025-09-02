@@ -1,1 +1,1 @@
-export {default} from './EmptyPageMessage'
+export { default } from './EmptyPageMessage'

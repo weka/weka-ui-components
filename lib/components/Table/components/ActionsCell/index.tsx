@@ -1,1 +1,1 @@
-export {default} from './ActionsCell'
+export { default } from './ActionsCell'

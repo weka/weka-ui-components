@@ -1,3 +1,1 @@
-export {default} from './SpanTooltip'
-
-
+export { default } from './SpanTooltip'

@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from 'storybook-solidjs'
-import { default as EmptyPageMessageComponent, EmptyPageMessageProps } from './EmptyPageMessage'
+import {
+  default as EmptyPageMessageComponent,
+  EmptyPageMessageProps
+} from './EmptyPageMessage'
 import React from 'react'
 
 const meta: Meta<typeof EmptyPageMessageComponent> = {
