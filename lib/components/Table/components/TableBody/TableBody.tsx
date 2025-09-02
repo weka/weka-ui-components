@@ -93,7 +93,9 @@ function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
             isResizable={isResizable}
             disableActionsPortal={disableActionsPortal}
             extraClasses={extraClasses}
-            rowCanExpand={isExpandable && getRowCanExpand?.(row.original)}
+            rowCanExpand={
+              isExpandable && (getRowCanExpand?.(row.original) ?? true)
+            }
             expandedRows={expandedRows}
             {...(infinityScrollConfig && {
               virtualRow,
