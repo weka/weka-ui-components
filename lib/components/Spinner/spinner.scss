@@ -24,25 +24,24 @@ $blade-rotation: 0deg;
 
 .spinner-blade {
   position: absolute;
-  left: .4629em;
+  left: 0.4629em;
   bottom: 0;
-  width: .094em;
-  height: .2777em;
-  border-radius: .5em;
+  width: 0.094em;
+  height: 0.2777em;
+  border-radius: 0.5em;
   background-color: transparent;
-  transform-origin: center -.2222em;
+  transform-origin: center -0.2222em;
   animation: spinner-fade 1s infinite linear;
 
   $animation-delay: 0s;
   $blade-rotation: 0deg;
-
 
   @for $i from 1 through 12 {
     &:nth-child(#{$i}) {
       animation-delay: $animation-delay;
       transform: rotate($blade-rotation);
       $blade-rotation: $blade-rotation + 30;
-      $animation-delay: $animation-delay + .083;
+      $animation-delay: $animation-delay + 0.083;
     }
   }
 }
@@ -56,4 +55,3 @@ $blade-rotation: 0deg;
     background-color: transparent;
   }
 }
-

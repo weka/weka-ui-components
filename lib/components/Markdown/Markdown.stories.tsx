@@ -15,8 +15,6 @@ export const Default: Story = {
     children: 'Here is some **bold** text and [a link](https://example.com)'
   },
   render: (args: { children: string }) => (
-    <MarkdownComponent {...args}>
-      {args.children}
-    </MarkdownComponent>
+    <MarkdownComponent {...args}>{args.children}</MarkdownComponent>
   )
 }

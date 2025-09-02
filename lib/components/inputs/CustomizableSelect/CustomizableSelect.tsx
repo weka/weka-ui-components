@@ -77,7 +77,11 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   const [isLoadingOptions, setLoadingOptions] = useState(false)
   const options = isAsync ? asyncOptions : localOptions
   const selectRef = React.useRef<HTMLInputElement | null>(null)
-  const highlighted = useHighlightInput({ inputRef: selectRef, isHighlighted, isScrolledInto })
+  const highlighted = useHighlightInput({
+    inputRef: selectRef,
+    isHighlighted,
+    isScrolledInto
+  })
 
   useEffect(() => {
     if (isAsync && !preventCall) {

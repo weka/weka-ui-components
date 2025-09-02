@@ -1,2 +1,1 @@
-export {default} from './DateSelector'
-
+export { default } from './DateSelector'

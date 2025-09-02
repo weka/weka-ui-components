@@ -5,17 +5,16 @@
   box-sizing: border-box;
   padding-top: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--ironhide-t2);;
+  border-bottom: 1px solid var(--ironhide-t2);
 
   &-label {
     color: var(--neutral-s3);
     font-size: 14px;
     font-weight: bold;
-font-family: var(--bold-font);
+    font-family: var(--bold-font);
     width: 150px;
   }
 
   &-value {
-
   }
 }

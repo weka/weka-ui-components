@@ -1,1 +1,1 @@
-export {default} from './TextSelectBox'
+export { default } from './TextSelectBox'

@@ -1,3 +1,1 @@
-export {default} from './MultiValue'
-
-
+export { default } from './MultiValue'

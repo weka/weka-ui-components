@@ -1,2 +1,1 @@
-export {default} from './NumInput'
-
+export { default } from './NumInput'

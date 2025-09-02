@@ -14,7 +14,8 @@
     }
   }
 
-  &.warning, &.minor {
+  &.warning,
+  &.minor {
     svg {
       path {
         fill: var(--optimus-s2);
@@ -30,7 +31,6 @@
     }
   }
 
-
   &.critical {
     background-color: var(--focus-s1);
 
@@ -40,5 +40,4 @@
       }
     }
   }
-
 }

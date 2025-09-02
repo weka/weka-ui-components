@@ -1,11 +1,12 @@
-.tiering-cell{
+.tiering-cell {
   display: flex;
   justify-content: center;
   svg {
     height: 24px;
     width: 24px;
     margin-right: 8px;
-    &.remote, &.writable {
+    &.remote,
+    &.writable {
       path {
         fill: var(--accent-key);
       }

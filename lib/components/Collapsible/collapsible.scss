@@ -13,7 +13,8 @@
     height: auto;
   }
 
-  &.expanded, &.expanding {
+  &.expanded,
+  &.expanding {
     --expanded: 1;
   }
 
@@ -65,4 +66,3 @@
     transform: rotate(-90deg);
   }
 }
-

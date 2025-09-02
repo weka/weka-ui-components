@@ -49,11 +49,7 @@ function Tooltip({
         onMouseDown={(e) => e.stopPropagation()}
         onMouseUp={(e) => e.stopPropagation()}
       >
-        {typeof data === 'string' ? (
-         <Markdown>{data}</Markdown>
-        ) : (
-          data
-        )}
+        {typeof data === 'string' ? <Markdown>{data}</Markdown> : data}
       </div>
     )
   })

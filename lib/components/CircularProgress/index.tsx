@@ -1,3 +1,1 @@
-export {default} from './CircularProgress'
-
-
+export { default } from './CircularProgress'

@@ -17,9 +17,11 @@ To release a new version of the package:
 2. A new release will be created for each merged PR.
 
 ## Storybook
+
 https://weka.github.io/weka-ui-components
 
 ## Run storybook locally
+
 yarn run storybook
 
 ## Commits Naming
@@ -71,23 +73,23 @@ Add above all other scripts inside the `body` element:
 
 ```html
 <script>
-    // optimization to remove flickering between reloads
-    const savedDarkMode = localStorage.getItem('isDarkMode')
+  // optimization to remove flickering between reloads
+  const savedDarkMode = localStorage.getItem('isDarkMode')
 
-    if (savedDarkMode) {
+  if (savedDarkMode) {
     if (savedDarkMode === 'true') {
-        document.documentElement.classList.add('dark-mode')
-        document.body.classList.add('dark-mode')
+      document.documentElement.classList.add('dark-mode')
+      document.body.classList.add('dark-mode')
     } else if (savedDarkMode === 'false') {
-        document.documentElement.classList.add('light-mode')
-        document.body.classList.add('light-mode')
+      document.documentElement.classList.add('light-mode')
+      document.body.classList.add('light-mode')
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        document.documentElement.classList.remove('dark-mode')
-        document.documentElement.classList.remove('light-mode')
+      document.documentElement.classList.remove('dark-mode')
+      document.documentElement.classList.remove('light-mode')
     })
-    }
+  }
 </script>
 ```
 

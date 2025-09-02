@@ -1,6 +1,11 @@
 import { RefObject, useEffect } from 'react'
 
-function useKeyEvent(ref: RefObject<any>, targetKey: string, funcToActive: (arg?: any) => void, keyEvent = 'keydown') {
+function useKeyEvent(
+  ref: RefObject<any>,
+  targetKey: string,
+  funcToActive: (arg?: any) => void,
+  keyEvent = 'keydown'
+) {
   function downHandler({ key }: KeyboardEvent) {
     if (key === targetKey) {
       funcToActive()

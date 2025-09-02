@@ -1,6 +1,5 @@
 .schedule-selector-wrapper {
   .toggle-button:not(.toggle-button-disabled) {
-
     .toggle-button-pad {
       background-color: var(--accent-key);
     }
@@ -14,8 +13,6 @@
       }
     }
   }
-
-
 
   .input-number {
     input {
@@ -45,9 +42,9 @@
     .react-select__control {
       background-color: var(--ironhide-t4);
       height: 32px;
-        &--is-disabled {
-          background-color: var(--ironhide-t2);
-        }
+      &--is-disabled {
+        background-color: var(--ironhide-t2);
+      }
     }
 
     .react-select__indicator-separator {
@@ -70,7 +67,8 @@
       font-size: 14px;
     }
 
-    .react-select__single-value:not(.react-select__single-value--is-disabled) .react-select__single-value-label {
+    .react-select__single-value:not(.react-select__single-value--is-disabled)
+      .react-select__single-value-label {
       color: var(--ironhide-s4);
     }
   }

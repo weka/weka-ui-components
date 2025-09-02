@@ -1,1 +1,1 @@
-export {default} from './FilterBox'
+export { default } from './FilterBox'

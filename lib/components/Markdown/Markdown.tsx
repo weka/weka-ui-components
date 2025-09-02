@@ -19,9 +19,7 @@ function LinkRenderer(props: { href: string; children: ReactElement }) {
 function Markdown({ children }: { children: string }) {
   return (
     <div className='markdown-wrapper'>
-      <ReactMarkdown components={{ a: LinkRenderer }}>
-        {children}
-      </ReactMarkdown>
+      <ReactMarkdown components={{ a: LinkRenderer }}>{children}</ReactMarkdown>
     </div>
   )
 }

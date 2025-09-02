@@ -2,14 +2,16 @@
   --uiFieldBorderWidth: var(--fieldBorderWidth, 2px);
   --uiFieldPaddingRight: var(--fieldPaddingRight, 1rem);
   --uiFieldPaddingLeft: var(--fieldPaddingLeft, 1rem);
-  --uiFieldBorderColorActive: var(--fieldBorderColorActive, rgba(22, 22, 22, 1));
+  --uiFieldBorderColorActive: var(
+    --fieldBorderColorActive,
+    rgba(22, 22, 22, 1)
+  );
 
   display: var(--fieldDisplay, inline-flex);
   position: relative;
   width: 525px;
   height: 320px;
   padding-top: 20px;
-
 
   .field__input {
     box-sizing: border-box;
@@ -25,13 +27,13 @@
     display: inline-block;
     word-break: break-word;
 
-
-    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
 
-    &[type=number] {
+    &[type='number'] {
       -moz-appearance: textfield;
     }
   }
@@ -69,7 +71,7 @@
     }
   }
 
-   .field__input:focus {
+  .field__input:focus {
     border: 1px solid var(--main-color);
     box-shadow: 0 0 0 1px var(--main-color);
     border-radius: 4px;
@@ -84,7 +86,6 @@
   .field__input:disabled {
     background-color: var(--ironhide-t2);
     color: var(--ironhide-s1);
-
   }
 
   .text-area-error {

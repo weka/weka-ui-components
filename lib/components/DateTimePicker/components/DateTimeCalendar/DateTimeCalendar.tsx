@@ -17,7 +17,16 @@ interface DateTimeCalendarProps {
   showNow?: boolean
 }
 
-function DateTimeCalendar({ onSubmit, initValue = DateTime.now(), minDate = null, maxDate = null, showSeconds = true, showTime = true, canClear = true, showNow }: DateTimeCalendarProps) {
+function DateTimeCalendar({
+  onSubmit,
+  initValue = DateTime.now(),
+  minDate = null,
+  maxDate = null,
+  showSeconds = true,
+  showTime = true,
+  canClear = true,
+  showNow
+}: DateTimeCalendarProps) {
   const [dateTime, setDateTime] = useState(initValue)
   return (
     <div className='calendar-wrapper'>
@@ -29,29 +38,30 @@ function DateTimeCalendar({ onSubmit, initValue = DateTime.now(), minDate = null
           maxDate={maxDate}
         />
       </div>
-      {showTime
-      ? (
-          <>
-            <div>
-              <TimeSelector
-                time={dateTime}
-                onSubmit={setDateTime}
-                showSeconds={showSeconds}
-                onNowSubmit={onSubmit}
-                showNow={showNow}
-              />
+      {showTime ? (
+        <>
+          <div>
+            <TimeSelector
+              time={dateTime}
+              onSubmit={setDateTime}
+              showSeconds={showSeconds}
+              onNowSubmit={onSubmit}
+              showNow={showNow}
+            />
+          </div>
+          <div className='calendar-actions'>
+            <div className='calendar-actions-sub'>
+              {canClear && (
+                <Button empty onClick={() => onSubmit(undefined)}>
+                  Clear
+                </Button>
+              )}
+              <Button onClick={() => onSubmit(dateTime)}>OK</Button>
             </div>
-            <div className='calendar-actions'>
-              <div className='calendar-actions-sub'>
-                {canClear && <Button empty onClick={() => onSubmit(undefined)}>Clear</Button>}
-                <Button onClick={() => onSubmit(dateTime)}>OK</Button>
-              </div>
-            </div>
-          </>
-        )
-      : null}
+          </div>
+        </>
+      ) : null}
     </div>
-
   )
 }
 

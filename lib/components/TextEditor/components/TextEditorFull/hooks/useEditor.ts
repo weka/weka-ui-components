@@ -10,7 +10,6 @@ function useEditor({
   onlyMatching: boolean
   value: string
 }) {
-
   useEffect(() => {
     if (!value || !editor) {
       return

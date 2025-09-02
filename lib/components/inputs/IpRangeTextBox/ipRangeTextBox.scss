@@ -10,7 +10,6 @@
   height: 48px;
   padding-bottom: 2px;
 
-
   .ip-range-text-box-disabled {
     background-color: var(--ironhide-t3);
   }
@@ -39,14 +38,14 @@
       font-size: 17px;
       color: var(--ironhide-s4);
 
-      &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
 
-      &[type=number] {
+      &[type='number'] {
         -moz-appearance: textfield;
-
       }
     }
 
@@ -102,7 +101,6 @@
   .field__ip-input:disabled {
     background-color: var(--ironhide-t2);
     color: var(--ironhide-s1);
-
   }
 
   .ip-range-text-box-error {
