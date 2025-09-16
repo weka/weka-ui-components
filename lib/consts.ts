@@ -12,6 +12,7 @@ const {
 
 // eslint-disable-next-line
 export const EMPTY_STRING = ''
+export const EMPTY_CONTENT = '—'
 export const ZERO_STRING = '0'
 // eslint-disable-next-line
 export const NOP = () => {}
@@ -110,6 +111,16 @@ export const OBS_MODES = {
 
 type TimeShortenings = Record<string, unknown>
 
+export const TIMES_SECONDS = {
+  Years: 60 * 60 * 24 * 30 * 365,
+  Months: 60 * 60 * 24 * 30,
+  Weeks: 60 * 60 * 24 * 7,
+  Days: 60 * 60 * 24,
+  Hours: 60 * 60,
+  Minutes: 60,
+  Seconds: 1
+}
+
 export const TIME_PARTS_SHORTENINGS: TimeShortenings = {
   years: 'y',
   months: 'mon',
@@ -150,6 +161,16 @@ export const TIME_FORMATS = {
   DATE_TIME_SECONDS_MS: 'yyyy-MM-dd HH:mm:ss.SSS'
 }
 
+export const CAPACITY = {
+  EB: 1000 * 1000 * 1000 * 1000 * 1000 * 1000,
+  PB: 1000 * 1000 * 1000 * 1000 * 1000,
+  TB: 1000 * 1000 * 1000 * 1000,
+  GB: 1000 * 1000 * 1000,
+  MB: 1000 * 1000,
+  KB: 1000,
+  Bytes: 1
+}
+
 type SeverityIcons = Record<string, unknown>
 
 export const SEVERITY_DEBUG = 'DEBUG'
@@ -158,6 +179,7 @@ export const SEVERITY_WARNING = 'WARNING'
 export const SEVERITY_MINOR = 'MINOR'
 export const SEVERITY_MAJOR = 'MAJOR'
 export const SEVERITY_CRITICAL = 'CRITICAL'
+export const SEVERITY_NONE = 'NONE'
 
 export const SEVERITIES = [
   SEVERITY_DEBUG,
@@ -168,6 +190,16 @@ export const SEVERITIES = [
   SEVERITY_CRITICAL
 ] as const
 export type Severities = (typeof SEVERITIES)[number]
+
+export const SEVERITY_ORDER = {
+  [SEVERITY_CRITICAL]: 0,
+  [SEVERITY_MAJOR]: 1,
+  [SEVERITY_MINOR]: 2,
+  [SEVERITY_WARNING]: 3,
+  [SEVERITY_INFO]: 4,
+  [SEVERITY_DEBUG]: 5,
+  [SEVERITY_NONE]: 6
+}
 
 export const SEVERITIES_ICONS: SeverityIcons = {
   INFO: EventInfo,

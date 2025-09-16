@@ -5,10 +5,13 @@ import {
   DIALOG_STATUSES,
   DOWNLOAD_FAILED,
   EMPTY_STRING,
+  SEVERITY_NONE,
+  SEVERITY_ORDER,
   TIME_PARTS_SHORTENINGS,
   TOASTER_DIALOG,
   TOASTER_DIALOG_DISMISS,
-  TOASTER_TYPES
+  TOASTER_TYPES,
+  type Severities
 } from 'consts'
 import { DateTime, DurationUnits } from 'luxon'
 import { Toast, Tooltip } from './components'
@@ -513,7 +516,15 @@ const utils = {
         .filter(Boolean)
         .join('-')
     )
-  }
+  },
+  sortAlertsBySeverity: (
+    a: { severity: Severities },
+    b: { severity: Severities }
+  ) =>
+    SEVERITY_ORDER[a.severity ?? EMPTY_STRING] ??
+    SEVERITY_ORDER[SEVERITY_NONE] -
+      (SEVERITY_ORDER[b.severity ?? EMPTY_STRING] ??
+        SEVERITY_ORDER[SEVERITY_NONE])
 }
 
 function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr

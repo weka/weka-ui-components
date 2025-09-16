@@ -14,8 +14,14 @@ export {
   SHORT_ROLES,
   STRING_RESTRICTION_TYPES
 } from './consts'
-import type { Formula, StringRestriction, StringRestrictionType } from 'consts'
+export * as consts from './consts'
+import type {
+  Formula,
+  StringRestriction,
+  StringRestrictionType,
+  Severities
+} from 'consts'
 
-export type { Formula, StringRestriction, StringRestrictionType }
+export type { Formula, StringRestriction, StringRestrictionType, Severities }
 export * from './hooks'
 export { default as localStorageService } from './localStorageService'
