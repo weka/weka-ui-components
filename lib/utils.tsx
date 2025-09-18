@@ -521,10 +521,8 @@ const utils = {
     a: { severity: Severities },
     b: { severity: Severities }
   ) =>
-    SEVERITY_ORDER[a.severity ?? EMPTY_STRING] ??
-    SEVERITY_ORDER[SEVERITY_NONE] -
-      (SEVERITY_ORDER[b.severity ?? EMPTY_STRING] ??
-        SEVERITY_ORDER[SEVERITY_NONE])
+    SEVERITY_ORDER[a.severity ?? SEVERITY_NONE] -
+    SEVERITY_ORDER[b.severity ?? SEVERITY_NONE]
 }
 
 function insensitiveSort<Arr extends string[] | number[]>(array: Arr): Arr
