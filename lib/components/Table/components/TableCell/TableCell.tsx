@@ -106,6 +106,12 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
       }
     }
 
+    if (columnMeta?.baseStyle) {
+      return {
+        ...baseStyle
+      }
+    }
+
     return {
       ...baseStyle,
       flex: `${sizeVar} 0 auto`
@@ -116,8 +122,11 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
     <td
       key={cell.id}
       className={clsx(
-        isActionCell ? 'td-actions' : 'table-cell',
-        columnMeta?.columnAlign === 'center' && 'column-align-center',
+        {
+          'td-actions': isActionCell,
+          'table-cell': !isActionCell,
+          'column-align-center': columnMeta?.columnAlign === 'center'
+        },
         extraClasses?.tableCell
       )}
       {...(!isActionCell && {

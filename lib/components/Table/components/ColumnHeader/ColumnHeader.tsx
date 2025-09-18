@@ -45,10 +45,9 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
 
   const getColumnStyle = <Data, Value>(
     headerId: string,
-    columnMeta?: ColumnMeta<Data, Value>,
-    isActionCell?: boolean
+    columnMeta?: ColumnMeta<Data, Value>
   ) => {
-    if (isActionCell) {
+    if (columnMeta?._type === 'action') {
       return {}
     }
 
@@ -63,6 +62,12 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
         ...baseStyle,
         paddingLeft: '0',
         paddingRight: '0'
+      }
+    }
+
+    if (columnMeta?.baseStyle) {
+      return {
+        ...baseStyle
       }
     }
 
@@ -86,29 +91,25 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
         const columnSorted = column.getIsSorted()
 
         const columnMeta = column.columnDef.meta
-        const isActionCell = columnMeta?._type === 'action'
 
         return (
           <th
             colSpan={header.colSpan}
             key={header.id}
-            className={clsx(
-              'table-header',
-              isActionCell && 'table-header-actions'
-            )}
-            style={getColumnStyle(header.id, columnMeta, isActionCell)}
+            className={clsx('table-header', {
+              'table-header-actions': columnMeta?._type === 'action'
+            })}
+            style={getColumnStyle(header.id, columnMeta)}
           >
             <div
-              className={clsx({
-                ['table-header-content']: true,
+              className={clsx('table-header-content', {
                 'column-align-center': columnMeta?.columnAlign === 'center'
               })}
             >
               <Tooltip data={column.columnDef.meta?.headerTooltip}>
                 <span
-                  className={clsx({
-                    ['table-headline']: true,
-                    ['disable-sort']: !canSort
+                  className={clsx('table-headline', {
+                    'disable-sort': !canSort
                   })}
                   onClick={() => {
                     if (canSort) {
@@ -124,10 +125,9 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
               )}
               {canSort && (columnSorted || isHeaderEmpty) && (
                 <div
-                  className={clsx(
-                    'table-sort',
-                    !columnSorted && isHeaderEmpty && 'table-sort-no-title'
-                  )}
+                  className={clsx('table-sort', {
+                    'table-sort-no-title': !columnSorted && isHeaderEmpty
+                  })}
                   onClick={() => toggleSortBy(column.id)}
                 >
                   {columnSorted === 'desc' ? (
@@ -140,10 +140,8 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
               {header.column.getCanResize() && (
                 <div
                   onMouseDown={header.getResizeHandler()}
-                  className={clsx({
-                    ['column-resizer']: true,
-                    ['column-resizer-is-resizing']:
-                      header.column.getIsResizing()
+                  className={clsx('column-resizer', {
+                    'column-resizer-is-resizing': header.column.getIsResizing()
                   })}
                 />
               )}
