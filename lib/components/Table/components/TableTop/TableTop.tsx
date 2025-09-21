@@ -14,7 +14,7 @@ const { ClearFilters, ColumnResize, ColumnResizeReset, ThinArrow } = svgs
 interface TableTopProps<Data> {
   table: ExtendedTable<Data>
   title?: string
-  itemsAmount?: number
+  totalRows?: number
   maxRows?: number
   canExpandAll: boolean
   isExpandable: boolean
@@ -31,7 +31,7 @@ interface TableTopProps<Data> {
 export function TableTop<Data>(props: TableTopProps<Data>) {
   const {
     title,
-    itemsAmount,
+    totalRows,
     maxRows,
     table,
     canExpandAll,
@@ -56,7 +56,7 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
         <span className='heading-4'>{title}</span>
         {!hideRowsCount && (
           <span className='sub-title bold'>
-            {`${itemsAmount || table.getRowCount()} ${
+            {`${totalRows || table.getRowCount()} ${
               maxRows ? `(max ${maxRows})` : EMPTY_STRING
             }`}
           </span>

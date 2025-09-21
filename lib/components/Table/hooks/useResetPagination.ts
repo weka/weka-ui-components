@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { ExtendedColumnFilter, ExtendedTable } from '../types'
 import { SortingState } from '@tanstack/react-table'
 
@@ -6,7 +6,6 @@ function useResetPagination<Data>({
   table,
   columnFilters,
   manualPagination,
-  setCurrentPage,
   sorting,
   scrollElement,
   outsideFilters
@@ -14,26 +13,31 @@ function useResetPagination<Data>({
   table: ExtendedTable<Data>
   columnFilters: ExtendedColumnFilter[]
   manualPagination?: boolean
-  setCurrentPage: (page: number) => void
   sorting: SortingState
   scrollElement: HTMLElement | null
   outsideFilters?: unknown
 }) {
+  const isFirstRender = useRef(true)
+
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
     if (scrollElement) {
       scrollElement.scrollTop = 0
     }
 
-    setCurrentPage(1)
     table.setPageIndex(0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     manualPagination,
     table,
-    setCurrentPage,
     columnFilters,
     sorting,
-    scrollElement,
     outsideFilters
+    // scrollElement intentionally excluded to avoid re-renders
   ])
 }
 

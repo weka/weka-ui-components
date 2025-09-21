@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Tooltip from '../Tooltip'
 import svgs from 'svgs'
 import { IconButton } from '@mui/material'
@@ -10,12 +10,10 @@ import './pagination.scss'
 const { Arrow, LastArrow } = svgs
 
 type PaginationProps = {
+  currentPage: number
   onPageChange: (page: number) => void
-  defaultCurrentPage?: number
   isLoading?: boolean
   disablePageInput?: boolean
-  currentPage?: number
-  setCurrentPage?: (page: number) => void
 } & (
   | { totalRows: number; rowsPerPage: number; numberOfPages?: undefined }
   | {
@@ -27,91 +25,35 @@ type PaginationProps = {
 
 function Pagination(props: PaginationProps) {
   const {
+    currentPage = 1,
     onPageChange,
-    defaultCurrentPage = 1,
     isLoading,
     totalRows,
     rowsPerPage,
     numberOfPages: outerNumberOfPages,
-    disablePageInput = false,
-    currentPage: outsideCurrentPage,
-    setCurrentPage: setOutsideCurrentPage
+    disablePageInput = false
   } = props
 
-  const [internalCurrentPage, setInternalCurrentPage] =
-    useState(defaultCurrentPage)
-  const currentPage = outsideCurrentPage ?? internalCurrentPage
-  const setCurrentPage = setOutsideCurrentPage ?? setInternalCurrentPage
-
-  const [canPreviousPage, setCanPreviousPage] = useState(false)
-  const [canNextPage, setCanNextPage] = useState(true)
-
   const [pageInputValue, setInputPageValue] = useState(currentPage.toString())
-  const pageInputValueRef = useRef(pageInputValue)
-  pageInputValueRef.current = pageInputValue
 
   const numberOfPages = outerNumberOfPages ?? Math.ceil(totalRows / rowsPerPage)
 
-  useEffect(() => {
-    setCurrentPage((prevPage) => {
-      const pageToUpdate = Math.min(prevPage, numberOfPages) || prevPage
-      setInputPageValue(pageToUpdate.toString())
-      return pageToUpdate
-    })
-  }, [numberOfPages])
+  const canPreviousPage = currentPage > 1
+  const canNextPage = currentPage < numberOfPages && numberOfPages > 0
 
-  const handlePageChange: typeof setCurrentPage = (newPageRaw) => {
-    setCurrentPage((prevPage) => {
-      const newPageVal =
-        typeof newPageRaw === 'function' ? newPageRaw(prevPage) : newPageRaw
-
-      if (newPageVal.toString() !== pageInputValueRef.current) {
-        setInputPageValue(newPageVal.toString())
-      }
-
-      return newPageVal
-    })
+  const handlePageChange = (newPage: number) => {
+    onPageChange(newPage)
   }
-  const onNextPage = () => handlePageChange((prev) => prev + 1)
-  const onPrevPage = () => handlePageChange((prev) => prev - 1)
 
   const handleInputChange = () => {
     const page = Number(pageInputValue) || 1
     const newPageNumber = page > numberOfPages ? numberOfPages : page
     handlePageChange(newPageNumber)
-    setInputPageValue(newPageNumber.toString())
   }
 
   useEffect(() => {
-    if (
-      outsideCurrentPage &&
-      outsideCurrentPage.toString() !== pageInputValue
-    ) {
-      setInputPageValue(currentPage.toString())
-    }
+    setInputPageValue(currentPage.toString())
   }, [currentPage])
-
-  useEffect(() => {
-    handlePageChange(defaultCurrentPage)
-  }, [defaultCurrentPage])
-
-  useEffect(() => {
-    onPageChange(currentPage)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage])
-
-  useEffect(() => {
-    if (numberOfPages === currentPage || !numberOfPages) {
-      setCanNextPage(false)
-    } else {
-      setCanNextPage(true)
-    }
-    if (currentPage === 1) {
-      setCanPreviousPage(false)
-    } else {
-      setCanPreviousPage(true)
-    }
-  }, [numberOfPages, currentPage])
 
   return !isLoading ? (
     <div className='pagination-footer'>
@@ -131,7 +73,7 @@ function Pagination(props: PaginationProps) {
           <Tooltip data={canPreviousPage ? 'Previous Page' : EMPTY_STRING}>
             <div className='pagination-control-wrapper'>
               <IconButton
-                onClick={onPrevPage}
+                onClick={() => handlePageChange(currentPage - 1)}
                 className='pagination-arrow'
                 disabled={!canPreviousPage}
               >
@@ -148,21 +90,23 @@ function Pagination(props: PaginationProps) {
               }
               value={pageInputValue}
               maxLength={15}
-              onBlur={handleInputChange}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleInputChange()
-                }
-              }}
               autosize
               disabled={numberOfPages <= 1 || disablePageInput}
+              {...({
+                onKeyPress: (e: React.KeyboardEvent) => {
+                  if (e.key === 'Enter') {
+                    handleInputChange()
+                  }
+                },
+                onBlur: handleInputChange
+              } as any)}
             />
             <span className='note'>{`/ ${numberOfPages || 1} `}</span>
           </div>
           <Tooltip data={canNextPage ? 'Next Page' : EMPTY_STRING}>
             <div className='pagination-control-wrapper'>
               <IconButton
-                onClick={onNextPage}
+                onClick={() => handlePageChange(currentPage + 1)}
                 disabled={!canNextPage}
                 className='pagination-arrow'
               >
