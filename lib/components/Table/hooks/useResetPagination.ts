@@ -31,14 +31,7 @@ function useResetPagination<Data>({
 
     table.setPageIndex(0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    manualPagination,
-    table,
-    columnFilters,
-    sorting,
-    outsideFilters
-    // scrollElement intentionally excluded to avoid re-renders
-  ])
+  }, [manualPagination, table, columnFilters, sorting, outsideFilters])
 }
 
 export default useResetPagination
