@@ -148,6 +148,7 @@ declare module '@tanstack/react-table' {
     >
     columnTitle?: string
     _type?: 'column' | 'action'
+    baseStyle?: boolean
   }
 }
 
