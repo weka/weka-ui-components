@@ -37,8 +37,8 @@ import {
   usePageSize,
   usePrepareColumnDefs,
   useFiltersChangeListener,
-  useResetPagination,
-  useColumnSizeVars
+  useColumnSizeVars,
+  useResetPagination
 } from './hooks'
 import { useToggle } from 'hooks'
 import {
@@ -84,7 +84,11 @@ export interface TableProps<Data, Value> {
   fixedPageSize?: number
   disableActionsPortal?: boolean
   manualPagination?: boolean
-  itemsAmount?: number
+  currentPage?: number
+  onPageChange?: (page: number) => void
+  totalRows?: number
+  rowsPerPage?: number
+  disablePageInput?: boolean
   canExpandAll?: boolean
   getRowCanExpand?: (row: Data) => boolean
   expandedRows?: Record<string, boolean>
@@ -145,7 +149,11 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     maxRows,
     emptyMessage,
     manualPagination,
-    itemsAmount,
+    currentPage: outerCurrentPage,
+    onPageChange: outerPageChange,
+    totalRows,
+    rowsPerPage,
+    disablePageInput,
     canExpandAll = false,
     loading,
     filters: userColumnFilters,
@@ -252,7 +260,10 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     filterCategory
   })
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [paginationState, setPaginationState] = useState({
+    pageIndex: outerCurrentPage ? outerCurrentPage - 1 : 0,
+    pageSize: fixedPageSize || 50
+  })
 
   const table = useReactTable<Data>({
     columns: columnDefs,
@@ -267,18 +278,20 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
         sorting: [{ id: defaultSort, desc: defaultDescendingSort }]
       }),
       columnFilters: initialFilters,
-      globalFilter: defaultGlobalFilter,
-      pagination: {
-        pageSize: fixedPageSize || 50
-      }
+      globalFilter: defaultGlobalFilter
     },
     state: {
-      ...(infinityScrollConfig && {
-        pagination: {
-          pageSize: data.length,
-          pageIndex: 0
-        }
-      }),
+      pagination: infinityScrollConfig
+        ? {
+            pageSize: data.length,
+            pageIndex: 0
+          }
+        : {
+            pageSize: fixedPageSize || paginationState.pageSize,
+            pageIndex: outerCurrentPage
+              ? outerCurrentPage - 1
+              : paginationState.pageIndex
+          },
       ...(userColumnFilters && { columnFilters: userColumnFilters })
     },
     ...(userColumnFilters && { onColumnFiltersChange: onFiltersChanged }),
@@ -305,6 +318,11 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     autoResetPage: false,
     paginateExpandedRows: false,
     getRowId,
+    manualPagination,
+    onPaginationChange: setPaginationState,
+    ...(manualPagination &&
+      totalRows &&
+      rowsPerPage && { pageCount: Math.ceil(totalRows / rowsPerPage) }),
     ...(grouping && { getGroupedRowModel: getGroupedRowModel() })
   })
 
@@ -371,6 +389,12 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     onVisibilityChange(allColumns, columnVisibility)
   }, [onVisibilityChange, allColumns, columnVisibility])
 
+  useEffect(() => {
+    if (typeof paginationState.pageIndex === 'number') {
+      outerPageChange?.(paginationState.pageIndex + 1)
+    }
+  }, [paginationState.pageIndex, outerPageChange])
+
   useLayoutEffect(() => {
     if (!miniTable) {
       tableRef.current?.scrollTo(0, 0)
@@ -379,7 +403,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       }
     }
   }, [
-    pageIndex,
+    paginationState.pageIndex,
     RowSubComponent,
     collapseRowsOnLeavingPage,
     isAllRowsExpanded,
@@ -399,7 +423,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     table,
     columnFilters,
     manualPagination,
-    setCurrentPage,
     sorting,
     scrollElement: tableRef.current,
     outsideFilters
@@ -412,7 +435,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       {!miniTable && (
         <TableTop
           title={title}
-          itemsAmount={itemsAmount}
+          totalRows={totalRows}
           maxRows={maxRows}
           table={table}
           canExpandAll={canExpandAll}
@@ -490,19 +513,18 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       ) : (
         <Loader />
       )}
-      {(!miniTable || fixedPageSize) &&
-        !manualPagination &&
-        !infinityScrollConfig && (
-          <div className='footer'>
-            <Pagination
-              onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
-              numberOfPages={pageCount}
-              isLoading={loading}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
-          </div>
-        )}
+      {(!miniTable || fixedPageSize) && !infinityScrollConfig && !loading && (
+        <div className='footer'>
+          <Pagination
+            currentPage={pageIndex + 1}
+            onPageChange={(pageNumber) => {
+              table.setPageIndex(pageNumber - 1)
+            }}
+            numberOfPages={pageCount}
+            disablePageInput={disablePageInput}
+          />
+        </div>
+      )}
     </div>
   )
 }
