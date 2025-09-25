@@ -222,6 +222,10 @@ const utils = {
       })
     }
   },
+  toastDismissAll: () => {
+    toast.dismiss()
+    toast.clearWaitingQueue()
+  },
   mask2SubnetOp(val: number): string {
     return [255, 255, 255, 255]
       .map(() =>
