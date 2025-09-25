@@ -271,9 +271,24 @@ const utils = {
     [...searchParams].reduce<
       Record<string, string[] | Record<string, string[]>>
     >((acc, [key, value]) => {
-      const matchedObj = key.match(/([A-z_-]+)\[([A-z_-]+)\]/)
-      if (matchedObj) {
-        const [, objName, objKey] = matchedObj
+      const bracketIndex = key.indexOf('[')
+      const closeBracketIndex = key.indexOf(']', bracketIndex)
+
+      if (bracketIndex > 0 && closeBracketIndex > bracketIndex) {
+        const objName = key.slice(0, bracketIndex)
+        const objKey = key.slice(bracketIndex + 1, closeBracketIndex)
+
+        // Prevent prototype pollution
+        if (
+          objName === '__proto__' ||
+          objName === 'constructor' ||
+          objName === 'prototype' ||
+          objKey === '__proto__' ||
+          objKey === 'constructor' ||
+          objKey === 'prototype'
+        ) {
+          return acc
+        }
 
         let objectValue = acc[objName]
 
