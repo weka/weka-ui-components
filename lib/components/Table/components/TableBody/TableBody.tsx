@@ -30,9 +30,10 @@ interface TableBodyProps<Data> {
     isFetchingNextPage: boolean
   }
   tableRef: RefObject<HTMLDivElement>
+  rows: ExtendedRow<Data>[]
 }
 
-function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
+function TableBody<Data>(props: TableBodyProps<Data>) {
   const {
     table,
     isExpandable,
@@ -50,10 +51,10 @@ function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
     getRowCanExpand,
     expandedRows,
     infinityScrollConfig,
-    tableRef
+    tableRef,
+    rows
   } = props
 
-  const { rows } = table.getRowModel()
   const allColumns = table.getAllColumns()
 
   const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
@@ -108,17 +109,4 @@ function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
   )
 }
 
-// special memoized wrapper for our table body that we will use during column resizing
-export const MemoizedTableBody = React.memo(
-  TableBodyComponent
-) as typeof TableBody
-
-export const TableBody: typeof TableBodyComponent = ({ table, ...props }) => {
-  return table.getState().columnSizingInfo.isResizingColumn ? (
-    <MemoizedTableBody table={table} {...props} />
-  ) : (
-    <TableBodyComponent table={table} {...props} />
-  )
-}
-
-export default TableBody
+export default React.memo(TableBody)

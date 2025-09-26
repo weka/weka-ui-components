@@ -393,7 +393,8 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     if (typeof paginationState.pageIndex === 'number') {
       outerPageChange?.(paginationState.pageIndex + 1)
     }
-  }, [paginationState.pageIndex, outerPageChange])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginationState.pageIndex])
 
   useLayoutEffect(() => {
     if (!miniTable) {
@@ -497,6 +498,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
               expandedRows={expandedRows}
               infinityScrollConfig={infinityScrollConfig}
               tableRef={tableRef}
+              rows={rows}
             />
           </table>
           {!rows.length && (
