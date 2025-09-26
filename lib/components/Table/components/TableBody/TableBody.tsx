@@ -33,7 +33,7 @@ interface TableBodyProps<Data> {
   rows: ExtendedRow<Data>[]
 }
 
-function TableBody<Data>(props: TableBodyProps<Data>) {
+function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
   const {
     table,
     isExpandable,
@@ -109,4 +109,14 @@ function TableBody<Data>(props: TableBodyProps<Data>) {
   )
 }
 
-export default React.memo(TableBody)
+const MemoizedTableBody = React.memo(TableBodyComponent) as typeof TableBody
+
+const TableBody: typeof TableBodyComponent = ({ table, ...props }) => {
+  return table.getState().columnSizingInfo.isResizingColumn ? (
+    <MemoizedTableBody table={table} {...props} />
+  ) : (
+    <TableBodyComponent table={table} {...props} />
+  )
+}
+
+export default TableBody
