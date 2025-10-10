@@ -1,6 +1,6 @@
-import { Utils } from '../../../../../main'
 import { EMPTY_STRING } from 'consts'
 import { ExtendedCellProps, ExtendedColumn, ExtendedRow } from '../../../types'
+import { getUniqueCount } from '../../../tableUtils'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -28,15 +28,7 @@ function AggregatedTotalCell<Data, Value>(
 
   const { getUrl, openInNewTab } = cellDef?.options ?? {}
 
-  const count = row.getLeafRows().reduce<Set<unknown>>((acc, item) => {
-    const value = item.getValue(column.id)
-
-    if (!Utils.isEmpty(value)) {
-      acc.add(value)
-    }
-
-    return acc
-  }, new Set()).size
+  const count = getUniqueCount(row, column.id)
 
   const cellContent =
     typeof count === 'number' ? `${count} (total)` : EMPTY_STRING

@@ -23,14 +23,85 @@ export const tableUtils = {
     'accessorFn' in column.columnDef || 'accessorKey' in column.columnDef
 }
 
-export const customSortingFns = {
+const uniqueCountCache = new Map<string, number>()
+
+export const getUniqueCount = <Data>(
+  row: ExtendedRow<Data>,
+  columnId: string
+): number => {
+  const cacheKey = `${row.id}-${columnId}`
+
+  if (uniqueCountCache.has(cacheKey)) {
+    return uniqueCountCache.get(cacheKey) ?? 0
+  }
+
+  const count = row.getLeafRows().reduce<Set<unknown>>((acc, item) => {
+    const value = item.getValue(columnId)
+
+    if (!utils.isEmpty(value)) {
+      acc.add(value)
+    }
+
+    return acc
+  }, new Set()).size
+
+  uniqueCountCache.set(cacheKey, count)
+
+  return count
+}
+
+export const clearUniqueCountCache = () => {
+  uniqueCountCache.clear()
+}
+
+const getSortValue = <Data>(
+  row: ExtendedRow<Data>,
+  columnId: string,
+  grouping?: string[]
+): { value: string | number; isAggregated: boolean; fallbackName?: string } => {
+  const isLastGroupingLevel =
+    !grouping ||
+    grouping.length === 0 ||
+    (row.groupingColumnId &&
+      grouping.indexOf(row.groupingColumnId) === grouping.length - 1)
+
+  if (isLastGroupingLevel) {
+    return {
+      value: row.getValue(columnId),
+      isAggregated: false
+    }
+  }
+
+  const count = getUniqueCount(row, columnId)
+
+  return {
+    value: count,
+    isAggregated: true,
+    fallbackName: row.getValue(row.groupingColumnId || columnId) ?? EMPTY_STRING
+  }
+}
+
+export const getCustomSortingFns = (grouping?: string[]) => ({
   stringSort: <Data>(
     rowA: ExtendedRow<Data>,
     rowB: ExtendedRow<Data>,
     columnId: string
   ): number => {
-    let a = rowA.getValue(columnId) ?? EMPTY_STRING
-    let b = rowB.getValue(columnId) ?? EMPTY_STRING
+    const resultA = getSortValue(rowA, columnId, grouping)
+    const resultB = getSortValue(rowB, columnId, grouping)
+
+    if (
+      resultA.isAggregated &&
+      resultB.isAggregated &&
+      resultA.value === resultB.value
+    ) {
+      return (resultA?.fallbackName?.toString() || EMPTY_STRING).localeCompare(
+        resultB?.fallbackName?.toString() || EMPTY_STRING
+      )
+    }
+
+    let a = resultA.value ?? EMPTY_STRING
+    let b = resultB.value ?? EMPTY_STRING
 
     if (typeof a === 'boolean' || typeof b === 'boolean') {
       return a > b ? -1 : a < b ? 1 : 0
@@ -105,12 +176,27 @@ export const customSortingFns = {
     rowB: ExtendedRow<Data>,
     columnId: string
   ): number => {
-    const a = rowA.getValue(columnId) || 0
-    const b = rowB.getValue(columnId) || 0
+    const resultA = getSortValue(rowA, columnId, grouping)
+    const resultB = getSortValue(rowB, columnId, grouping)
 
-    return +a - +b
+    if (
+      resultA.isAggregated &&
+      resultB.isAggregated &&
+      resultA.value === resultB.value
+    ) {
+      return (resultA?.fallbackName?.toString() || EMPTY_STRING).localeCompare(
+        resultB?.fallbackName?.toString() || EMPTY_STRING
+      )
+    }
+
+    const a =
+      typeof resultA.value === 'number' ? resultA.value : +(resultA.value || 0)
+    const b =
+      typeof resultB.value === 'number' ? resultB.value : +(resultB.value || 0)
+
+    return a - b
   }
-}
+})
 
 export const urlFilterParsers = {
   boolean: (rawValue: Parameters<UrlFilterParser>[0]) => {

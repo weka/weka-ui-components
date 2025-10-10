@@ -51,7 +51,7 @@ import {
 import { ColumnHeader, Pagination, TableTop, TableBody } from './components'
 import { AggregatedTotalCell, DefaultCell } from './exports'
 import { TABLE_FILTERS_MAP } from './tableConsts'
-import { customSortingFns } from './tableUtils'
+import { getCustomSortingFns, clearUniqueCountCache } from './tableUtils'
 
 import './table.scss'
 
@@ -301,7 +301,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       size: 100,
       sortingFn: 'stringSort'
     },
-    sortingFns: customSortingFns,
+    sortingFns: getCustomSortingFns(grouping),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -395,6 +395,10 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationState.pageIndex])
+
+  useEffect(() => {
+    clearUniqueCountCache()
+  }, [data])
 
   useLayoutEffect(() => {
     if (!miniTable) {
