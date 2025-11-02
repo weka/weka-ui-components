@@ -159,7 +159,7 @@
     transition: height 0.3s ease;
 
     &.select-wrapper-is-multi {
-      z-index: 10;
+      z-index: 1001;
     }
 
     & .react-select__value-container--is-multi {
