@@ -84,7 +84,7 @@
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "5.1.6",
     "url-loader": "^4.1.1",
-    "vite": "^6.3.6",
+    "vite": "^6.4.1",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-lib-inject-css": "^2.1.1",
     "vite-plugin-svgr": "^4.2.0",
