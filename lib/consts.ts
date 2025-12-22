@@ -229,9 +229,7 @@ export const ORIGIN_OPTIONS = {
   WEKA: 'WEKA'
 }
 
-// CUSTOM EVENTS
-export const STORAGE = 'storage'
-export const SCHEME_CHANGE = 'schemeChange'
+export const LOCAL_STORAGE_UPDATE_EVENT = 'storage'
 
 //ToasterDialog
 export const DIALOG_STATUSES = {
