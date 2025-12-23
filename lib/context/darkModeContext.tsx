@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import { SCHEME_CHANGE, STORAGE } from 'consts'
+import { LOCAL_STORAGE_UPDATE_EVENT } from 'consts'
 
 type Theme = {
   isDarkMode: boolean
@@ -97,17 +97,20 @@ const DarkModeProvider = (props: PropsWithChildren) => {
 
   useEffect(() => {
     const onThemeChanged = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY && event.newValue) {
-        const isDarkMode = JSON.parse(event.newValue) as boolean
+      if (event.key === STORAGE_KEY) {
+        if (event.newValue) {
+          const isDarkMode = JSON.parse(event.newValue) as boolean
 
-        applyTheme({ isDarkMode, isSystem: false })
-      } else {
-        applyTheme({ isDarkMode: getPrefersDarkMode(), isSystem: true })
+          applyTheme({ isDarkMode, isSystem: false })
+        } else {
+          applyTheme({ isDarkMode: getPrefersDarkMode(), isSystem: true })
+        }
       }
     }
 
-    window.addEventListener(STORAGE, onThemeChanged)
-    return () => window.removeEventListener(STORAGE, onThemeChanged)
+    window.addEventListener(LOCAL_STORAGE_UPDATE_EVENT, onThemeChanged)
+    return () =>
+      window.removeEventListener(LOCAL_STORAGE_UPDATE_EVENT, onThemeChanged)
   }, [applyTheme])
 
   useEffect(() => {
@@ -120,13 +123,10 @@ const DarkModeProvider = (props: PropsWithChildren) => {
       }
 
       const matchedMedia = window.matchMedia(PREFERS_DARK)
-      matchedMedia.addEventListener(SCHEME_CHANGE, onPrefersColorSchemeChanged)
+      matchedMedia.addEventListener('change', onPrefersColorSchemeChanged)
 
       return () => {
-        matchedMedia.removeEventListener(
-          SCHEME_CHANGE,
-          onPrefersColorSchemeChanged
-        )
+        matchedMedia.removeEventListener('change', onPrefersColorSchemeChanged)
       }
     }
   }, [applyTheme, themeState.isSystem])
