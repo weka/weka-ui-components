@@ -35,10 +35,13 @@ jobs:
       - name: Run tests
         run: yarn test:run
 
+      - name: Configure npm authentication
+        run: |
+          yarn config set npmScopes.weka.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.weka.npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Publish to GitHub Packages
         run: yarn npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
