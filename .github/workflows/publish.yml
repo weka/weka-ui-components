@@ -23,6 +23,9 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@weka'
 
+      - name: Enable Corepack (for Yarn 4)
+        run: corepack enable
+
       - name: Install dependencies
         run: yarn install --immutable
 
