@@ -1,0 +1,45 @@
+name: Publish Package
+
+on:
+  push:
+    tags:
+      - '*.*.*'  # Triggers on version tags like 4.0.0, 4.1.0, etc.
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # For creating GitHub Release
+      packages: write  # For publishing to GitHub Packages
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@weka'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Run tests
+        run: yarn test:run
+
+      - name: Publish to GitHub Packages
+        run: yarn npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

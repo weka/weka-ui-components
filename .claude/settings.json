@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "ai-coding-rules:ts-react-linter-driven-development": true
+  },
+  "extraKnownMarketplaces": {
+    "ai-coding-rules": {
+      "source": {
+        "source": "github",
+        "repo": "sofa-tata/ai-coding-rules"
+      }
+    }
+  }
+}

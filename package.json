@@ -8,20 +8,43 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "3.198.0",
+  "version": "4.0.0-beta.1",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/main.ts",
+      "types": "./lib/main.ts"
+    },
+    "./v2": {
+      "types": "./dist/v2/index.d.ts",
+      "development": "./lib/v2/index.ts",
+      "default": "./dist/v2/index.js"
+    },
+    "./v2/styles.css": "./dist/assets/Button.module.css"
+  },
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "scripts": {
     "build": "vite build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -c .storybook",
     "predeploy-storybook": "yarn run build-storybook",
     "deploy-storybook": "gh-pages -d storybook-static",
     "lint": "eslint ./lib",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "release:patch": "yarn version patch && git push && git push --tags",
+    "release:minor": "yarn version minor && git push && git push --tags",
+    "release:major": "yarn version major && git push && git push --tags"
   },
   "files": [
-    "lib"
+    "lib",
+    "dist"
   ],
   "dependencies": {
     "@tanstack/react-table": "^8.14.0",
@@ -67,13 +90,19 @@
     "@storybook/react-webpack5": "^8.6.14",
     "@storybook/test": "^8.6.14",
     "@svgr/webpack": "^8.1.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jsdom": "^27",
     "@types/luxon": "^3.2.0",
     "@types/react": "^18.0.15",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.3.1",
     "@weka/eslint-config": "https://github.com/weka/eslint-config#1.1.0",
     "babel-loader": "^9.1.3",
     "eslint": "^8.34.0",
     "gh-pages": "^5.0.0",
+    "happy-dom": "^20.3.9",
+    "jsdom": "^27.4.0",
     "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -88,7 +117,8 @@
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-lib-inject-css": "^2.1.1",
     "vite-plugin-svgr": "^4.2.0",
-    "vite-tsconfig-paths": "^5.1.2"
+    "vite-tsconfig-paths": "^5.1.2",
+    "vitest": "^4.0.18"
   },
   "resolutions": {
     "brace-expansion": "2.0.2",

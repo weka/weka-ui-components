@@ -17,7 +17,11 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'lib/main.ts'),
+      // v1 entry (existing) + v2 entry (new)
+      entry: {
+        main: resolve(__dirname, 'lib/main.ts'),
+        'v2/index': resolve(__dirname, 'lib/v2/index.ts')
+      },
       formats: ['es']
     },
     copyPublicDir: false,
@@ -31,8 +35,16 @@ export default defineConfig({
         '@emotion/react',
         '@emotion/styled',
         '@mui/material',
-        'luxon'
-      ]
+        'luxon',
+        'clsx'
+      ],
+      output: {
+        // Preserve module structure for v2 - ensures relative imports work
+        preserveModules: true,
+        preserveModulesRoot: 'lib',
+        entryFileNames: '[name].js',
+        assetFileNames: 'assets/[name][extname]'
+      }
     }
   }
 })
