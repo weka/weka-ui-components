@@ -48,11 +48,11 @@
   border: 1px solid var(--primary-color, #0066cc);
 
   &:hover:not(.disabled) {
-    background-color: var(--outline-hover, rgba(0, 102, 204, 0.1));
+    background-color: var(--outline-hover, rgb(0 102 204 / 10%));
   }
 
   &:active:not(.disabled) {
-    background-color: var(--outline-active, rgba(0, 102, 204, 0.2));
+    background-color: var(--outline-active, rgb(0 102 204 / 20%));
   }
 }
 

@@ -1,0 +1,7 @@
+dist
+node_modules
+storybook-static
+coverage
+*.min.js
+*.min.css
+yarn.lock

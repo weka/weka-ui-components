@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["lib/v2"],
+  "exclude": [
+    "lib/v2/**/*.test.ts",
+    "lib/v2/**/*.test.tsx",
+    "lib/v2/**/*.spec.ts",
+    "lib/v2/**/*.spec.tsx",
+    "lib/v2/**/*.stories.ts",
+    "lib/v2/**/*.stories.tsx"
+  ]
+}

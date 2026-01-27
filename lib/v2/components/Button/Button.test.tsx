@@ -37,24 +37,24 @@ describe('Button', () => {
   })
 
   it('applies variant classes', () => {
-    const { rerender } = render(<Button variant="primary">Primary</Button>)
+    const { rerender } = render(<Button variant='primary'>Primary</Button>)
     expect(screen.getByRole('button')).toHaveClass('primary')
 
-    rerender(<Button variant="secondary">Secondary</Button>)
+    rerender(<Button variant='secondary'>Secondary</Button>)
     expect(screen.getByRole('button')).toHaveClass('secondary')
 
-    rerender(<Button variant="outline">Outline</Button>)
+    rerender(<Button variant='outline'>Outline</Button>)
     expect(screen.getByRole('button')).toHaveClass('outline')
   })
 
   it('applies size classes', () => {
-    const { rerender } = render(<Button size="small">Small</Button>)
+    const { rerender } = render(<Button size='small'>Small</Button>)
     expect(screen.getByRole('button')).toHaveClass('small')
 
-    rerender(<Button size="medium">Medium</Button>)
+    rerender(<Button size='medium'>Medium</Button>)
     expect(screen.getByRole('button')).toHaveClass('medium')
 
-    rerender(<Button size="large">Large</Button>)
+    rerender(<Button size='large'>Large</Button>)
     expect(screen.getByRole('button')).toHaveClass('large')
   })
 
@@ -64,10 +64,10 @@ describe('Button', () => {
   })
 
   it('has correct button type', () => {
-    const { rerender } = render(<Button type="submit">Submit</Button>)
+    const { rerender } = render(<Button type='submit'>Submit</Button>)
     expect(screen.getByRole('button')).toHaveAttribute('type', 'submit')
 
-    rerender(<Button type="reset">Reset</Button>)
+    rerender(<Button type='reset'>Reset</Button>)
     expect(screen.getByRole('button')).toHaveAttribute('type', 'reset')
 
     rerender(<Button>Default</Button>)
@@ -75,7 +75,7 @@ describe('Button', () => {
   })
 
   it('applies custom className', () => {
-    render(<Button className="custom-class">Custom</Button>)
+    render(<Button className='custom-class'>Custom</Button>)
     expect(screen.getByRole('button')).toHaveClass('custom-class')
   })
 })

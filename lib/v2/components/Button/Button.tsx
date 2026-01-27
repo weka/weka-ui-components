@@ -1,10 +1,11 @@
-import React from 'react'
+import { type MouseEventHandler, type ReactNode } from 'react'
 import clsx from 'clsx'
+
 import styles from './Button.module.scss'
 
 export interface ButtonProps {
   /** Button content */
-  children: React.ReactNode
+  children: ReactNode
   /** Button variant */
   variant?: 'primary' | 'secondary' | 'outline'
   /** Button size */
@@ -16,7 +17,7 @@ export interface ButtonProps {
   /** Full width button */
   fullWidth?: boolean
   /** Click handler */
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>
   /** Button type */
   type?: 'button' | 'submit' | 'reset'
   /** Additional class name */
@@ -34,7 +35,7 @@ export function Button({
   type = 'button',
   className,
   ...rest
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   const classes = clsx(
     styles.button,
     styles[variant],
@@ -50,13 +51,16 @@ export function Button({
   return (
     <button
       className={classes}
+      disabled={disabled || loading}
       onClick={onClick}
       type={type}
-      disabled={disabled || loading}
       {...rest}
     >
       {loading ? (
-        <span className={styles.spinner} aria-label="Loading" />
+        <span
+          aria-label='Loading'
+          className={styles.spinner}
+        />
       ) : (
         children
       )}
