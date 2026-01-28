@@ -6,4 +6,33 @@
   font-size: 14px;
   box-sizing: border-box;
   color: var(--text-color);
+  width: 100%;
+  padding: 0 8px;
+
+  &.has-error {
+    border-color: var(--focus-key);
+  }
+
+  &::placeholder {
+    color: var(--ironhide-s2);
+  }
+}
+
+.table-text-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+
+  .select-wrapper {
+    width: calc(100% - 4px);
+    margin: 0 2px;
+  }
+}
+
+.table-text-filter-error {
+  color: var(--focus-key);
+  font-size: 12px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
