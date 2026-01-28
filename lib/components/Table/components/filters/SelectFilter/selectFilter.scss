@@ -1,3 +1,12 @@
 .table-select-filter {
   padding: 1px 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+
+  .select-wrapper {
+    width: calc(100% - 4px);
+    margin: 0 2px;
+  }
 }

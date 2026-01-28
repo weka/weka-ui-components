@@ -8,6 +8,12 @@ import {
 } from './components/filters/DurationFilter'
 import { Duration } from 'luxon'
 
+export const FILTER_MODES = {
+  INCLUDE: 'include',
+  EXCLUDE: 'exclude',
+  REGEX: 'regex'
+} as const
+
 export const tableUtils = {
   getColumnTitle: <Data, Value>(column: ExtendedColumn<Data, Value>) => {
     const customTitle = column.columnDef.meta?.columnTitle
@@ -52,6 +58,67 @@ export const getUniqueCount = <Data>(
 
 export const clearUniqueCountCache = () => {
   uniqueCountCache.clear()
+}
+
+export type TextFilterMode = 'include' | 'exclude' | 'regex'
+export type SelectFilterMode = 'include' | 'exclude'
+
+export interface TextFilterValue {
+  pattern: string
+  mode: TextFilterMode
+}
+
+export interface SelectFilterValue {
+  value: string
+  mode: SelectFilterMode
+}
+
+export interface MultiSelectFilterValue {
+  values: string[]
+  mode: SelectFilterMode
+}
+
+export function validateRegexPattern(pattern: string): string | undefined {
+  try {
+    new RegExp(pattern, 'i')
+    return undefined
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Invalid regex pattern'
+    return message.replace('Invalid regular expression:', 'Invalid regular expression:\n')
+  }
+}
+
+export function isTextFilterValue(value: unknown): value is TextFilterValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'pattern' in value &&
+    'mode' in value &&
+    typeof (value as TextFilterValue).pattern === 'string' &&
+    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE, FILTER_MODES.REGEX].includes((value as TextFilterValue).mode)
+  )
+}
+
+export function isSelectFilterValue(value: unknown): value is SelectFilterValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'value' in value &&
+    'mode' in value &&
+    typeof (value as SelectFilterValue).value === 'string' &&
+    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE].includes((value as SelectFilterValue).mode)
+  )
+}
+
+export function isMultiSelectFilterValue(value: unknown): value is MultiSelectFilterValue {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'values' in value &&
+    'mode' in value &&
+    Array.isArray((value as MultiSelectFilterValue).values) &&
+    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE].includes((value as MultiSelectFilterValue).mode)
+  )
 }
 
 const getSortValue = <Data>(
@@ -242,6 +309,45 @@ export const urlFilterParsers = {
       duration: rawValue?.duration?.[0],
       operator: rawValue?.operator?.[0]
     }
+  },
+  text: (rawValue: Parameters<UrlFilterParser>[0]) => {
+    if (Utils.isObject(rawValue) && rawValue?.pattern?.[0]) {
+      const mode = rawValue?.mode?.[0]
+      const validModes: TextFilterMode[] = [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE, FILTER_MODES.REGEX]
+      return {
+        pattern: rawValue?.pattern?.[0],
+        mode: validModes.includes(mode as TextFilterMode) ? mode as TextFilterMode : FILTER_MODES.INCLUDE
+      }
+    }
+    if (Array.isArray(rawValue) && rawValue[0]) {
+      return rawValue[0]
+    }
+    return null
+  },
+  select: (rawValue: Parameters<UrlFilterParser>[0]) => {
+    if (Utils.isObject(rawValue) && rawValue?.value?.[0]) {
+      const mode = rawValue?.mode?.[0]
+      const validModes: SelectFilterMode[] = [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE]
+      return {
+        value: rawValue?.value?.[0],
+        mode: validModes.includes(mode as SelectFilterMode) ? mode as SelectFilterMode : FILTER_MODES.INCLUDE
+      }
+    }
+    if (Array.isArray(rawValue) && rawValue[0]) {
+      return rawValue[0]
+    }
+    return null
+  },
+  multiSelect: (rawValue: Parameters<UrlFilterParser>[0]) => {
+    if (Utils.isObject(rawValue) && rawValue?.values) {
+      const mode = rawValue?.mode?.[0]
+      const validModes: SelectFilterMode[] = [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE]
+      return {
+        values: rawValue?.values,
+        mode: validModes.includes(mode as SelectFilterMode) ? mode as SelectFilterMode : FILTER_MODES.INCLUDE
+      }
+    }
+    return Array.isArray(rawValue) ? rawValue : null
   }
 } as const
 
@@ -249,11 +355,28 @@ export const filterFns = {
   multiSelect<Data>(
     row: ExtendedRow<Data>,
     columnId: string,
-    filterValue: string[] | number[] | string
+    filterValue: string[] | number[] | string | MultiSelectFilterValue
   ): boolean {
     if (!filterValue) {
       return false
     }
+
+    if (isMultiSelectFilterValue(filterValue)) {
+      const { values, mode } = filterValue
+      if (!values || values.length === 0) {
+        return true
+      }
+
+      const rowValue = row.getValue(columnId)
+      const matches = values.some((val) => {
+        return Array.isArray(rowValue)
+          ? rowValue.some((item) => item?.toString() === val?.toString())
+          : rowValue?.toString() === val?.toString()
+      })
+
+      return mode === FILTER_MODES.EXCLUDE ? !matches : matches
+    }
+
     if (Array.isArray(filterValue)) {
       return filterValue.some((val) => {
         const rowValue = row.getValue(columnId)
@@ -265,6 +388,29 @@ export const filterFns = {
     }
 
     return filterValue?.toString() === row.getValue(columnId)?.toString()
+  },
+  select<Data>(
+    row: ExtendedRow<Data>,
+    columnId: string,
+    filterValue: string | SelectFilterValue
+  ): boolean {
+    if (!filterValue) {
+      return true
+    }
+
+    if (isSelectFilterValue(filterValue)) {
+      const { value, mode } = filterValue
+      if (!value) {
+        return true
+      }
+
+      const rowValue = row.getValue(columnId)
+      const matches = rowValue?.toString() === value
+
+      return mode === FILTER_MODES.EXCLUDE ? !matches : matches
+    }
+
+    return filterValue === row.getValue(columnId)?.toString()
   },
   date<Data>(
     row: ExtendedRow<Data>,
@@ -363,5 +509,46 @@ export const filterFns = {
     const compare = operators[filterValue.operator]
 
     return compare(valueTime, filterSeconds)
+  },
+  text<Data>(
+    row: ExtendedRow<Data>,
+    columnId: string,
+    filterValue: TextFilterValue | string
+  ): boolean {
+    if (typeof filterValue === 'string') {
+      if (!filterValue) {
+        return true
+      }
+      const cellValue = row.getValue(columnId)?.toString()?.toLowerCase() ?? EMPTY_STRING
+      return cellValue.includes(filterValue.toLowerCase())
+    }
+
+    if (!filterValue?.pattern) {
+      return true
+    }
+
+    const { pattern, mode } = filterValue
+
+    if (mode === FILTER_MODES.REGEX) {
+      const regexError = validateRegexPattern(pattern)
+      if (regexError) {
+        return true
+      }
+    }
+
+    const cellValue = row.getValue(columnId)?.toString()?.toLowerCase() ?? EMPTY_STRING
+
+    let matches: boolean
+    if (mode === FILTER_MODES.REGEX) {
+      try {
+        matches = new RegExp(pattern, 'i').test(cellValue)
+      } catch {
+        return true
+      }
+    } else {
+      matches = cellValue.includes(pattern.toLowerCase())
+    }
+
+    return mode === FILTER_MODES.EXCLUDE ? !matches : matches
   }
 } as const

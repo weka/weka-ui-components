@@ -14,13 +14,13 @@ export const ROWS_PER_PAGE_RATIO = 1.5
 export const TABLE_FILTERS_MAP = {
   multiSelect: {
     component: MultiSelectFilter,
-    parser: urlFilterParsers.arrayOfStrings,
+    parser: urlFilterParsers.multiSelect,
     filterFn: filterFns.multiSelect
   },
   select: {
     component: SelectFilter,
-    parser: urlFilterParsers.string,
-    filterFn: 'equalsString'
+    parser: urlFilterParsers.select,
+    filterFn: filterFns.select
   },
   date: {
     component: DateFilter,
@@ -29,8 +29,8 @@ export const TABLE_FILTERS_MAP = {
   },
   text: {
     component: TextFilter,
-    parser: urlFilterParsers.string,
-    filterFn: 'includesString'
+    parser: urlFilterParsers.text,
+    filterFn: filterFns.text
   },
   severity: {
     component: SeverityFilter,

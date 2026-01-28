@@ -4,7 +4,14 @@ import svgs from 'svgs'
 import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from 'consts'
 import utils from 'utils'
 import { ExtendedColumn } from '../../../types'
-import { tableUtils } from '../../../tableUtils'
+import {
+  tableUtils,
+  isTextFilterValue,
+  isSelectFilterValue,
+  isMultiSelectFilterValue,
+  TextFilterValue,
+  SelectFilterMode
+} from '../../../tableUtils'
 import {
   DateFilterValue,
   isDateFilterValue,
@@ -14,6 +21,17 @@ import {
 import './filterBox.scss'
 
 const { Close } = svgs
+
+const TEXT_FILTER_MODE_LABELS: Record<TextFilterValue['mode'], string> = {
+  include: 'Include',
+  exclude: 'Exclude',
+  regex: 'Regex'
+}
+
+const SELECT_FILTER_MODE_LABELS: Record<SelectFilterMode, string> = {
+  include: 'Include',
+  exclude: 'Exclude'
+}
 
 const filterFormatters = {
   dateFilter: (
@@ -76,6 +94,39 @@ function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
 
     if (isDurationFilterValue(filterValue)) {
       return `${filterValue.operator} ${filterValue.duration}`
+    }
+
+    if (isTextFilterValue(filterValue)) {
+      return (
+        <>
+          <span className='filter-mode-label'>
+            {TEXT_FILTER_MODE_LABELS[filterValue.mode]}:
+          </span>{' '}
+          <span className='filter-pattern'>{filterValue.pattern}</span>
+        </>
+      )
+    }
+
+    if (isSelectFilterValue(filterValue)) {
+      return (
+        <>
+          <span className='filter-mode-label'>
+            {SELECT_FILTER_MODE_LABELS[filterValue.mode]}:
+          </span>{' '}
+          <span className='filter-pattern'>{filterValue.value}</span>
+        </>
+      )
+    }
+
+    if (isMultiSelectFilterValue(filterValue)) {
+      return (
+        <>
+          <span className='filter-mode-label'>
+            {SELECT_FILTER_MODE_LABELS[filterValue.mode]}:
+          </span>{' '}
+          <span className='filter-pattern'>{filterValue.values.join(', ')}</span>
+        </>
+      )
     }
 
     throw new Error(`Unknown filter value: ${JSON.stringify(filterValue)}`)

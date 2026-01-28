@@ -105,16 +105,20 @@ function useUrlFilters(props: {
         })
       } else if (Utils.isObject(value)) {
         Object.entries(value).forEach(([innerKey, innerVal]) => {
-          if (
+          if (Array.isArray(innerVal)) {
+            innerVal.forEach((arrVal) => {
+              if (!Utils.isEmpty(arrVal)) {
+                searchParams.append(`${id}[${innerKey}]`, arrVal.toString())
+              }
+            })
+          } else if (
             typeof innerVal !== 'string' &&
             typeof innerVal !== 'number' &&
             typeof innerVal !== 'boolean' &&
             typeof innerVal !== 'undefined'
           ) {
             throw new Error('Invalid filter value. Expected string or number.')
-          }
-
-          if (!Utils.isEmpty(innerVal)) {
+          } else if (!Utils.isEmpty(innerVal)) {
             searchParams.append(`${id}[${innerKey}]`, innerVal.toString())
           }
         })

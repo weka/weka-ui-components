@@ -1,6 +1,7 @@
 node_modules
 .vscode
 .idea
+.cursor
 storybook-static
 .DS_Store
 .yarn/install-state.gz

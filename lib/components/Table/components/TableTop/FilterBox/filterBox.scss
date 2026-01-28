@@ -39,5 +39,15 @@
     word-break: break-word;
     max-height: 20px;
     overflow-y: auto;
+
+    .filter-mode-label {
+      font-weight: normal;
+      font-family: var(--acumin-pro);
+    }
+
+    .filter-pattern {
+      font-weight: bold;
+      font-family: var(--bold-font);
+    }
   }
 }
