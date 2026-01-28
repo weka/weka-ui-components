@@ -1,0 +1,157 @@
+name: Update Parent Repos
+
+# Only runs for official releases (not beta/alpha/rc)
+on:
+  release:
+    types: [published]
+
+jobs:
+  check-release-type:
+    runs-on: ubuntu-latest
+    outputs:
+      is_official: ${{ steps.check.outputs.is_official }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Check if official release
+        id: check
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          if [[ "$VERSION" =~ (beta|alpha|rc) ]]; then
+            echo "is_official=false" >> $GITHUB_OUTPUT
+            echo "⏭️ Skipping parent repo updates for pre-release: $VERSION"
+          else
+            echo "is_official=true" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "✅ Official release: $VERSION - will update parent repos"
+          fi
+
+  update-parent-repos:
+    needs: check-release-type
+    if: needs.check-release-type.outputs.is_official == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false  # Continue with other repos if one fails
+      matrix:
+        repo:
+          # Add your parent repos here:
+          - owner: weka
+            name: gohome
+            path: observe/frontend
+          - owner: weka
+            name: gohome
+            path: packages/frontend
+          # - owner: weka
+          #   name: weka_worktree
+          #   path: build/packages/dashboard/files
+
+    steps:
+      - name: Checkout parent repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo.owner }}/${{ matrix.repo.name }}
+          token: ${{ secrets.PARENT_REPOS_TOKEN }}
+          path: parent-repo
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@weka'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Update weka-ui-components version
+        working-directory: parent-repo/${{ matrix.repo.path }}
+        run: |
+          VERSION="${{ needs.check-release-type.outputs.version }}"
+          echo "Updating @weka/weka-ui-components to ^$VERSION"
+
+          # Update package.json - handles both git URL and semver formats
+          if grep -q "weka-ui-components.*git" package.json; then
+            # Currently using git URL - switch to semver
+            sed -i 's|"@weka/weka-ui-components":.*|"@weka/weka-ui-components": "^'"$VERSION"'",|' package.json
+          else
+            # Already using semver - just update version
+            sed -i 's|"@weka/weka-ui-components": ".*"|"@weka/weka-ui-components": "^'"$VERSION"'"|' package.json
+          fi
+
+          echo "Updated package.json:"
+          grep weka-ui-components package.json
+
+      - name: Install dependencies
+        working-directory: parent-repo/${{ matrix.repo.path }}
+        run: yarn install
+        env:
+          WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run tests
+        id: tests
+        working-directory: parent-repo/${{ matrix.repo.path }}
+        continue-on-error: true
+        run: |
+          if yarn test 2>/dev/null; then
+            echo "result=success" >> $GITHUB_OUTPUT
+            echo "✅ Tests passed"
+          else
+            echo "result=failed" >> $GITHUB_OUTPUT
+            echo "❌ Tests failed"
+          fi
+
+      - name: Run build
+        id: build
+        working-directory: parent-repo/${{ matrix.repo.path }}
+        continue-on-error: true
+        run: |
+          if yarn build 2>/dev/null; then
+            echo "result=success" >> $GITHUB_OUTPUT
+            echo "✅ Build passed"
+          else
+            echo "result=failed" >> $GITHUB_OUTPUT
+            echo "❌ Build failed"
+          fi
+
+      - name: Create Pull Request
+        if: steps.tests.outputs.result == 'success' && steps.build.outputs.result == 'success'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PARENT_REPOS_TOKEN }}
+          path: parent-repo
+          commit-message: "chore(deps): update @weka/weka-ui-components to ${{ needs.check-release-type.outputs.version }}"
+          title: "chore(deps): update @weka/weka-ui-components to ${{ needs.check-release-type.outputs.version }}"
+          body: |
+            ## Automated dependency update
+
+            Updates `@weka/weka-ui-components` to version `${{ needs.check-release-type.outputs.version }}`
+
+            ### Verification
+            - ✅ Tests passed
+            - ✅ Build passed
+
+            ### Release notes
+            ${{ github.event.release.html_url }}
+
+            ---
+            🤖 This PR was automatically created by the weka-ui-components release workflow.
+          branch: deps/weka-ui-components-${{ needs.check-release-type.outputs.version }}
+          base: main
+
+      - name: Create Issue if tests/build failed
+        if: steps.tests.outputs.result == 'failed' || steps.build.outputs.result == 'failed'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.PARENT_REPOS_TOKEN }}
+          repository: ${{ matrix.repo.owner }}/${{ matrix.repo.name }}
+          issue-number: 1  # This will create a new issue
+          body: |
+            ## ⚠️ weka-ui-components update failed
+
+            Attempted to update `@weka/weka-ui-components` to version `${{ needs.check-release-type.outputs.version }}` but verification failed:
+
+            - Tests: ${{ steps.tests.outputs.result == 'success' && '✅ Passed' || '❌ Failed' }}
+            - Build: ${{ steps.build.outputs.result == 'success' && '✅ Passed' || '❌ Failed' }}
+
+            Please update manually and fix any breaking changes.
+
+            Release notes: ${{ github.event.release.html_url }}

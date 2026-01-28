@@ -20,8 +20,7 @@
       "types": "./dist/v2/index.d.ts",
       "development": "./lib/v2/index.ts",
       "default": "./dist/v2/index.js"
-    },
-    "./v2/styles.css": "./dist/assets/Button.module.css"
+    }
   },
   "sideEffects": [
     "*.css",
@@ -38,9 +37,10 @@
     "deploy-storybook": "gh-pages -d storybook-static",
     "lint": "eslint ./lib",
     "format": "prettier --write .",
-    "release:patch": "yarn version patch && git push && git push --tags",
-    "release:minor": "yarn version minor && git push && git push --tags",
-    "release:major": "yarn version major && git push && git push --tags"
+    "release:patch": "npm version patch && git push -u origin HEAD && git push --tags",
+    "release:minor": "npm version minor && git push -u origin HEAD && git push --tags",
+    "release:major": "npm version major && git push -u origin HEAD && git push --tags",
+    "release:beta": "npm version prerelease --preid beta && git push -u origin HEAD && git push --tags"
   },
   "files": [
     "lib",

@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for branch detection
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,11 +25,38 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@weka'
 
+      - name: Check branch for official releases
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          # Get the branch that contains this tag
+          BRANCHES=$(git branch -r --contains ${{ github.sha }} | grep -v HEAD || true)
+
+          if [[ ! "$VERSION" =~ "beta" && ! "$VERSION" =~ "alpha" && ! "$VERSION" =~ "rc" ]]; then
+            # Official release - must be on main
+            if [[ ! "$BRANCHES" =~ "origin/main" ]]; then
+              echo "❌ Official releases must be from main branch"
+              echo "   Tag: $VERSION"
+              echo "   Branches containing this commit: $BRANCHES"
+              echo ""
+              echo "To fix: merge your changes to main first, then create the tag from main"
+              exit 1
+            fi
+            echo "✅ Official release from main branch"
+          else
+            echo "✅ Pre-release ($VERSION) - allowed from any branch"
+          fi
+
       - name: Enable Corepack (for Yarn 4)
         run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Sync version from git tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME}"
+          echo "Setting version to: $TAG_VERSION"
+          npm version "$TAG_VERSION" --no-git-tag-version --allow-same-version
 
       - name: Build
         run: yarn build
