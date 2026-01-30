@@ -25,6 +25,23 @@ const FILTER_MODE_OPTIONS = [
   { value: FILTER_MODES.REGEX, label: 'Regular Expression' }
 ]
 
+const getPatternFromFilterValue = (fv: TextFilterValue | string | undefined): string => {
+  if (fv === undefined) {
+    return EMPTY_STRING
+  }
+  if (typeof fv === 'string') {
+    return fv
+  }
+  return fv.pattern ?? EMPTY_STRING
+}
+
+const getModeFromFilterValue = (fv: TextFilterValue | string | undefined): TextFilterMode => {
+  if (fv === undefined || typeof fv === 'string') {
+    return FILTER_MODES.INCLUDE
+  }
+  return fv.mode ?? FILTER_MODES.INCLUDE
+}
+
 function TextFilter<Data, Value>({
   column,
   filterOptions
@@ -33,25 +50,17 @@ function TextFilter<Data, Value>({
 
   const filterValue = column.getFilterValue() as TextFilterValue | string | undefined
 
-  const initialPattern = advancedFiltering
-    ? (filterValue as TextFilterValue | undefined)?.pattern ?? EMPTY_STRING
-    : (typeof filterValue === 'string' ? filterValue : EMPTY_STRING)
-  
-  const initialMode = advancedFiltering
-    ? (filterValue as TextFilterValue | undefined)?.mode ?? FILTER_MODES.INCLUDE
-    : FILTER_MODES.INCLUDE
+  const initialPattern = getPatternFromFilterValue(filterValue)
+  const initialMode = advancedFiltering ? getModeFromFilterValue(filterValue) : FILTER_MODES.INCLUDE
 
   const [pattern, setPattern] = useState<string>(initialPattern)
   const [mode, setMode] = useState<TextFilterMode>(initialMode)
   const [error, setError] = useState<string>(EMPTY_STRING)
 
   useEffect(() => {
+    setPattern(getPatternFromFilterValue(filterValue))
     if (advancedFiltering) {
-      const value = filterValue as TextFilterValue | undefined
-      setPattern(value?.pattern ?? EMPTY_STRING)
-      setMode(value?.mode ?? FILTER_MODES.INCLUDE)
-    } else {
-      setPattern(typeof filterValue === 'string' ? filterValue : EMPTY_STRING)
+      setMode(getModeFromFilterValue(filterValue))
     }
   }, [filterValue, advancedFiltering])
 
