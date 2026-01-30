@@ -23,6 +23,23 @@ const FILTER_MODE_OPTIONS = [
   { value: FILTER_MODES.EXCLUDE, label: 'Exclude' }
 ]
 
+const getValueFromFilterValue = (fv: SelectFilterValue | string | undefined): string => {
+  if (fv === undefined) {
+    return EMPTY_STRING
+  }
+  if (typeof fv === 'string') {
+    return fv
+  }
+  return fv.value ?? EMPTY_STRING
+}
+
+const getModeFromFilterValue = (fv: SelectFilterValue | string | undefined): SelectFilterMode => {
+  if (fv === undefined || typeof fv === 'string') {
+    return FILTER_MODES.INCLUDE
+  }
+  return fv.mode ?? FILTER_MODES.INCLUDE
+}
+
 function SelectFilter<Data, Value>({
   table,
   column,
@@ -31,24 +48,16 @@ function SelectFilter<Data, Value>({
   const { fixedOptions, advancedFiltering = true } = filterOptions
   const filterValue = column.getFilterValue() as SelectFilterValue | string | undefined
 
-  const initialValue = advancedFiltering
-    ? (filterValue as SelectFilterValue | undefined)?.value ?? EMPTY_STRING
-    : (typeof filterValue === 'string' ? filterValue : EMPTY_STRING)
-
-  const initialMode = advancedFiltering
-    ? (filterValue as SelectFilterValue | undefined)?.mode ?? FILTER_MODES.INCLUDE
-    : FILTER_MODES.INCLUDE
+  const initialValue = getValueFromFilterValue(filterValue)
+  const initialMode = advancedFiltering ? getModeFromFilterValue(filterValue) : FILTER_MODES.INCLUDE
 
   const [value, setValue] = useState<string>(initialValue)
   const [mode, setMode] = useState<SelectFilterMode>(initialMode)
 
   useEffect(() => {
+    setValue(getValueFromFilterValue(filterValue))
     if (advancedFiltering) {
-      const fv = filterValue as SelectFilterValue | undefined
-      setValue(fv?.value ?? EMPTY_STRING)
-      setMode(fv?.mode ?? FILTER_MODES.INCLUDE)
-    } else {
-      setValue(typeof filterValue === 'string' ? filterValue : EMPTY_STRING)
+      setMode(getModeFromFilterValue(filterValue))
     }
   }, [filterValue, advancedFiltering])
 

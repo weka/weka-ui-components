@@ -25,39 +25,36 @@ const FILTER_MODE_OPTIONS = [
   { value: FILTER_MODES.EXCLUDE, label: 'Exclude' }
 ]
 
+const getValuesFromFilterValue = (fv: MultiSelectFilterValue | string[] | string | undefined): string[] => {
+  if (fv === undefined) {
+    return []
+  }
+  if (Array.isArray(fv)) {
+    return fv
+  }
+  if (typeof fv === 'string') {
+    return [fv]
+  }
+  return fv.values ?? []
+}
+
+const getModeFromFilterValue = (fv: MultiSelectFilterValue | string[] | string | undefined): SelectFilterMode => {
+  if (fv === undefined || Array.isArray(fv) || typeof fv === 'string') {
+    return FILTER_MODES.INCLUDE
+  }
+  return fv.mode ?? FILTER_MODES.INCLUDE
+}
+
 function MultiSelectFilter<Data, Value>({
   table,
   column,
   filterOptions
 }: ExtendedFilterProps<Data, Value, MultiSelectFilterOptions>) {
-  const filterValue = column.getFilterValue() as MultiSelectFilterValue | string[] | undefined
+  const filterValue = column.getFilterValue() as MultiSelectFilterValue | string[] | string | undefined
   const { fixedOptions, advancedFiltering = true } = filterOptions
 
-  const getInitialValues = (): string[] => {
-    if (advancedFiltering) {
-      return (filterValue as MultiSelectFilterValue | undefined)?.values ?? []
-    }
-    if (filterValue === undefined) {
-      return []
-    }
-    if (Array.isArray(filterValue)) {
-      return filterValue as string[]
-    }
-    if (typeof filterValue === 'string') {
-      return [filterValue]
-    }
-    return []
-  }
-
-  const getInitialMode = (): SelectFilterMode => {
-    if (advancedFiltering) {
-      return (filterValue as MultiSelectFilterValue | undefined)?.mode ?? FILTER_MODES.INCLUDE
-    }
-    return FILTER_MODES.INCLUDE
-  }
-
-  const [values, setValues] = useState<string[]>(getInitialValues())
-  const [mode, setMode] = useState<SelectFilterMode>(getInitialMode())
+  const [values, setValues] = useState<string[]>(getValuesFromFilterValue(filterValue))
+  const [mode, setMode] = useState<SelectFilterMode>(advancedFiltering ? getModeFromFilterValue(filterValue) : FILTER_MODES.INCLUDE)
 
   const visibleItems = table.getRowModel().rows.length
 
@@ -100,20 +97,9 @@ function MultiSelectFilter<Data, Value>({
   }, [column, fixedOptions, values, visibleItems])
 
   useEffect(() => {
+    setValues(getValuesFromFilterValue(filterValue))
     if (advancedFiltering) {
-      const fv = filterValue as MultiSelectFilterValue | undefined
-      setValues(fv?.values ?? [])
-      setMode(fv?.mode ?? FILTER_MODES.INCLUDE)
-    } else {
-      const formatValue =
-        filterValue === undefined
-          ? []
-          : Array.isArray(filterValue)
-          ? filterValue
-          : typeof filterValue === 'string'
-          ? [filterValue]
-          : []
-      setValues(formatValue)
+      setMode(getModeFromFilterValue(filterValue))
     }
   }, [JSON.stringify(filterValue), advancedFiltering])
 
