@@ -1,9 +1,11 @@
 import React, {
+  forwardRef,
   lazy,
   memo,
   Suspense,
   useEffect,
   useId,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState
@@ -20,7 +22,7 @@ import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
 
-import type { ParsedData } from './hooks'
+import type { ExternalSearchAction, ParsedData } from './hooks'
 import {
   useDisableSyntaxCheck,
   useEditor,
@@ -58,6 +60,10 @@ const AceEditor = lazy(() =>
   })
 )
 
+export interface TextEditorHandle {
+  getEditor: () => IAceEditor | undefined
+}
+
 export interface TextEditorFullProps {
   onChange?: () => void
   readOnly?: boolean
@@ -80,8 +86,15 @@ export interface TextEditorFullProps {
   }[]
   fontSize?: number
   editorOptions?: Record<string, unknown>
+  externalSearchTerm?: string
+  externalSearchIsRegex?: boolean
+  externalSearchCaseSensitive?: boolean
+  externalSearchWholeWord?: boolean
+  externalSearchAction?: ExternalSearchAction
+  onSearchBoundary?: (direction: 'next' | 'prev') => void
+  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }
-function TextEditorFull({
+const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(function TextEditorFull({
   readOnly,
   value = EMPTY_STRING,
   onChange,
@@ -100,8 +113,16 @@ function TextEditorFull({
   lines,
   fontSize,
   editorOptions = {},
+  externalSearchTerm,
+  externalSearchIsRegex = false,
+  externalSearchCaseSensitive = false,
+  externalSearchWholeWord = false,
+  externalSearchAction,
+  onSearchBoundary,
+  onSearchCounterUpdate,
   ...rest
-}: TextEditorFullProps) {
+}, ref) {
+
   const editorContext = useTextEditorContext(true)
   const editorContextValue = editorContext?.value
   const setTextEditorContext = editorContext?.setTextEditorContext
@@ -116,6 +137,10 @@ function TextEditorFull({
 
   const [onlyMatching, toggleOnlyMatching] = useToggle(false)
   const [editorReady, setEditorReady] = useState(false)
+
+  useImperativeHandle(ref, () => ({
+    getEditor: () => editorRef.current?.editor
+  }), [editorReady])
 
   const handleLoad = () => {
     setEditorReady(true)
@@ -144,7 +169,14 @@ function TextEditorFull({
     editor,
     allowSearch: options.allowSearch,
     editorReady,
-    value: options.value
+    value: options.value,
+    externalSearchTerm,
+    externalSearchIsRegex,
+    externalSearchCaseSensitive,
+    externalSearchWholeWord,
+    externalSearchAction,
+    onSearchBoundary,
+    onSearchCounterUpdate
   })
 
   const jsonValue = useOnlyMatching({
@@ -246,6 +278,6 @@ function TextEditorFull({
       </Suspense>
     </div>
   )
-}
+})
 
 export default memo(TextEditorFull)
