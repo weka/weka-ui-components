@@ -7,12 +7,16 @@ function useSearch({
   allowSearch,
   editorReady,
   editor,
-  value
+  value,
+  externalSearchTerm,
+  externalSearchIsRegex = false
 }: {
   allowSearch: boolean
   editorReady: boolean
   editor?: IAceEditor
   value: string
+  externalSearchTerm?: string
+  externalSearchIsRegex?: boolean
 }) {
   const [searchValue, setSearchValueState] = useState(EMPTY_STRING)
 
@@ -51,6 +55,39 @@ function useSearch({
       }
     }
   }, [allowSearch, editor, editorReady])
+
+  useEffect(() => {
+    if (externalSearchTerm && editor && editorReady) {
+      const timeoutId = setTimeout(() => {
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/4020e188-f290-43b5-bff8-c3a5319aa143',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useSearch.ts:effect',message:'Starting external search',data:{externalSearchTerm,externalSearchIsRegex,hasEditor:!!editor,editorReady},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        editor.execCommand('find')
+        const searchBox = editor.searchBox
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/4020e188-f290-43b5-bff8-c3a5319aa143',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useSearch.ts:afterExecCommand',message:'After execCommand find',data:{hasSearchBox:!!searchBox,hasSearchInput:!!searchBox?.searchInput,hasRegExpOption:!!searchBox?.regExpOption,hasFind:typeof searchBox?.find},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C,D'})}).catch(()=>{});
+        // #endregion
+        if (searchBox) {
+          searchBox.searchInput.value = externalSearchTerm
+          // #region agent log
+          fetch('http://127.0.0.1:7244/ingest/4020e188-f290-43b5-bff8-c3a5319aa143',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useSearch.ts:beforeSync',message:'Before $syncOptions',data:{activeInput:searchBox.activeInput?.className,regExpOptionChecked:searchBox.regExpOption?.checked,regExpOptionTagName:searchBox.regExpOption?.tagName,hasSyncOptions:typeof searchBox.$syncOptions},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'F,G'})}).catch(()=>{});
+          // #endregion
+          searchBox.regExpOption.checked = externalSearchIsRegex
+          searchBox.$syncOptions()
+          // #region agent log
+          fetch('http://127.0.0.1:7244/ingest/4020e188-f290-43b5-bff8-c3a5319aa143',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useSearch.ts:afterSync',message:'After $syncOptions',data:{activeInputAfter:searchBox.activeInput?.className,regExpOptionCheckedAfter:searchBox.regExpOption?.checked},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'F,G'})}).catch(()=>{});
+          // #endregion
+        }
+      }, 50)
+      return () => clearTimeout(timeoutId)
+    } else if (!externalSearchTerm && editor) {
+      const searchBox = editor.searchBox
+      if (searchBox) {
+        searchBox.searchInput.value = EMPTY_STRING
+        searchBox.$syncOptions()
+      }
+    }
+  }, [externalSearchTerm, externalSearchIsRegex, editor, editorReady, value])
 
   return searchValue
 }

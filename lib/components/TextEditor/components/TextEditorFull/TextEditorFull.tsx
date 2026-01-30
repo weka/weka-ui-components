@@ -80,28 +80,34 @@ export interface TextEditorFullProps {
   }[]
   fontSize?: number
   editorOptions?: Record<string, unknown>
+  externalSearchTerm?: string
+  externalSearchIsRegex?: boolean
 }
-function TextEditorFull({
-  readOnly,
-  value = EMPTY_STRING,
-  onChange,
-  onValidate,
-  allowSearch = false,
-  allowCopy = false,
-  foldAll = false,
-  extraClass = EMPTY_STRING,
-  valueForMatched,
-  isValueForMatchedLoading = false,
-  mode = 'json',
-  initialLine,
-  onScroll,
-  maxLines,
-  loading,
-  lines,
-  fontSize,
-  editorOptions = {},
-  ...rest
-}: TextEditorFullProps) {
+function TextEditorFull(props: TextEditorFullProps) {
+  const {
+    readOnly,
+    value = EMPTY_STRING,
+    onChange,
+    onValidate,
+    allowSearch = false,
+    allowCopy = false,
+    foldAll = false,
+    extraClass = EMPTY_STRING,
+    valueForMatched,
+    isValueForMatchedLoading = false,
+    mode = 'json',
+    initialLine,
+    onScroll,
+    maxLines,
+    loading,
+    lines,
+    fontSize,
+    editorOptions = {},
+    externalSearchTerm,
+    externalSearchIsRegex = false,
+    ...rest
+  } = props
+
   const editorContext = useTextEditorContext(true)
   const editorContextValue = editorContext?.value
   const setTextEditorContext = editorContext?.setTextEditorContext
@@ -144,7 +150,9 @@ function TextEditorFull({
     editor,
     allowSearch: options.allowSearch,
     editorReady,
-    value: options.value
+    value: options.value,
+    externalSearchTerm,
+    externalSearchIsRegex
   })
 
   const jsonValue = useOnlyMatching({

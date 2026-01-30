@@ -37,6 +37,15 @@ interface TextEditorProps {
   maxLines?: number
   loading?: boolean
   liteMode?: boolean
+  /**
+   * External search term that triggers Ace's find-all functionality
+   * to highlight matches in the editor
+   */
+  externalSearchTerm?: string
+  /**
+   * Whether the external search term should be treated as regex
+   */
+  externalSearchIsRegex?: boolean
 }
 
 function TextEditor(props: TextEditorProps) {
