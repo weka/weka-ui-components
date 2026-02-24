@@ -21,8 +21,17 @@
     "format": "prettier --write ."
   },
   "files": [
-    "lib"
+    "lib",
+    "plugins"
   ],
+  "exports": {
+    ".": "./lib/main.ts",
+    "./plugins": {
+      "types": "./plugins/index.d.ts",
+      "default": "./plugins/index.js"
+    },
+    "./lib/*": "./lib/*"
+  },
   "dependencies": {
     "@tanstack/react-table": "^8.14.0",
     "@tanstack/react-virtual": "^3.11.2",
