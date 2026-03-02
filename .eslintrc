@@ -6,6 +6,12 @@
       "rules": {
         "import/no-anonymous-default-export": "off"
       }
+    },
+    {
+      "files": ["**/icons/**/*.tsx"],
+      "rules": {
+        "max-len": "off"
+      }
     }
   ]
 }

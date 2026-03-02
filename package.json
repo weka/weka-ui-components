@@ -11,15 +11,9 @@
   "version": "4.0.0-beta.2",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
-  "exports": {
-    ".": {
-      "import": "./lib/main.ts",
-      "types": "./lib/main.ts"
-    },
-    "./v2": {
-      "types": "./dist/v2/index.d.ts",
-      "development": "./lib/v2/index.ts",
-      "default": "./dist/v2/index.js"
+  "typesVersions": {
+    "*": {
+      "v2": ["./dist/v2/index.d.ts"]
     }
   },
   "sideEffects": [
@@ -49,6 +43,11 @@
   ],
   "exports": {
     ".": "./lib/main.ts",
+    "./v2": {
+      "types": "./dist/v2/index.d.ts",
+      "development": "./lib/v2/index.ts",
+      "default": "./dist/v2/index.js"
+    },
     "./plugins": {
       "types": "./plugins/index.d.ts",
       "default": "./plugins/index.js"

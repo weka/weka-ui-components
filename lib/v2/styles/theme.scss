@@ -1,0 +1,331 @@
+@use 'colors' as *;
+
+// ========================================
+// V2 LIGHT THEME
+// ========================================
+
+@mixin v2-light-theme {
+  // Gray Scale Theme Variables (light-dark format)
+  --gray-0-900: #{$gray-0};
+  --gray-0-920: #{$gray-0};
+  --gray-0-1000: #{$gray-0};
+  --gray-20-950: #{$gray-20};
+  --gray-50-920: #{$gray-50};
+  --gray-50-950: #{$gray-50};
+  --gray-100-850: #{$gray-100};
+  --gray-100-900: #{$gray-100};
+  --gray-150-850: #{$gray-150};
+  --gray-200-800: #{$gray-200};
+  --gray-250-750: #{$gray-250};
+  --gray-300-600: #{$gray-300};
+  --gray-300-700: #{$gray-300};
+  --gray-350-650: #{$gray-350};
+  --gray-400-600: #{$gray-400};
+  --gray-450-550: #{$gray-450};
+  --gray-550-450: #{$gray-550};
+  --gray-600-300: #{$gray-600};
+  --gray-600-400: #{$gray-600};
+  --gray-650-350: #{$gray-650};
+  --gray-700-300: #{$gray-700};
+  --gray-750-250: #{$gray-750};
+  --gray-800-200: #{$gray-800};
+  --gray-850-150: #{$gray-850};
+  --gray-900-100: #{$gray-900};
+  --gray-920-50: #{$gray-920};
+  --gray-950-20: #{$gray-950};
+  --gray-1000-0: #{$gray-1000};
+
+  // Static Gray Values
+  --gray-200: #{$gray-200};
+  --gray-300: #{$gray-300};
+  --gray-500: #{$gray-500};
+  --gray-800: #{$gray-800};
+
+  // Purple Theme Variables
+  --purple-20-950: #{$purple-20};
+  --purple-100-900: #{$purple-100};
+  --purple-100-800: #{$purple-100};
+  --purple-100-400: #{$purple-100};
+  --purple-200-800: #{$purple-200};
+  --purple-300-700: #{$purple-300};
+  --purple-400-600: #{$purple-400};
+  --purple-500: #{$purple-500};
+  --purple-500-300: #{$purple-500};
+  --purple-600-400: #{$purple-600};
+  --purple-700: #{$purple-700};
+  --purple-700-300: #{$purple-700};
+  --purple-800-200: #{$purple-800};
+  --purple-900-100: #{$purple-900};
+  --purple-950-20: #{$purple-950};
+
+  // Red Theme Variables
+  --red-20-950: #{$red-20};
+  --red-50-950: #{$red-50};
+  --red-100-900: #{$red-100};
+  --red-100-700: #{$red-100};
+  --red-200-800: #{$red-200};
+  --red-200: #{$red-200};
+  --red-300-700: #{$red-300};
+  --red-300: #{$red-300};
+  --red-400-600: #{$red-400};
+  --red-400: #{$red-400};
+  --red-500: #{$red-500};
+  --red-600: #{$red-600};
+  --red-600-400: #{$red-600};
+  --red-700: #{$red-700};
+  --red-700-300: #{$red-700};
+  --red-800: #{$red-800};
+  --red-800-200: #{$red-800};
+  --red-900-100: #{$red-900};
+  --red-950-50: #{$red-950};
+  --red-950-20: #{$red-950};
+
+  // Green Theme Variables
+  --green-20-950: #{$green-20};
+  --green-50-950: #{$green-50};
+  --green-100-900: #{$green-100};
+  --green-200-800: #{$green-200};
+  --green-200: #{$green-200};
+  --green-300-700: #{$green-300};
+  --green-400-600: #{$green-400};
+  --green-400: #{$green-400};
+  --green-500: #{$green-500};
+  --green-600-400: #{$green-600};
+  --green-700-300: #{$green-700};
+  --green-800-200: #{$green-800};
+  --green-900-100: #{$green-900};
+  --green-950-50: #{$green-950};
+  --green-950-20: #{$green-950};
+
+  // Orange Theme Variables
+  --orange-20-950: #{$orange-20};
+  --orange-50-950: #{$orange-50};
+  --orange-100-900: #{$orange-100};
+  --orange-200-800: #{$orange-200};
+  --orange-200: #{$orange-200};
+  --orange-300-700: #{$orange-300};
+  --orange-400-600: #{$orange-400};
+  --orange-500: #{$orange-500};
+  --orange-600-400: #{$orange-600};
+  --orange-700-300: #{$orange-700};
+  --orange-800-200: #{$orange-800};
+  --orange-900-100: #{$orange-900};
+  --orange-950-50: #{$orange-950};
+  --orange-950-20: #{$orange-950};
+
+  // Semantic Variables
+  --bg-primary: #{$gray-0};
+  --bg-secondary: #{$gray-50};
+  --bg-tertiary: #{$gray-100};
+  --text-primary: #{$gray-900};
+  --text-secondary: #{$gray-600};
+  --text-disabled: #{$gray-400};
+  --border-light: #{$gray-200};
+  --border-medium: #{$gray-300};
+
+  // Interactive States
+  --bg-default: rgb(255 255 255 / 0%);
+  --bg-hover: rgb(0 0 0 / 20%);
+  --bg-item-hover: #{rgba($gray-800, 0.1)};
+  --bg-item-active: #{rgba($gray-800, 0.18)};
+  --bg-focus: rgb(0 0 0 / 28%);
+
+  // Brand Colors
+  --color-primary: #{$purple-500};
+  --color-accent: #{$green-500};
+  --primary: var(--color-primary);
+
+  // Status Colors
+  --error: #{$red-500};
+  --warning: #{$orange-600};
+  --success: #{$green-500};
+  --disabled: #{$gray-600};
+
+  // Icon Variables
+  --icon-color: #{$gray-600};
+  --icon-bg: #{$gray-0};
+  --icon-border: #{$gray-300};
+  --icon-bg-hover: rgb(0 0 0 / 14%);
+  --icon-bg-active: rgb(0 0 0 / 24%);
+  --icon-button-hover: var(--bg-hover);
+
+  // Scrollbar
+  --scrollbar-thumb: #{$gray-400};
+
+  // Backward Compatibility
+  --background-primary: #{$gray-0};
+  --background-secondary: #{$gray-50};
+  --background-tertiary: #{$gray-100};
+  --border-color: #{$gray-800};
+  --shadow-color: #{rgba($gray-1000, 0.4)};
+
+  // Legacy Aliases
+  --text-color-primary: var(--text-primary);
+  --text-color-secondary: var(--text-secondary);
+  --bg-color-primary: var(--bg-primary);
+}
+
+// ========================================
+// V2 DARK THEME
+// ========================================
+
+@mixin v2-dark-theme {
+  // Gray Scale Theme Variables (light-dark format)
+  --gray-0-900: #{$gray-900};
+  --gray-0-920: #{$gray-920};
+  --gray-0-1000: #{$gray-1000};
+  --gray-20-950: #{$gray-950};
+  --gray-50-920: #{$gray-920};
+  --gray-50-950: #{$gray-950};
+  --gray-100-850: #{$gray-850};
+  --gray-100-900: #{$gray-900};
+  --gray-150-850: #{$gray-850};
+  --gray-200-800: #{$gray-800};
+  --gray-250-750: #{$gray-750};
+  --gray-300-600: #{$gray-600};
+  --gray-300-700: #{$gray-700};
+  --gray-350-650: #{$gray-650};
+  --gray-400-600: #{$gray-600};
+  --gray-450-550: #{$gray-550};
+  --gray-550-450: #{$gray-450};
+  --gray-600-300: #{$gray-300};
+  --gray-600-400: #{$gray-400};
+  --gray-650-350: #{$gray-350};
+  --gray-700-300: #{$gray-300};
+  --gray-750-250: #{$gray-250};
+  --gray-800-200: #{$gray-200};
+  --gray-850-150: #{$gray-150};
+  --gray-900-100: #{$gray-100};
+  --gray-920-50: #{$gray-50};
+  --gray-950-20: #{$gray-20};
+  --gray-1000-0: #{$gray-0};
+
+  // Static Gray Values
+  --gray-200: #{$gray-200};
+  --gray-300: #{$gray-300};
+  --gray-500: #{$gray-500};
+  --gray-800: #{$gray-800};
+
+  // Purple Theme Variables
+  --purple-20-950: #{$purple-950};
+  --purple-100-900: #{$purple-900};
+  --purple-100-800: #{$purple-800};
+  --purple-100-400: #{$purple-400};
+  --purple-200-800: #{$purple-800};
+  --purple-300-700: #{$purple-700};
+  --purple-400-600: #{$purple-600};
+  --purple-500: #{$purple-500};
+  --purple-500-300: #{$purple-300};
+  --purple-600-400: #{$purple-400};
+  --purple-700: #{$purple-700};
+  --purple-700-300: #{$purple-300};
+  --purple-800-200: #{$purple-200};
+  --purple-900-100: #{$purple-100};
+  --purple-950-20: #{$purple-20};
+
+  // Red Theme Variables
+  --red-20-950: #{$red-950};
+  --red-50-950: #{$red-950};
+  --red-100-900: #{$red-900};
+  --red-100-700: #{$red-700};
+  --red-200-800: #{$red-800};
+  --red-200: #{$red-200};
+  --red-300-700: #{$red-700};
+  --red-300: #{$red-300};
+  --red-400-600: #{$red-600};
+  --red-400: #{$red-400};
+  --red-500: #{$red-500};
+  --red-600: #{$red-600};
+  --red-600-400: #{$red-400};
+  --red-700: #{$red-700};
+  --red-700-300: #{$red-300};
+  --red-800: #{$red-800};
+  --red-800-200: #{$red-200};
+  --red-900-100: #{$red-100};
+  --red-950-50: #{$red-50};
+  --red-950-20: #{$red-20};
+
+  // Green Theme Variables
+  --green-20-950: #{$green-950};
+  --green-50-950: #{$green-950};
+  --green-100-900: #{$green-900};
+  --green-200-800: #{$green-800};
+  --green-200: #{$green-200};
+  --green-300-700: #{$green-700};
+  --green-400-600: #{$green-600};
+  --green-400: #{$green-400};
+  --green-500: #{$green-500};
+  --green-600-400: #{$green-400};
+  --green-700-300: #{$green-300};
+  --green-800-200: #{$green-200};
+  --green-900-100: #{$green-100};
+  --green-950-50: #{$green-50};
+  --green-950-20: #{$green-20};
+
+  // Orange Theme Variables
+  --orange-20-950: #{$orange-950};
+  --orange-50-950: #{$orange-950};
+  --orange-100-900: #{$orange-900};
+  --orange-200-800: #{$orange-800};
+  --orange-200: #{$orange-200};
+  --orange-300-700: #{$orange-700};
+  --orange-400-600: #{$orange-600};
+  --orange-500: #{$orange-500};
+  --orange-600-400: #{$orange-400};
+  --orange-700-300: #{$orange-300};
+  --orange-800-200: #{$orange-200};
+  --orange-900-100: #{$orange-100};
+  --orange-950-50: #{$orange-50};
+  --orange-950-20: #{$orange-20};
+
+  // Semantic Variables
+  --bg-primary: #{$gray-1000};
+  --bg-secondary: #{$gray-920};
+  --bg-tertiary: #{$gray-850};
+  --text-primary: #{$gray-0};
+  --text-secondary: #{$gray-300};
+  --text-disabled: #{$gray-600};
+  --border-light: #{$gray-800};
+  --border-medium: #{$gray-700};
+
+  // Interactive States
+  --bg-default: rgb(0 0 0 / 0%);
+  --bg-hover: rgb(255 255 255 / 20%);
+  --bg-item-hover: #{rgba($gray-200, 0.15)};
+  --bg-item-active: #{rgba($gray-200, 0.25)};
+  --bg-focus: rgb(255 255 255 / 28%);
+
+  // Brand Colors
+  --color-primary: #{$purple-400};
+  --color-accent: #{$green-400};
+  --primary: var(--color-primary);
+
+  // Status Colors
+  --error: #{$red-500};
+  --warning: #{$orange-400};
+  --success: #{$green-500};
+  --disabled: #{$gray-600};
+
+  // Icon Variables
+  --icon-color: #{$gray-0};
+  --icon-bg: #{$gray-1000};
+  --icon-border: #{$gray-700};
+  --icon-bg-hover: rgb(255 255 255 / 14%);
+  --icon-bg-active: rgb(255 255 255 / 24%);
+  --icon-button-hover: var(--bg-hover);
+
+  // Scrollbar
+  --scrollbar-thumb: #{$gray-600};
+
+  // Backward Compatibility
+  --background-primary: #{$gray-1000};
+  --background-secondary: #{$gray-920};
+  --background-tertiary: #{$gray-850};
+  --border-color: #{$gray-800};
+  --shadow-color: #{rgba($gray-1000, 0.4)};
+
+  // Legacy Aliases
+  --text-color-primary: var(--text-primary);
+  --text-color-secondary: var(--text-secondary);
+  --bg-color-primary: var(--bg-primary);
+}
