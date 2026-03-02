@@ -11,8 +11,7 @@
   }
 
   .selected-options-wrapper {
-    max-height: 250px;
-    overflow: auto;
+    overflow: visible;
 
     .selected-option {
       display: flex;
