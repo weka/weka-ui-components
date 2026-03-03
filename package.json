@@ -8,12 +8,14 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
   "typesVersions": {
     "*": {
-      "v2": ["./dist/v2/index.d.ts"]
+      "v2": [
+        "./dist/v2/index.d.ts"
+      ]
     }
   },
   "sideEffects": [
