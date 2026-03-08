@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from 'storybook-solidjs'
-import { default as TextEditorComponent } from './TextEditor'
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import { default as TextEditorComponent } from './TextEditor'
 
 const meta: Meta<typeof TextEditorComponent> = {
   component: TextEditorComponent

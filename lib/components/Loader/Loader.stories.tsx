@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+
 import { default as LoaderComponent } from './Loader'
 
 const meta: Meta<typeof LoaderComponent> = {

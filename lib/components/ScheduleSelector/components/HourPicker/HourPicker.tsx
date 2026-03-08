@@ -1,6 +1,8 @@
-import React, { useMemo, useCallback } from 'react'
-import { ToggleButton } from '../../../index'
+import React, { useCallback, useMemo } from 'react'
+
 import { ZERO_STRING } from 'consts'
+
+import { ToggleButton } from '../../../index'
 
 import './hourPicker.scss'
 
@@ -24,10 +26,12 @@ const HourPicker: React.FC<HourPickerProps> = ({
   onChange,
   isDisabled
 }) => {
-  const parseHours = useMemo(() => {
-    return (hours: string): string[] =>
-      hours?.split(',').map((hour) => hour.trim()) || []
-  }, [])
+  const parseHours = useMemo(
+    () =>
+      (hours: string): string[] =>
+        hours?.split(',').map((hour) => hour.trim()) || [],
+    []
+  )
 
   const parsedHours = useMemo(() => parseHours(hours), [hours, parseHours])
 
@@ -75,12 +79,12 @@ const HourPicker: React.FC<HourPickerProps> = ({
 
   return (
     <ToggleButton
-      options={hourOptions}
-      value={initialSelectedHours}
-      onChange={handleHourToggle}
-      wrapperClass='hour-picker-wrapper'
       isDisabled={isDisabled}
+      onChange={handleHourToggle}
+      options={hourOptions}
       small
+      value={initialSelectedHours}
+      wrapperClass='hour-picker-wrapper'
     />
   )
 }

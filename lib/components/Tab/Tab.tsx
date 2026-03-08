@@ -1,9 +1,12 @@
-import React, { ReactElement } from 'react'
-import clsx from 'clsx'
-import { EMPTY_STRING } from 'consts'
+import type { ReactElement } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import Tooltip from '../Tooltip'
+import clsx from 'clsx'
+
+import { EMPTY_STRING } from 'consts'
 import svgs from 'svgs'
+
+import Tooltip from '../Tooltip'
 import ValidityIndicator from '../ValidityIndicator'
 
 import './tab.scss'
@@ -25,21 +28,20 @@ interface TabProps {
   unfilledFields?: unknown[]
 }
 
-function Tab(props: TabProps) {
-  const {
-    title,
-    subComponent = null,
-    active,
-    setActive,
-    wrapperClass = EMPTY_STRING,
-    disabled = false,
-    isSideTab = false,
-    isSubTab = false,
-    navigateTo,
-    info,
-    hasValidIndicator = false,
-    unfilledFields
-  } = props
+function Tab({
+  title,
+  subComponent = null,
+  active,
+  setActive,
+  wrapperClass = EMPTY_STRING,
+  disabled = false,
+  isSideTab = false,
+  isSubTab = false,
+  navigateTo,
+  info,
+  hasValidIndicator = false,
+  unfilledFields
+}: TabProps) {
   const cls = clsx({
     'custom-tab': true,
     'custom-tab-side': isSideTab,
@@ -50,32 +52,38 @@ function Tab(props: TabProps) {
   })
 
   const tabContent = (
-    <div className={cls} onClick={setActive}>
+    <div
+      className={cls}
+      onClick={setActive}
+    >
       <div className='tab-title-wrapper'>
         <div className='tab-title'>{title}</div>
-        {(info || hasValidIndicator) && (
+        {info || hasValidIndicator ? (
           <div className='tab-indicators'>
-            {info && (
+            {info ? (
               <Tooltip data={info}>
                 <Info className='tab-info' />
               </Tooltip>
-            )}
-            {hasValidIndicator && (
+            ) : null}
+            {hasValidIndicator ? (
               <div>
                 <ValidityIndicator
                   invalidFieldsLength={unfilledFields?.length || 0}
                 />
               </div>
-            )}
+            ) : null}
           </div>
-        )}
+        ) : null}
       </div>
       {subComponent}
     </div>
   )
 
   return navigateTo ? (
-    <Link to={navigateTo} className='link-tab'>
+    <Link
+      className='link-tab'
+      to={navigateTo}
+    >
       {tabContent}
     </Link>
   ) : (

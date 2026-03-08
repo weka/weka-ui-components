@@ -1,9 +1,11 @@
 import React from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
-import Tooltip from '../../Tooltip'
-import JsonEditor from '../../TextEditor'
 import svgs from 'svgs'
+
+import JsonEditor from '../../TextEditor'
+import Tooltip from '../../Tooltip'
 
 import './jsonBox.scss'
 
@@ -18,16 +20,15 @@ interface JsonBoxProps {
   isRequired?: boolean
   info?: string
 }
-function JsonBox(props: JsonBoxProps) {
-  const {
-    label,
-    error,
-    wrapperClass = EMPTY_STRING,
-    info,
-    isRequired,
-    disabled,
-    ...rest
-  } = props
+function JsonBox({
+  label,
+  error,
+  wrapperClass = EMPTY_STRING,
+  info,
+  isRequired,
+  disabled,
+  ...rest
+}: JsonBoxProps) {
   const classes = clsx({
     'json-box': true,
     'has-error': !!error,
@@ -38,14 +39,18 @@ function JsonBox(props: JsonBoxProps) {
     <div className={classes}>
       <span className='json-box__label field-1-label-content'>
         {label}
-        {isRequired && <span className='required-star'>*</span>}
+        {isRequired ? <span className='required-star'>*</span> : null}
         {!!info && (
           <Tooltip data={info}>
             <Info />
           </Tooltip>
         )}
       </span>
-      <JsonEditor readOnly={disabled} {...rest} tabSize={2} />
+      <JsonEditor
+        readOnly={disabled}
+        {...rest}
+        tabSize={2}
+      />
       <span className='json-box-error capitalize-first-letter'>{error}</span>
     </div>
   )

@@ -1,12 +1,16 @@
-import React, { ReactElement, ChangeEvent, useEffect, useState } from 'react'
+import type { ChangeEvent, ReactElement } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-import Tooltip from '../../Tooltip'
+
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import { useHighlightInput, useToggle } from '../../../hooks'
-import Utils from 'utils'
 import svgs from 'svgs'
-import { useAutosizeWidth } from './hooks'
+import Utils from 'utils'
+
+import { useHighlightInput, useToggle } from '../../../hooks'
 import InputLoader from '../../InputLoader'
+import Tooltip from '../../Tooltip'
+
+import { useAutosizeWidth } from './hooks'
 
 import './textBox.scss'
 
@@ -114,17 +118,38 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
   return (
     <Tooltip data={tooltip}>
       <div
+        ref={textBoxRef}
         className={wrapperClasses}
         style={autosize ? { width: `${inputWidth}px` } : {}}
-        ref={textBoxRef}
       >
-        {autosize && (
-          <div ref={calculationBoxRef} className='calculation-box'>
+        {autosize ? (
+          <div
+            ref={calculationBoxRef}
+            className='calculation-box'
+          >
             {value}
           </div>
-        )}
-        {Icon && <Icon className='text-box-icon' />}
+        ) : null}
+        {Icon ? <Icon className='text-box-icon' /> : null}
         <input
+          ref={(node) => {
+            inputRef.current = node
+
+            if (ref) {
+              if (typeof ref === 'function') {
+                ref(node)
+              } else {
+                ref.current = node
+              }
+            }
+          }}
+          autoComplete='new-password'
+          className={inputClasses}
+          onChange={onTextChange}
+          placeholder={placeholder}
+          step='any'
+          type={showPassword && type === 'password' ? 'text' : type}
+          value={value === null ? EMPTY_STRING : value}
           onKeyDown={(e) => {
             if (
               type === 'number' &&
@@ -146,26 +171,8 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
               onChange(placeholder)
             }
           }}
-          step='any'
-          autoComplete='new-password'
-          className={inputClasses}
-          placeholder={placeholder}
-          value={value === null ? EMPTY_STRING : value}
-          onChange={onTextChange}
-          ref={(node) => {
-            inputRef.current = node
-
-            if (ref) {
-              if (typeof ref === 'function') {
-                ref(node)
-              } else {
-                ref.current = node
-              }
-            }
-          }}
-          type={showPassword && type === 'password' ? 'text' : type}
           {...rest}
-        ></input>
+        />
         {type === 'password' && (
           <span className='password-icon'>
             {Utils.getPasswordIcon(
@@ -175,15 +182,15 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
             )}
           </span>
         )}
-        {isLoadingValue && (
+        {isLoadingValue ? (
           <span className='loader-wrapper'>
             <InputLoader />
           </span>
-        )}
+        ) : null}
         <span className='field__label-wrap'>
           <span className='field__label field-1-label-content'>
             {label}
-            {isRequired && <span className='required-star'>*</span>}
+            {isRequired ? <span className='required-star'>*</span> : null}
             {!!info && (
               <Tooltip data={info}>
                 <Info />

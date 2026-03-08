@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import TextBox from '../TextBox'
-import Select from '../Select'
-import Utils from 'utils'
+
 import { EMPTY_STRING } from 'consts'
+import Utils from 'utils'
+
 import Info from '../../Info'
+import Select from '../Select'
+import TextBox from '../TextBox'
 
 import './textSelectBox.scss'
 
@@ -20,20 +22,19 @@ interface TextSelectBoxProps {
   options: any[]
   formatFunc: (val: any) => any
 }
-function TextSelectBox(props: TextSelectBoxProps) {
-  const {
-    label,
-    onChange,
-    value,
-    wrapperClass = EMPTY_STRING,
-    options,
-    formatFunc,
-    info,
-    selectPlaceholder,
-    error,
-    isRequired,
-    ...rest
-  } = props
+function TextSelectBox({
+  label,
+  onChange,
+  value,
+  wrapperClass = EMPTY_STRING,
+  options,
+  formatFunc,
+  info,
+  selectPlaceholder,
+  error,
+  isRequired,
+  ...rest
+}: TextSelectBoxProps) {
   const { number, unit } = formatFunc(value)
   const [textValue, setTextValue] = useState(number)
   const [selectValue, setSelectValue] = useState(
@@ -68,17 +69,21 @@ function TextSelectBox(props: TextSelectBoxProps) {
     <div className={classes}>
       <span className='text-select-label field-1-label-content'>
         {label}
-        {isRequired && <span className='required-star'>*</span>}
-        {info && <Info data={info} />}
+        {isRequired ? <span className='required-star'>*</span> : null}
+        {info ? <Info data={info} /> : null}
       </span>
       <TextBox
-        value={textValue}
-        type='number'
         onChange={onTextChange}
+        type='number'
+        value={textValue}
         {...rest}
       />
       <div className='spread-line' />
-      <Select value={selectValue} options={options} onChange={onSelectChange} />
+      <Select
+        onChange={onSelectChange}
+        options={options}
+        value={selectValue}
+      />
       <span className='text-select-error capitalize-first-letter'>{error}</span>
     </div>
   )

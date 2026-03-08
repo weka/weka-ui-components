@@ -1,7 +1,9 @@
-import type { Meta, StoryObj } from 'storybook-solidjs'
-import { default as NewPasswordTooltipComponent } from './NewPasswordTooltip'
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
 import { EMPTY_STRING } from 'consts'
+
+import { default as NewPasswordTooltipComponent } from './NewPasswordTooltip'
 
 const meta: Meta<typeof NewPasswordTooltipComponent> = {
   component: NewPasswordTooltipComponent,

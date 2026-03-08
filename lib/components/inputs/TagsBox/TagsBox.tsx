@@ -1,20 +1,17 @@
-import React, {
-  ReactElement,
-  MouseEvent,
-  KeyboardEvent,
-  useEffect,
-  useState
-} from 'react'
+import type { KeyboardEvent, MouseEvent, ReactElement } from 'react'
+import React, { useEffect, useState } from 'react'
+import { type MenuPosition, type MultiValue } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import { type MultiValue, type MenuPosition } from 'react-select'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
+import type Option from 'types'
+
 import { EMPTY_STRING, EVENT_KEYS, TAG_SEPARATOR } from 'consts'
-import Utils from 'utils'
-import Tooltip from '../../Tooltip'
 import svgs from 'svgs'
-import Option from 'types'
+import Utils from 'utils'
+
 import { useHighlightInput } from '../../../hooks'
+import Tooltip from '../../Tooltip'
 
 import './tagsBox.scss'
 
@@ -41,26 +38,25 @@ export interface TagsBoxProps {
   isScrolledInto?: boolean
 }
 
-function TagsBox(props: TagsBoxProps) {
-  const {
-    label,
-    onChange,
-    value = [],
-    error,
-    placeholder,
-    wrapperClass = EMPTY_STRING,
-    tagsValidation = (val) => val,
-    warning,
-    isRequired,
-    info,
-    invalidTagText,
-    disabled,
-    isClearable,
-    expandInputOnFocus = true,
-    isHighlighted,
-    isScrolledInto,
-    ...rest
-  } = props
+function TagsBox({
+  label,
+  onChange,
+  value = [],
+  error,
+  placeholder,
+  wrapperClass = EMPTY_STRING,
+  tagsValidation = (val) => val,
+  warning,
+  isRequired,
+  info,
+  invalidTagText,
+  disabled,
+  isClearable,
+  expandInputOnFocus = true,
+  isHighlighted,
+  isScrolledInto,
+  ...rest
+}: TagsBoxProps) {
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [editValueError, setEditErrorValue] = useState(false)
   const [displayValue, setDisplayValue] = useState([])
@@ -132,10 +128,13 @@ function TagsBox(props: TagsBoxProps) {
   }
 
   return (
-    <FormControl className={wrapperClasses} ref={tagsBoxRef}>
+    <FormControl
+      ref={tagsBoxRef}
+      className={wrapperClasses}
+    >
       <span className='tags-label field-1-label-content'>
         {label}
-        {isRequired && <span className='required-star'>*</span>}
+        {isRequired ? <span className='required-star'>*</span> : null}
         {!!info && (
           <Tooltip data={info}>
             <Info />
@@ -143,36 +142,39 @@ function TagsBox(props: TagsBoxProps) {
         )}
       </span>
       <CreatableSelect
+        classNamePrefix='react-tagsbox'
         components={{ DropdownIndicator: null }}
         inputValue={editValue}
         isClearable={isClearable}
-        isMulti
         isDisabled={disabled}
+        isMulti
+        noOptionsMessage={() => null}
         onChange={onChangeWrapper}
         onInputChange={setEditValue}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
-        noOptionsMessage={() => null}
         value={displayValue}
         formatCreateLabel={(userInput) => (
-          <div onClick={onMouseClick} className='tags-user-input-preview'>
+          <div
+            className='tags-user-input-preview'
+            onClick={onMouseClick}
+          >
             {`'${userInput}'`}
-            {editValueError && (
+            {editValueError ? (
               <span className='tags-invalid'>
                 {` - ${invalidTagText || 'Invalid value'}`}
               </span>
-            )}
+            ) : null}
           </div>
         )}
-        classNamePrefix='react-tagsbox'
         {...rest}
       />
       <span className='tags-box-error capitalize-first-letter'>
         {editValueError || error}
       </span>
-      {value && !error && warning && (
+      {value && !error && warning ? (
         <span className='tags-warning'>{warning}</span>
-      )}
+      ) : null}
     </FormControl>
   )
 }

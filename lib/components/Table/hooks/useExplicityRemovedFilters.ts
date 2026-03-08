@@ -1,7 +1,9 @@
 import { useState } from 'react'
+
 import { EXPLICITLY_REMOVED_FILTERS } from 'consts'
+
 import localStorageService from '../../../localStorageService'
-import { ExtendedColumnFilter } from '../types'
+import type { ExtendedColumnFilter } from '../types'
 
 /**
  * Keeps track of user-removed **default** filters

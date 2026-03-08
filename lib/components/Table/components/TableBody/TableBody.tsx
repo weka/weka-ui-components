@@ -1,12 +1,14 @@
-import React, { RefObject } from 'react'
-import {
+import type { RefObject } from 'react'
+import React from 'react'
+
+import { useInfiniteScroll } from '../../hooks'
+import type {
   ExtendedRow,
+  ExtendedTable,
   RowAction,
-  TableExtraClasses,
-  ExtendedTable
+  TableExtraClasses
 } from '../../types'
 import TableRow from '../TableRow'
-import { useInfiniteScroll } from '../../hooks'
 
 interface TableBodyProps<Data> {
   table: ExtendedTable<Data>
@@ -33,28 +35,26 @@ interface TableBodyProps<Data> {
   rows: ExtendedRow<Data>[]
 }
 
-function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
-  const {
-    table,
-    isExpandable,
-    grouping,
-    RowSubComponent,
-    onRowClick,
-    onToggleExpand,
-    checkRowSelected,
-    checkRowHighlighted,
-    rowActions,
-    hasEmptyActionsCell,
-    isResizable,
-    disableActionsPortal,
-    extraClasses,
-    getRowCanExpand,
-    expandedRows,
-    infinityScrollConfig,
-    tableRef,
-    rows
-  } = props
-
+function TableBodyComponent<Data>({
+  table,
+  isExpandable,
+  grouping,
+  RowSubComponent,
+  onRowClick,
+  onToggleExpand,
+  checkRowSelected,
+  checkRowHighlighted,
+  rowActions,
+  hasEmptyActionsCell,
+  isResizable,
+  disableActionsPortal,
+  extraClasses,
+  getRowCanExpand,
+  expandedRows,
+  infinityScrollConfig,
+  tableRef,
+  rows
+}: TableBodyProps<Data>) {
   const allColumns = table.getAllColumns()
 
   const { getInfScrollPropsBody, getInfScrollPropsRow, getVirtualRows } =
@@ -80,24 +80,24 @@ function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
         return (
           <TableRow
             key={row.id}
-            row={row}
-            columns={allColumns}
-            isExpandable={isExpandable}
-            grouping={grouping}
             RowSubComponent={RowSubComponent}
+            checkRowHighlighted={checkRowHighlighted}
+            checkRowSelected={checkRowSelected}
+            columns={allColumns}
+            disableActionsPortal={disableActionsPortal}
+            expandedRows={expandedRows}
+            extraClasses={extraClasses}
+            grouping={grouping}
+            hasEmptyActionsCell={hasEmptyActionsCell}
+            isExpandable={isExpandable}
+            isResizable={isResizable}
             onRowClick={onRowClick}
             onToggleExpand={onToggleExpand}
-            checkRowSelected={checkRowSelected}
-            checkRowHighlighted={checkRowHighlighted}
+            row={row}
             rowActions={rowActions}
-            hasEmptyActionsCell={hasEmptyActionsCell}
-            isResizable={isResizable}
-            disableActionsPortal={disableActionsPortal}
-            extraClasses={extraClasses}
             rowCanExpand={
-              isExpandable && (getRowCanExpand?.(row.original) ?? true)
+              isExpandable ? getRowCanExpand?.(row.original) ?? true : null
             }
-            expandedRows={expandedRows}
             {...(infinityScrollConfig && {
               virtualRow,
               getInfScrollPropsRow
@@ -111,12 +111,17 @@ function TableBodyComponent<Data>(props: TableBodyProps<Data>) {
 
 const MemoizedTableBody = React.memo(TableBodyComponent) as typeof TableBody
 
-const TableBody: typeof TableBodyComponent = ({ table, ...props }) => {
-  return table.getState().columnSizingInfo.isResizingColumn ? (
-    <MemoizedTableBody table={table} {...props} />
+const TableBody: typeof TableBodyComponent = ({ table, ...props }) =>
+  table.getState().columnSizingInfo.isResizingColumn ? (
+    <MemoizedTableBody
+      table={table}
+      {...props}
+    />
   ) : (
-    <TableBodyComponent table={table} {...props} />
+    <TableBodyComponent
+      table={table}
+      {...props}
+    />
   )
-}
 
 export default TableBody

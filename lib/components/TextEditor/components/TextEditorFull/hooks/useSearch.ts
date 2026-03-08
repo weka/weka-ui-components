@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import type { IAceEditor } from 'react-ace/lib/types'
+
 import { EMPTY_STRING } from 'consts'
-import { IAceEditor } from 'react-ace/lib/types'
 
 function useSearch({
   allowSearch,

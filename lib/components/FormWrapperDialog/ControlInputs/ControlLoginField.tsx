@@ -1,7 +1,10 @@
 import React from 'react'
-import { Controller, Control } from 'react-hook-form'
-import LoginField from '../../inputs/LoginField'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
+
+import LoginField from '../../inputs/LoginField'
 
 interface ControlLoginFieldProps {
   control: Control<Record<string, unknown>[]>
@@ -11,34 +14,33 @@ interface ControlLoginFieldProps {
   disabled?: boolean
 }
 
-function ControlLoginField(props: ControlLoginFieldProps) {
-  const {
-    control,
-    name,
-    defaultValue = EMPTY_STRING,
-    rules = {},
-    ...rest
-  } = props
+function ControlLoginField({
+  control,
+  name,
+  defaultValue = EMPTY_STRING,
+  rules = {},
+  ...rest
+}: ControlLoginFieldProps) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
   )
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
-      defaultValue={defaultValue}
       control={control}
+      defaultValue={defaultValue}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <div className='field-container'>
           <LoginField
             {...rest}
+            error={error?.message}
+            isRequired={isRequiredInRules ? !disabled : null}
             onChange={field.onChange}
             value={field.value}
-            error={error?.message}
-            isRequired={isRequiredInRules && !disabled}
           />
         </div>
       )}

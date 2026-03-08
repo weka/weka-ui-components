@@ -1,10 +1,11 @@
 import React, { useId, useState } from 'react'
 import clsx from 'clsx'
+
 import { useDarkMode } from '../../context'
+import { Checkbox } from '../inputs'
+import Tooltip from '../Tooltip'
 
 import './darkModeSwitch.scss'
-import Tooltip from '../Tooltip'
-import { Checkbox } from '../inputs'
 
 /**
  * @file This file contains the implementation of DarkModeSwitch and the necessary setup for dark mode.
@@ -70,6 +71,8 @@ function DarkModeSwitch() {
 
   return (
     <Tooltip
+      onOpen={() => setTooltipOpen(true)}
+      open={isTooltipOpen}
       data={
         <div className='dark-mode-switch-tooltip'>
           <div>
@@ -78,8 +81,8 @@ function DarkModeSwitch() {
             mode
           </div>
           <label
-            htmlFor={checkboxId}
             className={clsx('follows-system-container', 'label-5')}
+            htmlFor={checkboxId}
           >
             <Checkbox
               checked={isSystem}
@@ -92,8 +95,6 @@ function DarkModeSwitch() {
           </label>
         </div>
       }
-      open={isTooltipOpen}
-      onOpen={() => setTooltipOpen(true)}
       onClose={(event) => {
         if (
           event.type !== 'blur' ||
@@ -109,11 +110,11 @@ function DarkModeSwitch() {
     >
       <div className='dark-mode-switch-wrapper'>
         <input
-          className='dark-mode-switch'
-          type='checkbox'
           checked={!isDarkMode}
-          onChange={(event) => setTheme({ isDarkMode: !event.target.checked })}
+          className='dark-mode-switch'
           id={switchId}
+          onChange={(event) => setTheme({ isDarkMode: !event.target.checked })}
+          type='checkbox'
         />
       </div>
     </Tooltip>

@@ -1,4 +1,5 @@
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react'
+import React from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import './markdown.scss'
@@ -6,10 +7,10 @@ import './markdown.scss'
 function LinkRenderer(props: { href: string; children: ReactElement }) {
   return (
     <a
-      href={props.href}
-      target='_blank'
-      rel='noreferrer'
       aria-label={`${props.children}`}
+      href={props.href}
+      rel='noreferrer'
+      target='_blank'
     >
       {props.children}
     </a>

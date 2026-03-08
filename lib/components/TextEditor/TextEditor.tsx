@@ -1,19 +1,19 @@
+import React, { useEffect } from 'react'
+
+import { useHideContent } from './components/TextEditorFull/hooks'
+import type { ParsedData } from './components'
 import {
   FoldAllButton,
-  TagsInput,
   FontSizeControls,
+  HideContentInput,
   LinesCount,
-  TextEditorFull,
-  TextViewerLite,
   SearchButton,
-  ParsedData,
-  HideContentInput
+  TagsInput,
+  TextEditorFull,
+  TextViewerLite
 } from './components'
 import { TextEditorProvider, useTextEditorContext } from './context'
-
-import React, { useEffect } from 'react'
 import { useLinesCount, useTags } from './hooks'
-import { useHideContent } from './components/TextEditorFull/hooks'
 
 export const DEFAULT_FONT_SIZE = 16
 
@@ -66,16 +66,16 @@ function TextEditor(props: TextEditorProps) {
   return liteMode ? (
     <TextViewerLite
       key={fontSize}
-      value={filteredValue}
       fontSize={fontSize}
-      maxLines={maxLines}
       lines={lines}
+      maxLines={maxLines}
+      value={filteredValue}
     />
   ) : (
     <TextEditorFull
       {...props}
-      lines={lines}
       fontSize={fontSize}
+      lines={lines}
       value={filteredValue}
     />
   )

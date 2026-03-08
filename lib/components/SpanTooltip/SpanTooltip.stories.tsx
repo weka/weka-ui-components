@@ -1,7 +1,8 @@
 import React from 'react'
-import { Meta, StoryFn } from '@storybook/react'
-import SpanTooltip from './SpanTooltip'
+import type { Meta, StoryFn } from '@storybook/react'
+
 import type { SpanTooltipProps } from './SpanTooltip'
+import SpanTooltip from './SpanTooltip'
 
 export default {
   title: 'Components/SpanTooltip',

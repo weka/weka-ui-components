@@ -1,7 +1,8 @@
 import React from 'react'
-import Copy from '../../../../Copy'
-import { ExtendedCellProps } from '../../../types'
 import { CircularProgress } from '@mui/material'
+
+import Copy from '../../../../Copy'
+import type { ExtendedCellProps } from '../../../types'
 
 import './copyCell.scss'
 
@@ -13,8 +14,12 @@ export interface CopyCellOptions<Data> {
   isLoading?: boolean | ((values: Data) => boolean)
 }
 
-function CopyCell<Data>(props: ExtendedCellProps<Data, CopyCellValue>) {
-  const { cell, column, row, customValue } = props
+function CopyCell<Data>({
+  cell,
+  column,
+  row,
+  customValue
+}: ExtendedCellProps<Data, CopyCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const cellDef = column.columnDef.meta?.cell
@@ -30,8 +35,8 @@ function CopyCell<Data>(props: ExtendedCellProps<Data, CopyCellValue>) {
   return (
     <div className='copy-cell'>
       <span>{value}</span>
-      {value && <Copy text={value} />}
-      {showLoading && <CircularProgress size={14} />}
+      {value ? <Copy text={value} /> : null}
+      {showLoading ? <CircularProgress size={14} /> : null}
     </div>
   )
 }

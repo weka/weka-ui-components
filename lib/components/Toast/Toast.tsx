@@ -1,6 +1,7 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
 import copy from 'copy-to-clipboard'
+
 import svgs from 'svgs'
 
 import './toast.scss'
@@ -12,8 +13,7 @@ interface ToastProps {
   icon: React.ReactNode
 }
 
-function Toast(props: ToastProps) {
-  const { message, icon } = props
+function Toast({ message, icon }: ToastProps) {
   return (
     <div className='toast-wrapper'>
       <span>{icon}</span>

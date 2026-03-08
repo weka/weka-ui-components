@@ -1,4 +1,5 @@
 import svgs from 'svgs'
+
 import utils from './utils'
 
 const {
@@ -14,7 +15,7 @@ const {
 export const EMPTY_STRING = ''
 export const EMPTY_CONTENT = '—'
 export const ZERO_STRING = '0'
-// eslint-disable-next-line
+
 export const NOP = () => {}
 export const TAG_SEPARATOR = ','
 
@@ -405,11 +406,7 @@ export const FORM_VALIDATIONS = {
               "Value can't be equal to one of the fields"
             return value !== restriction.value
           default:
-            throw new Error(
-              `Unknown restriction type: ${
-                (restriction as StringRestriction).type
-              }`
-            )
+            throw new Error(`Unknown restriction type: ${restriction.type}`)
         }
       }
       const isInvalid = restrictions.every(

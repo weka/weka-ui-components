@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { default as TagsBoxComponent, TagsBoxProps } from './TagsBox'
 import React, { useState } from 'react'
+import type { Meta, StoryObj } from '@storybook/react'
+
+import type { TagsBoxProps } from './TagsBox'
+import { default as TagsBoxComponent } from './TagsBox'
 
 const meta: Meta<typeof TagsBoxComponent> = {
   component: TagsBoxComponent,
@@ -10,7 +12,7 @@ export default meta
 
 type Story = StoryObj<typeof TagsBoxComponent>
 
-const TagsBoxComponentWithState = (args: TagsBoxProps) => {
+function TagsBoxComponentWithState(args: TagsBoxProps) {
   const [value, setValue] = useState<string[]>([])
   const handleOnChange = (newValue: string[]) => {
     setValue(newValue)
@@ -18,9 +20,9 @@ const TagsBoxComponentWithState = (args: TagsBoxProps) => {
   return (
     <TagsBoxComponent
       {...args}
-      value={value}
-      onChange={handleOnChange}
       label='Tagsbox Label'
+      onChange={handleOnChange}
+      value={value}
     />
   )
 }

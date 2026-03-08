@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
+import type { IAceEditor } from 'react-ace/lib/types'
+
 import { useTextEditorContext } from '../../../context'
-import { IAceEditor } from 'react-ace/lib/types'
 
 function useDisableSyntaxCheck({ editor }: { editor?: IAceEditor }) {
   const editorContext = useTextEditorContext(true)

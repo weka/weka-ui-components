@@ -60,13 +60,13 @@ export const NoDataWithCustomMessage: Story = {
 export const WithChildren: Story = {
   render: () => (
     <LoadingState
-      type='error'
       message='Something went wrong'
+      type='error'
     >
       <button
-        type='button'
         onClick={() => alert('Retry clicked')}
         style={{ marginTop: '12px', padding: '8px 16px', cursor: 'pointer' }}
+        type='button'
       >
         Retry
       </button>

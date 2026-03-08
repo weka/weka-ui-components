@@ -1,7 +1,10 @@
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import React from 'react'
+import clsx from 'clsx'
+
 import { useToggle } from 'hooks'
 import svgs from 'svgs'
-import clsx from 'clsx'
+
 import SpanTooltip from '../SpanTooltip/SpanTooltip'
 
 import './summary.scss'
@@ -15,14 +18,12 @@ interface SummaryProps {
   onExpand?: (expanded: boolean) => void
 }
 
-function Summary(props: SummaryProps) {
-  const {
-    title,
-    children,
-    expanded: outerExpanded,
-    onExpand: outerOnExpand
-  } = props
-
+function Summary({
+  title,
+  children,
+  expanded: outerExpanded,
+  onExpand: outerOnExpand
+}: SummaryProps) {
   const [innerExpanded, toggleInnerExpanded] = useToggle(true)
 
   const isExpanded = outerExpanded ?? innerExpanded
@@ -46,7 +47,7 @@ function Summary(props: SummaryProps) {
         />
         <SpanTooltip>{title}</SpanTooltip>
       </button>
-      {isExpanded && <div className='content'>{children}</div>}
+      {isExpanded ? <div className='content'>{children}</div> : null}
     </div>
   )
 }

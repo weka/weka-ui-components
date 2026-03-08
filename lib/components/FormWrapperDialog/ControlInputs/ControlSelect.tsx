@@ -1,7 +1,10 @@
 import React from 'react'
-import { Controller, Control } from 'react-hook-form'
-import Select from '../../inputs/Select'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
+
+import Select from '../../inputs/Select'
 
 interface ControlSelectProps {
   control: Control<Record<string, unknown>[]>
@@ -11,14 +14,13 @@ interface ControlSelectProps {
   disabled?: boolean
 }
 
-function ControlSelect(props: ControlSelectProps) {
-  const {
-    control,
-    name,
-    defaultValue = EMPTY_STRING,
-    rules = {},
-    ...rest
-  } = props
+function ControlSelect({
+  control,
+  name,
+  defaultValue = EMPTY_STRING,
+  rules = {},
+  ...rest
+}: ControlSelectProps) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
@@ -26,20 +28,20 @@ function ControlSelect(props: ControlSelectProps) {
 
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
-      defaultValue={defaultValue}
       control={control}
+      defaultValue={defaultValue}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <div className='field-container'>
           <Select
             {...rest}
+            error={error?.message}
+            isRequired={isRequiredInRules ? !disabled : null}
             onChange={field.onChange}
             value={field.value}
-            error={error?.message}
-            isRequired={isRequiredInRules && !disabled}
           />
         </div>
       )}

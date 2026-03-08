@@ -1,5 +1,4 @@
 import type { PropsWithChildren } from 'react'
-
 import React, {
   createContext,
   useCallback,
@@ -8,6 +7,7 @@ import React, {
   useMemo,
   useState
 } from 'react'
+
 import { LOCAL_STORAGE_UPDATE_EVENT } from 'consts'
 
 type Theme = {
@@ -31,7 +31,7 @@ const DarkModeContext = createContext<{
   setTheme: (theme: { isDarkMode: boolean } | { isSystem: true }) => void
 } | null>(null)
 
-const DarkModeProvider = (props: PropsWithChildren) => {
+function DarkModeProvider(props: PropsWithChildren) {
   const [themeState, setThemeState] = useState<Theme>(() => {
     const savedDarkMode = localStorage.getItem(STORAGE_KEY) as
       | 'true'
@@ -139,7 +139,12 @@ const DarkModeProvider = (props: PropsWithChildren) => {
     [setTheme, themeState]
   )
 
-  return <DarkModeContext.Provider value={value} {...props} />
+  return (
+    <DarkModeContext.Provider
+      value={value}
+      {...props}
+    />
+  )
 }
 
 const useDarkMode = () => {

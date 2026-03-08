@@ -1,12 +1,15 @@
-import React, { useState, FC, useCallback } from 'react'
-import { Meta, StoryFn } from '@storybook/react'
-import ScheduleSelector from './ScheduleSelector'
+import type { FC } from 'react'
+import React, { useCallback, useState } from 'react'
+import type { Meta, StoryFn } from '@storybook/react'
 
-import { Select } from '../inputs'
 import Utils from 'utils'
+
 import { TextEditor } from '../index'
-import { ScheduleData } from './types'
+import { Select } from '../inputs'
+
+import ScheduleSelector from './ScheduleSelector'
 import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'
+import type { ScheduleData } from './types'
 
 const initialScheduleData: ScheduleData = {
   daily: {
@@ -91,18 +94,24 @@ const Template: StoryFn = (args) => {
     <div style={{ maxWidth: '885px' }}>
       <h4>Select Schedule Type:</h4>
       <div style={{ marginBottom: '20px' }}>
-        <ScheduleTypeSelector onChange={handleTypeChange} value={type} />
+        <ScheduleTypeSelector
+          onChange={handleTypeChange}
+          value={type}
+        />
       </div>
       <div style={{ minHeight: '80px' }}>
         <ScheduleSelector
-          type={type}
-          scheduleData={scheduleData}
-          onChange={handleDataChange}
           isDisabled={args.isDisabled}
+          onChange={handleDataChange}
+          scheduleData={scheduleData}
+          type={type}
         />
       </div>
       <div style={{ height: '600px', display: 'flex', paddingTop: '10px' }}>
-        <TextEditor value={JSON.stringify(scheduleData, null, 2)} readOnly />
+        <TextEditor
+          readOnly
+          value={JSON.stringify(scheduleData, null, 2)}
+        />
       </div>
     </div>
   )

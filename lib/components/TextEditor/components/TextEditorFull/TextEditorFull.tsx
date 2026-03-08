@@ -1,5 +1,3 @@
-import type { IAceEditor } from 'react-ace/lib/types'
-
 import React, {
   lazy,
   memo,
@@ -10,25 +8,29 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { EMPTY_STRING } from 'consts'
-import Copy from '../../../Copy'
-import { useToggle } from 'hooks'
-import { Checkbox } from '../../../inputs'
+import type { IAceEditor } from 'react-ace/lib/types'
 import { CircularProgress } from '@mui/material'
+import clsx from 'clsx'
+
+import { EMPTY_STRING } from 'consts'
+import { useToggle } from 'hooks'
+
+import Copy from '../../../Copy'
+import { Checkbox } from '../../../inputs'
+import Loader from '../../../Loader'
+import { useTextEditorContext } from '../../context'
+
+import type { ParsedData } from './hooks'
 import {
+  useDisableSyntaxCheck,
+  useEditor,
   useFoldAll,
+  useForcedLineNumbers,
+  useIsScrollbarVisible,
   useLinePosition,
   useOnlyMatching,
-  useSearch,
-  useForcedLineNumbers,
-  useEditor,
-  ParsedData,
-  useDisableSyntaxCheck,
-  useIsScrollbarVisible
+  useSearch
 } from './hooks'
-import clsx from 'clsx'
-import { useTextEditorContext } from '../../context'
-import Loader from '../../../Loader'
 
 import './textEditorFull.scss'
 
@@ -79,29 +81,27 @@ export interface TextEditorFullProps {
   fontSize?: number
   editorOptions?: Record<string, unknown>
 }
-function TextEditorFull(props: TextEditorFullProps) {
-  const {
-    readOnly,
-    value = EMPTY_STRING,
-    onChange,
-    onValidate,
-    allowSearch = false,
-    allowCopy = false,
-    foldAll = false,
-    extraClass = EMPTY_STRING,
-    valueForMatched,
-    isValueForMatchedLoading = false,
-    mode = 'json',
-    initialLine,
-    onScroll,
-    maxLines,
-    loading,
-    lines,
-    fontSize,
-    editorOptions = {},
-    ...rest
-  } = props
-
+function TextEditorFull({
+  readOnly,
+  value = EMPTY_STRING,
+  onChange,
+  onValidate,
+  allowSearch = false,
+  allowCopy = false,
+  foldAll = false,
+  extraClass = EMPTY_STRING,
+  valueForMatched,
+  isValueForMatchedLoading = false,
+  mode = 'json',
+  initialLine,
+  onScroll,
+  maxLines,
+  loading,
+  lines,
+  fontSize,
+  editorOptions = {},
+  ...rest
+}: TextEditorFullProps) {
   const editorContext = useTextEditorContext(true)
   const editorContextValue = editorContext?.value
   const setTextEditorContext = editorContext?.setTextEditorContext
@@ -199,40 +199,48 @@ function TextEditorFull(props: TextEditorFullProps) {
     <Loader />
   ) : (
     <div className={classes}>
-      {allowCopy && <Copy text={jsonValue} extraClass='copy-btn' />}
+      {allowCopy ? (
+        <Copy
+          extraClass='copy-btn'
+          text={jsonValue}
+        />
+      ) : null}
       {(valueForMatched || isValueForMatchedLoading) &&
-        options.allowSearch &&
-        isScrollbarVisible !== null && (
-          <div
-            className={clsx('matching-toggle', {
-              'with-scrollbar': isScrollbarVisible
-            })}
-          >
-            <span>Show only matching lines</span>
-            {isValueForMatchedLoading ? (
-              <CircularProgress size={16} />
-            ) : (
-              <Checkbox checked={onlyMatching} onChange={toggleOnlyMatching} />
-            )}
-          </div>
-        )}
+      options.allowSearch &&
+      isScrollbarVisible !== null ? (
+        <div
+          className={clsx('matching-toggle', {
+            'with-scrollbar': isScrollbarVisible
+          })}
+        >
+          <span>Show only matching lines</span>
+          {isValueForMatchedLoading ? (
+            <CircularProgress size={16} />
+          ) : (
+            <Checkbox
+              checked={onlyMatching}
+              onChange={toggleOnlyMatching}
+            />
+          )}
+        </div>
+      ) : null}
       <Suspense fallback={<Loader />}>
         <AceEditor
           ref={editorRef}
-          mode={mode}
-          height='100%'
-          fontSize={fontSize}
-          width='calc(100% - 16px)'
-          showPrintMargin={false}
-          highlightActiveLine={false}
-          name={id}
           editorProps={{ $blockScrolling: true }}
-          readOnly={readOnly}
-          value={onlyMatching ? jsonValue : options.value}
+          fontSize={fontSize}
+          height='100%'
+          highlightActiveLine={false}
+          mode={mode}
+          name={id}
           onChange={onChange}
-          onValidate={onValidate}
           onLoad={handleLoad}
+          onValidate={onValidate}
+          readOnly={readOnly}
           setOptions={{ maxLines, ...editorOptions }}
+          showPrintMargin={false}
+          value={onlyMatching ? jsonValue : options.value}
+          width='calc(100% - 16px)'
           {...rest}
         />
       </Suspense>

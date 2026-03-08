@@ -1,9 +1,11 @@
 import React from 'react'
 import clsx from 'clsx'
-import Tooltip from '../../../../Tooltip'
+
 import { EMPTY_STRING } from 'consts'
-import { ExtendedCellProps } from '../../../types'
 import svgs from 'svgs'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 import './iconCell.scss'
 
@@ -19,9 +21,12 @@ export type IconCellValue = string | boolean | null | undefined
 
 export const IconCellName = 'IconCell'
 
-function IconCell<Data>(props: ExtendedCellProps<Data, IconCellValue>) {
-  const { cell, column, row, customValue } = props
-
+function IconCell<Data>({
+  cell,
+  column,
+  row,
+  customValue
+}: ExtendedCellProps<Data, IconCellValue>) {
   const cellDef = column.columnDef.meta?.cell
   if (cellDef && cellDef.type !== IconCellName) {
     throw new Error(`${IconCellName}: cell options type is incorrect`)
@@ -43,7 +48,7 @@ function IconCell<Data>(props: ExtendedCellProps<Data, IconCellValue>) {
   return (
     <Tooltip data={dataForTooltip}>
       <div className={clsx('icon-cell', additionalClass)}>
-        {value && <Icon />}
+        {value ? <Icon /> : null}
       </div>
     </Tooltip>
   )

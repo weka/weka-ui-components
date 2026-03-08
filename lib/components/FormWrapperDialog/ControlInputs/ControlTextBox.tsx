@@ -1,7 +1,10 @@
 import React from 'react'
-import { Control, Controller } from 'react-hook-form'
-import TextBox from '../../inputs/TextBox'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+
 import { FORM_VALIDATIONS } from 'consts'
+
+import TextBox from '../../inputs/TextBox'
 
 interface ControlTextBoxProps {
   control: Control<Record<string, unknown>[]>
@@ -11,28 +14,33 @@ interface ControlTextBoxProps {
   disabled?: boolean
 }
 
-function ControlTextBox(props: ControlTextBoxProps) {
-  const { control, name, defaultValue, rules = {}, ...rest } = props
+function ControlTextBox({
+  control,
+  name,
+  defaultValue,
+  rules = {},
+  ...rest
+}: ControlTextBoxProps) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
   )
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
-      defaultValue={defaultValue}
       control={control}
+      defaultValue={defaultValue}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <div className='field-container'>
           <TextBox
             {...rest}
+            error={error?.message}
+            isRequired={isRequiredInRules ? !disabled : null}
             onChange={field.onChange}
             value={field.value}
-            error={error?.message}
-            isRequired={isRequiredInRules && !disabled}
           />
         </div>
       )}

@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from 'storybook-solidjs'
-import { default as ErrorPageComponent } from './ErrorPage'
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import { default as ErrorPageComponent } from './ErrorPage'
 
 const meta: Meta<typeof ErrorPageComponent> = {
   component: ErrorPageComponent,

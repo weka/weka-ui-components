@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+
 import { useTextEditorContext } from '../context'
 
 function useTags({ value }: { value?: string }) {

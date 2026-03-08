@@ -1,47 +1,48 @@
 import type {
+  Cell,
   Column,
   ColumnDef,
-  FilterFn,
-  Table,
-  HeaderGroup,
-  Cell,
-  Row,
   ColumnFilter,
-  SortingFn
+  FilterFn,
+  HeaderGroup,
+  Row,
+  SortingFn,
+  Table
 } from '@tanstack/react-table'
-import '@tanstack/react-table'
-import {
-  ApiCallCellOptions,
-  BlocksCellOptions,
-  CapacityCellOptions,
-  DateCellOptions,
-  DefaultCellOptions,
-  IconCellOptions,
-  SwitchCellOptions,
-  StatusCellOptions,
-  IconButtonCellOptions,
-  CopyCellOptions,
-  ApiCallCellName,
-  CapacityCellName,
-  StatusCellName,
-  DateCellName,
-  SwitchCellName,
-  IconCellName,
-  DefaultCellName,
-  IconButtonCellName,
-  BlocksCellName,
-  CopyCellName,
-  AggregatedTotalCellOptions,
-  AggregatedTotalCellName
-} from './exports'
 
-import {
+import '@tanstack/react-table'
+
+import type {
   DateFilterOptions,
   FilterTypes,
   MultiSelectFilterOptions,
   SelectFilterOptions,
   TextFilterOptions
 } from './components'
+import type {
+  AggregatedTotalCellName,
+  AggregatedTotalCellOptions,
+  ApiCallCellName,
+  ApiCallCellOptions,
+  BlocksCellName,
+  BlocksCellOptions,
+  CapacityCellName,
+  CapacityCellOptions,
+  CopyCellName,
+  CopyCellOptions,
+  DateCellName,
+  DateCellOptions,
+  DefaultCellName,
+  DefaultCellOptions,
+  IconButtonCellName,
+  IconButtonCellOptions,
+  IconCellName,
+  IconCellOptions,
+  StatusCellName,
+  StatusCellOptions,
+  SwitchCellName,
+  SwitchCellOptions
+} from './exports'
 
 export type ExtendedTable<Data> = Table<Data>
 

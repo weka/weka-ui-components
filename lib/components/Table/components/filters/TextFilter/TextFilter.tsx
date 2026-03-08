@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { ExtendedFilterProps } from '../../../types'
+
 import { EMPTY_STRING } from 'consts'
-import FilterWrapper from '../../FilterWrapper'
+
 import { Select } from '../../../../inputs'
-import { TextFilterValue, TextFilterMode, validateRegexPattern, FILTER_MODES } from '../../../tableUtils'
+import type { TextFilterMode, TextFilterValue } from '../../../tableUtils'
+import { FILTER_MODES, validateRegexPattern } from '../../../tableUtils'
+import type { ExtendedFilterProps } from '../../../types'
+import FilterWrapper from '../../FilterWrapper'
 
 import './textFilter.scss'
 
@@ -25,7 +28,9 @@ const FILTER_MODE_OPTIONS = [
   { value: FILTER_MODES.REGEX, label: 'Regular Expression' }
 ]
 
-const getPatternFromFilterValue = (fv: TextFilterValue | string | undefined): string => {
+const getPatternFromFilterValue = (
+  fv: TextFilterValue | string | undefined
+): string => {
   if (fv === undefined) {
     return EMPTY_STRING
   }
@@ -35,7 +40,9 @@ const getPatternFromFilterValue = (fv: TextFilterValue | string | undefined): st
   return fv.pattern ?? EMPTY_STRING
 }
 
-const getModeFromFilterValue = (fv: TextFilterValue | string | undefined): TextFilterMode => {
+const getModeFromFilterValue = (
+  fv: TextFilterValue | string | undefined
+): TextFilterMode => {
   if (fv === undefined || typeof fv === 'string') {
     return FILTER_MODES.INCLUDE
   }
@@ -48,10 +55,15 @@ function TextFilter<Data, Value>({
 }: ExtendedFilterProps<Data, Value, TextFilterOptions>) {
   const { advancedFiltering = true } = filterOptions
 
-  const filterValue = column.getFilterValue() as TextFilterValue | string | undefined
+  const filterValue = column.getFilterValue() as
+    | TextFilterValue
+    | string
+    | undefined
 
   const initialPattern = getPatternFromFilterValue(filterValue)
-  const initialMode = advancedFiltering ? getModeFromFilterValue(filterValue) : FILTER_MODES.INCLUDE
+  const initialMode = advancedFiltering
+    ? getModeFromFilterValue(filterValue)
+    : FILTER_MODES.INCLUDE
 
   const [pattern, setPattern] = useState<string>(initialPattern)
   const [mode, setMode] = useState<TextFilterMode>(initialMode)
@@ -88,7 +100,7 @@ function TextFilter<Data, Value>({
   }
 
   const valueToSubmit = advancedFiltering
-    ? { pattern, mode } as TextFilterValue
+    ? ({ pattern, mode } as TextFilterValue)
     : pattern
 
   const shouldDisableBtn = (val: TextFilterValue | string) => {
@@ -107,26 +119,28 @@ function TextFilter<Data, Value>({
   return (
     <FilterWrapper
       column={column}
-      value={valueToSubmit as Value}
-      shouldDisableBtn={shouldDisableBtn}
       disabledBtnTooltip={disabledBtnTooltip}
+      shouldDisableBtn={shouldDisableBtn}
+      value={valueToSubmit as Value}
     >
       <div className='table-text-filter-wrapper'>
-      <input
-        autoFocus
+        <input
+          autoFocus
           className={clsx('table-text-filter', { 'has-error': !!error })}
-          value={pattern}
           onChange={handlePatternChange}
-        type='text'
-      />
-        {error && <span className='table-text-filter-error'>{error}</span>}
-        {advancedFiltering && (
+          type='text'
+          value={pattern}
+        />
+        {error ? (
+          <span className='table-text-filter-error'>{error}</span>
+        ) : null}
+        {advancedFiltering ? (
           <Select
+            onChange={handleModeChange}
             options={FILTER_MODE_OPTIONS}
             value={mode}
-            onChange={handleModeChange}
           />
-        )}
+        ) : null}
       </div>
     </FilterWrapper>
   )

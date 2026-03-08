@@ -1,7 +1,8 @@
-import { renderHook } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { useClickOutside } from './useClickOutside'
 import type { RefObject } from 'react'
+import { renderHook } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { useClickOutside } from './useClickOutside'
 
 describe('useClickOutside', () => {
   let ref: RefObject<HTMLElement>

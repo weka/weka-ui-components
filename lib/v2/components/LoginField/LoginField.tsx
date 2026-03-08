@@ -38,11 +38,11 @@ export function LoginField({
         {isRequired ? <span className={styles.required}>*</span> : null}
       </label>
       <input
-        id={id}
         autoFocus={autoFocus}
         className={clsx(styles.input, error && styles.inputError)}
         data-testid={dataTestId}
         disabled={disabled}
+        id={id}
         onChange={(e) => onChange(e.target.value)}
         type={type}
         value={value}

@@ -1,13 +1,13 @@
+export type { TooltipPlacement } from './consts'
 export {
-  EMPTY_STRING,
+  COMMA_SEPARATOR,
   EMPTY_ARRAY,
-  EMPTY_STRING_ARRAY,
   EMPTY_OBJECT,
   EMPTY_SET,
+  EMPTY_STRING,
+  EMPTY_STRING_ARRAY,
   NOOP,
   NOT_APPLICABLE,
-  COMMA_SEPARATOR,
   PERCENTAGE,
   TOOLTIP_PLACEMENTS
 } from './consts'
-export type { TooltipPlacement } from './consts'

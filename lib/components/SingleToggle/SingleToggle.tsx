@@ -1,5 +1,7 @@
-import React, { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
+import React from 'react'
 import clsx from 'clsx'
+
 import Tooltip from '../Tooltip'
 
 import './singleToggle.scss'
@@ -38,8 +40,8 @@ function SingleToggle({
         })}
       >
         <input
-          type='checkbox'
           checked={isEnabled}
+          type='checkbox'
           onChange={(e) => {
             e.stopPropagation()
             onClick(e)

@@ -1,9 +1,11 @@
 import React from 'react'
-import Tooltip from '../../../../Tooltip'
-import CapacityBar from '../../../../CapacityBar'
+
 import Utils from 'utils'
+
+import CapacityBar from '../../../../CapacityBar'
 import SpanTooltip from '../../../../SpanTooltip'
-import { ExtendedCellProps } from '../../../types'
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 import './capacityCell.scss'
 
@@ -41,9 +43,10 @@ function getBarColor(used: number, total: number, caution = false) {
 
 export const CapacityCellName = 'CapacityCell'
 
-function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>) {
-  const { cell, customValue } = props
-
+function CapacityCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, CapacityCellValue>) {
   const cellDef = cell.column.columnDef.meta?.cell
 
   if (cellDef && cellDef.type !== CapacityCellName) {
@@ -70,7 +73,7 @@ function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>) {
     <div className='capacity-cell'>
       <div className='capacity-cell-headline'>
         <SpanTooltip extraClasses='label-4'>{text}</SpanTooltip>
-        {isThin && (
+        {isThin ? (
           <Tooltip
             data={`Thinly Provisioned Filesystem\nMax SSD: ${Utils.formatBytesToString(
               maxThin,
@@ -80,12 +83,12 @@ function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>) {
           >
             <div className='thin-provision' />
           </Tooltip>
-        )}
+        ) : null}
       </div>
       <div className='capacity-cell-data'>
         <CapacityBar
-          firstUsage={total ? used / total : 0}
           firstColor={getBarColor(used, total, caution)}
+          firstUsage={total ? used / total : 0}
         />
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React from 'react'
-import { DateTime } from 'luxon'
-import Utils from 'utils'
 import clsx from 'clsx'
+import type { DateTime } from 'luxon'
+
 import { EMPTY_STRING, TIME_FORMATS } from 'consts'
+import Utils from 'utils'
 
 import './DateTimeLabel.scss'
 
@@ -15,16 +16,14 @@ interface DateTimeLabelProps {
   customFormat?: string
 }
 
-function DateTimeLabel(props: DateTimeLabelProps) {
-  const {
-    date = null,
-    showSeconds = true,
-    showTime = true,
-    disabled,
-    enableCustomFormat = false,
-    customFormat = TIME_FORMATS.DATE
-  } = props
-
+function DateTimeLabel({
+  date = null,
+  showSeconds = true,
+  showTime = true,
+  disabled,
+  enableCustomFormat = false,
+  customFormat = TIME_FORMATS.DATE
+}: DateTimeLabelProps) {
   const labelClasses = clsx({
     'datetime-label': true,
     'datetime-label-disabled': disabled

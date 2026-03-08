@@ -1,22 +1,20 @@
 import React, { useMemo } from 'react'
 import { DateTime } from 'luxon'
-import svgs from 'svgs'
+
 import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from 'consts'
+import svgs from 'svgs'
 import utils from 'utils'
-import { ExtendedColumn } from '../../../types'
+
+import type { SelectFilterMode, TextFilterValue } from '../../../tableUtils'
 import {
-  tableUtils,
-  isTextFilterValue,
-  isSelectFilterValue,
   isMultiSelectFilterValue,
-  TextFilterValue,
-  SelectFilterMode
+  isSelectFilterValue,
+  isTextFilterValue,
+  tableUtils
 } from '../../../tableUtils'
-import {
-  DateFilterValue,
-  isDateFilterValue,
-  isDurationFilterValue
-} from '../../filters'
+import type { ExtendedColumn } from '../../../types'
+import type { DateFilterValue } from '../../filters'
+import { isDateFilterValue, isDurationFilterValue } from '../../filters'
 
 import './filterBox.scss'
 
@@ -64,13 +62,11 @@ interface FilterBoxProps<Data, Value> {
   hasCustomDateFormat?: boolean
   customDateFormat?: string
 }
-function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
-  const {
-    column,
-    hasCustomDateFormat = false,
-    customDateFormat = TIME_FORMATS.DATE_TIME_SECONDS
-  } = props
-
+function FilterBox<Data, Value>({
+  column,
+  hasCustomDateFormat = false,
+  customDateFormat = TIME_FORMATS.DATE_TIME_SECONDS
+}: FilterBoxProps<Data, Value>) {
   const columnTitle = tableUtils.getColumnTitle(column)
   const filterValue = column.getFilterValue()
   const onDelete = () => column.setFilterValue(undefined)
@@ -124,7 +120,9 @@ function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
           <span className='filter-mode-label'>
             {SELECT_FILTER_MODE_LABELS[filterValue.mode]}:
           </span>{' '}
-          <span className='filter-pattern'>{filterValue.values.join(', ')}</span>
+          <span className='filter-pattern'>
+            {filterValue.values.join(', ')}
+          </span>
         </>
       )
     }

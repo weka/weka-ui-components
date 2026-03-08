@@ -1,6 +1,8 @@
-import type { Meta, StoryObj } from 'storybook-solidjs'
-import { default as SpinnerComponent, SpinnerProps } from './Spinner'
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import type { SpinnerProps } from './Spinner'
+import { default as SpinnerComponent } from './Spinner'
 
 const meta: Meta<typeof SpinnerComponent> = {
   component: SpinnerComponent,

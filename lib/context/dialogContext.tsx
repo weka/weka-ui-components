@@ -1,3 +1,4 @@
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import React, {
   createContext,
   useCallback,
@@ -5,8 +6,6 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import type { Dispatch, ReactNode, SetStateAction } from 'react'
-import Button from '../components/Button'
 import {
   Dialog as MuiDialog,
   DialogActions,
@@ -14,6 +13,8 @@ import {
   DialogTitle
 } from '@mui/material'
 import clsx from 'clsx'
+
+import Button from '../components/Button'
 
 import './dialogContext.scss'
 
@@ -45,19 +46,22 @@ interface DialogContextType {
   unSetDialog: () => void
 }
 
-const Dialog = ({ dialog, unSetDialog }: DialogProps) => {
+function Dialog({ dialog, unSetDialog }: DialogProps) {
   const [isClickLoading, setIsClickLoading] = useState(false)
 
   return (
     <div>
-      <MuiDialog open={!!dialog} classes={{ paper: 'dialog' }}>
+      <MuiDialog
+        classes={{ paper: 'dialog' }}
+        open={!!dialog}
+      >
         <DialogTitle>
           <div
+            data-testid='dialog_title'
             className={clsx('headline', {
               success: dialog.type === 'success',
               error: dialog.type === 'error'
             })}
-            data-testid='dialog_title'
           >
             {dialog.title}
           </div>
@@ -67,17 +71,19 @@ const Dialog = ({ dialog, unSetDialog }: DialogProps) => {
         </DialogContent>
         <DialogActions classes={{ root: 'dialogActions' }}>
           <Button
+            data-testid='close_button'
+            empty={!!dialog.onConfirm}
             onClick={() => {
               dialog?.onCancel?.()
               unSetDialog()
             }}
-            empty={!!dialog.onConfirm}
-            data-testid='close_button'
           >
             {dialog.cancelText ?? (dialog.onConfirm ? 'Cancel' : 'Close')}
           </Button>
           {!!dialog.onConfirm && (
             <Button
+              data-testid='confirm_button'
+              isLoading={isClickLoading}
               onClick={() => {
                 if (dialog.shouldConfirmBtnLoading) {
                   setIsClickLoading(true)
@@ -90,8 +96,6 @@ const Dialog = ({ dialog, unSetDialog }: DialogProps) => {
                   unSetDialog()
                 }
               }}
-              isLoading={isClickLoading}
-              data-testid='confirm_button'
             >
               {dialog.confirmText || 'Confirm'}
             </Button>
@@ -102,7 +106,7 @@ const Dialog = ({ dialog, unSetDialog }: DialogProps) => {
   )
 }
 
-const DialogProvider = (props: DialogProviderProps) => {
+function DialogProvider(props: DialogProviderProps) {
   const [dialog, setDialog] = useState<Dialog | null>()
   const unSetDialog = useCallback(() => {
     setDialog(null)
@@ -114,9 +118,17 @@ const DialogProvider = (props: DialogProviderProps) => {
   )
 
   return (
-    <DialogContext.Provider value={contextValue} {...props}>
+    <DialogContext.Provider
+      value={contextValue}
+      {...props}
+    >
       {props.children}
-      {dialog && <Dialog dialog={dialog} unSetDialog={unSetDialog} />}
+      {dialog ? (
+        <Dialog
+          dialog={dialog}
+          unSetDialog={unSetDialog}
+        />
+      ) : null}
     </DialogContext.Provider>
   )
 }

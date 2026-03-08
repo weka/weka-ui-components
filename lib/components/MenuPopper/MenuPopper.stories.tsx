@@ -1,7 +1,9 @@
-import { default as MenuPopperComponent } from './MenuPopper'
-import Button from '../Button'
 import React, { useState } from 'react'
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
+
+import Button from '../Button'
+
+import { default as MenuPopperComponent } from './MenuPopper'
 
 export default {
   title: 'Components/MenuPopper',
@@ -23,9 +25,9 @@ const Template: ComponentStory<typeof MenuPopperComponent> = (args) => {
       {Boolean(anchorEl) && (
         <MenuPopperComponent
           anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClickAway={handleClose}
           items={[]}
+          onClickAway={handleClose}
+          open={Boolean(anchorEl)}
           {...args}
         />
       )}

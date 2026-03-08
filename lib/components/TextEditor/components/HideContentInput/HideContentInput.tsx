@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
-import { useTextEditorContext } from '../../context'
-import { TagsBox } from '../../../inputs'
+import { useLocalStorage } from 'react-use'
 import clsx from 'clsx'
 
+import { TagsBox } from '../../../inputs'
+import { useTextEditorContext } from '../../context'
+
 import './hideContentInput.scss'
-import { useLocalStorage } from 'react-use'
 
 interface HideContentInputProps {
   wrapperClass?: string
@@ -13,9 +14,7 @@ interface HideContentInputProps {
 const DISABLE_SYNTAX_CHECK_KEY = 'hideContent'
 const HIDE_CONTENT_STORAGE_KEY = 'text-editor-hide-content'
 
-function HideContentInput(props: HideContentInputProps) {
-  const { wrapperClass } = props
-
+function HideContentInput({ wrapperClass }: HideContentInputProps) {
   const [invalidText, setInvalidText] = React.useState(
     'Incorrect regular expression'
   )
@@ -54,11 +53,13 @@ function HideContentInput(props: HideContentInputProps) {
 
   return (
     <TagsBox
-      value={hideContent}
       info='Enter regular expression to hide specific text'
-      placeholder='Add a RegExp'
-      onChange={setHideContent}
+      invalidTagText={invalidText} // TODO:
       label='Hide Content'
+      onChange={setHideContent}
+      placeholder='Add a RegExp'
+      value={hideContent}
+      wrapperClass={clsx('text-editor-hide-content-input', wrapperClass)}
       tagsValidation={(regExpsArr) =>
         regExpsArr.filter((regExp) => {
           try {
@@ -74,8 +75,6 @@ function HideContentInput(props: HideContentInputProps) {
           }
         })
       }
-      invalidTagText={invalidText} // TODO:
-      wrapperClass={clsx('text-editor-hide-content-input', wrapperClass)}
     />
   )
 }

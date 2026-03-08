@@ -1,8 +1,10 @@
 import React from 'react'
-import Tooltip from '../../Tooltip'
-import Switch from '../../Switch'
+
 import { EMPTY_STRING } from 'consts'
 import svgs from 'svgs'
+
+import Switch from '../../Switch'
+import Tooltip from '../../Tooltip'
 
 import './FormSwitch.scss'
 
@@ -35,17 +37,16 @@ function FormSwitch({
       <div className='form-switch'>
         <div>
           <span className='form-switch-label'>{label}</span>
-          {info && (
+          {info ? (
             <Tooltip data={info}>
               <Info className='form-switch-info' />
             </Tooltip>
-          )}
+          ) : null}
         </div>
-
         <Switch
+          checked={value || placeholder || false}
           onChange={onChange}
           oneColor={oneColor}
-          checked={value || placeholder || false}
           {...rest}
         />
       </div>

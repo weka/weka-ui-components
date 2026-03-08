@@ -1,37 +1,33 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useState,
-  useMemo,
-  useRef
-} from 'react'
-import { FormControl } from '@mui/material'
+import type { ReactElement } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import ReactSelect from 'react-select'
+import { FormControl } from '@mui/material'
 import clsx from 'clsx'
+
 import { EMPTY_STRING, NOP } from 'consts'
+import svgs from 'svgs'
+import Utils from 'utils'
+
+import { useHighlightInput } from '../../../hooks'
+import InputLoader from '../../InputLoader'
+import Tooltip from '../../Tooltip'
+
+import ClearIndicator from './ClearIndicator'
+import MultiValue from './MultiValue'
 import SelectOption from './SelectOption'
 import SingleValue from './SingleValue'
-import MultiValue from './MultiValue'
-import ClearIndicator from './ClearIndicator'
-import Utils from 'utils'
-import svgs from 'svgs'
-import Tooltip from '../../Tooltip'
 import VirtualMenuList from './VirtualMenuList'
-import InputLoader from '../../InputLoader'
-import { useHighlightInput } from '../../../hooks'
 
 import './select.scss'
 
 const { Info } = svgs
 
 export const getStyle = (hasError, hasLabel) => ({
-  menuPortal: (provided, state) => {
-    return {
-      ...provided,
-      zIndex: 1500,
-      top: state.offset === state.rect.top ? state.offset + 6 : state.offset - 6
-    }
-  },
+  menuPortal: (provided, state) => ({
+    ...provided,
+    zIndex: 1500,
+    top: state.offset === state.rect.top ? state.offset + 6 : state.offset - 6
+  }),
   menu: (base) => ({
     ...base,
     boxShadow: '0 0 0 2px var(--main-color)',
@@ -140,36 +136,35 @@ export const CommonSelectComponents = {
   LoadingIndicator: InputLoader
 }
 
-function Select(props: SelectProps) {
-  const {
-    onChange = NOP,
-    options,
-    value,
-    wrapperClass = EMPTY_STRING,
-    isMulti,
-    label,
-    disabled,
-    sortOptions,
-    error,
-    placeholder = 'Select...',
-    info,
-    isRequired,
-    redInfo = NOP,
-    isSingleClearable = false,
-    isClearable = true,
-    autoFocus = false,
-    groupedOptions = false,
-    expandInputOnFocus,
-    getAsyncOptions,
-    optionsUrl,
-    tooltip,
-    defaultValueIndex,
-    defaultValueKey,
-    preventCall,
-    isHighlighted,
-    isScrolledInto,
-    ...rest
-  } = props
+function Select({
+  onChange = NOP,
+  options,
+  value,
+  wrapperClass = EMPTY_STRING,
+  isMulti,
+  label,
+  disabled,
+  sortOptions,
+  error,
+  placeholder = 'Select...',
+  info,
+  isRequired,
+  redInfo = NOP,
+  isSingleClearable = false,
+  isClearable = true,
+  autoFocus = false,
+  groupedOptions = false,
+  expandInputOnFocus,
+  getAsyncOptions,
+  optionsUrl,
+  tooltip,
+  defaultValueIndex,
+  defaultValueKey,
+  preventCall,
+  isHighlighted,
+  isScrolledInto,
+  ...rest
+}: SelectProps) {
   const isAsync = !!getAsyncOptions
   const [saveOptions, setSaveOptions] = useState<Option[] | null>(null)
   const selectRef = useRef<HTMLInputElement | null>(null)
@@ -290,13 +285,13 @@ function Select(props: SelectProps) {
   return (
     <Tooltip data={tooltip}>
       <FormControl
-        variant='outlined'
-        className={wrapperClasses}
         ref={selectRef}
+        className={wrapperClasses}
+        variant='outlined'
       >
         <span className='select-label field-1-label-content'>
           {label}
-          {isRequired && <span className='required-star'>*</span>}
+          {isRequired ? <span className='required-star'>*</span> : null}
           {!!info && (
             <Tooltip data={info}>
               <Info />
@@ -305,23 +300,23 @@ function Select(props: SelectProps) {
         </span>
         <ReactSelect
           {...rest}
-          isLoading={isAsync && !saveOptions}
-          menuPosition='fixed'
-          isDisabled={disabled}
-          styles={getStyle(!!error, !!label)}
           autoFocus={autoFocus}
-          value={currentValue}
-          options={saveOptions || []}
           autosize
-          isMulti={isMulti}
-          isClearable={(isMulti && isClearable) || isSingleClearable}
-          onChange={onSelectChange}
           classNamePrefix='react-select'
-          dropdownAlign={{ offset: [0, 0] }}
-          components={{ ...CommonSelectComponents, MultiValue }}
-          menuPortalTarget={document.body}
           closeMenuOnSelect={!isMulti}
+          components={{ ...CommonSelectComponents, MultiValue }}
+          dropdownAlign={{ offset: [0, 0] }}
+          isClearable={(isMulti && isClearable) || isSingleClearable}
+          isDisabled={disabled}
+          isLoading={isAsync ? !saveOptions : null}
+          isMulti={isMulti}
+          menuPortalTarget={document.body}
+          menuPosition='fixed'
+          onChange={onSelectChange}
+          options={saveOptions || []}
           placeholder={placeholder}
+          styles={getStyle(!!error, !!label)}
+          value={currentValue}
         />
         <span className='select-error capitalize-first-letter'>
           {error || redInfo(value)}

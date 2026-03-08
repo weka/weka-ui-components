@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { EMPTY_STRING, NOOP } from '../../utils/consts'
+
 import { LoginField } from './LoginField'
 
 const meta: Meta<typeof LoginField> = {
@@ -90,11 +91,11 @@ export const Interactive: Story = {
 
     return (
       <LoginField
-        label='Email'
-        value={value}
-        onChange={handleChange}
         error={error}
         isRequired
+        label='Email'
+        onChange={handleChange}
+        value={value}
       />
     )
   }
@@ -115,22 +116,22 @@ export const LoginForm: Story = {
         }}
       >
         <LoginField
-          label='Email'
-          value={email}
-          onChange={setEmail}
           isRequired
+          label='Email'
+          onChange={setEmail}
+          value={email}
         />
         <LoginField
+          isRequired
           label='Password'
+          onChange={setPassword}
           type='password'
           value={password}
-          onChange={setPassword}
-          isRequired
         />
         <button
-          type='button'
-          style={{ padding: '12px', cursor: 'pointer' }}
           onClick={() => alert(`Email: ${email}, Password: ${password}`)}
+          style={{ padding: '12px', cursor: 'pointer' }}
+          type='button'
         >
           Sign In
         </button>

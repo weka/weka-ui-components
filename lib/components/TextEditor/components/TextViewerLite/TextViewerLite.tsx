@@ -1,9 +1,10 @@
 import React, { Fragment, useMemo, useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
+import clsx from 'clsx'
+
+import { useCharacterSize, useScrolledX } from './hooks'
 
 import './textViewerLite.scss'
-import { useCharacterSize, useScrolledX } from './hooks'
-import clsx from 'clsx'
 
 const GUTTER_PADDING_LEFT = 21
 const GUTTER_PADDING_RIGHT = 13
@@ -20,9 +21,12 @@ type TextViewerLiteProps = {
       }[]
 }
 
-function TextViewerLite(props: TextViewerLiteProps) {
-  const { value, fontSize, maxLines, lines: outerLines } = props
-
+function TextViewerLite({
+  value,
+  fontSize,
+  maxLines,
+  lines: outerLines
+}: TextViewerLiteProps) {
   const parentRef = useRef<HTMLDivElement>(null)
   const isScrolledX = useScrolledX({ element: parentRef.current })
 
@@ -30,19 +34,20 @@ function TextViewerLite(props: TextViewerLiteProps) {
     fontSize
   })
 
-  const lines = useMemo(() => {
-    return outerLines?.map(({ text }) => text) ?? value?.split('\n') ?? []
-  }, [outerLines, value])
+  const lines = useMemo(
+    () => outerLines?.map(({ text }) => text) ?? value?.split('\n') ?? [],
+    [outerLines, value]
+  )
 
-  const longestLineLength = useMemo(() => {
-    return lines.reduce((acc, line) => Math.max(acc, line.length), 0)
-  }, [lines])
+  const longestLineLength = useMemo(
+    () => lines.reduce((acc, line) => Math.max(acc, line.length), 0),
+    [lines]
+  )
 
   const charactersPerColumn = Math.min(maximumCharPerColumn, longestLineLength)
 
-  const getLineNumber = (index: number) => {
-    return outerLines?.[index]?.number ?? (index + 1).toString()
-  }
+  const getLineNumber = (index: number) =>
+    outerLines?.[index]?.number ?? (index + 1).toString()
 
   const rowVirtualizer = useVirtualizer({
     count: lines.length,
@@ -77,6 +82,7 @@ function TextViewerLite(props: TextViewerLiteProps) {
   return (
     <div className='text-viewer-lite'>
       <div
+        ref={parentRef}
         style={{
           height: `100%`,
           width: `100%`,
@@ -88,7 +94,6 @@ function TextViewerLite(props: TextViewerLiteProps) {
           }`,
           ...(fontSize && { fontSize: `${fontSize}px` })
         }}
-        ref={parentRef}
       >
         <pre
           style={{
@@ -109,8 +114,8 @@ function TextViewerLite(props: TextViewerLiteProps) {
             <div style={{ height: '100%', position: 'relative' }}>
               {rowVirtualizer.getVirtualItems().map((virtualRow) => (
                 <div
-                  className='text-viewer-gutter-item'
                   key={virtualRow.index}
+                  className='text-viewer-gutter-item'
                   style={{
                     height: `${virtualRow.size}px`,
                     transform: `translateY(${virtualRow.start}px)`,
@@ -135,8 +140,8 @@ function TextViewerLite(props: TextViewerLiteProps) {
 
                 return cellData ? (
                   <span
-                    className='text-viewer-cell'
                     key={virtualColumn.index}
+                    className='text-viewer-cell'
                     style={{
                       position: 'absolute',
                       top: 0,

@@ -1,11 +1,13 @@
-import React, { useState, useRef } from 'react'
-import { DateTime } from 'luxon'
+import React, { useRef, useState } from 'react'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import clsx from 'clsx'
-import DateTimeLabel from './components/DateTimeLabel'
-import svgs from 'svgs'
-import DateTimeCalendar from './components/DateTimeCalendar'
+import type { DateTime } from 'luxon'
+
 import { EMPTY_STRING } from 'consts'
+import svgs from 'svgs'
+
+import DateTimeCalendar from './components/DateTimeCalendar'
+import DateTimeLabel from './components/DateTimeLabel'
 
 import './DateTimePicker.scss'
 
@@ -30,25 +32,24 @@ interface DateTimePickerProps {
   customFormat?: string
 }
 
-function DateTimePicker(props: DateTimePickerProps) {
-  const {
-    onChange,
-    value,
-    label = EMPTY_STRING,
-    minDate,
-    maxDate,
-    showSeconds,
-    isRequired,
-    error,
-    disablePortal,
-    showTime,
-    showCalendarIcon = false,
-    disabled = false,
-    canClear = true,
-    showNow,
-    enableCustomFormat,
-    customFormat
-  } = props
+function DateTimePicker({
+  onChange,
+  value,
+  label = EMPTY_STRING,
+  minDate,
+  maxDate,
+  showSeconds,
+  isRequired,
+  error,
+  disablePortal,
+  showTime,
+  showCalendarIcon = false,
+  disabled = false,
+  canClear = true,
+  showNow,
+  enableCustomFormat,
+  customFormat
+}: DateTimePickerProps) {
   const [isOpen, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -67,14 +68,20 @@ function DateTimePicker(props: DateTimePickerProps) {
   })
 
   return (
-    <div className={dateTimePickerClasses} ref={ref}>
-      <div className={labelClasses} onClick={() => setOpen((state) => !state)}>
-        {label && (
+    <div
+      ref={ref}
+      className={dateTimePickerClasses}
+    >
+      <div
+        className={labelClasses}
+        onClick={() => setOpen((state) => !state)}
+      >
+        {label ? (
           <div className='picker-label-title'>
             {label}
-            {isRequired && <span className='required-star'>*</span>}
+            {isRequired ? <span className='required-star'>*</span> : null}
           </div>
-        )}
+        ) : null}
         {showCalendarIcon ? (
           <EmptyCalendar />
         ) : (
@@ -82,43 +89,46 @@ function DateTimePicker(props: DateTimePickerProps) {
         )}
         <div className='picker-label-text'>
           <DateTimeLabel
+            customFormat={customFormat}
             date={value}
-            showSeconds={showSeconds}
-            showTime={showTime}
             disabled={disabled}
             enableCustomFormat={enableCustomFormat}
-            customFormat={customFormat}
+            showSeconds={showSeconds}
+            showTime={showTime}
           />
         </div>
         <span className='datetime-picker-error'>{error}</span>
       </div>
       <Popper
-        disablePortal={disablePortal}
-        open={isOpen}
         anchorEl={ref.current}
-        transition
         className='popper-wrapper'
+        disablePortal={disablePortal}
         nonce={undefined}
         onResize={undefined}
         onResizeCapture={undefined}
+        open={isOpen}
+        transition
       >
         {({ TransitionProps }) => (
-          <Grow {...TransitionProps} style={{ transformOrigin: 'center top' }}>
+          <Grow
+            {...TransitionProps}
+            style={{ transformOrigin: 'center top' }}
+          >
             <Paper className='menu-popper menu-popper-calendar'>
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <div className='date-time-wrapper'>
                   <DateTimeCalendar
+                    canClear={canClear}
                     initValue={value}
-                    minDate={minDate}
                     maxDate={maxDate}
+                    minDate={minDate}
+                    showNow={showNow}
+                    showSeconds={showSeconds}
+                    showTime={showTime}
                     onSubmit={(val) => {
                       onChange(val)
                       setOpen(false)
                     }}
-                    showSeconds={showSeconds}
-                    showTime={showTime}
-                    canClear={canClear}
-                    showNow={showNow}
                   />
                 </div>
               </ClickAwayListener>

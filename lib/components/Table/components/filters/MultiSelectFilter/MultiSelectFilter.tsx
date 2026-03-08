@@ -1,10 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import Utils from 'utils'
+import React, { useEffect, useMemo, useState } from 'react'
+
 import svgs from 'svgs'
-import { ExtendedFilterProps } from '../../../types'
-import FilterWrapper from '../../FilterWrapper'
+import Utils from 'utils'
+
 import { Select } from '../../../../inputs'
-import { MultiSelectFilterValue, SelectFilterMode, FILTER_MODES } from '../../../tableUtils'
+import type {
+  MultiSelectFilterValue,
+  SelectFilterMode
+} from '../../../tableUtils'
+import { FILTER_MODES } from '../../../tableUtils'
+import type { ExtendedFilterProps } from '../../../types'
+import FilterWrapper from '../../FilterWrapper'
 
 import './multiSelectFilter.scss'
 
@@ -25,7 +31,9 @@ const FILTER_MODE_OPTIONS = [
   { value: FILTER_MODES.EXCLUDE, label: 'Exclude' }
 ]
 
-const getValuesFromFilterValue = (fv: MultiSelectFilterValue | string[] | string | undefined): string[] => {
+const getValuesFromFilterValue = (
+  fv: MultiSelectFilterValue | string[] | string | undefined
+): string[] => {
   if (fv === undefined) {
     return []
   }
@@ -38,7 +46,9 @@ const getValuesFromFilterValue = (fv: MultiSelectFilterValue | string[] | string
   return fv.values ?? []
 }
 
-const getModeFromFilterValue = (fv: MultiSelectFilterValue | string[] | string | undefined): SelectFilterMode => {
+const getModeFromFilterValue = (
+  fv: MultiSelectFilterValue | string[] | string | undefined
+): SelectFilterMode => {
   if (fv === undefined || Array.isArray(fv) || typeof fv === 'string') {
     return FILTER_MODES.INCLUDE
   }
@@ -50,11 +60,21 @@ function MultiSelectFilter<Data, Value>({
   column,
   filterOptions
 }: ExtendedFilterProps<Data, Value, MultiSelectFilterOptions>) {
-  const filterValue = column.getFilterValue() as MultiSelectFilterValue | string[] | string | undefined
+  const filterValue = column.getFilterValue() as
+    | MultiSelectFilterValue
+    | string[]
+    | string
+    | undefined
   const { fixedOptions, advancedFiltering = true } = filterOptions
 
-  const [values, setValues] = useState<string[]>(getValuesFromFilterValue(filterValue))
-  const [mode, setMode] = useState<SelectFilterMode>(advancedFiltering ? getModeFromFilterValue(filterValue) : FILTER_MODES.INCLUDE)
+  const [values, setValues] = useState<string[]>(
+    getValuesFromFilterValue(filterValue)
+  )
+  const [mode, setMode] = useState<SelectFilterMode>(
+    advancedFiltering
+      ? getModeFromFilterValue(filterValue)
+      : FILTER_MODES.INCLUDE
+  )
 
   const visibleItems = table.getRowModel().rows.length
 
@@ -117,38 +137,45 @@ function MultiSelectFilter<Data, Value>({
   }
 
   const getSelectedOption = (selectOption: string) => (
-    <div key={selectOption} className='selected-option'>
+    <div
+      key={selectOption}
+      className='selected-option'
+    >
       <Close onClick={() => onUnselectOne(selectOption)} />
       <span className='dropdown-lines-1'>{selectOption}</span>
     </div>
   )
 
   const valueToSubmit = advancedFiltering
-    ? { values, mode } as MultiSelectFilterValue
+    ? ({ values, mode } as MultiSelectFilterValue)
     : values
 
   const shouldDisableBtn = () => values.length === 0
 
   return (
-    <FilterWrapper value={valueToSubmit as Value} column={column} shouldDisableBtn={shouldDisableBtn}>
+    <FilterWrapper
+      column={column}
+      shouldDisableBtn={shouldDisableBtn}
+      value={valueToSubmit as Value}
+    >
       <div className='table-multi-select-filter'>
         <Select
-          options={options}
-          onChange={onSelectOne}
-          value={null}
           autoFocus
+          onChange={onSelectOne}
+          options={options}
           sortOptions
+          value={null}
         />
         <div className='selected-options-wrapper'>
           {values.map(getSelectedOption)}
         </div>
-        {advancedFiltering && (
+        {advancedFiltering ? (
           <Select
+            onChange={handleModeChange}
             options={FILTER_MODE_OPTIONS}
             value={mode}
-            onChange={handleModeChange}
           />
-        )}
+        ) : null}
       </div>
     </FilterWrapper>
   )

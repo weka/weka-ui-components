@@ -1,9 +1,11 @@
 import React from 'react'
+import clsx from 'clsx'
+
+import { EMPTY_STRING } from 'consts'
+import svgs from 'svgs'
+
 import Button from '../Button'
 import Tooltip from '../Tooltip'
-import svgs from 'svgs'
-import { EMPTY_STRING } from 'consts'
-import clsx from 'clsx'
 
 import './filterButton.scss'
 
@@ -30,7 +32,11 @@ function FilterButton({
     <div>
       <Tooltip data={tooltipText}>
         <div>
-          <Button onClick={onClick} disable={disable} extraClass={btnClasses}>
+          <Button
+            disable={disable}
+            extraClass={btnClasses}
+            onClick={onClick}
+          >
             <div className='filter-icon-wrapper'>
               <Filter className='filter-icon' />
             </div>

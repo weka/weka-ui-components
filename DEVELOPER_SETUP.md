@@ -33,16 +33,18 @@ export WEKA_COMPONENTS_NPM_TOKEN="ghp_YOUR_TOKEN_HERE"
 ```
 
 Then reload:
+
 ```bash
 source ~/.zshrc
 ```
 
 In the parent project's `.yarnrc.yml`, use the variable:
+
 ```yaml
 npmScopes:
   weka:
-    npmRegistryServer: "https://npm.pkg.github.com"
-    npmAuthToken: "${WEKA_COMPONENTS_NPM_TOKEN}"
+    npmRegistryServer: 'https://npm.pkg.github.com'
+    npmAuthToken: '${WEKA_COMPONENTS_NPM_TOKEN}'
 ```
 
 ### Verify Setup
@@ -53,6 +55,7 @@ yarn add @weka/weka-ui-components@4.0.0
 ```
 
 If you see "Package not found" or 403 errors, double-check:
+
 - Token has `read:packages` scope
 - Token is authorized for SSO (step 2)
 - Environment variable is set (`echo $WEKA_COMPONENTS_NPM_TOKEN`)
@@ -68,17 +71,20 @@ If you're developing **weka-ui-components itself**, follow these additional step
 To test changes in a parent project without publishing:
 
 1. In weka-ui-components, build so that `dist/` is up to date:
+
    ```bash
    cd ~/Projects/weka-ui-components
    yarn build
    ```
 
 2. In parent project's `package.json`, temporarily use `portal:`:
+
    ```json
    "@weka/weka-ui-components": "portal:/path/to/weka-ui-components"
    ```
 
 3. Install and run:
+
    ```bash
    yarn install
    yarn dev
@@ -95,6 +101,7 @@ To test changes in a parent project without publishing:
 See [VERSIONING.md](./VERSIONING.md) for full details.
 
 **Quick reference:**
+
 ```bash
 yarn release:patch    # Bug fixes: 4.0.0 → 4.0.1
 yarn release:minor    # New features: 4.0.1 → 4.1.0
@@ -111,12 +118,14 @@ yarn release:beta
 ```
 
 This will:
+
 - Increment beta version (`4.0.0-beta.1` → `4.0.0-beta.2`)
 - Create git commit and tag
 - Push to GitHub
 - GitHub Action publishes automatically
 
 Parent projects can test with:
+
 ```bash
 yarn add @weka/weka-ui-components@4.0.0-beta.2
 ```
@@ -167,14 +176,14 @@ Same as 403 - authentication issue. Check token and SSO authorization.
 
 ## Quick Reference
 
-| Task | Command |
-|------|---------|
-| Install package | `yarn add @weka/weka-ui-components@^4.0.0` |
-| Update to latest | `yarn up @weka/weka-ui-components` |
-| Link for local dev | Use `portal:` in package.json (see above) |
-| Unlink | Revert package.json to version, `yarn install` |
-| Release patch | `yarn release:patch` |
-| Release minor | `yarn release:minor` |
-| Release major | `yarn release:major` |
-| Release beta | `yarn release:beta` |
-| Check token | `echo $WEKA_COMPONENTS_NPM_TOKEN` |
+| Task               | Command                                        |
+| ------------------ | ---------------------------------------------- |
+| Install package    | `yarn add @weka/weka-ui-components@^4.0.0`     |
+| Update to latest   | `yarn up @weka/weka-ui-components`             |
+| Link for local dev | Use `portal:` in package.json (see above)      |
+| Unlink             | Revert package.json to version, `yarn install` |
+| Release patch      | `yarn release:patch`                           |
+| Release minor      | `yarn release:minor`                           |
+| Release major      | `yarn release:major`                           |
+| Release beta       | `yarn release:beta`                            |
+| Check token        | `echo $WEKA_COMPONENTS_NPM_TOKEN`              |

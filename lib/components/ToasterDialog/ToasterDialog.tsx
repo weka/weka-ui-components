@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import clsx from 'clsx'
+
 import { DIALOG_STATUSES, TOASTER_DIALOG, TOASTER_DIALOG_DISMISS } from 'consts'
-import Utils from 'utils'
 import svgs from 'svgs'
+import Utils from 'utils'
+
 import { useDialog } from '../../context'
 
 import './toasterDialog.scss'

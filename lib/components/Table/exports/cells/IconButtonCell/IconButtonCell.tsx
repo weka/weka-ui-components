@@ -1,9 +1,11 @@
 import React from 'react'
-import Tooltip from '../../../../Tooltip'
 import { IconButton } from '@mui/material'
-import { EMPTY_STRING } from 'consts'
 import clsx from 'clsx'
-import { ExtendedCellProps } from '../../../types'
+
+import { EMPTY_STRING } from 'consts'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 import './iconButtonCell.scss'
 
@@ -19,11 +21,10 @@ export type IconButtonCellValue = never
 
 export const IconButtonCellName = 'IconButtonCell'
 
-function IconButtonCell<Data>(
-  props: ExtendedCellProps<Data, IconButtonCellValue>
-) {
-  const { row, column } = props
-
+function IconButtonCell<Data>({
+  row,
+  column
+}: ExtendedCellProps<Data, IconButtonCellValue>) {
   const cellDef = column.columnDef.meta?.cell
   if (!cellDef || cellDef.type !== IconButtonCellName) {
     throw new Error(
@@ -54,11 +55,11 @@ function IconButtonCell<Data>(
     >
       <div>
         <IconButton
+          className={iconBtnClasses}
           onClick={() => onClick(row.original)}
           disabled={
             disabled instanceof Function ? disabled(row.original) : disabled
           }
-          className={iconBtnClasses}
         >
           <Icon />
         </IconButton>

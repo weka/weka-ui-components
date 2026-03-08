@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
+
 import { MONTHS, SHORT_DAY_OF_WEEK } from 'consts'
 import svgs from 'svgs'
+
 import DayCell from '../DayCell/DayCell'
 
 import './DateSelector.scss'
@@ -40,9 +42,12 @@ function getDaysOfTheMonth(referenceDate) {
   return monthDaysByWeek
 }
 
-function DateSelector(props: DateSelectorProps) {
-  const { date, onSubmit, maxDate = null, minDate = null } = props
-
+function DateSelector({
+  date,
+  onSubmit,
+  maxDate = null,
+  minDate = null
+}: DateSelectorProps) {
   const [currentMonthYear, setCurrentMonthYear] = useState(
     date || DateTime.now()
   )
@@ -71,32 +76,44 @@ function DateSelector(props: DateSelectorProps) {
   return (
     <div className='datetime-calendar'>
       <div className='date-toolbar'>
-        <div className='date-controller' onClick={monthBackward}>
+        <div
+          className='date-controller'
+          onClick={monthBackward}
+        >
           <Arrow className='rotate90' />
         </div>
         <div>{dateString}</div>
-        <div className='date-controller' onClick={monthForward}>
+        <div
+          className='date-controller'
+          onClick={monthForward}
+        >
           <Arrow className='rotate270' />
         </div>
       </div>
       <div className='calendar-days-of-week'>
         {SHORT_DAY_OF_WEEK.map((txt) => (
-          <div key={txt} className='day-of-week'>
+          <div
+            key={txt}
+            className='day-of-week'
+          >
             {txt.toUpperCase()}
           </div>
         ))}
       </div>
       {allDays.map((w) => (
-        <div key={w} className='calendar-row'>
+        <div
+          key={w}
+          className='calendar-row'
+        >
           {w.map((d) => (
             <DayCell
-              minDate={minDate}
-              maxDate={maxDate}
-              onSelect={onSubmit}
               key={d}
               date={d}
-              selected={isSelected(d)}
+              maxDate={maxDate}
+              minDate={minDate}
               month={currentMonthYear.month}
+              onSelect={onSubmit}
+              selected={isSelected(d)}
             />
           ))}
         </div>

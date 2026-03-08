@@ -1,13 +1,16 @@
-import React, { FC, useCallback } from 'react'
-import { DayPicker, HourPicker } from '../'
-import { Select } from '../../../inputs'
+import type { FC } from 'react'
+import React, { useCallback } from 'react'
+
 import { EMPTY_STRING } from 'consts'
+
+import { Select } from '../../../inputs'
 import {
-  SPECIFIC_HOURS,
+  DEFAULT_HOUR,
   EVERY_HOUR,
   SELECT_ALL,
-  DEFAULT_HOUR
+  SPECIFIC_HOURS
 } from '../../ScheduleSelectorConsts'
+import { DayPicker, HourPicker } from '../'
 
 import './hourlySelector.scss'
 import '../../scheduleSelector.scss'
@@ -79,15 +82,15 @@ const HourlySelector: FC<HourlySelectorProps> = ({
       <div className='hourly-selector-wrapper'>
         <Select
           disabled={isDisabled}
+          onChange={handleSelectChange}
           options={selectOptions}
           value={isEveryHour ? EVERY_HOUR.value : SPECIFIC_HOURS.value}
-          onChange={handleSelectChange}
         />
         <span className='label-2'>with an offset of</span>
         <div className='input-number'>
           <input
-            type='number'
             disabled={isDisabled}
+            type='number'
             value={hourlyData.minuteOffset || 0}
             onChange={(e) => {
               const minuteOffset =
@@ -107,23 +110,23 @@ const HourlySelector: FC<HourlySelectorProps> = ({
           <span className='label-2'>on</span>
           <DayPicker
             days={hourlyData.days || SELECT_ALL}
-            onChange={handleDaysChanged}
             isDisabled={isDisabled}
+            onChange={handleDaysChanged}
           />
         </div>
       </div>
       {!isEveryHour && (
         <div className='hourly-picker-wrapper'>
           <HourPicker
+            isDisabled={isDisabled}
+            minuteOffset={parseInt(hourlyData.minuteOffset, 10)}
+            onChange={handleHourToggle}
+            selectedHours={specificHours}
             hours={
               hourlyData.hours !== EMPTY_STRING
                 ? hourlyData.hours
                 : DEFAULT_HOUR
             }
-            onChange={handleHourToggle}
-            minuteOffset={parseInt(hourlyData.minuteOffset, 10)}
-            selectedHours={specificHours}
-            isDisabled={isDisabled}
           />
         </div>
       )}

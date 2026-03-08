@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
+
 import Utils from 'utils'
-import { ExtendedTable } from '../types'
-import { ROWS_PER_PAGE_RATIO, ROW_HEIGHT } from '../tableConsts'
+
+import { ROW_HEIGHT, ROWS_PER_PAGE_RATIO } from '../tableConsts'
+import type { ExtendedTable } from '../types'
 
 function usePageSize<Data>({
   table,

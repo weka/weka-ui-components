@@ -1,14 +1,17 @@
 import React from 'react'
 import { Duration } from 'luxon'
-import Tooltip from '../../../../Tooltip'
+
 import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from 'consts'
-import { ExtendedCellProps } from '../../../types'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 export type TimeCellValue = number
 
-function TimeCell<Data>(props: ExtendedCellProps<Data, TimeCellValue>) {
-  const { cell, customValue } = props
-
+function TimeCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, TimeCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const durationObj = Duration.fromMillis(value * 1000)

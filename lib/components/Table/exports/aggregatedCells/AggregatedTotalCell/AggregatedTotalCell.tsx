@@ -1,8 +1,14 @@
-import { EMPTY_STRING } from 'consts'
-import { ExtendedCellProps, ExtendedColumn, ExtendedRow } from '../../../types'
-import { getUniqueCount } from '../../../tableUtils'
 import React from 'react'
 import { Link } from 'react-router-dom'
+
+import { EMPTY_STRING } from 'consts'
+
+import { getUniqueCount } from '../../../tableUtils'
+import type {
+  ExtendedCellProps,
+  ExtendedColumn,
+  ExtendedRow
+} from '../../../types'
 
 export interface AggregatedTotalCellOptions<Data, Value> {
   getUrl?: (options: {
@@ -14,11 +20,10 @@ export interface AggregatedTotalCellOptions<Data, Value> {
 
 export const AggregatedTotalCellName = 'AggregatedTotalCell'
 
-function AggregatedTotalCell<Data, Value>(
-  props: ExtendedCellProps<Data, Value>
-) {
-  const { row, column } = props
-
+function AggregatedTotalCell<Data, Value>({
+  row,
+  column
+}: ExtendedCellProps<Data, Value>) {
   const cellDef = column.columnDef.meta?.aggregatedCell
   if (cellDef && cellDef.type !== AggregatedTotalCellName) {
     throw new Error(
@@ -37,8 +42,8 @@ function AggregatedTotalCell<Data, Value>(
     <>
       {getUrl ? (
         <Link
-          to={getUrl({ row, column })}
           className='table-link'
+          to={getUrl({ row, column })}
           {...(openInNewTab && {
             target: '_blank',
             rel: 'noopener noreferrer'

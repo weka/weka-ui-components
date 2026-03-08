@@ -1,8 +1,11 @@
 import React from 'react'
-import { Controller, Control } from 'react-hook-form'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { DateTime } from 'luxon'
-import DateTimePicker from '../../DateTimePicker'
+
 import { FORM_VALIDATIONS } from 'consts'
+
+import DateTimePicker from '../../DateTimePicker'
 
 interface ControlDatePickerProps {
   control: Control<Record<string, unknown>[]>
@@ -12,19 +15,24 @@ interface ControlDatePickerProps {
   disabled?: boolean
 }
 
-function ControlDatePicker(props: ControlDatePickerProps) {
-  const { control, name, defaultValue, rules = {}, ...rest } = props
+function ControlDatePicker({
+  control,
+  name,
+  defaultValue,
+  rules = {},
+  ...rest
+}: ControlDatePickerProps) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
   )
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
-      defaultValue={defaultValue}
       control={control}
+      defaultValue={defaultValue}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => {
         const formattedValue = field.value
@@ -34,10 +42,10 @@ function ControlDatePicker(props: ControlDatePickerProps) {
           <div className='field-container'>
             <DateTimePicker
               {...rest}
+              error={error?.message}
+              isRequired={isRequiredInRules ? !disabled : null}
               onChange={(date) => field.onChange(date ? date.toISO() : null)}
               value={formattedValue}
-              error={error?.message}
-              isRequired={isRequiredInRules && !disabled}
             />
           </div>
         )

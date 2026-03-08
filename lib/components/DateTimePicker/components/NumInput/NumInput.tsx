@@ -1,7 +1,8 @@
 import React from 'react'
 import clsx from 'clsx'
-import svgs from 'svgs'
+
 import { EMPTY_STRING, NOP } from 'consts'
+import svgs from 'svgs'
 
 import './NumInput.scss'
 
@@ -17,17 +18,15 @@ interface NumInputProps {
   initialNumState?: { [key: string]: any }
 }
 
-function NumInput(props: NumInputProps) {
-  const {
-    max,
-    value,
-    onChange = NOP,
-    numTitle = EMPTY_STRING,
-    initialNumState = {},
-    numFocus = {},
-    setNumFocus = NOP
-  } = props
-
+function NumInput({
+  max,
+  value,
+  onChange = NOP,
+  numTitle = EMPTY_STRING,
+  initialNumState = {},
+  numFocus = {},
+  setNumFocus = NOP
+}: NumInputProps) {
   const numInputClasses = clsx({
     'num-input-controller': true,
     'num-input-controller-active': numFocus[numTitle]
@@ -35,19 +34,19 @@ function NumInput(props: NumInputProps) {
 
   return (
     <div
-      className={numInputClasses}
-      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
-      tabIndex={0}
+      onBlur={() => setNumFocus({ initialNumState })}
       onFocus={() => {
         setNumFocus({ ...initialNumState, [numTitle]: true })
       }}
-      onBlur={() => setNumFocus({ initialNumState })}
+      className={numInputClasses}
+      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+      tabIndex={0}
     >
       <input
-        type='number'
-        min='0'
         max={max}
+        min='0'
         onFocus={(e) => e.target.select()}
+        type='number'
         value={value < 10 ? `0${value}` : value}
         onChange={(e) => {
           e.target.value = parseInt(e.target.value, 10)
@@ -59,23 +58,23 @@ function NumInput(props: NumInputProps) {
       <div className='arrow-buttons'>
         <Arrow
           className='rotate180'
-          onMouseDown={(e) => {
-            if (e.detail > 1) {
-              e.preventDefault()
-            }
-          }}
           onClick={() => {
             onChange((value + max + 2) % (max + 1))
           }}
-        />
-        <Arrow
           onMouseDown={(e) => {
             if (e.detail > 1) {
               e.preventDefault()
             }
           }}
+        />
+        <Arrow
           onClick={() => {
             onChange((value + max) % (max + 1))
+          }}
+          onMouseDown={(e) => {
+            if (e.detail > 1) {
+              e.preventDefault()
+            }
           }}
         />
       </div>

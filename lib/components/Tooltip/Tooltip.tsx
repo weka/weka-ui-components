@@ -1,8 +1,11 @@
-import React, { ForwardedRef, ReactElement } from 'react'
-import { Tooltip as MuiTooltip } from '@mui/material'
+import type { ForwardedRef, ReactElement } from 'react'
+import React from 'react'
 import type { TooltipProps as MuiTooltipProps } from '@mui/material'
+import { Tooltip as MuiTooltip } from '@mui/material'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
+
 import Markdown from '../Markdown'
 
 import './tooltip.scss'
@@ -15,7 +18,7 @@ export type TooltipProps = {
   extraPopperClass?: string
   enterDelay?: number
   followCursor?: boolean
-} & Pick<MuiTooltipProps, 'open' | 'onClose' | 'onOpen'>
+} & Pick<MuiTooltipProps, 'open' | 'onClose' | 'onOpen' | 'placement'>
 
 function Tooltip({
   children,
@@ -58,16 +61,16 @@ function Tooltip({
 
   return (
     <MuiTooltip
-      enterNextDelay={400}
       enterDelay={enterDelay}
-      title={<TooltipContent />}
+      enterNextDelay={400}
       followCursor={followCursor}
+      placement='top'
+      title={<TooltipContent />}
       classes={{
         tooltip: classes,
         arrow: 'tooltip-arrow',
         popper: extraPopperClass
       }}
-      placement='top'
       arrow
       // when "title" prop is jsx, but not string, the component can't automatically set aria-label
       // so we need to set it manually

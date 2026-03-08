@@ -3,20 +3,20 @@ name: V2 Release
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers on version tags like v4.0.0, v4.1.0, etc.
+      - 'v*.*.*' # Triggers on version tags like v4.0.0, v4.1.0, etc.
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # For creating GitHub Release
-      packages: write  # For publishing to GitHub Packages
+      contents: write # For creating GitHub Release
+      packages: write # For publishing to GitHub Packages
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history needed for branch detection
+          fetch-depth: 0 # Full history needed for branch detection
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

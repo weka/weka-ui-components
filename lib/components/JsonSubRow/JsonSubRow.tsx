@@ -13,10 +13,10 @@ function JsonSubRow<Data>({ row }: JsonSubRowProps<Data>) {
   return (
     <div>
       <TextEditor
-        value={JSON.stringify(row.original, null, 2)}
         extraClass='jsonSubRow'
-        readOnly
         maxLines={Infinity}
+        readOnly
+        value={JSON.stringify(row.original, null, 2)}
       />
     </div>
   )

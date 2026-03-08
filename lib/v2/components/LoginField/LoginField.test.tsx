@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { EMPTY_STRING } from '../../utils/consts'
+
 import { LoginField } from './LoginField'
 
 describe('LoginField', () => {
@@ -30,18 +31,13 @@ describe('LoginField', () => {
         />
       )
 
-      expect(screen.getByLabelText('Email')).toHaveValue(
-        'test@example.com'
-      )
+      expect(screen.getByLabelText('Email')).toHaveValue('test@example.com')
     })
 
     it('renders input with default type text', () => {
       render(<LoginField {...defaultProps} />)
 
-      expect(screen.getByLabelText('Email')).toHaveAttribute(
-        'type',
-        'text'
-      )
+      expect(screen.getByLabelText('Email')).toHaveAttribute('type', 'text')
     })
 
     it('renders input with custom type', () => {
@@ -92,9 +88,7 @@ describe('LoginField', () => {
     it('does not render error message when error prop is not provided', () => {
       const { container } = render(<LoginField {...defaultProps} />)
 
-      const errorElement = container.querySelector(
-        '[class*="errorMessage"]'
-      )
+      const errorElement = container.querySelector('[class*="errorMessage"]')
       expect(errorElement).not.toBeInTheDocument()
     })
 
@@ -172,17 +166,15 @@ describe('LoginField', () => {
         />
       )
 
-      expect(screen.getByLabelText('Email').className).toContain(
-        'inputError'
-      )
+      expect(screen.getByLabelText('Email').className).toContain('inputError')
     })
 
     it('does not apply error class when no error', () => {
       render(<LoginField {...defaultProps} />)
 
-      expect(
-        screen.getByLabelText('Email').className
-      ).not.toContain('inputError')
+      expect(screen.getByLabelText('Email').className).not.toContain(
+        'inputError'
+      )
     })
 
     it('applies required class to asterisk', () => {

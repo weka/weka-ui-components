@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
 
 import './ToggleButton.scss'
@@ -19,17 +20,15 @@ interface ToggleButtonProps {
   breakpointIndex?: number
 }
 
-function ToggleButton(props: ToggleButtonProps) {
-  const {
-    options,
-    value,
-    onChange,
-    small,
-    wrapperClass = EMPTY_STRING,
-    isDisabled,
-    breakpointIndex
-  } = props
-
+function ToggleButton({
+  options,
+  value,
+  onChange,
+  small,
+  wrapperClass = EMPTY_STRING,
+  isDisabled,
+  breakpointIndex
+}: ToggleButtonProps) {
   const elementsList = useRef<HTMLDivElement>(null)
   const instanceId = useRef(
     `toggle-button-${Math.random().toString(36).slice(2, 11)}`
@@ -80,7 +79,7 @@ function ToggleButton(props: ToggleButtonProps) {
       const values = Array.isArray(value) ? value : [value]
       const pads = Array.from(
         instanceElement.querySelectorAll('.toggle-button-pad')
-      ) as HTMLElement[]
+      )
 
       values.forEach((val, index) => {
         const element = Array.from(elementsList.current!.children).find(
@@ -118,16 +117,22 @@ function ToggleButton(props: ToggleButtonProps) {
     >
       {Array.isArray(value) ? (
         value.map((_, index) => (
-          <div key={index} className='toggle-button-pad' />
+          <div
+            key={index}
+            className='toggle-button-pad'
+          />
         ))
       ) : (
         <div className='toggle-button-pad toggle-button-pad-transition' />
       )}
-      <div className='toggle-button-options' ref={elementsList}>
+      <div
+        ref={elementsList}
+        className='toggle-button-options'
+      >
         {options.map((option) => (
           <span
-            className='toggle-button-option'
             key={option.value}
+            className='toggle-button-option'
             data-value={option.value}
             onClick={() => {
               onChange(option.value)

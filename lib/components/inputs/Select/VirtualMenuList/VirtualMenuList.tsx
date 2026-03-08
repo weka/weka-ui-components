@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react'
+import React, { useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import React, { ReactNode, useRef } from 'react'
+
 import { EMPTY_STRING } from 'consts'
 
 import './virtualMenuList.scss'
@@ -16,13 +18,10 @@ const VirtualMenuList: React.FC<VirtualMenuListProps> = ({
   const parentRef = useRef<HTMLDivElement>(null)
   const childrenArray = React.Children.toArray(children)
 
-  const isGroup = (child: any) => {
-    return child.props?.children && Array.isArray(child.props.children)
-  }
+  const isGroup = (child: any) =>
+    child.props?.children && Array.isArray(child.props.children)
 
-  const getItemHeight = (item: any) => {
-    return item.props?.data?.subLabel ? 56 : 36
-  }
+  const getItemHeight = (item: any) => (item.props?.data?.subLabel ? 56 : 36)
 
   const flattenedItems = childrenArray.reduce<
     { item: ReactNode; height: number }[]

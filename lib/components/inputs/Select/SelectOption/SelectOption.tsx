@@ -1,7 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { components, OptionProps } from 'react-select'
-import Tooltip from '../../../Tooltip'
+import React, { useEffect, useRef, useState } from 'react'
+import type { OptionProps } from 'react-select'
+import { components } from 'react-select'
+
 import { EMPTY_STRING } from 'consts'
+
+import Tooltip from '../../../Tooltip'
 
 import './selectOption.scss'
 
@@ -34,32 +37,41 @@ function SelectOption(props: SelectOptionProps) {
   }, [label, subLabel])
 
   return (
-    <components.Option {...props} className={icon ? 'has-icon' : EMPTY_STRING}>
+    <components.Option
+      {...props}
+      className={icon ? 'has-icon' : EMPTY_STRING}
+    >
       <Tooltip
-        extraClass='option-tooltip'
         data={tooltip || (isLabelOverflowing ? label : null)}
+        extraClass='option-tooltip'
       >
         <div className='option-wrapper'>
-          {icon && <div className='icon-wrapper'>{icon}</div>}
+          {icon ? <div className='icon-wrapper'>{icon}</div> : null}
           <div className='label-wrapper'>
             <Tooltip
-              extraClass='option-tooltip'
               data={isLabelOverflowing ? label : null}
+              extraClass='option-tooltip'
             >
-              <div ref={labelRef} className='main-label'>
+              <div
+                ref={labelRef}
+                className='main-label'
+              >
                 {label}
               </div>
             </Tooltip>
-            {subLabel && (
+            {subLabel ? (
               <Tooltip
-                extraClass='option-tooltip'
                 data={isSubLabelOverflowing ? subLabel : null}
+                extraClass='option-tooltip'
               >
-                <div ref={subLabelRef} className='label-4 sub-label'>
+                <div
+                  ref={subLabelRef}
+                  className='label-4 sub-label'
+                >
                   {subLabel}
                 </div>
               </Tooltip>
-            )}
+            ) : null}
           </div>
         </div>
       </Tooltip>

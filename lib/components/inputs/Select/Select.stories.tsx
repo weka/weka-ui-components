@@ -1,7 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react'
 import React, { useState } from 'react'
-import Select from './Select'
+import type { Meta, StoryObj } from '@storybook/react'
+
 import { EMPTY_STRING } from 'consts'
+
+import Select from './Select'
 
 const meta: Meta<typeof Select> = {
   title: 'Components/inputs/Select',
@@ -31,7 +33,7 @@ interface SelectProps {
   value?: string | number | string[] | number[]
 }
 
-const SelectWithState = (args: SelectProps) => {
+function SelectWithState(args: SelectProps) {
   const [selectedValue, setSelectedValue] = useState<SelectProps['value']>(
     args.value || EMPTY_STRING
   )
@@ -43,7 +45,11 @@ const SelectWithState = (args: SelectProps) => {
 
   return (
     <div>
-      <Select {...args} value={selectedValue} onChange={handleChange} />
+      <Select
+        {...args}
+        onChange={handleChange}
+        value={selectedValue}
+      />
     </div>
   )
 }

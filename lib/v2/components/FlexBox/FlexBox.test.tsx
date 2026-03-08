@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
 
 import { EMPTY_STRING } from '../../utils/consts'
+
 import { FlexBox } from './FlexBox'
 
 describe('FlexBox', () => {
@@ -158,13 +159,13 @@ describe('FlexBox', () => {
     it('renders correctly with all props combined', () => {
       const { container } = render(
         <FlexBox
-          direction='column'
-          gap={24}
           align='stretch'
-          justify='space-between'
-          wrap
+          direction='column'
           extraClass='test-class'
+          gap={24}
+          justify='space-between'
           style={{ maxWidth: '500px' }}
+          wrap
         >
           <span>Child 1</span>
           <span>Child 2</span>

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { DateTime } from 'luxon'
-import Tooltip from '../../../../Tooltip'
-import Utils from 'utils'
-import { TIME_FORMATS } from 'consts'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { ExtendedCellProps } from '../../../types'
+import { DateTime } from 'luxon'
+
+import { TIME_FORMATS } from 'consts'
+import Utils from 'utils'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 import './dateCell.scss'
 
@@ -21,8 +23,11 @@ export type DateCellValue = string
 
 export const DateCellName = 'DateCell'
 
-function DateCell<Data>(props: ExtendedCellProps<Data, DateCellValue>) {
-  const { cell, column, customValue } = props
+function DateCell<Data>({
+  cell,
+  column,
+  customValue
+}: ExtendedCellProps<Data, DateCellValue>) {
   const [, forceUpdate] = useState(0)
 
   const cellDef = column.columnDef.meta?.cell

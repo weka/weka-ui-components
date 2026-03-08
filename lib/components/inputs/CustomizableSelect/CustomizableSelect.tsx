@@ -1,13 +1,16 @@
-import React, { MouseEvent, ReactElement, useEffect, useState } from 'react'
+import type { MouseEvent, ReactElement } from 'react'
+import React, { useEffect, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
-import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
 import clsx from 'clsx'
-import Tooltip from '../../Tooltip'
+
+import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
 import svgs from 'svgs'
-import { CommonSelectComponents, getStyle } from '../Select/Select'
 import Utils from 'utils'
+
 import { useHighlightInput } from '../../../hooks'
+import Tooltip from '../../Tooltip'
+import { CommonSelectComponents, getStyle } from '../Select/Select'
 
 import './customizableSelect.scss'
 
@@ -42,34 +45,33 @@ interface CustomizableSelectProps {
   isScrolledInto?: boolean
 }
 
-function CustomizableSelect(props: CustomizableSelectProps) {
-  const {
-    onChange = NOP,
-    options: localOptions,
-    value,
-    wrapperClass = EMPTY_STRING,
-    label,
-    disabled,
-    sortOptions,
-    error,
-    placeholder = 'Select...',
-    info,
-    isRequired,
-    redInfo = NOP,
-    isClearable = true,
-    customValueValidation = () => true,
-    customValueError,
-    createLabel = 'Create',
-    getAsyncOptions,
-    optionsUrl,
-    tooltip,
-    defaultValueIndex,
-    defaultValueKey,
-    preventCall,
-    isHighlighted,
-    isScrolledInto,
-    ...rest
-  } = props
+function CustomizableSelect({
+  onChange = NOP,
+  options: localOptions,
+  value,
+  wrapperClass = EMPTY_STRING,
+  label,
+  disabled,
+  sortOptions,
+  error,
+  placeholder = 'Select...',
+  info,
+  isRequired,
+  redInfo = NOP,
+  isClearable = true,
+  customValueValidation = () => true,
+  customValueError,
+  createLabel = 'Create',
+  getAsyncOptions,
+  optionsUrl,
+  tooltip,
+  defaultValueIndex,
+  defaultValueKey,
+  preventCall,
+  isHighlighted,
+  isScrolledInto,
+  ...rest
+}: CustomizableSelectProps) {
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [isMenuOpen, setMenuIsOpen] = useState(false)
   const [asyncOptions, setAsyncOptions] = useState(null)
@@ -142,13 +144,13 @@ function CustomizableSelect(props: CustomizableSelectProps) {
   return (
     <Tooltip data={tooltip}>
       <FormControl
-        variant='outlined'
-        className={wrapperClasses}
         ref={selectRef}
+        className={wrapperClasses}
+        variant='outlined'
       >
         <span className='creatable-select-label field-1-label-content'>
           {label}
-          {isRequired && <span className='required-star'>*</span>}
+          {isRequired ? <span className='required-star'>*</span> : null}
           {!!info && (
             <Tooltip data={info}>
               <Info />
@@ -157,49 +159,26 @@ function CustomizableSelect(props: CustomizableSelectProps) {
         </span>
         <CreatableSelect
           {...rest}
-          isLoading={isLoadingOptions && !editValue && !value}
-          menuPosition='fixed'
-          createOptionPosition='first'
-          styles={getStyle(!!error, !!label)}
-          onMenuOpen={() => setMenuIsOpen(true)}
-          onMenuClose={() => setMenuIsOpen(false)}
-          menuIsOpen={isMenuOpen}
-          value={
-            options?.find((option) => option?.value === value) ||
-            (value
-              ? {
-                  label: value,
-                  value
-                }
-              : EMPTY_STRING)
-          }
-          isClearable={isClearable}
-          inputValue={editValue}
-          onInputChange={setEditValue}
-          onCreateOption={(inputValue) => {
-            if (customValueValidation(inputValue)) {
-              onChange(inputValue)
-            }
-          }}
-          onKeyDown={onKeyDown}
-          isDisabled={disabled}
-          placeholder={placeholder}
-          menuPortalTarget={document.body}
-          onChange={(newVal: Option | null) => {
-            const newValue = newVal?.value ?? EMPTY_STRING
-            onChange(newValue)
-          }}
-          options={
-            sortOptions && options
-              ? Utils.insensitiveSort(options, 'label')
-              : options || []
-          }
           classNamePrefix='react-creatable-select'
           components={CommonSelectComponents}
+          createOptionPosition='first'
+          inputValue={editValue}
+          isClearable={isClearable}
+          isDisabled={disabled}
+          isLoading={isLoadingOptions && !editValue ? !value : null}
+          menuIsOpen={isMenuOpen}
+          menuPortalTarget={document.body}
+          menuPosition='fixed'
+          onInputChange={setEditValue}
+          onKeyDown={onKeyDown}
+          onMenuClose={() => setMenuIsOpen(false)}
+          onMenuOpen={() => setMenuIsOpen(true)}
+          placeholder={placeholder}
+          styles={getStyle(!!error, !!label)}
           formatCreateLabel={(inputValue) => (
             <div
-              onClick={(event) => onMouseClick(event, inputValue)}
               className='new-option-input-preview'
+              onClick={(event) => onMouseClick(event, inputValue)}
             >
               {`${createLabel} '${inputValue}'`}
               {!customValueValidation(inputValue) && (
@@ -209,6 +188,29 @@ function CustomizableSelect(props: CustomizableSelectProps) {
               )}
             </div>
           )}
+          onChange={(newVal: Option | null) => {
+            const newValue = newVal?.value ?? EMPTY_STRING
+            onChange(newValue)
+          }}
+          onCreateOption={(inputValue) => {
+            if (customValueValidation(inputValue)) {
+              onChange(inputValue)
+            }
+          }}
+          options={
+            sortOptions && options
+              ? Utils.insensitiveSort(options, 'label')
+              : options || []
+          }
+          value={
+            options?.find((option) => option?.value === value) ||
+            (value
+              ? {
+                  label: value,
+                  value
+                }
+              : EMPTY_STRING)
+          }
         />
         <span className='creatable-select-error capitalize-first-letter'>
           {error || redInfo(value)}

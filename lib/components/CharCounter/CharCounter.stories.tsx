@@ -1,8 +1,11 @@
 import React from 'react'
-import { Meta, StoryFn } from '@storybook/react'
-import CharCounter, { CharCounterProps } from './CharCounter'
-import { TextBox } from '../inputs'
+import type { Meta, StoryFn } from '@storybook/react'
+
 import { EMPTY_STRING } from '../../consts'
+import { TextBox } from '../inputs'
+
+import type { CharCounterProps } from './CharCounter'
+import CharCounter from './CharCounter'
 
 export default {
   title: 'Components/CharCounter',
@@ -31,8 +34,14 @@ const Template: StoryFn<CharCounterProps> = (args) => {
   const [value, setValue] = React.useState(EMPTY_STRING)
   return (
     <div style={{ maxWidth: '300px' }}>
-      <TextBox onChange={setValue} value={value} />
-      <CharCounter messageLength={value.length} {...args} />
+      <TextBox
+        onChange={setValue}
+        value={value}
+      />
+      <CharCounter
+        messageLength={value.length}
+        {...args}
+      />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { NOOP } from '../../utils/consts'
+
 import { Checkbox } from './CheckBox'
 
 const meta: Meta<typeof Checkbox> = {
@@ -76,7 +77,7 @@ export const AllStates: Story = {
       </div>
       <div style={{ textAlign: 'center' }}>
         <Checkbox
-          checked={true}
+          checked
           onChange={NOOP}
         />
         <div style={{ marginTop: '8px', fontSize: '12px' }}>Checked</div>

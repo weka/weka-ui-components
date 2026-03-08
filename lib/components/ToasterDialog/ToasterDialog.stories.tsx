@@ -1,11 +1,13 @@
-import { Meta, StoryFn } from '@storybook/react'
+import React from 'react'
+import type { Meta, StoryFn } from '@storybook/react'
+
+import Utils from 'utils'
+
+import { DialogProvider } from '../../context'
+import Button from '../Button'
+import ToasterContainer from '../Toast/ToasterContainer'
 
 import { default as ToasterDialogComponent } from './ToasterDialog'
-import ToasterContainer from '../Toast/ToasterContainer'
-import { DialogProvider } from '../../context'
-import React from 'react'
-import Utils from 'utils'
-import Button from '../Button'
 
 interface DialogStoryArgs {
   successMessage: string
@@ -17,27 +19,31 @@ interface ToasterStoryArgs {
   errorToastMessage: string
 }
 
-const DialogStory = (args: DialogStoryArgs) => (
-  <div style={{ display: 'flex', gap: '20px' }}>
-    <Button onClick={() => Utils.toastSuccess(args.successMessage, true)}>
-      Dialog Success
-    </Button>
-    <Button onClick={() => Utils.toastError(args.errorMessage, true)}>
-      Dialog Error
-    </Button>
-  </div>
-)
+function DialogStory(args: DialogStoryArgs) {
+  return (
+    <div style={{ display: 'flex', gap: '20px' }}>
+      <Button onClick={() => Utils.toastSuccess(args.successMessage, true)}>
+        Dialog Success
+      </Button>
+      <Button onClick={() => Utils.toastError(args.errorMessage, true)}>
+        Dialog Error
+      </Button>
+    </div>
+  )
+}
 
-const ToasterStory = (args: ToasterStoryArgs) => (
-  <div style={{ display: 'flex', gap: '20px' }}>
-    <Button onClick={() => Utils.toastSuccess(args.successToastMessage)}>
-      Toast Success
-    </Button>
-    <Button onClick={() => Utils.toastError(args.errorToastMessage)}>
-      Toast Error
-    </Button>
-  </div>
-)
+function ToasterStory(args: ToasterStoryArgs) {
+  return (
+    <div style={{ display: 'flex', gap: '20px' }}>
+      <Button onClick={() => Utils.toastSuccess(args.successToastMessage)}>
+        Toast Success
+      </Button>
+      <Button onClick={() => Utils.toastError(args.errorToastMessage)}>
+        Toast Error
+      </Button>
+    </div>
+  )
+}
 
 export default {
   title: 'Components/ToasterDialog',

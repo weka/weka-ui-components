@@ -1,10 +1,10 @@
 import {
   DateFilter,
+  DurationFilter,
   MultiSelectFilter,
   SelectFilter,
   SeverityFilter,
-  TextFilter,
-  DurationFilter
+  TextFilter
 } from './components'
 import { filterFns, urlFilterParsers } from './tableUtils'
 

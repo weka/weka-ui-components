@@ -1,9 +1,13 @@
+import type { FC } from 'react'
+import React, { useCallback, useMemo } from 'react'
+import type { ColumnMeta } from '@tanstack/react-table'
+import { flexRender } from '@tanstack/react-table'
 import clsx from 'clsx'
-import { ExtendedRow, TableExtraClasses, ExtendedCell } from '../../types'
+
 import svgs from 'svgs'
-import { ColumnMeta, flexRender } from '@tanstack/react-table'
-import React, { FC, useMemo, useCallback } from 'react'
 import Utils from 'utils'
+
+import type { ExtendedCell, ExtendedRow, TableExtraClasses } from '../../types'
 
 const { Arrow } = svgs
 
@@ -18,18 +22,16 @@ interface TableCellProps<Data, Value> {
   rowIndex: number
 }
 
-function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
-  const {
-    cell,
-    row,
-    extraClasses,
-    onRowClick,
-    onToggleExpand,
-    RowSubComponent,
-    grouping,
-    rowIndex
-  } = props
-
+function TableCell<Data, Value>({
+  cell,
+  row,
+  extraClasses,
+  onRowClick,
+  onToggleExpand,
+  RowSubComponent,
+  grouping,
+  rowIndex
+}: TableCellProps<Data, Value>) {
   const shouldShowAggregated = useMemo(() => {
     if (cell.getIsAggregated()) {
       return true
@@ -155,24 +157,24 @@ function TableCell<Data, Value>(props: TableCellProps<Data, Value>) {
       ) : cell.getIsPlaceholder() ? null : (
         <>
           {grouping &&
-            RowSubComponent &&
-            !row.getIsGrouped() &&
-            (rowIndex === 0 ||
-              row.getVisibleCells()[rowIndex - 1].getIsPlaceholder()) && (
-              <span
-                className='expand-cell expand-group'
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleToggleExpand()
-                }}
-              >
-                {row.getIsExpanded() ? (
-                  <Arrow />
-                ) : (
-                  <Arrow className='rotate270' />
-                )}
-              </span>
-            )}
+          RowSubComponent &&
+          !row.getIsGrouped() &&
+          (rowIndex === 0 ||
+            row.getVisibleCells()[rowIndex - 1].getIsPlaceholder()) ? (
+            <span
+              className='expand-cell expand-group'
+              onClick={(e) => {
+                e.stopPropagation()
+                handleToggleExpand()
+              }}
+            >
+              {row.getIsExpanded() ? (
+                <Arrow />
+              ) : (
+                <Arrow className='rotate270' />
+              )}
+            </span>
+          ) : null}
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </>
       )}

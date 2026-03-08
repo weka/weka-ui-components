@@ -1,4 +1,6 @@
-import React, { FC, useMemo, useCallback } from 'react'
+import type { FC } from 'react'
+import React, { useCallback, useMemo } from 'react'
+
 import { ToggleButton } from '../../../index'
 import { MONTHS_OPTIONS } from '../../ScheduleSelectorConsts'
 
@@ -33,12 +35,12 @@ const MonthPicker: FC<MonthPickerProps> = ({
 
   return (
     <ToggleButton
-      options={MONTHS_OPTIONS}
-      value={selectedMonths}
-      onChange={toggleMonthSelection}
-      wrapperClass='monthly-picker-wrapper'
       isDisabled={isDisabled}
+      onChange={toggleMonthSelection}
+      options={MONTHS_OPTIONS}
       small
+      value={selectedMonths}
+      wrapperClass='monthly-picker-wrapper'
     />
   )
 }

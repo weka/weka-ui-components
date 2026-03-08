@@ -1,9 +1,8 @@
-import {
-  ColumnDef,
-  ColumnHelper,
-  createColumnHelper
-} from '@tanstack/react-table'
-import { IconButtonCell, IconButtonCellOptions } from './cells'
+import type { ColumnDef, ColumnHelper } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
+
+import type { IconButtonCellOptions } from './cells'
+import { IconButtonCell } from './cells'
 
 export const createColumnHelperWithAction: <Data>() => ColumnHelper<Data> & {
   action: (actionDef: IconButtonCellOptions<Data>) => ColumnDef<Data, unknown>

@@ -1,8 +1,11 @@
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react'
+import React from 'react'
 import clsx from 'clsx'
-import Tooltip from '../../Tooltip'
+
 import { EMPTY_STRING } from 'consts'
 import svgs from 'svgs'
+
+import Tooltip from '../../Tooltip'
 
 import './textArea.scss'
 
@@ -21,22 +24,20 @@ export interface TextAreaProps {
   disabled?: boolean
   insetLabel?: boolean
 }
-const TextArea = (props: TextAreaProps) => {
-  const {
-    label,
-    onChange,
-    value,
-    error,
-    placeholder,
-    wrapperClass = EMPTY_STRING,
-    isRequired,
-    info,
-    tooltip = EMPTY_STRING,
-    disabled = false,
-    insetLabel = false,
-    ...rest
-  } = props
-
+function TextArea({
+  label,
+  onChange,
+  value,
+  error,
+  placeholder,
+  wrapperClass = EMPTY_STRING,
+  isRequired,
+  info,
+  tooltip = EMPTY_STRING,
+  disabled = false,
+  insetLabel = false,
+  ...rest
+}: TextAreaProps) {
   function onTextChange(event) {
     onChange(event.target.value)
   }
@@ -53,17 +54,17 @@ const TextArea = (props: TextAreaProps) => {
       <Tooltip data={tooltip}>
         <textarea
           className='field__input'
+          disabled={disabled}
+          onChange={onTextChange}
           placeholder={placeholder}
           value={value === null ? EMPTY_STRING : value}
-          onChange={onTextChange}
-          disabled={disabled}
           {...rest}
         />
       </Tooltip>
       <span className='field__label-wrap'>
         <span className='field__label field-1-label-content'>
           {label}
-          {isRequired && <span className='required-star'>*</span>}
+          {isRequired ? <span className='required-star'>*</span> : null}
           {!!info && (
             <Tooltip data={info}>
               <Info />

@@ -1,14 +1,17 @@
-import React, { ReactElement, useRef } from 'react'
-import Tooltip from '../../../Tooltip'
-import Button from '../../../Button'
+import type { ReactElement } from 'react'
+import React, { useRef } from 'react'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
-import svgs from 'svgs'
-import { useKeyEvent, useToggle } from 'hooks'
-import Utils from 'utils'
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import { ExtendedColumn } from '../../types'
 import clsx from 'clsx'
+
+import { EMPTY_STRING, EVENT_KEYS } from 'consts'
+import { useKeyEvent, useToggle } from 'hooks'
+import svgs from 'svgs'
+import Utils from 'utils'
+
+import Button from '../../../Button'
+import Tooltip from '../../../Tooltip'
 import { tableUtils } from '../../tableUtils'
+import type { ExtendedColumn } from '../../types'
 
 import './filterWrapper.scss'
 
@@ -71,23 +74,22 @@ function FilterWrapper<Data, Value>({
           .toUpperCase()}${columnTitle.slice(1)}`}
       >
         <span
-          onClick={togglePopper}
           ref={anchor}
           className='filter-table-wrapper-icon'
+          onClick={togglePopper}
         >
           <Filter />
         </span>
       </Tooltip>
-
-      {isPopperOpen && (
+      {isPopperOpen ? (
         <Popper
-          open={isPopperOpen}
           anchorEl={anchor.current}
-          transition
           className='popper-wrapper'
           nonce={undefined}
           onResize={undefined}
           onResizeCapture={undefined}
+          open={isPopperOpen}
+          transition
         >
           {({ TransitionProps }) => (
             <Grow
@@ -101,8 +103,8 @@ function FilterWrapper<Data, Value>({
                   ) : (
                     <div className='filter-table-wrapper-data'>
                       <div
-                        className={clsx('filter-table-wrapper-inside-filter')}
                         ref={ref}
+                        className={clsx('filter-table-wrapper-inside-filter')}
                       >
                         {children}
                       </div>
@@ -129,7 +131,7 @@ function FilterWrapper<Data, Value>({
             </Grow>
           )}
         </Popper>
-      )}
+      ) : null}
     </div>
   )
 }

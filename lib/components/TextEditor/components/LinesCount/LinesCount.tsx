@@ -1,9 +1,10 @@
 import React from 'react'
-import { useTextEditorContext } from '../../context'
 import clsx from 'clsx'
 
-import './linesCount.scss'
 import SpanTooltip from '../../../SpanTooltip'
+import { useTextEditorContext } from '../../context'
+
+import './linesCount.scss'
 
 function LinesCount() {
   const {

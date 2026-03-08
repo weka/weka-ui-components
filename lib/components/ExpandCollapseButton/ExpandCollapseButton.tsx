@@ -1,9 +1,11 @@
+import React from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-import React from 'react'
-import Tooltip from '../Tooltip'
-import svgs from 'svgs'
+
 import { EMPTY_STRING } from 'consts'
+import svgs from 'svgs'
+
+import Tooltip from '../Tooltip'
 
 import './expandCollapseButton.scss'
 
@@ -16,9 +18,12 @@ interface ExpandCollapseButtonProps {
   tooltip?: string
 }
 
-function ExpandCollapseButton(props: ExpandCollapseButtonProps) {
-  const { onChange, shouldCollapse, disabled, tooltip } = props
-
+function ExpandCollapseButton({
+  onChange,
+  shouldCollapse,
+  disabled,
+  tooltip
+}: ExpandCollapseButtonProps) {
   return (
     <Tooltip
       data={
@@ -33,11 +38,11 @@ function ExpandCollapseButton(props: ExpandCollapseButtonProps) {
       <div>
         <IconButton
           disabled={disabled}
+          onClick={() => onChange(!shouldCollapse)}
           className={clsx({
             ['text-editor-expand-collapse-btn']: true,
             ['rotate']: !shouldCollapse
           })}
-          onClick={() => onChange(!shouldCollapse)}
         >
           <ThinArrow />
         </IconButton>

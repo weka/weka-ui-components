@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import Button from '../../../Button'
 import { DateTime } from 'luxon'
+
+import Button from '../../../Button'
 import DateSelector from '../DateSelector'
 import TimeSelector from '../TimeSelector'
 
@@ -33,29 +34,32 @@ function DateTimeCalendar({
       <div>
         <DateSelector
           date={dateTime}
-          onSubmit={showTime ? setDateTime : onSubmit}
-          minDate={minDate}
           maxDate={maxDate}
+          minDate={minDate}
+          onSubmit={showTime ? setDateTime : onSubmit}
         />
       </div>
       {showTime ? (
         <>
           <div>
             <TimeSelector
-              time={dateTime}
-              onSubmit={setDateTime}
-              showSeconds={showSeconds}
               onNowSubmit={onSubmit}
+              onSubmit={setDateTime}
               showNow={showNow}
+              showSeconds={showSeconds}
+              time={dateTime}
             />
           </div>
           <div className='calendar-actions'>
             <div className='calendar-actions-sub'>
-              {canClear && (
-                <Button empty onClick={() => onSubmit(undefined)}>
+              {canClear ? (
+                <Button
+                  empty
+                  onClick={() => onSubmit(undefined)}
+                >
                   Clear
                 </Button>
-              )}
+              ) : null}
               <Button onClick={() => onSubmit(dateTime)}>OK</Button>
             </div>
           </div>

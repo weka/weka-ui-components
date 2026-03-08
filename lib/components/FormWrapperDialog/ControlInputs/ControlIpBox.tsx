@@ -1,7 +1,10 @@
 import React from 'react'
-import { Controller, Control } from 'react-hook-form'
-import IpTextBox from '../../inputs/IpTextBox'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
+
+import IpTextBox from '../../inputs/IpTextBox'
 
 interface ControlIpBoxProps {
   control: Control<Record<string, unknown>[]>
@@ -11,35 +14,34 @@ interface ControlIpBoxProps {
   disabled?: boolean
 }
 
-function ControlIpBox(props: ControlIpBoxProps) {
-  const {
-    control,
-    name,
-    defaultValue = EMPTY_STRING,
-    rules = {},
-    ...rest
-  } = props
+function ControlIpBox({
+  control,
+  name,
+  defaultValue = EMPTY_STRING,
+  rules = {},
+  ...rest
+}: ControlIpBoxProps) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
   )
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
-      defaultValue={defaultValue}
       control={control}
+      defaultValue={defaultValue}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <div className='field-container'>
           <IpTextBox
             {...rest}
             disabled={disabled}
+            error={error?.message}
+            isRequired={isRequiredInRules ? !disabled : null}
             onChange={field.onChange}
             value={field.value}
-            error={error?.message}
-            isRequired={isRequiredInRules && !disabled}
           />
         </div>
       )}

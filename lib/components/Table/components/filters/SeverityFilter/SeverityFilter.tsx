@@ -1,9 +1,11 @@
 import React from 'react'
 import clsx from 'clsx'
-import FilterWrapper from '../../FilterWrapper'
+
 import { SEVERITIES, SEVERITIES_ICONS } from 'consts'
 import { useToggle } from 'hooks'
-import { ExtendedFilterProps } from '../../../types'
+
+import type { ExtendedFilterProps } from '../../../types'
+import FilterWrapper from '../../FilterWrapper'
 
 import './severityFilter.scss'
 
@@ -16,10 +18,10 @@ function SeverityFilter<Data, Value>({
   return (
     <FilterWrapper
       column={column}
-      value={filterValue}
       hideWrapper
       isPopperOpen={isPopperOpen}
       onTogglePopper={togglePopper}
+      value={filterValue}
     >
       <div className='severity-filter'>
         <span className='heading-4'>Min. Severity</span>
@@ -32,11 +34,11 @@ function SeverityFilter<Data, Value>({
           return (
             <div
               key={severity}
+              className={classes}
               onClick={() => {
                 column.setFilterValue(severity)
                 togglePopper()
               }}
-              className={classes}
             >
               <span>
                 <Icon />

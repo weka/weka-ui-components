@@ -11,7 +11,7 @@ function useToggle<Value1 extends string, Value2 extends string>(
 
 function useToggle(
   initialState: string | boolean,
-  options?: string[] | undefined
+  options?: string[]
 ): [string | boolean, () => void] {
   const [value, setValue] = useState<string | boolean>(initialState)
   const toggle = useCallback(() => {
