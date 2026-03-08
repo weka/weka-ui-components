@@ -405,12 +405,12 @@ export const filterFns = {
       }
 
       const rowValue = row.getValue(columnId)
-      const matches = rowValue?.toString() === value
+      const matches = rowValue?.toString().toLowerCase() === value.toLowerCase()
 
       return mode === FILTER_MODES.EXCLUDE ? !matches : matches
     }
 
-    return filterValue === row.getValue(columnId)?.toString()
+    return filterValue.toLowerCase() === row.getValue(columnId)?.toString().toLowerCase()
   },
   date<Data>(
     row: ExtendedRow<Data>,
