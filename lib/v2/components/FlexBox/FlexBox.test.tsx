@@ -128,7 +128,11 @@ describe('FlexBox', () => {
 
     it('preserves flex styles when custom style is applied', () => {
       const { container } = render(
-        <FlexBox direction='column' gap={8} style={{ backgroundColor: 'red' }}>
+        <FlexBox
+          direction='column'
+          gap={8}
+          style={{ backgroundColor: 'red' }}
+        >
           Content
         </FlexBox>
       )

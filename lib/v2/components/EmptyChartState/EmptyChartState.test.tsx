@@ -11,7 +11,11 @@ vi.mock('../../icons', () => ({
     color?: string
     extraClass?: string
   }) => (
-    <svg data-testid='chart-icon' data-color={color} className={extraClass} />
+    <svg
+      data-testid='chart-icon'
+      data-color={color}
+      className={extraClass}
+    />
   )
 }))
 

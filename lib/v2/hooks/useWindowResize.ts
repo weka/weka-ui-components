@@ -5,7 +5,7 @@ import { useEffect } from 'react'
  * @param callback - Function to call on resize
  * @param dependencies - Array of dependencies that should trigger re-registration
  */
-export function useResizeObserver(
+export function useWindowResize(
   callback: () => void,
   dependencies: unknown[] = []
 ): void {

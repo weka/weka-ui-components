@@ -5,13 +5,22 @@ import { Checkbox } from './CheckBox'
 
 vi.mock('../../icons', () => ({
   CheckboxCheckedIcon: (props: Record<string, unknown>) => (
-    <svg data-testid='checkbox-checked-icon' {...props} />
+    <svg
+      data-testid='checkbox-checked-icon'
+      {...props}
+    />
   ),
   CheckboxUncheckedIcon: (props: Record<string, unknown>) => (
-    <svg data-testid='checkbox-unchecked-icon' {...props} />
+    <svg
+      data-testid='checkbox-unchecked-icon'
+      {...props}
+    />
   ),
   CheckboxPartialIcon: (props: Record<string, unknown>) => (
-    <svg data-testid='checkbox-partial-icon' {...props} />
+    <svg
+      data-testid='checkbox-partial-icon'
+      {...props}
+    />
   )
 }))
 
@@ -22,7 +31,12 @@ describe('Checkbox', () => {
 
   describe('Rendering', () => {
     it('renders unchecked icon when checked is false', () => {
-      render(<Checkbox checked={false} onChange={vi.fn()} />)
+      render(
+        <Checkbox
+          checked={false}
+          onChange={vi.fn()}
+        />
+      )
       expect(screen.getByTestId('checkbox-unchecked-icon')).toBeInTheDocument()
       expect(
         screen.queryByTestId('checkbox-checked-icon')
@@ -33,7 +47,12 @@ describe('Checkbox', () => {
     })
 
     it('renders checked icon when checked is true', () => {
-      render(<Checkbox checked={true} onChange={vi.fn()} />)
+      render(
+        <Checkbox
+          checked={true}
+          onChange={vi.fn()}
+        />
+      )
       expect(screen.getByTestId('checkbox-checked-icon')).toBeInTheDocument()
       expect(
         screen.queryByTestId('checkbox-unchecked-icon')
@@ -44,7 +63,13 @@ describe('Checkbox', () => {
     })
 
     it('renders partial icon when partiallyChecked is true', () => {
-      render(<Checkbox checked={false} onChange={vi.fn()} partiallyChecked />)
+      render(
+        <Checkbox
+          checked={false}
+          onChange={vi.fn()}
+          partiallyChecked
+        />
+      )
       expect(screen.getByTestId('checkbox-partial-icon')).toBeInTheDocument()
       expect(
         screen.queryByTestId('checkbox-unchecked-icon')
@@ -55,7 +80,13 @@ describe('Checkbox', () => {
     })
 
     it('renders partial icon over checked icon when both are true', () => {
-      render(<Checkbox checked={true} onChange={vi.fn()} partiallyChecked />)
+      render(
+        <Checkbox
+          checked={true}
+          onChange={vi.fn()}
+          partiallyChecked
+        />
+      )
       expect(screen.getByTestId('checkbox-partial-icon')).toBeInTheDocument()
       expect(
         screen.queryByTestId('checkbox-checked-icon')
@@ -63,7 +94,12 @@ describe('Checkbox', () => {
     })
 
     it('renders with data-testid="custom-checkbox"', () => {
-      render(<Checkbox checked={false} onChange={vi.fn()} />)
+      render(
+        <Checkbox
+          checked={false}
+          onChange={vi.fn()}
+        />
+      )
       expect(screen.getByTestId('custom-checkbox')).toBeInTheDocument()
     })
 
@@ -83,7 +119,12 @@ describe('Checkbox', () => {
   describe('User Interactions', () => {
     it('calls onChange with true when unchecked checkbox is clicked', () => {
       const handleChange = vi.fn()
-      render(<Checkbox checked={false} onChange={handleChange} />)
+      render(
+        <Checkbox
+          checked={false}
+          onChange={handleChange}
+        />
+      )
 
       fireEvent.click(screen.getByTestId('custom-checkbox'))
 
@@ -93,7 +134,12 @@ describe('Checkbox', () => {
 
     it('calls onChange with false when checked checkbox is clicked', () => {
       const handleChange = vi.fn()
-      render(<Checkbox checked={true} onChange={handleChange} />)
+      render(
+        <Checkbox
+          checked={true}
+          onChange={handleChange}
+        />
+      )
 
       fireEvent.click(screen.getByTestId('custom-checkbox'))
 
@@ -107,7 +153,10 @@ describe('Checkbox', () => {
 
       render(
         <div onClick={parentClick}>
-          <Checkbox checked={false} onChange={handleChange} />
+          <Checkbox
+            checked={false}
+            onChange={handleChange}
+          />
         </div>
       )
 
@@ -122,12 +171,20 @@ describe('Checkbox', () => {
     it('updates icon when checked state changes', () => {
       const handleChange = vi.fn()
       const { rerender } = render(
-        <Checkbox checked={false} onChange={handleChange} />
+        <Checkbox
+          checked={false}
+          onChange={handleChange}
+        />
       )
 
       expect(screen.getByTestId('checkbox-unchecked-icon')).toBeInTheDocument()
 
-      rerender(<Checkbox checked={true} onChange={handleChange} />)
+      rerender(
+        <Checkbox
+          checked={true}
+          onChange={handleChange}
+        />
+      )
 
       expect(screen.getByTestId('checkbox-checked-icon')).toBeInTheDocument()
       expect(
@@ -138,13 +195,20 @@ describe('Checkbox', () => {
     it('updates icon when partiallyChecked state changes', () => {
       const handleChange = vi.fn()
       const { rerender } = render(
-        <Checkbox checked={false} onChange={handleChange} />
+        <Checkbox
+          checked={false}
+          onChange={handleChange}
+        />
       )
 
       expect(screen.getByTestId('checkbox-unchecked-icon')).toBeInTheDocument()
 
       rerender(
-        <Checkbox checked={false} onChange={handleChange} partiallyChecked />
+        <Checkbox
+          checked={false}
+          onChange={handleChange}
+          partiallyChecked
+        />
       )
 
       expect(screen.getByTestId('checkbox-partial-icon')).toBeInTheDocument()

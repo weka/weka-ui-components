@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
 import clsx from 'clsx'
 
+import { KEYBOARD_KEYS } from '../../utils/consts'
 import {
   CheckboxCheckedIcon,
   CheckboxPartialIcon,
@@ -20,31 +20,39 @@ export function Checkbox({
   checked,
   onChange,
   partiallyChecked,
-  wrapperClass,
-  ...rest
+  wrapperClass
 }: Readonly<CheckboxProps>) {
-  const checkboxIcon = useMemo(() => {
+  function getIcon() {
     if (partiallyChecked) {
-      return <CheckboxPartialIcon {...rest} />
-    } else if (checked) {
-      return <CheckboxCheckedIcon {...rest} />
-    } else {
-      return <CheckboxUncheckedIcon {...rest} />
+      return CheckboxPartialIcon
     }
-  }, [checked, partiallyChecked, rest])
+    if (checked) {
+      return CheckboxCheckedIcon
+    }
+    return CheckboxUncheckedIcon
+  }
+
+  const Icon = getIcon()
 
   return (
     <div
+      role='checkbox'
+      aria-checked={partiallyChecked ? 'mixed' : checked}
+      tabIndex={0}
       className={clsx(styles.checkbox, wrapperClass)}
       data-testid='custom-checkbox'
       onClick={(event) => {
         event?.stopPropagation()
         onChange(!checked)
       }}
+      onKeyDown={(event) => {
+        if (event.key === KEYBOARD_KEYS.SPACE || event.key === KEYBOARD_KEYS.ENTER) {
+          event.preventDefault()
+          onChange(!checked)
+        }
+      }}
     >
-      {checkboxIcon}
+      <Icon />
     </div>
   )
 }
-
-export default Checkbox

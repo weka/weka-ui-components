@@ -26,14 +26,13 @@ export const globalTypes = {
 // Decorator that applies theme to the story wrapper (using createElement to avoid JSX)
 const withTheme = (Story, context) => {
   const theme = context.globals.theme
-  const backgroundColor = theme === 'dark' ? '#171c21' : '#ffffff'
 
   return createElement(
     'div',
     {
       'data-theme': theme,
       style: {
-        backgroundColor,
+        backgroundColor: 'var(--gray-0-900)',
         padding: '1rem',
         minHeight: '100px',
         transition: 'background-color 0.2s ease'

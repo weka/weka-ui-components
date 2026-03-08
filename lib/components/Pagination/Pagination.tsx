@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Tooltip from '../Tooltip'
 import svgs from 'svgs'
 import { IconButton } from '@mui/material'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING, EVENT_KEYS } from 'consts'
 import { TextBox } from '../inputs'
 
 import './pagination.scss'
@@ -94,7 +94,7 @@ function Pagination(props: PaginationProps) {
               disabled={numberOfPages <= 1 || disablePageInput}
               {...({
                 onKeyPress: (e: React.KeyboardEvent) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === EVENT_KEYS.ENTER) {
                     handleInputChange()
                   }
                 },

@@ -48,9 +48,19 @@ export const WithCustomClass: Story = {
 }
 
 export const Interactive: Story = {
+  args: {
+    checked: false,
+    partiallyChecked: true
+  },
+
   render: function InteractiveCheckbox() {
     const [checked, setChecked] = useState(false)
-    return <Checkbox checked={checked} onChange={setChecked} />
+    return (
+      <Checkbox
+        checked={checked}
+        onChange={setChecked}
+      />
+    )
   }
 }
 
@@ -58,15 +68,25 @@ export const AllStates: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <Checkbox checked={false} onChange={NOOP} />
+        <Checkbox
+          checked={false}
+          onChange={NOOP}
+        />
         <div style={{ marginTop: '8px', fontSize: '12px' }}>Unchecked</div>
       </div>
       <div style={{ textAlign: 'center' }}>
-        <Checkbox checked={true} onChange={NOOP} />
+        <Checkbox
+          checked={true}
+          onChange={NOOP}
+        />
         <div style={{ marginTop: '8px', fontSize: '12px' }}>Checked</div>
       </div>
       <div style={{ textAlign: 'center' }}>
-        <Checkbox checked={false} onChange={NOOP} partiallyChecked />
+        <Checkbox
+          checked={false}
+          onChange={NOOP}
+          partiallyChecked
+        />
         <div style={{ marginTop: '8px', fontSize: '12px' }}>Partial</div>
       </div>
     </div>

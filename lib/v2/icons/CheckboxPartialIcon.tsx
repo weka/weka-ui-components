@@ -1,4 +1,3 @@
-
 export interface CheckboxPartialIconProps {
   color?: string
   width?: string | number
@@ -28,5 +27,3 @@ export function CheckboxPartialIcon({
     </svg>
   )
 }
-
-export default CheckboxPartialIcon

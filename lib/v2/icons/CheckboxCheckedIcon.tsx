@@ -1,4 +1,3 @@
-
 export interface CheckboxCheckedIconProps {
   color?: string
   width?: string | number
@@ -30,5 +29,3 @@ export function CheckboxCheckedIcon({
     </svg>
   )
 }
-
-export default CheckboxCheckedIcon

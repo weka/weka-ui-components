@@ -136,22 +136,3 @@ jobs:
             🤖 This PR was automatically created by the weka-ui-components release workflow.
           branch: deps/weka-ui-components-${{ needs.check-release-type.outputs.version }}
           base: main
-
-      - name: Create Issue if tests/build failed
-        if: steps.tests.outputs.result == 'failed' || steps.build.outputs.result == 'failed'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          token: ${{ secrets.PARENT_REPOS_TOKEN }}
-          repository: ${{ matrix.repo.owner }}/${{ matrix.repo.name }}
-          issue-number: 1  # This will create a new issue
-          body: |
-            ## ⚠️ weka-ui-components update failed
-
-            Attempted to update `@weka/weka-ui-components` to version `${{ needs.check-release-type.outputs.version }}` but verification failed:
-
-            - Tests: ${{ steps.tests.outputs.result == 'success' && '✅ Passed' || '❌ Failed' }}
-            - Build: ${{ steps.build.outputs.result == 'success' && '✅ Passed' || '❌ Failed' }}
-
-            Please update manually and fix any breaking changes.
-
-            Release notes: ${{ github.event.release.html_url }}

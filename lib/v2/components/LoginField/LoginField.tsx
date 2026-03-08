@@ -1,10 +1,11 @@
+import { useId } from 'react'
 import clsx from 'clsx'
 
 import styles from './loginField.module.scss'
 
 export interface LoginFieldProps {
   label: string
-  type?: string
+  type?: 'text' | 'password'
   value: string
   onChange: (value: string) => void
   error?: string
@@ -25,13 +26,19 @@ export function LoginField({
   disabled = false,
   dataTestId
 }: Readonly<LoginFieldProps>) {
+  const id = useId()
+
   return (
     <div className={styles.fieldContainer}>
-      <label className={styles.label}>
+      <label
+        className={styles.label}
+        htmlFor={id}
+      >
         {label}
         {isRequired ? <span className={styles.required}>*</span> : null}
       </label>
       <input
+        id={id}
         autoFocus={autoFocus}
         className={clsx(styles.input, error && styles.inputError)}
         data-testid={dataTestId}
@@ -44,5 +51,3 @@ export function LoginField({
     </div>
   )
 }
-
-export default LoginField

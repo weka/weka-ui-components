@@ -44,10 +44,13 @@ export const AutoHeight: Story = {
   }
 }
 
-export const PercentageHeight: Story = {
+export const InContainer: Story = {
   render: () => (
     <div style={{ height: '300px', border: '1px dashed #ccc' }}>
-      <EmptyChartState height='100%' message='Full container height' />
+      <EmptyChartState
+        height='100%'
+        message='Full container height'
+      />
     </div>
   )
 }

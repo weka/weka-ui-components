@@ -1,4 +1,3 @@
-
 export interface InfoIconProps {
   width?: number
   height?: number
@@ -36,5 +35,3 @@ export function InfoIcon({
     </svg>
   )
 }
-
-export default InfoIcon

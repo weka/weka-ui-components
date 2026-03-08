@@ -12,7 +12,12 @@ describe('LoadingState', () => {
     })
 
     it('renders loading state with custom message', () => {
-      render(<LoadingState message='Fetching data...' type='loading' />)
+      render(
+        <LoadingState
+          message='Fetching data...'
+          type='loading'
+        />
+      )
       expect(screen.getByText('Fetching data...')).toBeInTheDocument()
     })
 
@@ -31,7 +36,12 @@ describe('LoadingState', () => {
     })
 
     it('renders error state with custom message', () => {
-      render(<LoadingState message='Something went wrong' type='error' />)
+      render(
+        <LoadingState
+          message='Something went wrong'
+          type='error'
+        />
+      )
       expect(screen.getByText('Something went wrong')).toBeInTheDocument()
     })
 
@@ -50,7 +60,12 @@ describe('LoadingState', () => {
     })
 
     it('renders noData state with custom message', () => {
-      render(<LoadingState message='No items found' type='noData' />)
+      render(
+        <LoadingState
+          message='No items found'
+          type='noData'
+        />
+      )
       expect(screen.getByText('No items found')).toBeInTheDocument()
     })
 
@@ -73,7 +88,10 @@ describe('LoadingState', () => {
 
     it('renders children alongside message', () => {
       render(
-        <LoadingState message='Failed to load' type='error'>
+        <LoadingState
+          message='Failed to load'
+          type='error'
+        >
           <span>Click below to retry</span>
         </LoadingState>
       )

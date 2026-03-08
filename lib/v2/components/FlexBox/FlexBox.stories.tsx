@@ -59,7 +59,10 @@ export const Default: Story = {
 
 export const Column: Story = {
   render: () => (
-    <FlexBox direction='column' gap={8}>
+    <FlexBox
+      direction='column'
+      gap={8}
+    >
       <Box>Item 1</Box>
       <Box>Item 2</Box>
       <Box>Item 3</Box>
@@ -69,7 +72,10 @@ export const Column: Story = {
 
 export const SpaceBetween: Story = {
   render: () => (
-    <FlexBox justify='space-between' style={{ width: '100%' }}>
+    <FlexBox
+      justify='space-between'
+      style={{ width: '100%' }}
+    >
       <Box>Left</Box>
       <Box>Right</Box>
     </FlexBox>
@@ -90,7 +96,11 @@ export const Centered: Story = {
 
 export const WithWrap: Story = {
   render: () => (
-    <FlexBox wrap gap={8} style={{ width: '300px' }}>
+    <FlexBox
+      wrap
+      gap={8}
+      style={{ width: '300px' }}
+    >
       <Box>Item 1</Box>
       <Box>Item 2</Box>
       <Box>Item 3</Box>
@@ -102,7 +112,10 @@ export const WithWrap: Story = {
 
 export const AllJustifyOptions: Story = {
   render: () => (
-    <FlexBox direction='column' gap={16}>
+    <FlexBox
+      direction='column'
+      gap={16}
+    >
       {(
         [
           'flex-start',

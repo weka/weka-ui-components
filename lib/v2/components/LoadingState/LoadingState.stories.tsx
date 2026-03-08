@@ -57,9 +57,12 @@ export const NoDataWithCustomMessage: Story = {
   }
 }
 
-export const ErrorWithRetryButton: Story = {
+export const WithChildren: Story = {
   render: () => (
-    <LoadingState type='error' message='Something went wrong'>
+    <LoadingState
+      type='error'
+      message='Something went wrong'
+    >
       <button
         type='button'
         onClick={() => alert('Retry clicked')}

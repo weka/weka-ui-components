@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { useEffect } from 'react'
 
-import { EMPTY_STRING_ARRAY } from '../utils/consts'
+import { EMPTY_REF_ARRAY, EMPTY_STRING_ARRAY } from '../utils/consts'
 
 interface UseClickOutsideOptions {
   additionalRefs?: RefObject<HTMLElement>[]
@@ -25,7 +25,7 @@ function isClickInsideMainRef(
  */
 function hasDataAttributeOnRef(
   ref: RefObject<HTMLElement>,
-  dataAttributes: string[]
+  dataAttributes: readonly string[]
 ): boolean {
   return dataAttributes.some(
     (attr) => ref.current?.getAttribute(attr) === 'true'
@@ -36,7 +36,7 @@ function hasDataAttributeOnRef(
  * Check if click target is inside any of the additional refs
  */
 function isClickInsideAdditionalRefs(
-  refs: RefObject<HTMLElement>[],
+  refs: readonly RefObject<HTMLElement>[],
   target: HTMLElement
 ): boolean {
   return refs.some((r) => r.current && r.current.contains(target))
@@ -47,7 +47,7 @@ function isClickInsideAdditionalRefs(
  */
 function isClickOnMatchedSelector(
   target: HTMLElement,
-  selectors: string[]
+  selectors: readonly string[]
 ): boolean {
   return selectors.some((selector) => target.closest(selector))
 }
@@ -57,7 +57,7 @@ function isClickOnMatchedSelector(
  */
 function hasDataAttributeInAncestors(
   target: HTMLElement,
-  dataAttributes: string[]
+  dataAttributes: readonly string[]
 ): boolean {
   let currentElement: HTMLElement | null = target
 
@@ -78,7 +78,7 @@ function hasDataAttributeInAncestors(
  * Hook to handle clicks outside of specified elements.
  *
  * @param ref - Main element ref to check clicks outside of
- * @param handler - Callback function to execute when click is outside
+ * @param handler - Callback function to execute when a click is outside. **Must be memoized.**
  * @param options - Additional options for more complex scenarios
  */
 export const useClickOutside = (
@@ -87,7 +87,7 @@ export const useClickOutside = (
   options: UseClickOutsideOptions = {}
 ) => {
   const {
-    additionalRefs = [],
+    additionalRefs = EMPTY_REF_ARRAY,
     additionalSelectors = EMPTY_STRING_ARRAY,
     additionalDataAttributes = EMPTY_STRING_ARRAY,
     enabled = true

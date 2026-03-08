@@ -42,10 +42,11 @@ export function FlexBox({
   }
 
   return (
-    <div className={extraClass} style={flexStyle}>
+    <div
+      className={extraClass}
+      style={flexStyle}
+    >
       {children}
     </div>
   )
 }
-
-export default FlexBox

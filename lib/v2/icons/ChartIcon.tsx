@@ -27,5 +27,3 @@ export function ChartIcon({
     </svg>
   )
 }
-
-export default ChartIcon

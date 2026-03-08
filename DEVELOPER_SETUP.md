@@ -13,7 +13,7 @@ If you're working on a project that **uses** weka-ui-components, follow these st
 1. Go to: https://github.com/settings/tokens/new
 2. Select **"Classic"** token
 3. Name: `weka-packages-read` (or any name you prefer)
-4. Expiration: **No expiration** (recommended for read-only)
+4. Expiration: **12 months** (or less)
 5. Scopes: Select only **`read:packages`**
 6. Click **"Generate token"**
 7. Copy the token (starts with `ghp_...`)
@@ -125,22 +125,24 @@ yarn add @weka/weka-ui-components@4.0.0-beta.2
 
 ## CI/CD Setup for Parent Projects
 
-GitHub Actions automatically have access via `GITHUB_TOKEN`. Add this to your workflow:
+Each parent project's CI needs `WEKA_COMPONENTS_NPM_TOKEN` to install the package.
+
+### GitHub Actions
+
+Add `WEKA_COMPONENTS_NPM_TOKEN` as a repository secret, then pass it as an env variable:
 
 ```yaml
 - name: Install dependencies
   run: yarn install
   env:
-    WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
 ```
 
-And ensure `.yarnrc.yml` has:
-```yaml
-npmScopes:
-  weka:
-    npmRegistryServer: "https://npm.pkg.github.com"
-    npmAuthToken: "${WEKA_COMPONENTS_NPM_TOKEN}"
-```
+This works because the parent project's `.yarnrc.yml` references `${WEKA_COMPONENTS_NPM_TOKEN}` (see [One-Time Setup](#3-configure-your-environment) above).
+
+### wekapp
+
+The token is stored in AWS Parameter Store and injected via `pack.py` / `Dockerfile`.
 
 ---
 

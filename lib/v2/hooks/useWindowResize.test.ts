@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { useResizeObserver } from './useResizeObserver'
+import { useWindowResize } from './useWindowResize'
 
-describe('useResizeObserver', () => {
+describe('useWindowResize', () => {
   beforeEach(() => {
     vi.spyOn(window, 'addEventListener')
     vi.spyOn(window, 'removeEventListener')
@@ -14,21 +14,21 @@ describe('useResizeObserver', () => {
 
   it('calls callback immediately on mount', () => {
     const callback = vi.fn()
-    renderHook(() => useResizeObserver(callback, []))
+    renderHook(() => useWindowResize(callback, []))
 
     expect(callback).toHaveBeenCalledTimes(1)
   })
 
   it('adds resize event listener on mount', () => {
     const callback = vi.fn()
-    renderHook(() => useResizeObserver(callback, []))
+    renderHook(() => useWindowResize(callback, []))
 
     expect(window.addEventListener).toHaveBeenCalledWith('resize', callback)
   })
 
   it('removes resize event listener on unmount', () => {
     const callback = vi.fn()
-    const { unmount } = renderHook(() => useResizeObserver(callback, []))
+    const { unmount } = renderHook(() => useWindowResize(callback, []))
 
     unmount()
 
@@ -38,7 +38,7 @@ describe('useResizeObserver', () => {
   it('re-registers listener when dependencies change', () => {
     const callback = vi.fn()
     const { rerender } = renderHook(
-      ({ deps }) => useResizeObserver(callback, deps),
+      ({ deps }) => useWindowResize(callback, deps),
       { initialProps: { deps: [1] } }
     )
 
@@ -53,7 +53,7 @@ describe('useResizeObserver', () => {
   it('does not re-register listener when dependencies are stable', () => {
     const callback = vi.fn()
     const deps = [1]
-    const { rerender } = renderHook(() => useResizeObserver(callback, deps))
+    const { rerender } = renderHook(() => useWindowResize(callback, deps))
 
     expect(window.addEventListener).toHaveBeenCalledTimes(1)
 
