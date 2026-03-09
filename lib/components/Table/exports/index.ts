@@ -4,6 +4,7 @@ export { createColumnHelperWithAction as createColumnHelper } from './utils'
 export { default as PerPage } from './PerPage'
 export { useUrlFilters } from '../hooks'
 export { FILTER_MODES } from '../tableUtils'
+export type { TextFilterValue, SelectFilterValue, MultiSelectFilterValue } from '../tableUtils'
 
 import type {
   FilterFn,
