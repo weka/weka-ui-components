@@ -6,3 +6,4 @@ storybook-static
 .DS_Store
 .yarn/install-state.gz
 dist
+/types

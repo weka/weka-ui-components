@@ -1,0 +1,55 @@
+// ========================================
+// V2 STYLES ENTRY POINT
+// ========================================
+// Import this file to get v2 theme support
+
+@use 'theme';
+
+// Base variables
+:root {
+  --halfspread: 4px;
+  --spread: 8px;
+  --spread2: 16px;
+  --spread3: 24px;
+  --body-font: 'IBMPlexSans', 'Exo 2', 'Roboto', sans-serif;
+  --bold-font: 'IBMPlexSans', 'Exo 2', 'Roboto', sans-serif;
+  --font-family: 'IBMPlexSans', 'Exo 2', 'Roboto', sans-serif;
+}
+
+// ========================================
+// THEME APPLICATION
+// ========================================
+
+// Default: light theme
+:root {
+  @include theme.v2-light-theme;
+}
+
+// Class-based theme overrides
+:root.v2-light-mode,
+.v2-light-mode {
+  @include theme.v2-light-theme;
+}
+
+:root.v2-dark-mode,
+.v2-dark-mode {
+  @include theme.v2-dark-theme;
+}
+
+// Support for data-theme attribute (Storybook compatibility)
+[data-theme='light'] {
+  @include theme.v2-light-theme;
+}
+
+[data-theme='dark'] {
+  @include theme.v2-dark-theme;
+}
+
+// Legacy body-based theme application
+body.light-mode {
+  @include theme.v2-light-theme;
+}
+
+body.dark-mode {
+  @include theme.v2-dark-theme;
+}

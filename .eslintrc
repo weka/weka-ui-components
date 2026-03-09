@@ -1,10 +1,17 @@
 {
   "extends": ["@weka/eslint-config"],
+  "ignorePatterns": ["vite.config.ts", "vitest.config.ts"],
   "overrides": [
     {
       "files": ["**/*.stories.*"],
       "rules": {
         "import/no-anonymous-default-export": "off"
+      }
+    },
+    {
+      "files": ["**/icons/**/*.tsx"],
+      "rules": {
+        "max-len": "off"
       }
     }
   ]

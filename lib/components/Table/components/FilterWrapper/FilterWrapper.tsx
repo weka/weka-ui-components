@@ -5,7 +5,7 @@ import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import svgs from 'svgs'
 import { useKeyEvent, useToggle } from 'hooks'
 import Utils from 'utils'
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING, EVENT_KEYS } from 'consts'
 import { ExtendedColumn } from '../../types'
 import clsx from 'clsx'
 import { tableUtils } from '../../tableUtils'
@@ -50,7 +50,7 @@ function FilterWrapper<Data, Value>({
 
   const anchor = useRef(null)
   const ref = useRef(null)
-  useKeyEvent(ref, 'Enter', onClick)
+  useKeyEvent(ref, EVENT_KEYS.ENTER, onClick)
   const isDisable =
     Utils.isEmpty(value) ||
     (Utils.isString(value) && value?.trim().length === 0) ||
@@ -114,7 +114,10 @@ function FilterWrapper<Data, Value>({
                         }
                       >
                         <div className='filter-table-wrapper-btn'>
-                          <Button disable={isDisable} onClick={onClick}>
+                          <Button
+                            disable={isDisable}
+                            onClick={onClick}
+                          >
                             Filter
                           </Button>
                         </div>
