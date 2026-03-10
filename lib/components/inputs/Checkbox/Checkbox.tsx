@@ -1,4 +1,5 @@
-import React, { ForwardedRef, InputHTMLAttributes, forwardRef } from 'react'
+import type { ForwardedRef, InputHTMLAttributes } from 'react'
+import React, { forwardRef } from 'react'
 
 import './checkbox.scss'
 
@@ -8,7 +9,12 @@ const Checkbox = forwardRef(function Checkbox(
 ) {
   return (
     <span className='checkbox-container'>
-      <input className='checkbox-input' type='checkbox' {...props} ref={ref} />
+      <input
+        className='checkbox-input'
+        type='checkbox'
+        {...props}
+        ref={ref}
+      />
       <span className='checkmark' />
     </span>
   )

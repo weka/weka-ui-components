@@ -1,15 +1,12 @@
-import React, {
-  useState,
-  useRef,
-  useLayoutEffect,
-  useEffect,
-  ChangeEvent
-} from 'react'
+import type { ChangeEvent } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
-import Tooltip from '../../Tooltip'
+
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import Utils from 'utils'
 import svgs from 'svgs'
+import Utils from 'utils'
+
+import Tooltip from '../../Tooltip'
 
 import './ipRangeTextBox.scss'
 
@@ -55,19 +52,18 @@ interface IpRangeTextBoxProps {
   info?: string
 }
 
-function IpRangeTextBox(props: IpRangeTextBoxProps) {
-  const {
-    label,
-    onChange,
-    value,
-    error,
-    wrapperClass = EMPTY_STRING,
-    subnet,
-    disabled,
-    isRequired,
-    info,
-    ...rest
-  } = props
+function IpRangeTextBox({
+  label,
+  onChange,
+  value,
+  error,
+  wrapperClass = EMPTY_STRING,
+  subnet,
+  disabled,
+  isRequired,
+  info,
+  ...rest
+}: IpRangeTextBoxProps) {
   const ref = useRef<HTMLHeadingElement>(null)
   const mask = getFormatMask(subnet)
   const [ipVal, range] = value
@@ -132,15 +128,21 @@ function IpRangeTextBox(props: IpRangeTextBoxProps) {
 
   return (
     <div className={wrapperClasses}>
-      <div className='value-container' ref={ref}>
+      <div
+        ref={ref}
+        className='value-container'
+      >
         {Utils.range(5).map((inputIndex) => (
-          <div className='ip-part-value-edit' key={`input_${inputIndex}`}>
+          <div
+            key={`input_${inputIndex}`}
+            className='ip-part-value-edit'
+          >
             <input
-              value={ipParts[inputIndex]}
               disabled={mask.length >= inputIndex + 1}
+              onChange={(newValue) => setIpPart(inputIndex, newValue)}
               onKeyDown={keyDown}
               type='number'
-              onChange={(newValue) => setIpPart(inputIndex, newValue)}
+              value={ipParts[inputIndex]}
               {...rest}
             />
             {['.', '.', '.', '-', EMPTY_STRING][inputIndex]}
@@ -150,7 +152,7 @@ function IpRangeTextBox(props: IpRangeTextBoxProps) {
       <span className='field__label-wrap'>
         <span className='field__label field-1-label-content'>
           {label}
-          {isRequired && <span className='required-star'>*</span>}
+          {isRequired ? <span className='required-star'>*</span> : null}
           {!!info && (
             <Tooltip data={info}>
               <Info />

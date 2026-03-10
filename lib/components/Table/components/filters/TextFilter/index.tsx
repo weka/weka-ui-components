@@ -1,2 +1,2 @@
-export { default } from './TextFilter'
 export type * from './TextFilter'
+export { default } from './TextFilter'

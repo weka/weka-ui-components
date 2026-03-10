@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
+
 import Tooltip from '../Tooltip'
 
 export type CursorTooltipProps = {
@@ -47,7 +48,12 @@ function CursorTooltip({
   }
 
   return (
-    <Tooltip open={open} followCursor enterDelay={enterDelay} {...rest}>
+    <Tooltip
+      enterDelay={enterDelay}
+      followCursor
+      open={open}
+      {...rest}
+    >
       {React.cloneElement(children, {
         onMouseEnter: handleMouseEnter,
         onMouseLeave: handleMouseLeave,

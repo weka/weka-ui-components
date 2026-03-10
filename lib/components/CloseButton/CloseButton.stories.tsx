@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+
 import { default as CloseButtonComponent } from './CloseButton'
 
 const meta: Meta<typeof CloseButtonComponent> = {

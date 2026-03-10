@@ -1,9 +1,11 @@
 import React from 'react'
-import CircularProgress from '../../../../CircularProgress'
-import Tooltip from '../../../../Tooltip'
+
 import { OBS_IS_DETACHING, OBS_MODES } from 'consts'
 import svgs from 'svgs'
-import { ExtendedCellProps } from '../../../types'
+
+import CircularProgress from '../../../../CircularProgress'
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 import './tieringCell.scss'
 
@@ -21,7 +23,10 @@ export type TieringCellValue = TieringValue[]
 function getSVG({ mode, name, state, detachProgress = 0 }: TieringValue) {
   if (state === OBS_IS_DETACHING) {
     return (
-      <Tooltip data='Object Store Bucket is being detached' key={name}>
+      <Tooltip
+        key={name}
+        data='Object Store Bucket is being detached'
+      >
         <div>
           <CircularProgress
             progress={
@@ -33,12 +38,18 @@ function getSVG({ mode, name, state, detachProgress = 0 }: TieringValue) {
     )
   }
   const Icon = mode === OBS_MODES.REMOTE ? RemoteTiering : Tiering
-  return <Icon key={name} className={mode.toLowerCase()} />
+  return (
+    <Icon
+      key={name}
+      className={mode.toLowerCase()}
+    />
+  )
 }
 
-function TieringCell<Data>(props: ExtendedCellProps<Data, TieringCellValue>) {
-  const { cell, customValue } = props
-
+function TieringCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, TieringCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   return <div className='tiering-cell'>{value.map((val) => getSVG(val))}</div>

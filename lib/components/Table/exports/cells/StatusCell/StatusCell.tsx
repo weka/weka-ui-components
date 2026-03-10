@@ -1,8 +1,10 @@
 import React from 'react'
-import svgs from 'svgs'
+
 import { DRIVES_STATUSES, STATUS } from 'consts'
+import svgs from 'svgs'
+
 import Tooltip from '../../../../Tooltip'
-import { ExtendedCellProps } from '../../../types'
+import type { ExtendedCellProps } from '../../../types'
 
 import './statusCell.scss'
 
@@ -44,9 +46,11 @@ function getIcon(status: StatusCellValue) {
 
 export const StatusCellName = 'StatusCell'
 
-function StatusCell<Data>(props: ExtendedCellProps<Data, StatusCellValue>) {
-  const { cell, row, customValue } = props
-
+function StatusCell<Data>({
+  cell,
+  row,
+  customValue
+}: ExtendedCellProps<Data, StatusCellValue>) {
   const cellDef = cell.column.columnDef?.meta?.cell
   if (cellDef && cellDef.type !== StatusCellName) {
     throw new Error(`${StatusCellName}: cell options type is incorrect`)
@@ -63,9 +67,9 @@ function StatusCell<Data>(props: ExtendedCellProps<Data, StatusCellValue>) {
     <Tooltip data={tooltip}>
       <div className='status-cell-wrapper'>
         {getIcon(value)}
-        {showString && (
+        {showString ? (
           <span className='status-string'>{noUnderscoreValue}</span>
-        )}
+        ) : null}
       </div>
     </Tooltip>
   )

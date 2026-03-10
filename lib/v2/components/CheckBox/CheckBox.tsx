@@ -1,11 +1,11 @@
 import clsx from 'clsx'
 
-import { KEYBOARD_KEYS } from '../../utils/consts'
 import {
   CheckboxCheckedIcon,
   CheckboxPartialIcon,
   CheckboxUncheckedIcon
 } from '../../icons'
+import { KEYBOARD_KEYS } from '../../utils/consts'
 
 import styles from './checkBox.module.scss'
 
@@ -36,17 +36,20 @@ export function Checkbox({
 
   return (
     <div
-      role='checkbox'
       aria-checked={partiallyChecked ? 'mixed' : checked}
-      tabIndex={0}
       className={clsx(styles.checkbox, wrapperClass)}
       data-testid='custom-checkbox'
+      role='checkbox'
+      tabIndex={0}
       onClick={(event) => {
         event?.stopPropagation()
         onChange(!checked)
       }}
       onKeyDown={(event) => {
-        if (event.key === KEYBOARD_KEYS.SPACE || event.key === KEYBOARD_KEYS.ENTER) {
+        if (
+          event.key === KEYBOARD_KEYS.SPACE ||
+          event.key === KEYBOARD_KEYS.ENTER
+        ) {
           event.preventDefault()
           onChange(!checked)
         }

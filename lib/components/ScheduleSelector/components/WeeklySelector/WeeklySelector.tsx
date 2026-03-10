@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
+
 import { Select } from '../../../inputs'
+import { DAYS_OPTIONS, MIDNIGHT } from '../../ScheduleSelectorConsts'
 import { TimePicker } from '../'
-import { MIDNIGHT, DAYS_OPTIONS } from '../../ScheduleSelectorConsts'
 
 import './weeklySelector.scss'
 
@@ -40,15 +41,15 @@ const WeeklySelector: React.FC<WeeklySelectorProps> = ({
     <div className='weekly-selector-wrapper'>
       <span className='label-2'>Every week at</span>
       <TimePicker
-        value={time}
-        onChange={handleTimeChange}
         isDisabled={isDisabled}
+        onChange={handleTimeChange}
+        value={time}
       />
       <span className='label-2'>on</span>
       <Select
         disabled={isDisabled}
-        options={DAYS_OPTIONS}
         onChange={handleDayChange}
+        options={DAYS_OPTIONS}
         value={selectedDay}
       />
     </div>

@@ -1,13 +1,16 @@
 import React from 'react'
-import { ExtendedHeaderGroup, ExtendedTable, RowAction } from '../../types'
-import { ColumnMeta, flexRender } from '@tanstack/react-table'
-import Tooltip from '../../../Tooltip'
+import type { ColumnMeta } from '@tanstack/react-table'
+import { flexRender } from '@tanstack/react-table'
 import clsx from 'clsx'
-import svgs from 'svgs'
-import TableFilter from '../TableFilter'
-import { Utils } from '../../../../main'
+
 import { EMPTY_STRING } from 'consts'
+import svgs from 'svgs'
+
+import { Utils } from '../../../../main'
+import Tooltip from '../../../Tooltip'
+import type { ExtendedHeaderGroup, ExtendedTable, RowAction } from '../../types'
 import ScrollToTop from '../ScrollToTop'
+import TableFilter from '../TableFilter'
 
 const { LongArrow } = svgs
 
@@ -22,18 +25,16 @@ interface HeaderGroupProps<Data> {
   showScrollToTop: boolean
 }
 
-function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
-  const {
-    headerGroup,
-    table,
-    isExpandable,
-    rowActions,
-    hasEmptyActionsCell,
-    isResizable,
-    scrollElement,
-    showScrollToTop
-  } = props
-
+function ColumnHeader<Data>({
+  headerGroup,
+  table,
+  isExpandable,
+  rowActions,
+  hasEmptyActionsCell,
+  isResizable,
+  scrollElement,
+  showScrollToTop
+}: HeaderGroupProps<Data>) {
   const toggleSortBy = (columnId: string) => {
     table.setSorting((prevSorting) => [
       {
@@ -79,10 +80,9 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
 
   return (
     <tr key={headerGroup.id}>
-      {isExpandable && (
+      {isExpandable ? (
         <th className='table-header header-cell-for-expandable' />
-      )}
-
+      ) : null}
       {headerGroup.headers.map((header, index) => {
         const column = header.column
         const isHeaderEmpty = column.columnDef.header === EMPTY_STRING
@@ -94,12 +94,12 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
 
         return (
           <th
-            colSpan={header.colSpan}
             key={header.id}
+            colSpan={header.colSpan}
+            style={getColumnStyle(header.id, columnMeta)}
             className={clsx('table-header', {
               'table-header-actions': columnMeta?._type === 'action'
             })}
-            style={getColumnStyle(header.id, columnMeta)}
           >
             <div
               className={clsx('table-header-content', {
@@ -120,15 +120,18 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
                   {flexRender(column.columnDef.header, header.getContext())}
                 </span>
               </Tooltip>
-              {column.columnDef?.meta?.filter && (
-                <TableFilter table={table} column={column} />
-              )}
-              {canSort && (columnSorted || isHeaderEmpty) && (
+              {column.columnDef?.meta?.filter ? (
+                <TableFilter
+                  column={column}
+                  table={table}
+                />
+              ) : null}
+              {canSort && (columnSorted || isHeaderEmpty) ? (
                 <div
+                  onClick={() => toggleSortBy(column.id)}
                   className={clsx('table-sort', {
                     'table-sort-no-title': !columnSorted && isHeaderEmpty
                   })}
-                  onClick={() => toggleSortBy(column.id)}
                 >
                   {columnSorted === 'desc' ? (
                     <LongArrow className='rotate180' />
@@ -136,7 +139,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
                     <LongArrow />
                   )}
                 </div>
-              )}
+              ) : null}
               {header.column.getCanResize() && (
                 <div
                   onMouseDown={header.getResizeHandler()}
@@ -145,7 +148,6 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
                   })}
                 />
               )}
-
               {showScrollToTop && index === headerGroup.headers.length - 1 ? (
                 <ScrollToTop scrollElement={scrollElement} />
               ) : null}
@@ -153,9 +155,9 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
           </th>
         )
       })}
-      {(!Utils.isEmpty(rowActions) || (hasEmptyActionsCell && isResizable)) && (
+      {!Utils.isEmpty(rowActions) || (hasEmptyActionsCell && isResizable) ? (
         <th className='table-header table-header-actions'>{EMPTY_STRING}</th>
-      )}
+      ) : null}
     </tr>
   )
 }

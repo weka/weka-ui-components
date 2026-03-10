@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+
+import { EMPTY_STRING } from 'consts'
+
 import SpanTooltip from '../../../../SpanTooltip'
 import Spinner from '../../../../Spinner'
-import { ExtendedCell, ExtendedCellProps } from '../../../types'
-import { EMPTY_STRING } from 'consts'
+import type { ExtendedCell, ExtendedCellProps } from '../../../types'
 
 export interface ApiCallCellOptions<Data, Value> {
   apiCall: (cell: ExtendedCell<Data, Value>) => Promise<string>
@@ -13,9 +15,9 @@ export type ApiCallCellValue = never
 
 export const ApiCallCellName = 'ApiCallCell'
 
-function ApiCallCell<Data>(props: ExtendedCellProps<Data, ApiCallCellValue>) {
-  const { cell } = props
-
+function ApiCallCell<Data>({
+  cell
+}: ExtendedCellProps<Data, ApiCallCellValue>) {
   const cellDef = cell.column.columnDef.meta?.cell
   if (!cellDef || cellDef.type !== ApiCallCellName) {
     throw new Error(

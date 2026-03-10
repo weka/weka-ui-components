@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { DateTime } from 'luxon'
+import type { DateTime } from 'luxon'
 
 import './DayCell.scss'
 
@@ -13,16 +13,14 @@ interface DayCellProps {
   maxDate?: DateTime | null
 }
 
-function DayCell(props: DayCellProps) {
-  const {
-    month,
-    date,
-    selected,
-    onSelect,
-    minDate = null,
-    maxDate = null
-  } = props
-
+function DayCell({
+  month,
+  date,
+  selected,
+  onSelect,
+  minDate = null,
+  maxDate = null
+}: DayCellProps) {
   function isDisable() {
     return (
       month !== date.month ||
@@ -45,7 +43,10 @@ function DayCell(props: DayCellProps) {
   }
 
   return (
-    <div className={dayClassname} onClick={select}>
+    <div
+      className={dayClassname}
+      onClick={select}
+    >
       {date.day}
     </div>
   )

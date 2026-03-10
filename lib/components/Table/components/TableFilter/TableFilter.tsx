@@ -1,13 +1,11 @@
-import { TABLE_FILTERS_MAP } from '../../tableConsts'
-import { BaseFilterProps } from '../../types'
-
 import React from 'react'
+
+import { TABLE_FILTERS_MAP } from '../../tableConsts'
+import type { BaseFilterProps } from '../../types'
 
 export type FilterTypes = keyof typeof TABLE_FILTERS_MAP
 
-function TableFilter<Data>(props: BaseFilterProps<Data, unknown>) {
-  const { table, column } = props
-
+function TableFilter<Data>({ table, column }: BaseFilterProps<Data, unknown>) {
   const filterDef = column.columnDef.meta?.filter
 
   if (!filterDef) {
@@ -21,8 +19,8 @@ function TableFilter<Data>(props: BaseFilterProps<Data, unknown>) {
 
   return (
     <FilterComponent
-      table={table}
       column={column}
+      table={table}
       filterOptions={
         typeof filterDef === 'object' && filterDef.options
           ? filterDef.options

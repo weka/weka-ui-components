@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Checkbox } from './CheckBox'
 
@@ -49,7 +49,7 @@ describe('Checkbox', () => {
     it('renders checked icon when checked is true', () => {
       render(
         <Checkbox
-          checked={true}
+          checked
           onChange={vi.fn()}
         />
       )
@@ -82,7 +82,7 @@ describe('Checkbox', () => {
     it('renders partial icon over checked icon when both are true', () => {
       render(
         <Checkbox
-          checked={true}
+          checked
           onChange={vi.fn()}
           partiallyChecked
         />
@@ -136,7 +136,7 @@ describe('Checkbox', () => {
       const handleChange = vi.fn()
       render(
         <Checkbox
-          checked={true}
+          checked
           onChange={handleChange}
         />
       )
@@ -181,7 +181,7 @@ describe('Checkbox', () => {
 
       rerender(
         <Checkbox
-          checked={true}
+          checked
           onChange={handleChange}
         />
       )

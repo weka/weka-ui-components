@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from 'storybook-solidjs'
-import { default as CircularProgressComponent } from './CircularProgress'
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import { default as CircularProgressComponent } from './CircularProgress'
 
 const meta: Meta<typeof CircularProgressComponent> = {
   component: CircularProgressComponent

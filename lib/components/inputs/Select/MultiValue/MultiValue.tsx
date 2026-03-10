@@ -1,5 +1,7 @@
 import React from 'react'
-import { components, MultiValueProps } from 'react-select'
+import type { MultiValueProps } from 'react-select'
+import { components } from 'react-select'
+
 import Tooltip from '../../../Tooltip'
 
 interface ValueProps extends MultiValueProps {
@@ -11,7 +13,10 @@ function MultiValue(props: ValueProps) {
   } = props
   return (
     <components.MultiValue {...props}>
-      <Tooltip data={chipTooltip || label} placement='left'>
+      <Tooltip
+        data={chipTooltip || label}
+        placement='left'
+      >
         <span>{chipLabel || label}</span>
       </Tooltip>
     </components.MultiValue>

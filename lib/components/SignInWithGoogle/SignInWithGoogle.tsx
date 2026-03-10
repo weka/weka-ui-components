@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import clsx from 'clsx'
+
+import Utils from 'utils'
+
 import Button from '../Button'
 import Loader from '../Loader'
-import Utils from 'utils'
-import clsx from 'clsx'
 
 import './signInWithGoogle.scss'
 
@@ -113,10 +115,10 @@ function SignInWithGoogle({
     <div className='google-login-wrapper'>
       {client ? (
         <Button
-          onClick={getToken}
+          data-testid='googleBtn'
           empty
           extraClass={clsx('google-button', extraClass)}
-          data-testid='googleBtn'
+          onClick={getToken}
           {...rest}
         >
           <div className='google-btn-content'>

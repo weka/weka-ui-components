@@ -1,5 +1,6 @@
-import React, { FC, useCallback } from 'react'
-import { DayPicker, TimePicker } from '../index'
+import type { FC } from 'react'
+import React, { useCallback } from 'react'
+
 import { Select } from '../../../inputs'
 import {
   EVERY_DAY,
@@ -8,6 +9,7 @@ import {
   SPECIFIC_DAYS,
   WEEK_DAYS
 } from '../../ScheduleSelectorConsts'
+import { DayPicker, TimePicker } from '../index'
 
 import './dailySelector.scss'
 
@@ -59,24 +61,24 @@ const DailySelector: FC<DailySelectorProps> = ({
   return (
     <div className='daily-selector-wrapper'>
       <Select
+        disabled={isDisabled}
+        onChange={handleSelectChange}
         options={selectOptions}
         value={isEveryDay ? EVERY_DAY.value : SPECIFIC_DAYS.value}
-        onChange={handleSelectChange}
-        disabled={isDisabled}
       />
       <span className='label-2'>at</span>
       <TimePicker
-        value={dailyData.time || MIDNIGHT}
-        onChange={handleSelectedTime}
         isDisabled={isDisabled}
+        onChange={handleSelectedTime}
+        value={dailyData.time || MIDNIGHT}
       />
       {!isEveryDay && (
         <div className='specific-days-wrapper'>
           <span className='label-2'>on</span>
           <DayPicker
             days={dailyData.days || WEEK_DAYS.MONDAY}
-            onChange={handleSelectedDays}
             isDisabled={isDisabled}
+            onChange={handleSelectedDays}
           />
         </div>
       )}

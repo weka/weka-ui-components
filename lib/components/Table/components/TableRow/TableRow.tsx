@@ -1,17 +1,19 @@
+import React from 'react'
+import type { VirtualItem } from '@tanstack/react-virtual'
 import clsx from 'clsx'
-import {
+
+import svgs from 'svgs'
+
+import { Utils } from '../../../../main'
+import { ROW_HEIGHT } from '../../tableConsts'
+import type {
   ExtendedColumn,
   ExtendedRow,
   RowAction,
   TableExtraClasses
 } from '../../types'
-import svgs from 'svgs'
-import React from 'react'
-import TableCell from '../TableCell'
 import ActionsCell from '../ActionsCell'
-import { Utils } from '../../../../main'
-import { VirtualItem } from '@tanstack/react-virtual'
-import { ROW_HEIGHT } from '../../tableConsts'
+import TableCell from '../TableCell'
 
 const { Arrow } = svgs
 
@@ -36,27 +38,25 @@ interface TableRowProps<Data, Value> {
   getInfScrollPropsRow?: (virtualRow: VirtualItem) => Record<string, any>
 }
 
-function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
-  const {
-    row,
-    isExpandable,
-    grouping,
-    RowSubComponent,
-    onRowClick,
-    onToggleExpand,
-    checkRowSelected,
-    checkRowHighlighted,
-    rowActions,
-    hasEmptyActionsCell,
-    isResizable,
-    disableActionsPortal,
-    rowCanExpand,
-    extraClasses,
-    expandedRows = null,
-    virtualRow,
-    getInfScrollPropsRow
-  } = props
-
+function TableRow<Data, Value>({
+  row,
+  isExpandable,
+  grouping,
+  RowSubComponent,
+  onRowClick,
+  onToggleExpand,
+  checkRowSelected,
+  checkRowHighlighted,
+  rowActions,
+  hasEmptyActionsCell,
+  isResizable,
+  disableActionsPortal,
+  rowCanExpand,
+  extraClasses,
+  expandedRows = null,
+  virtualRow,
+  getInfScrollPropsRow
+}: TableRowProps<Data, Value>) {
   const isRowExpanded = expandedRows
     ? expandedRows[row.original.uuid]
     : row.getIsExpanded()
@@ -90,7 +90,7 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
           getInfScrollPropsRow &&
           getInfScrollPropsRow(virtualRow))}
       >
-        {!grouping && isExpandable && (
+        {!grouping && isExpandable ? (
           <td className={clsx('expand-cell', extraClasses?.expandCell)}>
             {rowCanExpand ? (
               <div onClick={row.getToggleExpandedHandler()}>
@@ -100,31 +100,30 @@ function TableRow<Data, Value>(props: TableRowProps<Data, Value>) {
               <div className='expand-placeholder' />
             )}
           </td>
-        )}
+        ) : null}
         {row.getVisibleCells().map((cell, index) => (
           <TableCell
             key={cell.id}
+            RowSubComponent={RowSubComponent}
             cell={cell}
-            row={row}
             extraClasses={extraClasses}
+            grouping={grouping}
             onRowClick={onRowClick}
             onToggleExpand={onToggleExpand}
-            RowSubComponent={RowSubComponent}
-            grouping={grouping}
+            row={row}
             rowIndex={index}
           />
         ))}
         {rowActions &&
-          (!Utils.isEmpty(rowActions) ||
-            (hasEmptyActionsCell && isResizable)) && (
-            <td className='td-actions'>
-              <ActionsCell
-                row={row}
-                actions={rowActions}
-                disablePortal={disableActionsPortal}
-              />
-            </td>
-          )}
+        (!Utils.isEmpty(rowActions) || (hasEmptyActionsCell && isResizable)) ? (
+          <td className='td-actions'>
+            <ActionsCell
+              actions={rowActions}
+              disablePortal={disableActionsPortal}
+              row={row}
+            />
+          </td>
+        ) : null}
       </tr>
       {isRowExpanded && !row.getIsGrouped() && RowSubComponent ? (
         <tr className='sub-table-line'>

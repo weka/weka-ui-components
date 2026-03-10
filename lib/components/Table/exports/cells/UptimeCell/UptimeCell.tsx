@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Tooltip from '../../../../Tooltip'
+
 import Utils from 'utils'
-import { ExtendedCellProps } from '../../../types'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 export type UptimeCellValue = string
 
@@ -17,9 +19,10 @@ function getMinTimeDiff(value: string) {
   return { value: splitTime[2], exactValue: splitTime[2] }
 }
 
-function UptimeCell<Data>(props: ExtendedCellProps<Data, UptimeCellValue>) {
-  const { cell, customValue } = props
-
+function UptimeCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, UptimeCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const [uptime, setUptime] = useState(getMinTimeDiff(value).value)

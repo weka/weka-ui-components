@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { EmptyChartState } from './EmptyChartState'
 
@@ -12,9 +12,9 @@ vi.mock('../../icons', () => ({
     extraClass?: string
   }) => (
     <svg
-      data-testid='chart-icon'
-      data-color={color}
       className={extraClass}
+      data-color={color}
+      data-testid='chart-icon'
     />
   )
 }))

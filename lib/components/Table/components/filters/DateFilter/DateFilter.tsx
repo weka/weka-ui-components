@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
-import DateTimePicker from '../../../../DateTimePicker'
-import FilterWrapper from '../../FilterWrapper'
-import utils from 'utils'
-import Button from '../../../../Button'
+
 import { useToggle } from 'hooks'
-import { ExtendedFilterProps } from '../../../types'
+import utils from 'utils'
+
+import Button from '../../../../Button'
+import DateTimePicker from '../../../../DateTimePicker'
+import type { ExtendedFilterProps } from '../../../types'
+import FilterWrapper from '../../FilterWrapper'
 
 import './dateFilter.scss'
 
@@ -64,24 +66,24 @@ function DateFilter<Data>({
       <div className='date-filter-wrapper'>
         <div>
           <DateTimePicker
-            onChange={onFromChange}
-            value={from}
+            customFormat={customFormat}
+            enableCustomFormat={enableCustomFormat}
             label={fromLabel}
             maxDate={to ? to.endOf('day') : DateTime.now()}
+            onChange={onFromChange}
             showSeconds
-            enableCustomFormat={enableCustomFormat}
-            customFormat={customFormat}
+            value={from}
           />
         </div>
         <div>
           <DateTimePicker
-            onChange={onToChange}
-            value={to}
-            label={toLabel}
-            minDate={from && from.startOf('day')}
-            showSeconds
-            enableCustomFormat={enableCustomFormat}
             customFormat={customFormat}
+            enableCustomFormat={enableCustomFormat}
+            label={toLabel}
+            minDate={from ? from.startOf('day') : null}
+            onChange={onToChange}
+            showSeconds
+            value={to}
           />
         </div>
         <div className='date-filter-controller'>

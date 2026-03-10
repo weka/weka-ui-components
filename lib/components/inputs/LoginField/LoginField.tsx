@@ -1,9 +1,11 @@
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from 'consts'
 import { useToggle } from 'hooks'
 import Utils from 'utils'
+
 import Info from '../../Info/Info'
 
 import './loginField.scss'
@@ -19,20 +21,18 @@ interface LoginFieldProps {
   tooltip?: any
   error?: any
 }
-function LoginField(props: LoginFieldProps) {
-  const {
-    label,
-    onChange,
-    value = EMPTY_STRING,
-    error,
-    placeholder,
-    type,
-    wrapperClass = EMPTY_STRING,
-    tooltip,
-    isRequired,
-    ...rest
-  } = props
-
+function LoginField({
+  label,
+  onChange,
+  value = EMPTY_STRING,
+  error,
+  placeholder,
+  type,
+  wrapperClass = EMPTY_STRING,
+  tooltip,
+  isRequired,
+  ...rest
+}: LoginFieldProps) {
   const [showPassword, toggleShowPassword] = useToggle(false)
 
   function onTextChange(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -58,16 +58,16 @@ function LoginField(props: LoginFieldProps) {
     <div className={wrapperClasses}>
       <span className='login-field-label'>
         <span className='body-copy-1'>{label}</span>
-        {isRequired && <span className='required-star'>*</span>}
+        {isRequired ? <span className='required-star'>*</span> : null}
         {tooltip ? <Info data={tooltip} /> : null}
       </span>
       <input
         autoComplete='new-password'
         className={inputClasses}
+        onChange={onTextChange}
         placeholder={placeholder}
         type={showPassword && type === 'password' ? 'text' : type}
         value={value}
-        onChange={onTextChange}
         {...rest}
       />
       {type === 'password' && (

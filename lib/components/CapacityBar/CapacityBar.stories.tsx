@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from 'storybook-solidjs'
-import CapacityBar from './CapacityBar'
-
 import React from 'react'
+import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import CapacityBar from './CapacityBar'
 
 const meta: Meta<typeof CapacityBar> = {
   component: CapacityBar,

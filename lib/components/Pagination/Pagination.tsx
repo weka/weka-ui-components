@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import Tooltip from '../Tooltip'
-import svgs from 'svgs'
+import React, { useEffect, useState } from 'react'
 import { IconButton } from '@mui/material'
+
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
+import svgs from 'svgs'
+
 import { TextBox } from '../inputs'
+import Tooltip from '../Tooltip'
 
 import './pagination.scss'
 
@@ -23,17 +25,15 @@ type PaginationProps = {
     }
 )
 
-function Pagination(props: PaginationProps) {
-  const {
-    currentPage = 1,
-    onPageChange,
-    isLoading,
-    totalRows,
-    rowsPerPage,
-    numberOfPages: outerNumberOfPages,
-    disablePageInput = false
-  } = props
-
+function Pagination({
+  currentPage = 1,
+  onPageChange,
+  isLoading,
+  totalRows,
+  rowsPerPage,
+  numberOfPages: outerNumberOfPages,
+  disablePageInput = false
+}: PaginationProps) {
   const [pageInputValue, setInputPageValue] = useState(currentPage.toString())
 
   const numberOfPages = outerNumberOfPages ?? Math.ceil(totalRows / rowsPerPage)
@@ -62,9 +62,9 @@ function Pagination(props: PaginationProps) {
           <Tooltip data={canPreviousPage ? 'First Page' : EMPTY_STRING}>
             <div className='pagination-control-wrapper'>
               <IconButton
-                onClick={() => handlePageChange(1)}
                 className='pagination-arrow'
                 disabled={!canPreviousPage}
+                onClick={() => handlePageChange(1)}
               >
                 <LastArrow className='rotate180' />
               </IconButton>
@@ -73,9 +73,9 @@ function Pagination(props: PaginationProps) {
           <Tooltip data={canPreviousPage ? 'Previous Page' : EMPTY_STRING}>
             <div className='pagination-control-wrapper'>
               <IconButton
-                onClick={() => handlePageChange(currentPage - 1)}
                 className='pagination-arrow'
                 disabled={!canPreviousPage}
+                onClick={() => handlePageChange(currentPage - 1)}
               >
                 <Arrow className='rotate90' />
               </IconButton>
@@ -83,15 +83,15 @@ function Pagination(props: PaginationProps) {
           </Tooltip>
           <div className='page-number-wrapper'>
             <TextBox
+              autosize
+              disabled={numberOfPages <= 1 || disablePageInput}
+              maxLength={15}
+              value={pageInputValue}
               onChange={(val) =>
                 setInputPageValue(
                   val.toString().replace(/[^0-9]/g, EMPTY_STRING)
                 )
               }
-              value={pageInputValue}
-              maxLength={15}
-              autosize
-              disabled={numberOfPages <= 1 || disablePageInput}
               {...({
                 onKeyPress: (e: React.KeyboardEvent) => {
                   if (e.key === EVENT_KEYS.ENTER) {
@@ -106,9 +106,9 @@ function Pagination(props: PaginationProps) {
           <Tooltip data={canNextPage ? 'Next Page' : EMPTY_STRING}>
             <div className='pagination-control-wrapper'>
               <IconButton
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={!canNextPage}
                 className='pagination-arrow'
+                disabled={!canNextPage}
+                onClick={() => handlePageChange(currentPage + 1)}
               >
                 <Arrow className='rotate270' />
               </IconButton>
@@ -117,9 +117,9 @@ function Pagination(props: PaginationProps) {
           <Tooltip data={canNextPage ? 'Last Page' : EMPTY_STRING}>
             <div className='pagination-control-wrapper'>
               <IconButton
-                onClick={() => handlePageChange(numberOfPages)}
-                disabled={!canNextPage}
                 className='pagination-arrow'
+                disabled={!canNextPage}
+                onClick={() => handlePageChange(numberOfPages)}
               >
                 <LastArrow />
               </IconButton>

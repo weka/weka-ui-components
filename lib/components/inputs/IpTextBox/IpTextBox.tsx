@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import Tooltip from '../../Tooltip'
+
 import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
-import Utils from 'utils'
 import svgs from 'svgs'
-import Copy from '../../Copy'
+import Utils from 'utils'
+
 import { useHighlightInput } from '../../../hooks'
+import Copy from '../../Copy'
+import Tooltip from '../../Tooltip'
 
 import './ipTextBox.scss'
 
@@ -35,20 +37,19 @@ interface IpTextBoxProps {
   isScrolledInto?: boolean
 }
 
-function IpTextBox(props: IpTextBoxProps) {
-  const {
-    label,
-    onChange = NOP,
-    value,
-    error,
-    wrapperClass = EMPTY_STRING,
-    isRequired,
-    info,
-    allowCopy,
-    isHighlighted,
-    isScrolledInto,
-    ...rest
-  } = props
+function IpTextBox({
+  label,
+  onChange = NOP,
+  value,
+  error,
+  wrapperClass = EMPTY_STRING,
+  isRequired,
+  info,
+  allowCopy,
+  isHighlighted,
+  isScrolledInto,
+  ...rest
+}: IpTextBoxProps) {
   const { disabled } = rest
   const ipBoxRef = React.useRef<HTMLInputElement | null>(null)
   const [ipParts, setIpParts] = useState(
@@ -86,11 +87,20 @@ function IpTextBox(props: IpTextBoxProps) {
   }
 
   return (
-    <div className={wrapperClasses} ref={ipBoxRef}>
+    <div
+      ref={ipBoxRef}
+      className={wrapperClasses}
+    >
       <div className='value-container'>
         {Utils.range(4).map((inputIndex) => (
-          <div className='ip-part-value-edit' key={`input_${inputIndex}`}>
+          <div
+            key={`input_${inputIndex}`}
+            className='ip-part-value-edit'
+          >
             <input
+              onChange={(newValue) => setIpPart(inputIndex, newValue)}
+              onKeyDown={keyDown}
+              type='number'
               value={ipParts[inputIndex]}
               onPaste={(e) => {
                 e.preventDefault()
@@ -101,9 +111,6 @@ function IpTextBox(props: IpTextBoxProps) {
                   onChange(ipArr.join('.'))
                 }
               }}
-              onKeyDown={keyDown}
-              type='number'
-              onChange={(newValue) => setIpPart(inputIndex, newValue)}
               {...rest}
             />
             {inputIndex !== 3 ? '.' : EMPTY_STRING}
@@ -113,7 +120,7 @@ function IpTextBox(props: IpTextBoxProps) {
       <span className='field__label-wrap'>
         <span className='field__label field-1-label-content'>
           {label}
-          {isRequired && <span className='required-star'>*</span>}
+          {isRequired ? <span className='required-star'>*</span> : null}
           {!!info && (
             <Tooltip data={info}>
               <Info />
@@ -121,7 +128,7 @@ function IpTextBox(props: IpTextBoxProps) {
           )}
         </span>
       </span>
-      {allowCopy && value && Utils.isIp(value) && <Copy text={value} />}
+      {allowCopy && value && Utils.isIp(value) ? <Copy text={value} /> : null}
       <span className='ip-text-box-error capitalize-first-letter'>{error}</span>
     </div>
   )

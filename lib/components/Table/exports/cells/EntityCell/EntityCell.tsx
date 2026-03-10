@@ -1,8 +1,10 @@
 import React from 'react'
-import Tooltip from '../../../../Tooltip'
-import svgs from 'svgs'
+
 import { ORIGIN_OPTIONS } from 'consts'
-import { ExtendedCellProps } from '../../../types'
+import svgs from 'svgs'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
 
 import './entityCell.scss'
 
@@ -10,9 +12,10 @@ const { User, Weka } = svgs
 
 export type EntityCellValue = string
 
-function EntityCell<Data>(props: ExtendedCellProps<Data, EntityCellValue>) {
-  const { cell, customValue } = props
-
+function EntityCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, EntityCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const Icon = value === ORIGIN_OPTIONS.USER ? User : Weka

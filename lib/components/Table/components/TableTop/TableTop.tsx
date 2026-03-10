@@ -1,13 +1,16 @@
 import React from 'react'
-import { ExtendedTable } from '../../types'
-import Tooltip from '../../../Tooltip'
-import ShowColumns from './ShowColumns'
 import { IconButton } from '@mui/material'
-import svgs from 'svgs'
-import { Utils } from '../../../../main'
-import FilterBox from './FilterBox'
-import { EMPTY_STRING } from 'consts'
 import clsx from 'clsx'
+
+import { EMPTY_STRING } from 'consts'
+import svgs from 'svgs'
+
+import { Utils } from '../../../../main'
+import Tooltip from '../../../Tooltip'
+import type { ExtendedTable } from '../../types'
+
+import FilterBox from './FilterBox'
+import ShowColumns from './ShowColumns'
 
 const { ClearFilters, ColumnResize, ColumnResizeReset, ThinArrow } = svgs
 
@@ -28,24 +31,22 @@ interface TableTopProps<Data> {
   hideRowsCount?: boolean
 }
 
-export function TableTop<Data>(props: TableTopProps<Data>) {
-  const {
-    title,
-    totalRows,
-    maxRows,
-    table,
-    canExpandAll,
-    isExpandable,
-    tableActions,
-    hasResizableColumns,
-    isResizable,
-    toggleResizable,
-    hasCustomDateFormat,
-    customDateFormat,
-    toggleAllRowsExpanding,
-    hideRowsCount
-  } = props
-
+export function TableTop<Data>({
+  title,
+  totalRows,
+  maxRows,
+  table,
+  canExpandAll,
+  isExpandable,
+  tableActions,
+  hasResizableColumns,
+  isResizable,
+  toggleResizable,
+  hasCustomDateFormat,
+  customDateFormat,
+  toggleAllRowsExpanding,
+  hideRowsCount
+}: TableTopProps<Data>) {
   const { columnFilters } = table.getState()
   const isAllRowsExpanded = table.getIsAllRowsExpanded()
   const allColumns = table.getAllColumns()
@@ -62,7 +63,7 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
           </span>
         )}
         {allColumns.length > 2 && <ShowColumns table={table} />}
-        {canExpandAll && isExpandable && (
+        {canExpandAll && isExpandable ? (
           <span className='table-manipulations-btn'>
             <Tooltip data={isAllRowsExpanded ? 'Collapse all' : 'Expand all'}>
               <IconButton
@@ -79,8 +80,8 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
               </IconButton>
             </Tooltip>
           </span>
-        )}
-        {hasResizableColumns && (
+        ) : null}
+        {hasResizableColumns ? (
           <span
             className={clsx({
               ['table-manipulations-btn']: true,
@@ -95,8 +96,8 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
               </IconButton>
             </Tooltip>
           </span>
-        )}
-        {hasResizableColumns && (
+        ) : null}
+        {hasResizableColumns ? (
           <span className='table-manipulations-btn'>
             <Tooltip data='Reset column resizing'>
               <IconButton onClick={() => table.resetColumnSizing()}>
@@ -104,7 +105,7 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
               </IconButton>
             </Tooltip>
           </span>
-        )}
+        ) : null}
       </div>
       {!Utils.isEmpty(columnFilters) && (
         <div className='table-filters'>
@@ -114,8 +115,8 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
                 <FilterBox
                   key={column.id}
                   column={column}
-                  hasCustomDateFormat={hasCustomDateFormat}
                   customDateFormat={customDateFormat}
+                  hasCustomDateFormat={hasCustomDateFormat}
                 />
               )
           )}

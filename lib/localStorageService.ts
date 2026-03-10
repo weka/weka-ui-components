@@ -1,6 +1,6 @@
 import {
-  SAVED_HIDDEN,
   SAVED_FILTERS,
+  SAVED_HIDDEN,
   SAVED_RESIZED,
   SAVED_RESIZING_ENABLED
 } from './consts'

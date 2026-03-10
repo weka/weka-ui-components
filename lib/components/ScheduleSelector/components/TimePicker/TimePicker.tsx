@@ -12,17 +12,15 @@ const TimePicker: React.FC<TimePickerProps> = ({
   value,
   onChange,
   isDisabled
-}) => {
-  return (
-    <div className='timePicker-wrapper'>
-      <input
-        type='time'
-        value={value}
-        disabled={isDisabled}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
-  )
-}
+}) => (
+  <div className='timePicker-wrapper'>
+    <input
+      disabled={isDisabled}
+      onChange={(e) => onChange(e.target.value)}
+      type='time'
+      value={value}
+    />
+  </div>
+)
 
 export default TimePicker

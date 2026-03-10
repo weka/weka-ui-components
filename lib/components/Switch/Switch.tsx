@@ -1,6 +1,9 @@
-import React, { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
+import React from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
+
 import Tooltip from '../Tooltip'
 
 import './switch.scss'
@@ -11,15 +14,14 @@ interface SwitchProps {
   checked: boolean
   tooltip?: string
 }
-function Switch(props: SwitchProps) {
-  const {
-    onChange,
-    oneColor = false,
-    checked,
-    disabled = false,
-    tooltip = EMPTY_STRING,
-    ...rest
-  } = props
+function Switch({
+  onChange,
+  oneColor = false,
+  checked,
+  disabled = false,
+  tooltip = EMPTY_STRING,
+  ...rest
+}: SwitchProps) {
   const classes = clsx({
     'one-color': oneColor,
     'toggle-btn': true,
@@ -36,7 +38,12 @@ function Switch(props: SwitchProps) {
   return (
     <Tooltip data={tooltip}>
       <div className={classes}>
-        <input type='checkbox' checked={checked} onChange={onClick} {...rest} />
+        <input
+          checked={checked}
+          onChange={onClick}
+          type='checkbox'
+          {...rest}
+        />
         <span />
       </div>
     </Tooltip>

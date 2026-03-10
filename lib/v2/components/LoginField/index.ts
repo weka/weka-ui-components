@@ -1,2 +1,2 @@
-export { LoginField } from './LoginField'
 export type { LoginFieldProps } from './LoginField'
+export { LoginField } from './LoginField'

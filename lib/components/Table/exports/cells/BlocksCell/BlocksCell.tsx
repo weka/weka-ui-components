@@ -1,10 +1,12 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react'
-import clsx from 'clsx'
-import { DRIVES_STATUSES, NODES_STATUSES } from 'consts'
 import { Link } from 'react-router-dom'
+import clsx from 'clsx'
+
+import { DRIVES_STATUSES, NODES_STATUSES } from 'consts'
+
+import type { ExtendedCellProps } from '../../../types'
 
 import './blocksCell.scss'
-import { ExtendedCellProps } from '../../../types'
 
 export interface BlocksCellOptions<Data> {
   showTotalCountOnly?: boolean
@@ -26,9 +28,11 @@ const ROW_HEIGHT = 10 // 8px height + 2px margin
 const BLOCK_WIDTH = 4 // 2px width + 2px margin
 const ELLIPSIS_WIDTH_IN_BLOCKS = 4
 
-function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
-  const { cell, column, customValue } = props
-
+function BlocksCell<Data>({
+  cell,
+  column,
+  customValue
+}: ExtendedCellProps<Data, BlocksCellValue>) {
   const cellDef = column.columnDef.meta?.cell
   if (cellDef && cellDef.type !== BlocksCellName) {
     throw new Error(`${BlocksCellName}: cell options type is incorrect`)
@@ -82,22 +86,27 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
     ? value.slice(0, maxBlocksCount - ELLIPSIS_WIDTH_IN_BLOCKS)
     : value
 
-  const sortedValue = useMemo(() => {
-    return valueToShow.sort((a, b) => {
-      if (isUpBlock(a) && !isUpBlock(b)) {
-        return 1
-      }
+  const sortedValue = useMemo(
+    () =>
+      valueToShow.sort((a, b) => {
+        if (isUpBlock(a) && !isUpBlock(b)) {
+          return 1
+        }
 
-      if (!isUpBlock(a) && isUpBlock(b)) {
-        return -1
-      }
+        if (!isUpBlock(a) && isUpBlock(b)) {
+          return -1
+        }
 
-      return 0
-    })
-  }, [valueToShow])
+        return 0
+      }),
+    [valueToShow]
+  )
 
   const cellContent = (
-    <div className='blocks-cell' ref={cellRef}>
+    <div
+      ref={cellRef}
+      className='blocks-cell'
+    >
       <span
         className={clsx({
           'table-count-cell': true,
@@ -115,13 +124,18 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
             [status]: true
           })
 
-          return <div key={uid ?? id} className={classes} />
+          return (
+            <div
+              key={uid ?? id}
+              className={classes}
+            />
+          )
         })}
-        {shouldShowEllipsis && (
+        {shouldShowEllipsis ? (
           <div className='blocks-ellipsis-wrapper'>
             <div className='blocks-ellipsis'>…</div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   )

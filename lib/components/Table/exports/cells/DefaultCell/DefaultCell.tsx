@@ -1,10 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react'
-import Tooltip from '../../../../Tooltip'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import clsx from 'clsx'
+
 import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from 'consts'
 import Utils from 'utils'
-import { Link } from 'react-router-dom'
-import { ExtendedCell, ExtendedCellProps } from '../../../types'
-import clsx from 'clsx'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCell, ExtendedCellProps } from '../../../types'
 
 import './defaultCell.scss'
 
@@ -19,9 +21,12 @@ export type DefaultCellValue = string | number | string[] | null | undefined
 
 export const DefaultCellName = 'DefaultCell'
 
-function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
-  const { cell, row, column, customValue } = props
-
+function DefaultCell<Data>({
+  cell,
+  row,
+  column,
+  customValue
+}: ExtendedCellProps<Data, DefaultCellValue>) {
   const cellDef = column.columnDef.meta?.cell
   if (cellDef && cellDef.type !== DefaultCellName) {
     throw new Error(
@@ -65,10 +70,10 @@ function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
 
   const cellContent = (
     <div
+      ref={ref}
       className={clsx({
         'table-default-cell-one-line': !isMultiline
       })}
-      ref={ref}
     >
       {formattedValue}
     </div>
@@ -84,8 +89,8 @@ function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
     >
       {getUrl ? (
         <Link
-          to={getUrl(row.original)}
           className='table-link'
+          to={getUrl(row.original)}
           {...(openInNewTab && {
             target: '_blank',
             rel: 'noopener noreferrer'

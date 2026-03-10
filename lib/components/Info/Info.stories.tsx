@@ -1,6 +1,8 @@
-import { default as InfoComponent, InfoProps } from './Info'
 import React from 'react'
 import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import type { InfoProps } from './Info'
+import { default as InfoComponent } from './Info'
 
 const meta: Meta<typeof InfoComponent> = {
   title: 'Components/Info',

@@ -1,7 +1,9 @@
 import React from 'react'
 import { Controller } from 'react-hook-form'
-import UploadField from '../../inputs/UploadField'
+
 import utils from 'utils'
+
+import UploadField from '../../inputs/UploadField'
 
 interface ControlFileUploadProps {
   control: Record<string, unknown>
@@ -9,22 +11,26 @@ interface ControlFileUploadProps {
   rules?: Record<string, unknown>
 }
 
-function ControlFileUpload(props: ControlFileUploadProps) {
-  const { control, name, rules = {}, ...rest } = props
+function ControlFileUpload({
+  control,
+  name,
+  rules = {},
+  ...rest
+}: ControlFileUploadProps) {
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
       control={control}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <div className='field-container'>
           <UploadField
             {...rest}
-            onReadError={() => utils.toastError('Failed to read file')}
-            onChange={field.onChange}
             error={error?.message}
+            onChange={field.onChange}
+            onReadError={() => utils.toastError('Failed to read file')}
           />
         </div>
       )}

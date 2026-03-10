@@ -1,11 +1,14 @@
-import React, { ReactElement, ReactNode, useId, useState } from 'react'
-import clsx from 'clsx'
+import type { ReactElement, ReactNode } from 'react'
+import React, { useId, useState } from 'react'
 import { IconButton } from '@mui/material'
-import SpanTooltip from '../../SpanTooltip'
-import { EMPTY_STRING, NOP, ENCODING_TYPES } from 'consts'
+import clsx from 'clsx'
+
+import { EMPTY_STRING, ENCODING_TYPES, NOP } from 'consts'
 import svgs from 'svgs'
-import Tooltip from '../../Tooltip'
+
 import Info from '../../Info'
+import SpanTooltip from '../../SpanTooltip'
+import Tooltip from '../../Tooltip'
 
 import './uploadField.scss'
 
@@ -26,23 +29,22 @@ interface UploadFieldProps {
   isRequired?: boolean
   description?: ReactNode
 }
-function UploadField(props: UploadFieldProps) {
-  const {
-    label,
-    onChange = NOP,
-    onClear = NOP,
-    disabled,
-    wrapperClass = EMPTY_STRING,
-    placeholder,
-    error,
-    onReadError,
-    tooltipText = EMPTY_STRING,
-    encoding = ENCODING_TYPES.text,
-    info,
-    isRequired,
-    description,
-    ...rest
-  } = props
+function UploadField({
+  label,
+  onChange = NOP,
+  onClear = NOP,
+  disabled,
+  wrapperClass = EMPTY_STRING,
+  placeholder,
+  error,
+  onReadError,
+  tooltipText = EMPTY_STRING,
+  encoding = ENCODING_TYPES.text,
+  info,
+  isRequired,
+  description,
+  ...rest
+}: UploadFieldProps) {
   const id = useId()
   const [fileName, setFileName] = useState(EMPTY_STRING)
   const uploadWrapperClasses = clsx('upload-wrapper', wrapperClass, {
@@ -90,20 +92,24 @@ function UploadField(props: UploadFieldProps) {
   return (
     <Tooltip data={tooltipText}>
       <div className={uploadWrapperClasses}>
-        {description && (
+        {description ? (
           <span className='field__description-wrap'>
             <span className='field__description field-1-description-content'>
               {description}
-              {isRequired && <span className='required-star'>*</span>}
+              {isRequired ? <span className='required-star'>*</span> : null}
               {!!info && (
-                <Info data={info} extraClass='upload-field-info-icon' />
+                <Info
+                  data={info}
+                  extraClass='upload-field-info-icon'
+                />
               )}
             </span>
           </span>
-        )}
+        ) : null}
         <input
-          id={id}
           disabled={disabled}
+          id={id}
+          onChange={(e) => onFileChange(e.target.files[0])}
           placeholder={placeholder}
           type='file'
           onClick={(e) => {
@@ -111,30 +117,30 @@ function UploadField(props: UploadFieldProps) {
             // we need this to enable choosing the same file more than once in a row:
             e.target.value = EMPTY_STRING
           }}
-          onChange={(e) => onFileChange(e.target.files[0])}
           {...rest}
         />
         <label
-          htmlFor={id}
           className='button small'
+          htmlFor={id}
           onClick={(e) => e.stopPropagation()}
         >
           {label}
-          {isRequired && !disabled && !description && (
+          {isRequired && !disabled && !description ? (
             <span className='required-star'>*</span>
-          )}
+          ) : null}
         </label>
-
         <span className='upload-field-info'>
           {!!info && !description && (
-            <Info data={info} extraClass='upload-field-info-icon' />
+            <Info
+              data={info}
+              extraClass='upload-field-info-icon'
+            />
           )}
         </span>
-
         <span className='upload-field-error capitalize-first-letter'>
           {error}
         </span>
-        {fileName && (
+        {fileName ? (
           <div className='file-name-wrapper'>
             <SpanTooltip extraClasses='file-name'>{fileName}</SpanTooltip>
             <IconButton
@@ -147,7 +153,7 @@ function UploadField(props: UploadFieldProps) {
               <Close />
             </IconButton>
           </div>
-        )}
+        ) : null}
       </div>
     </Tooltip>
   )

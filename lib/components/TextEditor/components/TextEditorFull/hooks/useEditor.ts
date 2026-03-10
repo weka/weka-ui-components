@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { IAceEditor } from 'react-ace/lib/types'
+import type { IAceEditor } from 'react-ace/lib/types'
 
 function useEditor({
   editor,

@@ -1,10 +1,12 @@
 import React from 'react'
-import Tooltip from '../../../../Tooltip'
-import { EMPTY_STRING, SHORT_ROLES } from 'consts'
 import clsx from 'clsx'
 
+import { EMPTY_STRING, SHORT_ROLES } from 'consts'
+
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps } from '../../../types'
+
 import './nodeCell.scss'
-import { ExtendedCellProps } from '../../../types'
 
 export type NodeCellValue = {
   nid: string
@@ -13,9 +15,10 @@ export type NodeCellValue = {
   roles?: string[]
 }
 
-function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
-  const { cell, customValue } = props
-
+function NodeCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, NodeCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const { nid, isBackend, showIsBackend, roles } = value
@@ -42,10 +45,10 @@ function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
     >
       <div className='node-cell'>
         <span>{nid} </span>
-        {isBackend && <span>{formattedRoles}</span>}
-        {showIsBackend && (
+        {isBackend ? <span>{formattedRoles}</span> : null}
+        {showIsBackend ? (
           <span className={isBackendClasses}>{isBackend ? '(B)' : ' (C)'}</span>
-        )}
+        ) : null}
       </div>
     </Tooltip>
   )

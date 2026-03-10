@@ -1,9 +1,10 @@
 import React from 'react'
-
-import { useTextEditorContext } from '../../context'
-import Tooltip from '../../../Tooltip'
 import { IconButton } from '@mui/material'
+
 import svgs from 'svgs'
+
+import Tooltip from '../../../Tooltip'
+import { useTextEditorContext } from '../../context'
 
 import './searchButton.scss'
 

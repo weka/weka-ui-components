@@ -1,11 +1,14 @@
-import React, { FC, useCallback } from 'react'
-import { TimePicker, DayPicker } from '../index'
+import type { FC } from 'react'
+import React, { useCallback } from 'react'
+
 import { EMPTY_STRING, ZERO_STRING } from 'consts'
+
 import {
-  WORK_DAYS,
+  DEFAULT_INTERVAL,
   MINUTES_OFFSETS,
-  DEFAULT_INTERVAL
+  WORK_DAYS
 } from '../../ScheduleSelectorConsts'
+import { DayPicker, TimePicker } from '../index'
 
 import './periodicSelector.scss'
 import '../../scheduleSelector.scss'
@@ -85,31 +88,31 @@ const PeriodicSelector: FC<PeriodicSelectorProps> = ({
         <span className='label-2'>Every</span>
         <div className='input-number'>
           <input
-            type='number'
-            max={60}
             disabled={isDisabled}
-            value={periodicData.interval || 30}
+            max={60}
             onChange={(e) => handleChangeInterval(Number(e.target.value))}
+            type='number'
+            value={periodicData.interval || 30}
           />
         </div>
         <span className='label-2'>minutes between</span>
         <TimePicker
-          value={periodicData.start_time || ZERO_STRING}
-          onChange={handleStartTimeChange}
           isDisabled={isDisabled}
+          onChange={handleStartTimeChange}
+          value={periodicData.start_time || ZERO_STRING}
         />
         <span className='label-2'>to</span>
         <TimePicker
-          value={periodicData.end_time || ZERO_STRING}
-          onChange={handleEndTimeChange}
           isDisabled={isDisabled}
+          onChange={handleEndTimeChange}
+          value={periodicData.end_time || ZERO_STRING}
         />
         <span className='label-2'>on</span>
       </div>
       <DayPicker
         days={days}
-        onChange={handleChangeDays}
         isDisabled={isDisabled}
+        onChange={handleChangeDays}
       />
     </div>
   )

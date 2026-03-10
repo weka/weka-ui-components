@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import TextBox from '../TextBox'
+
 import { DEFAULT_DEBOUNCE_DELAY, EMPTY_STRING } from 'consts'
 import { useDebounce } from 'hooks'
+
+import TextBox from '../TextBox'
 
 export interface SearchFieldProps {
   onValueUpdate: (value: string) => void
@@ -10,14 +12,13 @@ export interface SearchFieldProps {
   shouldUpdateTerm?: boolean
 }
 
-function SearchField(props: SearchFieldProps) {
-  const {
-    debounceDelay = DEFAULT_DEBOUNCE_DELAY,
-    shouldUpdateTerm = true,
-    label,
-    onValueUpdate,
-    ...rest
-  } = props
+function SearchField({
+  debounceDelay = DEFAULT_DEBOUNCE_DELAY,
+  shouldUpdateTerm = true,
+  label,
+  onValueUpdate,
+  ...rest
+}: SearchFieldProps) {
   const [term, setTerm] = useState<string>(EMPTY_STRING)
   const debouncedTerm = useDebounce(term, debounceDelay, shouldUpdateTerm)
 
@@ -25,7 +26,14 @@ function SearchField(props: SearchFieldProps) {
     onValueUpdate(debouncedTerm)
   }, [debouncedTerm])
 
-  return <TextBox label={label} onChange={setTerm} value={term} {...rest} />
+  return (
+    <TextBox
+      label={label}
+      onChange={setTerm}
+      value={term}
+      {...rest}
+    />
+  )
 }
 
 export default SearchField

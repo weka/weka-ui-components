@@ -1,12 +1,16 @@
-import { Utils } from '../../main'
-import { EMPTY_STRING, SEVERITIES, Severities } from 'consts'
-import utils from 'utils'
-import { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
-import {
-  type CompareOperator,
-  COMPARE_OPERATORS
-} from './components/filters/DurationFilter'
+import type { Severities } from 'consts'
 import { Duration } from 'luxon'
+
+import { EMPTY_STRING, SEVERITIES } from 'consts'
+import utils from 'utils'
+
+import { Utils } from '../../main'
+
+import {
+  COMPARE_OPERATORS,
+  type CompareOperator
+} from './components/filters/DurationFilter'
+import type { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
 
 export const FILTER_MODES = {
   INCLUDE: 'include',
@@ -84,7 +88,10 @@ export function validateRegexPattern(pattern: string): string | undefined {
     return undefined
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Invalid regex pattern'
-    return message.replace('Invalid regular expression:', 'Invalid regular expression:\n')
+    return message.replace(
+      'Invalid regular expression:',
+      'Invalid regular expression:\n'
+    )
   }
 }
 
@@ -95,29 +102,39 @@ export function isTextFilterValue(value: unknown): value is TextFilterValue {
     'pattern' in value &&
     'mode' in value &&
     typeof (value as TextFilterValue).pattern === 'string' &&
-    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE, FILTER_MODES.REGEX].includes((value as TextFilterValue).mode)
+    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE, FILTER_MODES.REGEX].includes(
+      (value as TextFilterValue).mode
+    )
   )
 }
 
-export function isSelectFilterValue(value: unknown): value is SelectFilterValue {
+export function isSelectFilterValue(
+  value: unknown
+): value is SelectFilterValue {
   return (
     typeof value === 'object' &&
     value !== null &&
     'value' in value &&
     'mode' in value &&
     typeof (value as SelectFilterValue).value === 'string' &&
-    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE].includes((value as SelectFilterValue).mode)
+    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE].includes(
+      (value as SelectFilterValue).mode
+    )
   )
 }
 
-export function isMultiSelectFilterValue(value: unknown): value is MultiSelectFilterValue {
+export function isMultiSelectFilterValue(
+  value: unknown
+): value is MultiSelectFilterValue {
   return (
     typeof value === 'object' &&
     value !== null &&
     'values' in value &&
     'mode' in value &&
     Array.isArray((value as MultiSelectFilterValue).values) &&
-    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE].includes((value as MultiSelectFilterValue).mode)
+    [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE].includes(
+      (value as MultiSelectFilterValue).mode
+    )
   )
 }
 
@@ -313,10 +330,16 @@ export const urlFilterParsers = {
   text: (rawValue: Parameters<UrlFilterParser>[0]) => {
     if (Utils.isObject(rawValue) && rawValue?.pattern?.[0]) {
       const mode = rawValue?.mode?.[0]
-      const validModes: TextFilterMode[] = [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE, FILTER_MODES.REGEX]
+      const validModes: TextFilterMode[] = [
+        FILTER_MODES.INCLUDE,
+        FILTER_MODES.EXCLUDE,
+        FILTER_MODES.REGEX
+      ]
       return {
         pattern: rawValue?.pattern?.[0],
-        mode: validModes.includes(mode as TextFilterMode) ? mode as TextFilterMode : FILTER_MODES.INCLUDE
+        mode: validModes.includes(mode as TextFilterMode)
+          ? (mode as TextFilterMode)
+          : FILTER_MODES.INCLUDE
       }
     }
     if (Array.isArray(rawValue) && rawValue[0]) {
@@ -327,10 +350,15 @@ export const urlFilterParsers = {
   select: (rawValue: Parameters<UrlFilterParser>[0]) => {
     if (Utils.isObject(rawValue) && rawValue?.value?.[0]) {
       const mode = rawValue?.mode?.[0]
-      const validModes: SelectFilterMode[] = [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE]
+      const validModes: SelectFilterMode[] = [
+        FILTER_MODES.INCLUDE,
+        FILTER_MODES.EXCLUDE
+      ]
       return {
         value: rawValue?.value?.[0],
-        mode: validModes.includes(mode as SelectFilterMode) ? mode as SelectFilterMode : FILTER_MODES.INCLUDE
+        mode: validModes.includes(mode as SelectFilterMode)
+          ? (mode as SelectFilterMode)
+          : FILTER_MODES.INCLUDE
       }
     }
     if (Array.isArray(rawValue) && rawValue[0]) {
@@ -341,10 +369,15 @@ export const urlFilterParsers = {
   multiSelect: (rawValue: Parameters<UrlFilterParser>[0]) => {
     if (Utils.isObject(rawValue) && rawValue?.values) {
       const mode = rawValue?.mode?.[0]
-      const validModes: SelectFilterMode[] = [FILTER_MODES.INCLUDE, FILTER_MODES.EXCLUDE]
+      const validModes: SelectFilterMode[] = [
+        FILTER_MODES.INCLUDE,
+        FILTER_MODES.EXCLUDE
+      ]
       return {
         values: rawValue?.values,
-        mode: validModes.includes(mode as SelectFilterMode) ? mode as SelectFilterMode : FILTER_MODES.INCLUDE
+        mode: validModes.includes(mode as SelectFilterMode)
+          ? (mode as SelectFilterMode)
+          : FILTER_MODES.INCLUDE
       }
     }
     return Array.isArray(rawValue) ? rawValue : null
@@ -368,11 +401,11 @@ export const filterFns = {
       }
 
       const rowValue = row.getValue(columnId)
-      const matches = values.some((val) => {
-        return Array.isArray(rowValue)
+      const matches = values.some((val) =>
+        Array.isArray(rowValue)
           ? rowValue.some((item) => item?.toString() === val?.toString())
           : rowValue?.toString() === val?.toString()
-      })
+      )
 
       return mode === FILTER_MODES.EXCLUDE ? !matches : matches
     }
@@ -410,7 +443,10 @@ export const filterFns = {
       return mode === FILTER_MODES.EXCLUDE ? !matches : matches
     }
 
-    return filterValue.toLowerCase() === row.getValue(columnId)?.toString().toLowerCase()
+    return (
+      filterValue.toLowerCase() ===
+      row.getValue(columnId)?.toString().toLowerCase()
+    )
   },
   date<Data>(
     row: ExtendedRow<Data>,
@@ -473,7 +509,7 @@ export const filterFns = {
     columnId: string,
     filterValue: { duration: string; operator: CompareOperator }
   ): boolean {
-    const valueTime = row.getValue(columnId) as number
+    const valueTime = row.getValue(columnId)
 
     const parts = filterValue.duration.split(' ')
     const durationObj: Record<string, number> = {}
@@ -519,7 +555,8 @@ export const filterFns = {
       if (!filterValue) {
         return true
       }
-      const cellValue = row.getValue(columnId)?.toString()?.toLowerCase() ?? EMPTY_STRING
+      const cellValue =
+        row.getValue(columnId)?.toString()?.toLowerCase() ?? EMPTY_STRING
       return cellValue.includes(filterValue.toLowerCase())
     }
 
@@ -536,7 +573,8 @@ export const filterFns = {
       }
     }
 
-    const cellValue = row.getValue(columnId)?.toString()?.toLowerCase() ?? EMPTY_STRING
+    const cellValue =
+      row.getValue(columnId)?.toString()?.toLowerCase() ?? EMPTY_STRING
 
     let matches: boolean
     if (mode === FILTER_MODES.REGEX) {

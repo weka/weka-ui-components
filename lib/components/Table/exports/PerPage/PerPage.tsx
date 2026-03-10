@@ -1,6 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import Select from '../../../inputs/Select'
+import type { Dispatch, SetStateAction } from 'react'
+import React from 'react'
+
 import { PER_PAGE_OPTIONS } from 'consts'
+
+import Select from '../../../inputs/Select'
 
 import './perPage.scss'
 
@@ -18,10 +21,10 @@ function PerPage({
   return (
     <div className='per-page'>
       <Select
-        value={value}
-        options={options}
-        wrapperClass='per-page-select'
         onChange={onChange}
+        options={options}
+        value={value}
+        wrapperClass='per-page-select'
       />
       <span>per page</span>
     </div>

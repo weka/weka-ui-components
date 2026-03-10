@@ -1,10 +1,13 @@
-import React, { SyntheticEvent } from 'react'
-import Switch from '../../../../Switch'
-import Tooltip from '../../../../Tooltip'
+import type { SyntheticEvent } from 'react'
+import React from 'react'
+
 import { EMPTY_STRING } from 'consts'
 
+import Switch from '../../../../Switch'
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedCellProps, ExtendedRow } from '../../../types'
+
 import './switchCell.scss'
-import { ExtendedCellProps, ExtendedRow } from '../../../types'
 
 export interface SwitchCellOptions<Data> {
   onChange: (row: ExtendedRow<Data>) => void
@@ -15,9 +18,12 @@ export type SwitchCellValue = boolean
 
 export const SwitchCellName = 'SwitchCell'
 
-function SwitchCell<Data>(props: ExtendedCellProps<Data, SwitchCellValue>) {
-  const { cell, column, row, customValue } = props
-
+function SwitchCell<Data>({
+  cell,
+  column,
+  row,
+  customValue
+}: ExtendedCellProps<Data, SwitchCellValue>) {
   const cellDef = column.columnDef.meta?.cell
   if (!cellDef || cellDef.type !== SwitchCellName) {
     throw new Error(
@@ -35,9 +41,9 @@ function SwitchCell<Data>(props: ExtendedCellProps<Data, SwitchCellValue>) {
     <Tooltip data={tooltip}>
       <div className='switch-cell'>
         <Switch
-          onClick={(e: SyntheticEvent) => e.stopPropagation()}
           checked={value}
           onChange={() => onChange(row)}
+          onClick={(e: SyntheticEvent) => e.stopPropagation()}
         />
       </div>
     </Tooltip>

@@ -1,10 +1,12 @@
 import React, { useRef } from 'react'
 import { IconButton } from '@mui/material'
-import MenuPopper from '../../../MenuPopper'
-import svgs from 'svgs'
+
 import { useToggle } from 'hooks'
-import { menuItem } from '../../../MenuPopper/MenuPopper'
-import { ExtendedRow, RowAction } from '../../types'
+import svgs from 'svgs'
+
+import MenuPopper from '../../../MenuPopper'
+import type { menuItem } from '../../../MenuPopper/MenuPopper'
+import type { ExtendedRow, RowAction } from '../../types'
 
 import './actionsCell.scss'
 
@@ -16,9 +18,11 @@ interface ActionsCellProps<Data> {
   disablePortal?: boolean
 }
 
-function ActionsCell<Data>(props: ActionsCellProps<Data>) {
-  const { actions, row, disablePortal = false } = props
-
+function ActionsCell<Data>({
+  actions,
+  row,
+  disablePortal = false
+}: ActionsCellProps<Data>) {
   const [isPopperOpen, togglePopper] = useToggle(false)
   const anchorRef = useRef<HTMLDivElement | null>(null)
   const formatActions = actions
@@ -43,21 +47,27 @@ function ActionsCell<Data>(props: ActionsCellProps<Data>) {
   function getPopper() {
     return (
       <MenuPopper
-        disablePortal={disablePortal}
         anchorEl={anchorRef.current}
-        open={isPopperOpen as boolean}
-        onClickAway={togglePopper}
+        disablePortal={disablePortal}
         items={formatActions as menuItem[]}
+        onClickAway={togglePopper}
+        open={isPopperOpen}
       />
     )
   }
 
   return formatActions.length ? (
-    <div className='table-row-actions' ref={anchorRef}>
-      <IconButton className='actions-btn' onClick={togglePopper}>
+    <div
+      ref={anchorRef}
+      className='table-row-actions'
+    >
+      <IconButton
+        className='actions-btn'
+        onClick={togglePopper}
+      >
         <MenuDots />
       </IconButton>
-      {isPopperOpen && getPopper()}
+      {isPopperOpen ? getPopper() : null}
     </div>
   ) : (
     <div className='table-row-actions-empty' />

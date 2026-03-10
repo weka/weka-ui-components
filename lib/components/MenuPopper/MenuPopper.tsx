@@ -1,17 +1,19 @@
 import React from 'react'
 import {
   ClickAwayListener,
+  Divider,
   Grow,
   MenuItem,
   MenuList,
   Paper,
-  Popper,
-  Divider
+  Popper
 } from '@mui/material'
-import Tooltip from '../Tooltip'
-import Utils from 'utils'
-import { EMPTY_STRING } from 'consts'
 import clsx from 'clsx'
+
+import { EMPTY_STRING } from 'consts'
+import Utils from 'utils'
+
+import Tooltip from '../Tooltip'
 
 import './menuPopper.scss'
 
@@ -34,16 +36,14 @@ interface MenuPopperProps {
   disablePortal?: boolean
   extraPopperClass?: string
 }
-function MenuPopper(props: MenuPopperProps) {
-  const {
-    open,
-    anchorEl,
-    onClickAway,
-    items,
-    disablePortal = false,
-    extraPopperClass = EMPTY_STRING
-  } = props
-
+function MenuPopper({
+  open,
+  anchorEl,
+  onClickAway,
+  items,
+  disablePortal = false,
+  extraPopperClass = EMPTY_STRING
+}: MenuPopperProps) {
   const getTooltipData = (disabled = EMPTY_STRING, tooltip = EMPTY_STRING) => {
     if (Utils.isString(disabled) && !Utils.isEmpty(disabled)) {
       return disabled
@@ -56,17 +56,20 @@ function MenuPopper(props: MenuPopperProps) {
 
   return (
     <Popper
-      open={open}
       anchorEl={anchorEl}
-      transition
-      disablePortal={disablePortal}
       className='popper-wrapper'
+      disablePortal={disablePortal}
       nonce={undefined}
       onResize={undefined}
       onResizeCapture={undefined}
+      open={open}
+      transition
     >
       {({ TransitionProps }) => (
-        <Grow {...TransitionProps} style={{ transformOrigin: 'center top' }}>
+        <Grow
+          {...TransitionProps}
+          style={{ transformOrigin: 'center top' }}
+        >
           <Paper className={clsx('menu-popper', extraPopperClass)}>
             <ClickAwayListener onClickAway={onClickAway}>
               <MenuList disablePadding>
@@ -83,8 +86,8 @@ function MenuPopper(props: MenuPopperProps) {
                         className={`menu-popper-item-wrapper dropdown-lines-1 ${item.extraClass}`}
                       >
                         <MenuItem
-                          disabled={!!item.disabled}
                           className='menu-popper-item'
+                          disabled={!!item.disabled}
                           onClick={(e) => {
                             e.stopPropagation()
                             item.onClick()

@@ -1,11 +1,9 @@
 import React from 'react'
-
-import {
-  default as SearchFieldComponent,
-  SearchFieldProps
-} from './SearchField'
-import { ComponentMeta, ComponentStory } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
+
+import type { SearchFieldProps } from './SearchField'
+import { default as SearchFieldComponent } from './SearchField'
 
 export default {
   component: SearchFieldComponent,
@@ -34,9 +32,7 @@ export default {
 
 const Template: ComponentStory<typeof SearchFieldComponent> = (
   args: SearchFieldProps
-) => {
-  return <SearchFieldComponent {...args} />
-}
+) => <SearchFieldComponent {...args} />
 
 export const SearchField = Template.bind({})
 SearchField.args = {

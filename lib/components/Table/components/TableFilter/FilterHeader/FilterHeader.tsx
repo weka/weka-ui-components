@@ -1,10 +1,12 @@
 import React, { useRef } from 'react'
-import clsx from 'clsx'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
-import Tooltip from '../../../../Tooltip'
-import svgs from 'svgs'
-import { useToggle } from 'hooks'
+import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
+import { useToggle } from 'hooks'
+import svgs from 'svgs'
+
+import Tooltip from '../../../../Tooltip'
 
 import './filterHeader.scss'
 
@@ -35,19 +37,22 @@ function FilterHeader({
     <div className={classes}>
       <span>{title}</span>
       <Tooltip data='Filter by'>
-        <span onClick={togglePopper} ref={anchor}>
+        <span
+          ref={anchor}
+          onClick={togglePopper}
+        >
           <FilterIcon />
         </span>
       </Tooltip>
-      {isPopperOpen && (
+      {isPopperOpen ? (
         <Popper
-          open={isPopperOpen}
           anchorEl={anchor.current}
-          transition
           className='popper-wrapper'
           nonce={undefined}
           onResize={undefined}
           onResizeCapture={undefined}
+          open={isPopperOpen}
+          transition
         >
           {({ TransitionProps }) => (
             <Grow
@@ -74,7 +79,7 @@ function FilterHeader({
             </Grow>
           )}
         </Popper>
-      )}
+      ) : null}
     </div>
   )
 }

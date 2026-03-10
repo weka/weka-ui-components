@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import './capacityBar.scss'
 
@@ -9,13 +9,12 @@ interface CapacityBarProps {
   secondColor?: string
 }
 
-function CapacityBar(props: CapacityBarProps) {
-  const {
-    firstUsage = 0,
-    firstColor = 'var(--accent-s3)',
-    secondUsage = 0,
-    secondColor = 'var(--main-color)'
-  } = props
+function CapacityBar({
+  firstUsage = 0,
+  firstColor = 'var(--accent-s3)',
+  secondUsage = 0,
+  secondColor = 'var(--main-color)'
+}: CapacityBarProps) {
   const firstRef = useRef<HTMLHeadingElement>(null)
   const secondRef = useRef<HTMLHeadingElement>(null)
 
@@ -31,13 +30,13 @@ function CapacityBar(props: CapacityBarProps) {
   return (
     <div className='capacity-bar'>
       <div
-        className='usage'
         ref={firstRef}
+        className='usage'
         style={{ backgroundColor: firstColor }}
       />
       <div
-        className='usage'
         ref={secondRef}
+        className='usage'
         style={{ backgroundColor: secondColor }}
       />
     </div>

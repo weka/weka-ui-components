@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
 
 import './textField.scss'
@@ -13,10 +14,15 @@ interface TextFieldProps {
   secondLabel?: string
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
-function TextField(props: TextFieldProps) {
-  const { label, onChange, value, error, wrapperClass, secondLabel, ...rest } =
-    props
-
+function TextField({
+  label,
+  onChange,
+  value,
+  error,
+  wrapperClass,
+  secondLabel,
+  ...rest
+}: TextFieldProps) {
   function onTextChange(event) {
     onChange(
       !Number.isNaN(event.target.valueAsNumber)
@@ -35,8 +41,8 @@ function TextField(props: TextFieldProps) {
       <div className='field-input-wrapper'>
         <input
           className='field__input'
-          value={value || EMPTY_STRING}
           onChange={onTextChange}
+          value={value || EMPTY_STRING}
           {...rest}
         />
         <span className='text-field-error capitalize-first-letter'>

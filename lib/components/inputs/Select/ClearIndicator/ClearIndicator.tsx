@@ -1,7 +1,10 @@
 import React from 'react'
-import { components, ClearIndicatorProps } from 'react-select'
-import Tooltip from '../../../Tooltip'
+import type { ClearIndicatorProps } from 'react-select'
+import { components } from 'react-select'
+
 import { EMPTY_STRING } from 'consts'
+
+import Tooltip from '../../../Tooltip'
 
 interface ClearIndicatorProp extends ClearIndicatorProps {
   selectProps: any

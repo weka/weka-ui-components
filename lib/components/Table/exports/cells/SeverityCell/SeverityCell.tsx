@@ -1,8 +1,10 @@
 import React from 'react'
 import clsx from 'clsx'
+
+import { EMPTY_STRING, SEVERITIES_ICONS } from 'consts'
+
 import Tooltip from '../../../../Tooltip'
-import { SEVERITIES_ICONS, EMPTY_STRING } from 'consts'
-import { ExtendedCellProps } from '../../../types'
+import type { ExtendedCellProps } from '../../../types'
 
 import './severityCell.scss'
 
@@ -13,15 +15,20 @@ interface SeverityCellProps<Data>
   extraClass?: string
 }
 
-function SeverityCell<Data>(props: SeverityCellProps<Data>) {
-  const { cell, customValue, extraClass = EMPTY_STRING } = props
-
+function SeverityCell<Data>({
+  cell,
+  customValue,
+  extraClass = EMPTY_STRING
+}: SeverityCellProps<Data>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const Icon = SEVERITIES_ICONS[value]
   const classes = clsx('event-severity', value.toLowerCase(), extraClass)
   return (
-    <Tooltip data={value} placement='right'>
+    <Tooltip
+      data={value}
+      placement='right'
+    >
       <div className={classes}>{Icon ? <Icon /> : value}</div>
     </Tooltip>
   )

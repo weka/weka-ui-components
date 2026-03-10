@@ -1,4 +1,5 @@
-import { useEffect, RefObject, useState } from 'react'
+import type { RefObject } from 'react'
+import { useEffect, useState } from 'react'
 
 type UseHighlightInputProps = {
   inputRef: RefObject<HTMLInputElement | HTMLDivElement>

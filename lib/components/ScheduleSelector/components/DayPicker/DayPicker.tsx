@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
+
 import { ToggleButton } from '../../../index'
-import { Option } from '../../../ToggleButton/ToggleButton'
+import type { Option } from '../../../ToggleButton/ToggleButton'
 import {
   DAYS_OF_WEEK,
   SELECT_ALL,
@@ -17,13 +18,13 @@ interface DayPickerProps {
   breakpointIndex?: number
 }
 
-const DayPicker = ({
+function DayPicker({
   days,
   onChange,
   options,
   isDisabled,
   breakpointIndex
-}: DayPickerProps) => {
+}: DayPickerProps) {
   const allDays = useMemo(
     () => (options || DAYS_OF_WEEK).map((day) => day.value),
     [options]
@@ -65,13 +66,13 @@ const DayPicker = ({
 
   return (
     <ToggleButton
-      options={options || DAYS_OF_WEEK}
-      value={selectedDays.includes(SELECT_ALL) ? [SELECT_ALL] : selectedDays}
-      onChange={toggleDaySelection}
-      wrapperClass='day-picker-wrapper'
-      isDisabled={isDisabled}
-      small
       breakpointIndex={breakpointIndex}
+      isDisabled={isDisabled}
+      onChange={toggleDaySelection}
+      options={options || DAYS_OF_WEEK}
+      small
+      value={selectedDays.includes(SELECT_ALL) ? [SELECT_ALL] : selectedDays}
+      wrapperClass='day-picker-wrapper'
     />
   )
 }

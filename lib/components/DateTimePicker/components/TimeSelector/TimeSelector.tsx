@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import Button from '../../../Button'
 import { DateTime } from 'luxon'
-import NumInput from '../NumInput'
+
 import { TIME_PARTS } from 'consts'
+
+import Button from '../../../Button'
+import NumInput from '../NumInput'
 
 import './TimeSelector.scss'
 
@@ -15,14 +17,13 @@ interface TimeSelectorProps {
   showNow?: boolean
 }
 
-function TimeSelector(props: TimeSelectorProps) {
-  const {
-    time,
-    onSubmit,
-    showSeconds = true,
-    onNowSubmit,
-    showNow = true
-  } = props
+function TimeSelector({
+  time,
+  onSubmit,
+  showSeconds = true,
+  onNowSubmit,
+  showNow = true
+}: TimeSelectorProps) {
   const initialNumState = {
     hour: false,
     minute: false,
@@ -52,21 +53,21 @@ function TimeSelector(props: TimeSelectorProps) {
   return (
     <div className={dateTimeClasses}>
       <div className={timeSelectorClasses}>
-        {showNow && (
+        {showNow ? (
           <Button
             extraClass='time-selector-now-btn'
             onClick={() => onNowSubmit(DateTime.now())}
           >
             Now
           </Button>
-        )}
+        ) : null}
         <NumInput
-          value={hours}
-          max={23}
-          numTitle={TIME_PARTS.HOUR}
           initialNumState={initialNumState}
+          max={23}
           numFocus={numFocus}
+          numTitle={TIME_PARTS.HOUR}
           setNumFocus={setNumFocus}
+          value={hours}
           onChange={(val) => {
             if (!Number.isNaN(val)) {
               setHours(val)
@@ -75,12 +76,12 @@ function TimeSelector(props: TimeSelectorProps) {
           }}
         />
         <NumInput
-          value={minutes}
-          max={59}
-          numTitle={TIME_PARTS.MINUTE}
           initialNumState={initialNumState}
+          max={59}
           numFocus={numFocus}
+          numTitle={TIME_PARTS.MINUTE}
           setNumFocus={setNumFocus}
+          value={minutes}
           onChange={(val) => {
             if (!Number.isNaN(val)) {
               setMinutes(val)
@@ -88,14 +89,14 @@ function TimeSelector(props: TimeSelectorProps) {
             }
           }}
         />
-        {showSeconds && (
+        {showSeconds ? (
           <NumInput
-            value={seconds}
-            max={59}
-            numTitle={TIME_PARTS.SECOND}
             initialNumState={initialNumState}
+            max={59}
             numFocus={numFocus}
+            numTitle={TIME_PARTS.SECOND}
             setNumFocus={setNumFocus}
+            value={seconds}
             onChange={(val) => {
               if (!Number.isNaN(val)) {
                 setSeconds(val)
@@ -103,7 +104,7 @@ function TimeSelector(props: TimeSelectorProps) {
               }
             }}
           />
-        )}
+        ) : null}
       </div>
     </div>
   )

@@ -1,14 +1,16 @@
 import React from 'react'
-import { ExtendedCellProps } from '../../../types'
+
+import type { ExtendedCellProps } from '../../../types'
 
 export type ProgressCellValue = {
   status: string
   progress: string
 }
 
-function ProgressCell<Data>(props: ExtendedCellProps<Data, ProgressCellValue>) {
-  const { cell, customValue } = props
-
+function ProgressCell<Data>({
+  cell,
+  customValue
+}: ExtendedCellProps<Data, ProgressCellValue>) {
   const value = customValue !== undefined ? customValue : cell.getValue()
 
   const { status, progress } = value

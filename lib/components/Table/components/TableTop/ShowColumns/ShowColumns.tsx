@@ -1,6 +1,4 @@
-import React, { useState, useRef } from 'react'
-import Tooltip from '../../../../Tooltip'
-import { Checkbox } from '../../../../inputs'
+import React, { useRef, useState } from 'react'
 import {
   ClickAwayListener,
   Grow,
@@ -8,9 +6,13 @@ import {
   Paper,
   Popper
 } from '@mui/material'
+
 import svgs from 'svgs'
-import { ExtendedTable } from '../../../types'
+
+import { Checkbox } from '../../../../inputs'
+import Tooltip from '../../../../Tooltip'
 import { tableUtils } from '../../../tableUtils'
+import type { ExtendedTable } from '../../../types'
 
 import './showColumns.scss'
 
@@ -20,9 +22,7 @@ interface ShowColumnsProps<Data> {
   table: ExtendedTable<Data>
 }
 
-function ShowColumns<Data>(props: ShowColumnsProps<Data>) {
-  const { table } = props
-
+function ShowColumns<Data>({ table }: ShowColumnsProps<Data>) {
   const ref = useRef(null)
   const [isOpen, setOpen] = useState(false)
 
@@ -34,24 +34,30 @@ function ShowColumns<Data>(props: ShowColumnsProps<Data>) {
   ).length
 
   return (
-    <span className='show-columns-wrapper' ref={ref}>
+    <span
+      ref={ref}
+      className='show-columns-wrapper'
+    >
       <Tooltip data='Show/Hide columns'>
         <IconButton onClick={() => setOpen((state) => !state)}>
           <Show />
         </IconButton>
       </Tooltip>
       <Popper
-        open={isOpen}
         anchorEl={ref.current}
-        transition
-        disablePortal
         className='popper-wrapper'
+        disablePortal
         nonce={undefined}
         onResize={undefined}
         onResizeCapture={undefined}
+        open={isOpen}
+        transition
       >
         {({ TransitionProps }) => (
-          <Grow {...TransitionProps} style={{ transformOrigin: 'center top' }}>
+          <Grow
+            {...TransitionProps}
+            style={{ transformOrigin: 'center top' }}
+          >
             <Paper className='menu-popper'>
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <div className='show-columns'>

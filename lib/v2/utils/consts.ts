@@ -13,7 +13,7 @@ export const EMPTY_STRING_ARRAY: readonly string[] = []
 export const EMPTY_REF_ARRAY: readonly RefObject<HTMLElement>[] = []
 export const EMPTY_OBJECT: Record<string, never> = {}
 export const EMPTY_SET = new Set<never>()
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+
 export const NOOP = () => {}
 export const NOT_APPLICABLE = 'N/A'
 export const COMMA_SEPARATOR = ', '

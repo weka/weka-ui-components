@@ -1,11 +1,25 @@
+import type { ReactNode } from 'react'
 import React, {
-  ReactNode,
   useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState
 } from 'react'
+import type { ColumnFilter, FilterFn } from '@tanstack/react-table'
+import {
+  getCoreRowModel,
+  getExpandedRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getGroupedRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable
+} from '@tanstack/react-table'
+import clsx from 'clsx'
+
 import {
   COLUMN_RESIZING_LISTENER,
   EMPTY_STRING,
@@ -13,45 +27,33 @@ import {
   SAVED_RESIZED,
   SAVED_RESIZING_ENABLED
 } from 'consts'
-import clsx from 'clsx'
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  getFacetedUniqueValues,
-  getFacetedRowModel,
-  getGroupedRowModel,
-  getExpandedRowModel,
-  ColumnFilter,
-  FilterFn
-} from '@tanstack/react-table'
+import { useToggle } from 'hooks'
 import Utils from 'utils'
+
 import localStorageService from '../../localStorageService'
 import Loader from '../Loader'
+
+import { ColumnHeader, Pagination, TableBody, TableTop } from './components'
+import { AggregatedTotalCell, DefaultCell } from './exports'
 import {
-  useUrlFilters,
+  useColumnSizeVars,
   useExplicitlyRemovedFilters,
+  useFiltersChangeListener,
   useHiddenColumns,
   usePageSize,
   usePrepareColumnDefs,
-  useFiltersChangeListener,
-  useColumnSizeVars,
-  useResetPagination
+  useResetPagination,
+  useUrlFilters
 } from './hooks'
-import { useToggle } from 'hooks'
-import {
-  ExtendedColumnFilter,
-  ExtendedColumnDef,
-  RowAction,
-  TableExtraClasses,
-  ExtendedRow
-} from './types'
-import { ColumnHeader, Pagination, TableTop, TableBody } from './components'
-import { AggregatedTotalCell, DefaultCell } from './exports'
 import { TABLE_FILTERS_MAP } from './tableConsts'
-import { getCustomSortingFns, clearUniqueCountCache } from './tableUtils'
+import { clearUniqueCountCache, getCustomSortingFns } from './tableUtils'
+import type {
+  ExtendedColumnDef,
+  ExtendedColumnFilter,
+  ExtendedRow,
+  RowAction,
+  TableExtraClasses
+} from './types'
 
 import './table.scss'
 
@@ -123,60 +125,58 @@ export interface TableProps<Data, Value> {
   outsideFilters?: unknown
 }
 
-function Table<Data, Value>(props: TableProps<Data, Value>) {
-  const {
-    columns: rawColumnDefs,
-    data,
-    rowActions = [],
-    tableActions,
-    title,
-    defaultSort = EMPTY_STRING,
-    globalFilter,
-    globalFilterFn,
-    defaultGlobalFilter = EMPTY_STRING,
-    checkRowSelected,
-    checkRowHighlighted,
-    getRowId,
-    addFilterToUrl,
-    RowSubComponent,
-    listenerPrefix,
-    onRowClick = NOP,
-    onToggleExpand,
-    miniTable,
-    filterCategory,
-    fixedPageSize,
-    disableActionsPortal,
-    maxRows,
-    emptyMessage,
-    manualPagination,
-    currentPage: outerCurrentPage,
-    onPageChange: outerPageChange,
-    totalRows,
-    rowsPerPage,
-    disablePageInput,
-    canExpandAll = false,
-    loading,
-    filters: userColumnFilters,
-    onFiltersChanged,
-    defaultDescendingSort = false,
-    onSortChanged,
-    manualSorting,
-    manualFilters,
-    extraClasses,
-    initialFilters: initialUserFilters,
-    grouping,
-    hasCustomDateFormat,
-    customDateFormat,
-    hasResizableColumns = false,
-    hasEmptyActionsCell = false,
-    collapseRowsOnLeavingPage = false,
-    getRowCanExpand,
-    expandedRows,
-    infinityScrollConfig,
-    hideRowsCount = false,
-    outsideFilters
-  } = props
-
+function Table<Data, Value>({
+  columns: rawColumnDefs,
+  data,
+  rowActions = [],
+  tableActions,
+  title,
+  defaultSort = EMPTY_STRING,
+  globalFilter,
+  globalFilterFn,
+  defaultGlobalFilter = EMPTY_STRING,
+  checkRowSelected,
+  checkRowHighlighted,
+  getRowId,
+  addFilterToUrl,
+  RowSubComponent,
+  listenerPrefix,
+  onRowClick = NOP,
+  onToggleExpand,
+  miniTable,
+  filterCategory,
+  fixedPageSize,
+  disableActionsPortal,
+  maxRows,
+  emptyMessage,
+  manualPagination,
+  currentPage: outerCurrentPage,
+  onPageChange: outerPageChange,
+  totalRows,
+  rowsPerPage,
+  disablePageInput,
+  canExpandAll = false,
+  loading,
+  filters: userColumnFilters,
+  onFiltersChanged,
+  defaultDescendingSort = false,
+  onSortChanged,
+  manualSorting,
+  manualFilters,
+  extraClasses,
+  initialFilters: initialUserFilters,
+  grouping,
+  hasCustomDateFormat,
+  customDateFormat,
+  hasResizableColumns = false,
+  hasEmptyActionsCell = false,
+  collapseRowsOnLeavingPage = false,
+  getRowCanExpand,
+  expandedRows,
+  infinityScrollConfig,
+  hideRowsCount = false,
+  outsideFilters
+}: TableProps<Data, Value>) {
   const columnDefs = usePrepareColumnDefs({
     columnDefs: rawColumnDefs
   })
@@ -439,70 +439,70 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     <div className={clsx('react-table-wrapper', extraClasses?.tableWrapper)}>
       {!miniTable && (
         <TableTop
-          title={title}
-          totalRows={totalRows}
+          canExpandAll={canExpandAll}
+          customDateFormat={customDateFormat}
+          hasCustomDateFormat={hasCustomDateFormat}
+          hasResizableColumns={hasResizableColumns}
+          hideRowsCount={hideRowsCount}
+          isExpandable={isExpandable}
+          isResizable={isResizable}
           maxRows={maxRows}
           table={table}
-          canExpandAll={canExpandAll}
-          isExpandable={isExpandable}
           tableActions={tableActions}
-          hasResizableColumns={hasResizableColumns}
-          isResizable={isResizable}
-          toggleResizable={toggleResizable}
-          hasCustomDateFormat={hasCustomDateFormat}
-          customDateFormat={customDateFormat}
+          title={title}
           toggleAllRowsExpanding={toggleAllRowsExpanding}
-          hideRowsCount={hideRowsCount}
+          toggleResizable={toggleResizable}
+          totalRows={totalRows}
         />
       )}
       {!loading ? (
         <div
+          ref={tableRef}
           className={clsx({
             'mini-table': miniTable,
             'scroll-wrapper': true
           })}
-          ref={tableRef}
         >
           <table
+            style={columnSizeVars}
             className={clsx('react-table', {
               'empty-table': !rows.length
             })}
-            style={columnSizeVars}
           >
             <thead className='sticky-header'>
               {table.getHeaderGroups().map((headerGroup) => (
                 <ColumnHeader
                   key={headerGroup.id}
-                  headerGroup={headerGroup}
-                  table={table}
-                  isExpandable={isExpandable}
-                  rowActions={rowActions}
                   hasEmptyActionsCell={hasEmptyActionsCell}
+                  headerGroup={headerGroup}
+                  isExpandable={isExpandable}
                   isResizable={isResizable}
+                  rowActions={rowActions}
                   scrollElement={tableRef.current}
                   showScrollToTop={!!infinityScrollConfig}
+                  table={table}
                 />
               ))}
             </thead>
             <TableBody
-              table={table}
-              isExpandable={isExpandable}
-              grouping={grouping}
               RowSubComponent={RowSubComponent}
-              onRowClick={onRowClick}
-              onToggleExpand={onToggleExpand}
-              checkRowSelected={checkRowSelected}
               checkRowHighlighted={checkRowHighlighted}
-              rowActions={rowActions}
-              hasEmptyActionsCell={hasEmptyActionsCell}
-              isResizable={isResizable}
+              checkRowSelected={checkRowSelected}
               disableActionsPortal={disableActionsPortal}
+              expandedRows={expandedRows}
               extraClasses={extraClasses}
               getRowCanExpand={getRowCanExpand}
-              expandedRows={expandedRows}
+              grouping={grouping}
+              hasEmptyActionsCell={hasEmptyActionsCell}
               infinityScrollConfig={infinityScrollConfig}
-              tableRef={tableRef}
+              isExpandable={isExpandable}
+              isResizable={isResizable}
+              onRowClick={onRowClick}
+              onToggleExpand={onToggleExpand}
+              rowActions={rowActions}
               rows={rows}
+              table={table}
+              tableRef={tableRef}
             />
           </table>
           {!rows.length && (
@@ -510,27 +510,27 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
               {emptyMessage || (title ? `No ${title}` : `No ${rows}`)}
             </span>
           )}
-          {infinityScrollConfig?.isFetchingNextPage && (
+          {infinityScrollConfig?.isFetchingNextPage ? (
             <div className='fetching-page-loader'>
               <Loader />
             </div>
-          )}
+          ) : null}
         </div>
       ) : (
         <Loader />
       )}
-      {(!miniTable || fixedPageSize) && !infinityScrollConfig && !loading && (
+      {(!miniTable || fixedPageSize) && !infinityScrollConfig && !loading ? (
         <div className='footer'>
           <Pagination
             currentPage={pageIndex + 1}
+            disablePageInput={disablePageInput}
+            numberOfPages={pageCount}
             onPageChange={(pageNumber) => {
               table.setPageIndex(pageNumber - 1)
             }}
-            numberOfPages={pageCount}
-            disablePageInput={disablePageInput}
           />
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

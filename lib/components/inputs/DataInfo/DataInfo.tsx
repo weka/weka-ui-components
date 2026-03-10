@@ -6,8 +6,7 @@ interface DataInfoProps {
   label: string
   value: string
 }
-function DataInfo(props: DataInfoProps) {
-  const { label, value } = props
+function DataInfo({ label, value }: DataInfoProps) {
   return (
     <div className='data-info'>
       <div className='data-info-label'>{label}</div>

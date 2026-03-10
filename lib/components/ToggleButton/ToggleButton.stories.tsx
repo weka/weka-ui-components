@@ -1,6 +1,8 @@
-import { default as ToggleButtonComponent } from './ToggleButton'
-import Utils from 'utils'
 import React, { useState } from 'react'
+
+import Utils from 'utils'
+
+import { default as ToggleButtonComponent } from './ToggleButton'
 
 export default {
   title: 'Components/ToggleButton',
@@ -21,15 +23,15 @@ export default {
   }
 }
 
-const Template = (args: object) => {
+function Template(args: object) {
   const { options } = args
   const [value, setValue] = useState(options[0].value)
   return (
     <ToggleButtonComponent
       {...args}
       onChange={setValue}
-      value={value}
       options={options}
+      value={value}
     />
   )
 }

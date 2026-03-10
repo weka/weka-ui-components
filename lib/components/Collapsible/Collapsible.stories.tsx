@@ -1,6 +1,8 @@
 import React from 'react'
-import { Meta, StoryFn } from '@storybook/react'
+import type { Meta, StoryFn } from '@storybook/react'
+
 import { useToggle } from 'hooks'
+
 import Collapsible from './Collapsible'
 
 export default {
@@ -15,9 +17,9 @@ const Template: StoryFn = () => {
     <div style={{ height: '150px' }}>
       <Collapsible
         expanded={expanded}
-        onToggle={toggleExpanded}
-        label='Collapsible'
         extraClass='collapsible-content'
+        label='Collapsible'
+        onToggle={toggleExpanded}
         headerRightContent={
           <div style={{ paddingLeft: '10px' }}>Click to get more content</div>
         }

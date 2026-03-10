@@ -1,20 +1,23 @@
 import React from 'react'
 import { toast } from 'react-toastify'
-import svgs from './svgs'
+import type { DurationUnits } from 'luxon'
+import { DateTime } from 'luxon'
+
 import {
   DIALOG_STATUSES,
   DOWNLOAD_FAILED,
   EMPTY_STRING,
+  type Severities,
   SEVERITY_NONE,
   SEVERITY_ORDER,
   TIME_PARTS_SHORTENINGS,
   TOASTER_DIALOG,
   TOASTER_DIALOG_DISMISS,
-  TOASTER_TYPES,
-  type Severities
+  TOASTER_TYPES
 } from 'consts'
-import { DateTime, DurationUnits } from 'luxon'
+
 import { Toast, Tooltip } from './components'
+import svgs from './svgs'
 
 const { Approve, Hide, View: Show, Warning } = svgs
 
@@ -55,13 +58,19 @@ const utils = {
   ): React.ReactElement {
     if (showPassword) {
       return (
-        <Tooltip data={`Hide ${passwordTooltip}`} placement='right'>
+        <Tooltip
+          data={`Hide ${passwordTooltip}`}
+          placement='right'
+        >
           <Show onClick={toggleShowPassword} />
         </Tooltip>
       )
     }
     return (
-      <Tooltip data={`Show ${passwordTooltip}`} placement='right'>
+      <Tooltip
+        data={`Show ${passwordTooltip}`}
+        placement='right'
+      >
         <Hide onClick={toggleShowPassword} />
       </Tooltip>
     )
@@ -168,19 +177,31 @@ const utils = {
     ) {
       if (toastId) {
         if (!toast.isActive(toastId)) {
-          toast.error(<Toast message={message} icon={<Warning />} />, {
-            position: toast.POSITION.BOTTOM_CENTER,
-            icon: false,
-            toastId,
-            autoClose
-          })
+          toast.error(
+            <Toast
+              icon={<Warning />}
+              message={message}
+            />,
+            {
+              position: toast.POSITION.BOTTOM_CENTER,
+              icon: false,
+              toastId,
+              autoClose
+            }
+          )
         }
       } else {
-        toast.error(<Toast message={message} icon={<Warning />} />, {
-          position: toast.POSITION.BOTTOM_CENTER,
-          icon: false,
-          autoClose
-        })
+        toast.error(
+          <Toast
+            icon={<Warning />}
+            message={message}
+          />,
+          {
+            position: toast.POSITION.BOTTOM_CENTER,
+            icon: false,
+            autoClose
+          }
+        )
       }
     } else {
       utils.dispatchCustomEvent(TOASTER_DIALOG, {
@@ -201,19 +222,31 @@ const utils = {
     ) {
       if (toastId) {
         if (!toast.isActive(toastId)) {
-          toast.success(<Toast message={message} icon={<Approve />} />, {
-            position: toast.POSITION.BOTTOM_CENTER,
-            icon: false,
-            toastId,
-            autoClose
-          })
+          toast.success(
+            <Toast
+              icon={<Approve />}
+              message={message}
+            />,
+            {
+              position: toast.POSITION.BOTTOM_CENTER,
+              icon: false,
+              toastId,
+              autoClose
+            }
+          )
         }
       } else {
-        toast.success(<Toast message={message} icon={<Approve />} />, {
-          position: toast.POSITION.BOTTOM_CENTER,
-          icon: false,
-          autoClose
-        })
+        toast.success(
+          <Toast
+            icon={<Approve />}
+            message={message}
+          />,
+          {
+            position: toast.POSITION.BOTTOM_CENTER,
+            icon: false,
+            autoClose
+          }
+        )
       }
     } else {
       utils.dispatchCustomEvent(TOASTER_DIALOG, {
@@ -245,9 +278,7 @@ const utils = {
     value: string | number
     label: string
     icon?: React.ReactNode
-  }) => {
-    return { label: label || value, value, icon }
-  },
+  }) => ({ label: label || value, value, icon }),
   parseParamsToQuery: (params: { [key: string]: any }) => {
     if (!params) {
       return {}
@@ -344,7 +375,7 @@ const utils = {
         const numPart = parseInt(part, 10)
         return valid && numPart >= 0 && numPart < 256
       }
-      return string.split('.').reduce(isValid)
+      return string.split('.').reduce<boolean>((acc, part) => isValid(acc, part), true)
     }
     return false
   },
@@ -442,7 +473,7 @@ const utils = {
     ) {
       return 'Not Valid DateTime Object'
     }
-    return utils.formatISODate(dateIn.toISO(), showMili, showSeconds, showTime)
+    return utils.formatISODate(dateIn.toISO() ?? '', showMili, showSeconds, showTime)
   },
   getRelativeTimeFromISODate: (date: string, showSeconds = false) => {
     const units: DurationUnits = ['years', 'months', 'days', 'hours', 'minutes']
@@ -480,17 +511,17 @@ const utils = {
       .join(separator)
   },
 
-  debounce: (callback: any, wait = 0) => {
+  debounce: (callback: (...args: unknown[]) => void, wait = 0) => {
     let timer: ReturnType<typeof setTimeout> | -1 = -1
 
-    return (...args) => {
+    return (...args: unknown[]) => {
       clearTimeout(timer)
       timer = setTimeout(() => {
         callback.apply(this, args)
       }, wait)
     }
   },
-  closeDialogOnEscape(reason, func) {
+  closeDialogOnEscape(reason: string, func: () => void) {
     if (reason === 'escapeKeyDown') {
       func()
     }

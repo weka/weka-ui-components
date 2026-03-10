@@ -1,2 +1,2 @@
-export { default } from './SelectFilter'
 export type * from './SelectFilter'
+export { default } from './SelectFilter'

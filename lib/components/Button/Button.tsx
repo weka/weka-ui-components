@@ -1,6 +1,8 @@
-import React, { MouseEventHandler } from 'react'
-import clsx from 'clsx'
+import type { MouseEventHandler } from 'react'
+import React from 'react'
 import { CircularProgress } from '@mui/material'
+import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
 
 import './button.scss'
@@ -17,18 +19,17 @@ export interface ButtonProps {
   [key: string]: any
 }
 
-function Button(props: ButtonProps) {
-  const {
-    children,
-    onClick,
-    extraClass = EMPTY_STRING,
-    disable,
-    isLoading = false,
-    empty,
-    fullWidth,
-    small,
-    ...rest
-  } = props
+function Button({
+  children,
+  onClick,
+  extraClass = EMPTY_STRING,
+  disable,
+  isLoading = false,
+  empty,
+  fullWidth,
+  small,
+  ...rest
+}: ButtonProps) {
   const { type = 'button' } = rest
   const classes = clsx({
     button: true,
@@ -41,13 +42,12 @@ function Button(props: ButtonProps) {
   })
 
   return (
-    // eslint-disable-next-line react/button-has-type
     <button
       className={classes}
       onClick={onClick}
       {...rest}
-      type={type}
       disabled={disable}
+      type={type}
     >
       {!isLoading ? (
         <div className='btn-children-wrapper'>{children}</div>

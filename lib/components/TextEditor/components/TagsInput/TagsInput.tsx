@@ -1,8 +1,9 @@
 import React, { useEffect, useLayoutEffect } from 'react'
-import { useTextEditorContext } from '../../context'
-import { TagsBox } from '../../../inputs'
-import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
+import clsx from 'clsx'
+
+import { TagsBox } from '../../../inputs'
+import { useTextEditorContext } from '../../context'
 
 import './tagsInput.scss'
 
@@ -13,9 +14,7 @@ interface TagsInputProps {
 
 const DISABLE_SYNTAX_CHECK_KEY = 'tags'
 
-function TagsInput(props: TagsInputProps) {
-  const { wrapperClass, addToUrl } = props
-
+function TagsInput({ wrapperClass, addToUrl }: TagsInputProps) {
   const {
     value: { tags },
     setTextEditorContext
@@ -59,21 +58,21 @@ function TagsInput(props: TagsInputProps) {
 
   return (
     <TagsBox
-      value={tags}
       info='Start a new tag with "+" or "-"'
+      invalidTagText='A new tag must start with "+" or "-" and be 2 or more characters long'
+      label='Tags'
       placeholder='Add a tag'
+      value={tags}
+      wrapperClass={clsx('text-editor-tags-input', wrapperClass)}
       onChange={(newTags) =>
         setTextEditorContext((prev) => ({ ...prev, tags: newTags }))
       }
-      label='Tags'
       tagsValidation={(tags) =>
         tags.filter(
           (tag) =>
             tag.length >= 2 && (tag.startsWith('+') || tag.startsWith('-'))
         )
       }
-      invalidTagText='A new tag must start with "+" or "-" and be 2 or more characters long'
-      wrapperClass={clsx('text-editor-tags-input', wrapperClass)}
     />
   )
 }

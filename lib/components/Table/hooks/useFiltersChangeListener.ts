@@ -1,7 +1,9 @@
 import { useCallback, useEffect } from 'react'
-import { ExtendedColumnFilter, ExtendedTable } from '../types'
+
 import { FILTER_CHANGE_LISTENER, FILTER_LISTENER } from 'consts'
+
 import { Utils } from '../../../main'
+import type { ExtendedColumnFilter, ExtendedTable } from '../types'
 
 interface ExtendedEvent extends Event {
   detail: {

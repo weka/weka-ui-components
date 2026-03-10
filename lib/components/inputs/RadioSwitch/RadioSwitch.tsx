@@ -1,8 +1,11 @@
-import React, { ChangeEvent } from 'react'
+import type { ChangeEvent } from 'react'
+import React from 'react'
 import { Radio } from '@mui/material'
 import clsx from 'clsx'
-import Tooltip from '../../Tooltip'
+
 import svgs from 'svgs'
+
+import Tooltip from '../../Tooltip'
 
 import './radioSwitch.scss'
 
@@ -36,8 +39,8 @@ function RadioSwitch({
   return (
     <div className={cls}>
       <Radio
-        classes={{ root: 'radio-btn' }}
         checked={checked}
+        classes={{ root: 'radio-btn' }}
         disabled={disabled}
         onChange={onRadioChange}
         value={value}

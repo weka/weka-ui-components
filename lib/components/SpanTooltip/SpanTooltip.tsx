@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
-import Tooltip from '../Tooltip'
-import type { TooltipProps } from '../Tooltip'
+
 import { EMPTY_STRING } from 'consts'
 import Utils from 'utils'
+
+import type { TooltipProps } from '../Tooltip'
+import Tooltip from '../Tooltip'
 
 import './spanTooltip.scss'
 
@@ -49,10 +51,13 @@ function SpanTooltip({
   }, [additionalData, tooltip])
 
   return (
-    <Tooltip data={data} {...tooltipProps}>
+    <Tooltip
+      data={data}
+      {...tooltipProps}
+    >
       <span
-        className={clsx(extraClasses, 'span-tooltip')}
         ref={ref}
+        className={clsx(extraClasses, 'span-tooltip')}
         style={style}
       >
         {children}

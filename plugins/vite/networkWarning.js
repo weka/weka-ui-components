@@ -74,17 +74,13 @@ export function networkWarningPlugin() {
       console.log(
         '  \x1b[31mAnyone on the same Wi-Fi/LAN can access this server and see your code.\x1b[0m'
       )
-      console.log(
-        '  VPN does NOT protect against this.'
-      )
+      console.log('  VPN does NOT protect against this.')
       console.log(
         '  For mobile testing, prefer phone hotspot or USB tethering.'
       )
       console.log('')
 
-      const confirmed = await confirm(
-        '  Expose to network? (yes/no): '
-      )
+      const confirmed = await confirm('  Expose to network? (yes/no): ')
       if (!confirmed) {
         console.log(
           '\n  ✅ Cancelled. Run without --host to use localhost only.\n'

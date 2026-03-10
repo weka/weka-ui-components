@@ -1,16 +1,18 @@
-import React, { FC, useCallback, useEffect, useMemo } from 'react'
+import type { FC } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import clsx from 'clsx'
+
 import { Select } from '../../../inputs'
-import { TimePicker, DayPicker, MonthPicker } from '../index'
 import {
   EVERY_MONTH,
   MIDNIGHT,
-  SELECT_ALL,
+  MINIMAL_DAYS_OF_MONTH,
   MONTHS,
-  SPECIFIC_MONTH,
   MONTHS_OPTIONS,
-  MINIMAL_DAYS_OF_MONTH
+  SELECT_ALL,
+  SPECIFIC_MONTH
 } from '../../ScheduleSelectorConsts'
+import { DayPicker, MonthPicker, TimePicker } from '../index'
 
 import './monthlySelector.scss'
 
@@ -187,16 +189,16 @@ const MonthlySelector: FC<MonthlySelectorProps> = ({
       <div className='monthly-selector-wrapper'>
         <div className='monthly-selector-content'>
           <Select
+            disabled={isDisabled}
+            onChange={handleSelectChange}
             options={selectOptions}
             value={everyMonth ? EVERY_MONTH.value : SPECIFIC_MONTH.value}
-            onChange={handleSelectChange}
-            disabled={isDisabled}
           />
           <span className='label-2'>at</span>
           <TimePicker
-            value={time}
-            onChange={handleTimeChange}
             isDisabled={isDisabled}
+            onChange={handleTimeChange}
+            value={time}
           />
           <span className='label-2'>on</span>
         </div>
@@ -207,20 +209,20 @@ const MonthlySelector: FC<MonthlySelectorProps> = ({
           )}
         >
           <DayPicker
+            breakpointIndex={breakpointIndex}
             days={monthlyData.days}
+            isDisabled={isDisabled}
             onChange={handleDateChange}
             options={daysOfMonth}
-            isDisabled={isDisabled}
-            breakpointIndex={breakpointIndex}
           />
         </div>
       </div>
       {!everyMonth && (
         <div className='monthly-picker-wrapper'>
           <MonthPicker
+            isDisabled={isDisabled}
             months={monthlyData.months}
             onChange={handleMonthChange}
-            isDisabled={isDisabled}
           />
         </div>
       )}

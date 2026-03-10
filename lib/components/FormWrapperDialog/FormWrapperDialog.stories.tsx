@@ -1,17 +1,18 @@
 import React from 'react'
-import { Meta, StoryFn } from '@storybook/react'
-import {
-  default as FormWrapperDialog,
-  FormDialogProps
-} from './FormWrapperDialog'
-import ControlTextBox from './ControlInputs/ControlTextBox'
 import { useForm } from 'react-hook-form'
-import Button from '../Button'
-import { useToggle } from 'hooks'
 import { action } from '@storybook/addon-actions'
-import ControlDatePicker from './ControlInputs/ControlDatePicker'
+import type { Meta, StoryFn } from '@storybook/react'
 import { DateTime } from 'luxon'
+
 import { FORM_VALIDATIONS } from 'consts'
+import { useToggle } from 'hooks'
+
+import Button from '../Button'
+
+import ControlDatePicker from './ControlInputs/ControlDatePicker'
+import ControlTextBox from './ControlInputs/ControlTextBox'
+import type { FormDialogProps } from './FormWrapperDialog'
+import { default as FormWrapperDialog } from './FormWrapperDialog'
 
 export default {
   title: 'Components/FormWrapperDialog',
@@ -32,26 +33,26 @@ const Template: StoryFn<typeof FormWrapperDialog> = (args: FormDialogProps) => {
     <>
       <Button onClick={toggleOpen}>Open Dialog</Button>
       <FormWrapperDialog
-        title='Dialog Title'
-        isOpen={isOpen}
-        toggleOpen={toggleOpen}
-        showSubmit
         handleSubmit={handleSubmit(onSubmit)}
+        isOpen={isOpen}
+        showSubmit
+        title='Dialog Title'
+        toggleOpen={toggleOpen}
         {...args}
       >
         <ControlTextBox
           control={control}
-          name='name'
           label='Name'
+          name='name'
           rules={{
             required: FORM_VALIDATIONS.REQUIRED
           }}
         />
         <ControlDatePicker
-          label='Birth Date'
           control={control}
-          name='birthDate'
           defaultValue={DateTime.now()}
+          label='Birth Date'
+          name='birthDate'
         />
       </FormWrapperDialog>
     </>

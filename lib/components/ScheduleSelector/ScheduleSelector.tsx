@@ -1,15 +1,18 @@
-import React, { useCallback, FC } from 'react'
+import type { FC } from 'react'
+import React, { useCallback } from 'react'
 import clsx from 'clsx'
-import {
-  PeriodicSelector,
-  HourlySelector,
-  DailySelector,
-  WeeklySelector,
-  MonthlySelector
-} from './components'
-import { ScheduleData } from './types'
-import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'
+
 import { EMPTY_STRING } from 'consts'
+
+import {
+  DailySelector,
+  HourlySelector,
+  MonthlySelector,
+  PeriodicSelector,
+  WeeklySelector
+} from './components'
+import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'
+import type { ScheduleData } from './types'
 
 interface ScheduleSelectorProps {
   type: string
@@ -42,37 +45,37 @@ const ScheduleSelector: FC<ScheduleSelectorProps> = ({
     >
       {type === SCHEDULER_TYPES.PERIODIC && (
         <PeriodicSelector
-          periodicData={scheduleData.periodic}
-          onChange={handleUpdate}
           isDisabled={isDisabled}
+          onChange={handleUpdate}
+          periodicData={scheduleData.periodic}
         />
       )}
       {type === SCHEDULER_TYPES.HOURLY && (
         <HourlySelector
           hourlyData={scheduleData.hourly}
-          onChange={handleUpdate}
           isDisabled={isDisabled}
+          onChange={handleUpdate}
         />
       )}
       {type === SCHEDULER_TYPES.DAILY && (
         <DailySelector
           dailyData={scheduleData.daily}
-          onChange={handleUpdate}
           isDisabled={isDisabled}
+          onChange={handleUpdate}
         />
       )}
       {type === SCHEDULER_TYPES.WEEKLY && (
         <WeeklySelector
-          weeklyData={scheduleData.weekly}
-          onChange={handleUpdate}
           isDisabled={isDisabled}
+          onChange={handleUpdate}
+          weeklyData={scheduleData.weekly}
         />
       )}
       {type === SCHEDULER_TYPES.MONTHLY && (
         <MonthlySelector
+          isDisabled={isDisabled}
           monthlyData={scheduleData.monthly}
           onChange={handleUpdate}
-          isDisabled={isDisabled}
         />
       )}
     </div>

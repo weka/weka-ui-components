@@ -1,16 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Dialog as MuiDialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
-  DialogActions
+  DialogTitle
 } from '@mui/material'
-import Button from '../Button'
-import Loader from '../Loader'
-import Info from '../Info'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from 'consts'
 import utils from 'utils'
+
+import Button from '../Button'
+import Info from '../Info'
+import Loader from '../Loader'
 
 import './formWrapperDialog.scss'
 
@@ -32,26 +34,25 @@ export interface FormDialogProps {
   showSubmit?: boolean
 }
 
-function FormWrapperDialog(props: FormDialogProps) {
+function FormWrapperDialog({
+  isOpen,
+  toggleOpen,
+  onCancel,
+  title = EMPTY_STRING,
+  info = EMPTY_STRING,
+  children,
+  handleSubmit,
+  handleValidate = null,
+  submitText = EMPTY_STRING,
+  dialogClass,
+  cancelText = EMPTY_STRING,
+  disabled = false,
+  showCancel = true,
+  showSubmit = true,
+  isLoading = false
+}: FormDialogProps) {
   const [isClickLoading, setClickLoading] = useState(false)
   const [isValidateClickLoading, setValidateClickLoading] = useState(false)
-  const {
-    isOpen,
-    toggleOpen,
-    onCancel,
-    title = EMPTY_STRING,
-    info = EMPTY_STRING,
-    children,
-    handleSubmit,
-    handleValidate = null,
-    submitText = EMPTY_STRING,
-    dialogClass,
-    cancelText = EMPTY_STRING,
-    disabled = false,
-    showCancel = true,
-    showSubmit = true,
-    isLoading = false
-  } = props
 
   const mounted = useRef(false)
   useEffect(() => {
@@ -69,8 +70,8 @@ function FormWrapperDialog(props: FormDialogProps) {
   return (
     isOpen && (
       <MuiDialog
-        open={isOpen}
         onClose={(_, reason) => utils.closeDialogOnEscape(reason, toggleOpen)}
+        open={isOpen}
         classes={{
           paper: clsx('dialog-wrapper', 'form-wrapper-dialog', dialogClass)
         }}
@@ -102,14 +103,18 @@ function FormWrapperDialog(props: FormDialogProps) {
             {isLoading ? <Loader /> : children}
           </DialogContent>
           <DialogActions classes={{ root: 'dialog-actions general-actions' }}>
-            {showCancel && (
-              <Button empty={showSubmit} onClick={handleCancel}>
+            {showCancel ? (
+              <Button
+                empty={showSubmit}
+                onClick={handleCancel}
+              >
                 {cancelText || 'Cancel'}
               </Button>
-            )}
-            {handleValidate && (
+            ) : null}
+            {handleValidate ? (
               <Button
                 empty
+                isLoading={isValidateClickLoading}
                 onClick={() => {
                   setValidateClickLoading(true)
                   handleValidate().finally(() => {
@@ -118,20 +123,19 @@ function FormWrapperDialog(props: FormDialogProps) {
                     }
                   })
                 }}
-                isLoading={isValidateClickLoading}
               >
                 Validate
               </Button>
-            )}
-            {showSubmit && (
+            ) : null}
+            {showSubmit ? (
               <Button
-                type='submit'
                 disable={isLoading || disabled}
                 isLoading={isClickLoading}
+                type='submit'
               >
                 {submitText || 'Save'}
               </Button>
-            )}
+            ) : null}
           </DialogActions>
         </form>
       </MuiDialog>

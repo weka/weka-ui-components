@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+
 import svgs from 'svgs'
+
 import Tooltip from '../../../Tooltip'
 
 import './scrollToTop.scss'
@@ -39,7 +41,10 @@ function ScrollToTop({ scrollElement }: ScrollToTopProps) {
   return (
     !isHidden && (
       <Tooltip data='Scroll to top'>
-        <TopArrow className='arrow-top-table' onClick={handleClick} />
+        <TopArrow
+          className='arrow-top-table'
+          onClick={handleClick}
+        />
       </Tooltip>
     )
   )

@@ -1,12 +1,15 @@
 import React from 'react'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import clsx from 'clsx'
-import { Control, Controller } from 'react-hook-form'
-import Tooltip from '../../Tooltip'
-import Select from '../../inputs/Select'
-import TextBox from '../../inputs/TextBox'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
 import svgs from 'svgs'
 import Utils from 'utils'
+
+import Select from '../../inputs/Select'
+import TextBox from '../../inputs/TextBox'
+import Tooltip from '../../Tooltip'
 
 import './controlInputs.scss'
 
@@ -35,25 +38,23 @@ interface ControlTextSelectBoxProps {
   wrapperClass?: string
 }
 
-function ControlTextSelectBox(props: ControlTextSelectBoxProps) {
-  const {
-    control,
-    name,
-    defaultValue = null,
-    rules = {},
-    label = EMPTY_STRING,
-    placeholder = {},
-    hideError = false,
-    textType = EMPTY_STRING,
-    options,
-    disabled = false,
-    selectPlaceholder = EMPTY_STRING,
-    wrapperClass = EMPTY_STRING,
-    onChange,
-    info = EMPTY_STRING,
-    allowDecimal = false
-  } = props
-
+function ControlTextSelectBox({
+  control,
+  name,
+  defaultValue = null,
+  rules = {},
+  label = EMPTY_STRING,
+  placeholder = {},
+  hideError = false,
+  textType = EMPTY_STRING,
+  options,
+  disabled = false,
+  selectPlaceholder = EMPTY_STRING,
+  wrapperClass = EMPTY_STRING,
+  onChange,
+  info = EMPTY_STRING,
+  allowDecimal = false
+}: ControlTextSelectBoxProps) {
   const formattedRules = { ...rules }
   if (rules.required) {
     const requiredFunc = (value) =>
@@ -79,11 +80,11 @@ function ControlTextSelectBox(props: ControlTextSelectBoxProps) {
   )
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={formattedRules}
-      defaultValue={{ textValue, selectValue }}
       control={control}
+      defaultValue={{ textValue, selectValue }}
+      isClearable
+      name={name}
+      rules={formattedRules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => {
         const classes = clsx({
@@ -98,9 +99,9 @@ function ControlTextSelectBox(props: ControlTextSelectBoxProps) {
           <div className={classes}>
             <span className='text-select-label field-1-label-content'>
               {label}
-              {isRequiredInRules && !disabled && (
+              {isRequiredInRules && !disabled ? (
                 <span className='required-star'>*</span>
-              )}
+              ) : null}
               {!!info && (
                 <Tooltip data={info}>
                   <Info />
@@ -108,6 +109,11 @@ function ControlTextSelectBox(props: ControlTextSelectBoxProps) {
               )}
             </span>
             <TextBox
+              allowDecimal={allowDecimal}
+              disabled={disabled}
+              placeholder={textPlaceholder}
+              type={textType}
+              value={field.value?.textValue}
               onChange={(newValue) => {
                 onChange?.(newValue)
                 field.onChange({
@@ -115,14 +121,12 @@ function ControlTextSelectBox(props: ControlTextSelectBoxProps) {
                   selectValue: field.value?.selectValue
                 })
               }}
-              value={field.value?.textValue}
-              placeholder={textPlaceholder}
-              type={textType}
-              allowDecimal={allowDecimal}
-              disabled={disabled}
             />
             <div className='spread-line' />
             <Select
+              disabled={disabled}
+              options={options}
+              value={field.value?.selectValue}
               onChange={(newValue) => {
                 onChange?.(newValue)
                 field.onChange({
@@ -130,9 +134,6 @@ function ControlTextSelectBox(props: ControlTextSelectBoxProps) {
                   textValue: field.value?.textValue
                 })
               }}
-              value={field.value?.selectValue}
-              options={options}
-              disabled={disabled}
             />
             {!!error && !hideError && (
               <span className='text-select-error capitalize-first-letter'>

@@ -35,17 +35,19 @@ const meta: Meta<typeof FlexBox> = {
 export default meta
 type Story = StoryObj<typeof FlexBox>
 
-const Box = ({ children }: { children: ReactNode }) => (
-  <div
-    style={{
-      padding: '16px',
-      backgroundColor: '#e0e0e0',
-      borderRadius: '4px'
-    }}
-  >
-    {children}
-  </div>
-)
+function Box({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        padding: '16px',
+        backgroundColor: '#e0e0e0',
+        borderRadius: '4px'
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export const Default: Story = {
   render: () => (
@@ -85,8 +87,8 @@ export const SpaceBetween: Story = {
 export const Centered: Story = {
   render: () => (
     <FlexBox
-      justify='center'
       align='center'
+      justify='center'
       style={{ height: '200px', border: '1px dashed #ccc' }}
     >
       <Box>Centered Content</Box>
@@ -97,9 +99,9 @@ export const Centered: Story = {
 export const WithWrap: Story = {
   render: () => (
     <FlexBox
-      wrap
       gap={8}
       style={{ width: '300px' }}
+      wrap
     >
       <Box>Item 1</Box>
       <Box>Item 2</Box>

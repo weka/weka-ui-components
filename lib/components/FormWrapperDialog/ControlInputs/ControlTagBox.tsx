@@ -1,7 +1,10 @@
 import React from 'react'
-import { Controller, Control } from 'react-hook-form'
-import TagsBox from '../../inputs/TagsBox'
+import type { Control } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
+
 import { FORM_VALIDATIONS } from 'consts'
+
+import TagsBox from '../../inputs/TagsBox'
 
 interface ControlTagsBoxProps {
   control: Control<Record<string, unknown>[]>
@@ -11,28 +14,33 @@ interface ControlTagsBoxProps {
   disabled?: boolean
 }
 
-function ControlTagsBox(props: ControlTagsBoxProps) {
-  const { control, name, defaultValue = [], rules = {}, ...rest } = props
+function ControlTagsBox({
+  control,
+  name,
+  defaultValue = [],
+  rules = {},
+  ...rest
+}: ControlTagsBoxProps) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
   )
   return (
     <Controller
-      name={name}
-      isClearable
-      rules={rules}
-      defaultValue={defaultValue}
       control={control}
+      defaultValue={defaultValue}
+      isClearable
+      name={name}
+      rules={rules}
       shouldUnregister
       render={({ field, fieldState: { error } }) => (
         <div className='field-container'>
           <TagsBox
             {...rest}
+            error={error?.message}
+            isRequired={isRequiredInRules ? !disabled : null}
             onChange={field.onChange}
             value={field.value}
-            error={error?.message}
-            isRequired={isRequiredInRules && !disabled}
           />
         </div>
       )}

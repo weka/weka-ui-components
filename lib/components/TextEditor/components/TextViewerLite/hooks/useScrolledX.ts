@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import Utils from 'utils'
 
 function useScrolledX({ element }: { element: HTMLDivElement | null }) {

@@ -1,13 +1,17 @@
-import React, { ReactNode, useRef } from 'react'
-import MenuPopper, { menuItem } from '../MenuPopper/MenuPopper'
-import { useToggle } from 'hooks'
-import clsx from 'clsx'
-import { EMPTY_STRING } from 'consts'
-import Info from '../Info'
-import svgs from 'svgs'
+import type { ReactNode } from 'react'
+import React, { useRef } from 'react'
 import { IconButton } from '@mui/material'
-import Tooltip from '../Tooltip'
+import clsx from 'clsx'
+
+import { EMPTY_STRING } from 'consts'
+import { useToggle } from 'hooks'
+import svgs from 'svgs'
+
+import Info from '../Info'
+import type { menuItem } from '../MenuPopper/MenuPopper'
+import MenuPopper from '../MenuPopper/MenuPopper'
 import SpanTooltip from '../SpanTooltip'
+import Tooltip from '../Tooltip'
 
 import './sideBlock.scss'
 
@@ -24,19 +28,19 @@ export interface SideBlockProps {
   info?: string
 }
 
-function SideBlock(props: SideBlockProps) {
+function SideBlock({
+  name,
+  onSelect,
+  description = EMPTY_STRING,
+  isSelected = false,
+  actions = [],
+  extraClass = EMPTY_STRING,
+  children,
+  info
+}: SideBlockProps) {
   const [isPopperOpen, togglePopper] = useToggle(false)
   const anchorRef = useRef<HTMLDivElement | null>(null)
-  const {
-    name,
-    onSelect,
-    description = EMPTY_STRING,
-    isSelected = false,
-    actions = [],
-    extraClass = EMPTY_STRING,
-    children,
-    info
-  } = props
+
   const shownActions = actions.filter((action) => !action.hideMenu)
   const hasActions = shownActions.length > 0
 
@@ -46,12 +50,12 @@ function SideBlock(props: SideBlockProps) {
     shownActions.length < 4
   return (
     <div
+      onClick={onSelect}
       className={clsx({
         [extraClass]: true,
         'side-block-wrapper': true,
         'side-block-wrapper-selected': isSelected
       })}
-      onClick={onSelect}
     >
       <div className='side-block-title'>
         <SpanTooltip
@@ -62,7 +66,7 @@ function SideBlock(props: SideBlockProps) {
         >
           {name}
         </SpanTooltip>
-        {info && <Info data={info} />}
+        {info ? <Info data={info} /> : null}
       </div>
       {children}
       <SpanTooltip
@@ -74,7 +78,10 @@ function SideBlock(props: SideBlockProps) {
       {showActionsAsIcons ? (
         <div className='side-block-actions'>
           {actions.map((action) => (
-            <Tooltip data={action.text} key={action.text}>
+            <Tooltip
+              key={action.text}
+              data={action.text}
+            >
               <div>
                 <IconButton
                   onClick={(e) => {
@@ -106,14 +113,14 @@ function SideBlock(props: SideBlockProps) {
           </IconButton>
         </div>
       ) : null}
-      {hasActions && !showActionsAsIcons && (
+      {hasActions && !showActionsAsIcons ? (
         <MenuPopper
-          open={isPopperOpen}
-          onClickAway={togglePopper}
-          items={actions as menuItem[]}
           anchorEl={anchorRef.current}
+          items={actions as menuItem[]}
+          onClickAway={togglePopper}
+          open={isPopperOpen}
         />
-      )}
+      ) : null}
     </div>
   )
 }

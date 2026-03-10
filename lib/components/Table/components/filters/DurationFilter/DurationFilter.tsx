@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import utils from 'utils'
-import { useToggle } from 'hooks'
+
 import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import FilterWrapper from '../../FilterWrapper'
+import { useToggle } from 'hooks'
+import utils from 'utils'
+
 import Button from '../../../../Button'
-import Tooltip from '../../../../Tooltip'
 import { TextField } from '../../../../inputs'
 import Select from '../../../../inputs/Select'
-import { ExtendedFilterProps } from '../../../types'
+import Tooltip from '../../../../Tooltip'
+import type { ExtendedFilterProps } from '../../../types'
+import FilterWrapper from '../../FilterWrapper'
 
 import './durationFilter.scss'
 
@@ -26,9 +28,8 @@ export interface DurationFilterValue {
 
 export const isDurationFilterValue = (
   obj: unknown
-): obj is { operator: string; duration: string } => {
-  return utils.isObject(obj) && ('operator' in obj || 'duration' in obj)
-}
+): obj is { operator: string; duration: string } =>
+  utils.isObject(obj) && ('operator' in obj || 'duration' in obj)
 
 function DurationFilter<Data>({
   column
@@ -71,16 +72,16 @@ function DurationFilter<Data>({
           <div>
             <div className='duration-filter-inputs'>
               <Select
+                options={operatorOptions}
                 value={operator}
                 onChange={(value) =>
                   setOperator(value as DurationFilterValue['operator'])
                 }
-                options={operatorOptions}
               />
               <TextField
+                label={EMPTY_STRING}
                 onChange={setDuration}
                 value={duration}
-                label={EMPTY_STRING}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === EVENT_KEYS.ENTER) {
                     handleFilterApply()
@@ -89,7 +90,10 @@ function DurationFilter<Data>({
               />
             </div>
             <div className='duration-filter-controller'>
-              <Button disable={!duration} onClick={handleFilterApply}>
+              <Button
+                disable={!duration}
+                onClick={handleFilterApply}
+              >
                 Filter
               </Button>
             </div>

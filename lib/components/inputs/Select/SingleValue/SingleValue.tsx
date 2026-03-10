@@ -1,5 +1,7 @@
 import React from 'react'
-import { components, SingleValueProps } from 'react-select'
+import type { SingleValueProps } from 'react-select'
+import { components } from 'react-select'
+
 import SpanTooltip from '../../../SpanTooltip'
 
 import './singleValue.scss'
@@ -20,8 +22,8 @@ function SingleValue(props: ValueProps) {
     <components.SingleValue {...props}>
       {icon}
       <SpanTooltip
-        extraClasses='react-select__single-value-label'
         additionalData={subLabel}
+        extraClasses='react-select__single-value-label'
       >
         {label}
       </SpanTooltip>

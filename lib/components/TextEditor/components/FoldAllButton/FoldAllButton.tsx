@@ -1,8 +1,9 @@
 import React from 'react'
 
-import { useTextEditorContext } from '../../context'
-import ExpandCollapseButton from '../../../ExpandCollapseButton'
 import { EMPTY_STRING } from 'consts'
+
+import ExpandCollapseButton from '../../../ExpandCollapseButton'
+import { useTextEditorContext } from '../../context'
 
 function FoldAllButton() {
   const {
@@ -23,9 +24,9 @@ function FoldAllButton() {
     <>
       {!hidden && (
         <ExpandCollapseButton
-          tooltip={disabled || EMPTY_STRING}
           disabled={!!disabled}
           shouldCollapse={!!foldAll}
+          tooltip={disabled || EMPTY_STRING}
           onChange={(newVal) =>
             setTextEditorContext((prev) => ({
               ...prev,

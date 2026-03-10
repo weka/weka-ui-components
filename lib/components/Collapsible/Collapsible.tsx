@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
-import { Info } from '../index'
+
 import { EMPTY_STRING } from 'consts'
 import svgs from 'svgs'
+
+import { Info } from '../index'
 
 import './collapsible.scss'
 
@@ -19,18 +21,17 @@ interface CollapsibleProps {
   expandOnHeaderClick?: boolean
 }
 
-function Collapsible(props: CollapsibleProps) {
-  const {
-    expanded,
-    children,
-    extraClass,
-    label,
-    info,
-    onToggle,
-    headerRightContent,
-    expandOnHeaderClick,
-    ...rest
-  } = props
+function Collapsible({
+  expanded,
+  children,
+  extraClass,
+  label,
+  info,
+  onToggle,
+  headerRightContent,
+  expandOnHeaderClick,
+  ...rest
+}: CollapsibleProps) {
   const [{ motion, height }, setState] = useState({
     motion: EMPTY_STRING,
     height: expanded ? 'auto' : 0
@@ -97,17 +98,20 @@ function Collapsible(props: CollapsibleProps) {
           onClick={!expandOnHeaderClick ? onToggle : undefined}
         >
           <ThinArrow className={clsx('arrow-icon', { collapsed: !expanded })} />
-          {label && (
+          {label ? (
             <div className='collapsible-label page-headline'>{label}</div>
-          )}
-          {info && <Info data={info} />}
+          ) : null}
+          {info ? <Info data={info} /> : null}
         </div>
-        {headerRightContent && (
+        {headerRightContent ? (
           <div className='collapsible-header-right'>{headerRightContent}</div>
-        )}
+        ) : null}
       </div>
       {!hasNoChildren && (
-        <div className='collapsible-content-wrapper' style={{ height }}>
+        <div
+          className='collapsible-content-wrapper'
+          style={{ height }}
+        >
           <div ref={contentRef}>{children}</div>
         </div>
       )}
