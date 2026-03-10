@@ -1,4 +1,4 @@
-name: Publish npm Package
+name: V2 Release
 
 on:
   push:
