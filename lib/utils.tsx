@@ -375,7 +375,9 @@ const utils = {
         const numPart = parseInt(part, 10)
         return valid && numPart >= 0 && numPart < 256
       }
-      return string.split('.').reduce<boolean>((acc, part) => isValid(acc, part), true)
+      return string
+        .split('.')
+        .reduce<boolean>((acc, part) => isValid(acc, part), true)
     }
     return false
   },
@@ -473,7 +475,12 @@ const utils = {
     ) {
       return 'Not Valid DateTime Object'
     }
-    return utils.formatISODate(dateIn.toISO() ?? '', showMili, showSeconds, showTime)
+    return utils.formatISODate(
+      dateIn.toISO() ?? '',
+      showMili,
+      showSeconds,
+      showTime
+    )
   },
   getRelativeTimeFromISODate: (date: string, showSeconds = false) => {
     const units: DurationUnits = ['years', 'months', 'days', 'hours', 'minutes']
