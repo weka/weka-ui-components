@@ -27,13 +27,9 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Install Yarn 4.6
-        run: corepack enable && corepack prepare yarn@4.6.0 --activate
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
 
       - run: |
           git config --global user.name 'github-actions'
