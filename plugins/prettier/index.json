@@ -9,9 +9,23 @@
   "singleAttributePerLine": true,
   "overrides": [
     {
-      "files": ["*.js", "*.jsx", "*.ts", "*.tsx", "*.json", "**/*.test.*"],
+      "files": [
+        "*.js",
+        "*.jsx",
+        "*.ts",
+        "*.tsx",
+        "**/*.test.*"
+      ],
       "options": {
         "printWidth": 80
+      }
+    },
+    {
+      "files": [
+        "*.json"
+      ],
+      "options": {
+        "printWidth": 1
       }
     }
   ]

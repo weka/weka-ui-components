@@ -67,6 +67,7 @@ export const eslintConfig = tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      'no-trailing-spaces': 'error',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true }
