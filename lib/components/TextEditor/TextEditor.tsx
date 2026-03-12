@@ -12,10 +12,9 @@ import {
   TextEditorFull,
   TextViewerLite
 } from './components'
+import { DEFAULT_FONT_SIZE } from './consts'
 import { TextEditorProvider, useTextEditorContext } from './context'
 import { useLinesCount, useTags } from './hooks'
-
-export const DEFAULT_FONT_SIZE = 16
 
 interface TextEditorProps {
   onChange?: () => void

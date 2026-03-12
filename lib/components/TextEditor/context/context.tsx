@@ -1,8 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import React, { createContext, useContext, useMemo, useState } from 'react'
 
-import { FONT_SIZE_STORAGE_KEY } from '../components/FontSizeControls/FontSizeControls'
-import { DEFAULT_FONT_SIZE } from '../TextEditor'
+import { DEFAULT_FONT_SIZE, FONT_SIZE_STORAGE_KEY } from '../consts'
 
 type TextEditorContextValue = {
   mode?: 'json' | 'text'

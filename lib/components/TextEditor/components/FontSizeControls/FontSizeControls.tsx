@@ -5,8 +5,8 @@ import { IconButton } from '@mui/material'
 import svgs from 'svgs'
 
 import Tooltip from '../../../Tooltip/Tooltip'
+import { DEFAULT_FONT_SIZE, FONT_SIZE_STORAGE_KEY } from '../../consts'
 import { useTextEditorContext } from '../../context'
-import { DEFAULT_FONT_SIZE } from '../../TextEditor'
 
 import './fontSizeControls.scss'
 
@@ -15,8 +15,6 @@ const { FontSizeEnlarge, FontSizeReduce } = svgs
 const MIN_FONT_SIZE = 10
 const MAX_FONT_SIZE = 30
 const FONT_SIZE_STEP = 2
-
-export const FONT_SIZE_STORAGE_KEY = 'text-editor-font-size'
 
 function FontSizeControls() {
   const { setTextEditorContext } = useTextEditorContext('FontSizeControls')
