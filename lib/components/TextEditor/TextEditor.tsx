@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useHideContent } from './components/TextEditorFull/hooks'
-import type { ParsedData } from './components'
+import type { ExternalSearchNavigation, ParsedData } from './components'
 import {
   FoldAllButton,
   FontSizeControls,
@@ -46,6 +46,10 @@ interface TextEditorProps {
    * Whether the external search term should be treated as regex
    */
   externalSearchIsRegex?: boolean
+  /**
+   * Navigation target for external search - positions editor on a specific match
+   */
+  externalSearchNavigation?: ExternalSearchNavigation
 }
 
 function TextEditor(props: TextEditorProps) {
