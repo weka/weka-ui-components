@@ -96,18 +96,13 @@ To test changes in a parent project without publishing:
    ```
    Then `yarn install` again.
 
-### Publishing a New Version
+### Publishing
 
-See [VERSIONING.md](./VERSIONING.md) for full details.
+Releases happen **automatically** when a PR is merged to `main`. See [VERSIONING.md](./VERSIONING.md) for full details.
 
-**Quick reference:**
-
-```bash
-yarn release:patch    # Bug fixes: 4.0.0 → 4.0.1
-yarn release:minor    # New features: 4.0.1 → 4.1.0
-yarn release:major    # Breaking changes: 4.1.0 → 5.0.0
-yarn release:beta     # Beta: 4.0.0-beta.1 → 4.0.0-beta.2
-```
+- **Minor bump** (default): merge a PR → auto-release creates the next minor version (e.g., `4.1.0` → `4.2.0`)
+- **Patch bump**: add the `patch` label to your PR before merging (e.g., `4.2.0` → `4.2.1`)
+- **Major bump**: manual — create and push a v-prefixed tag (e.g., `git tag v5.0.0 && git push origin v5.0.0`)
 
 ### Publishing a Beta Version
 
@@ -182,8 +177,8 @@ Same as 403 - authentication issue. Check token and SSO authorization.
 | Update to latest   | `yarn up @weka/weka-ui-components`             |
 | Link for local dev | Use `portal:` in package.json (see above)      |
 | Unlink             | Revert package.json to version, `yarn install` |
-| Release patch      | `yarn release:patch`                           |
-| Release minor      | `yarn release:minor`                           |
-| Release major      | `yarn release:major`                           |
+| Release (auto)     | Merge PR to `main` (minor by default)          |
+| Release patch      | Add `patch` label to PR, then merge            |
+| Release major      | `git tag v5.0.0 && git push origin v5.0.0`    |
 | Release beta       | `yarn release:beta`                            |
 | Check token        | `echo $WEKA_COMPONENTS_NPM_TOKEN`              |
