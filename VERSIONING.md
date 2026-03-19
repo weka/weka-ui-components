@@ -39,37 +39,26 @@ This package uses [Semantic Versioning](https://semver.org/) and is published to
 
 ---
 
-## How to Publish
+## Automatic Publishing
 
-### One Command (Recommended)
+Releases happen **automatically** when a PR is merged to `main`:
 
-```bash
-# For bug fixes
-yarn release:patch    # 4.0.0 → 4.0.1
+1. The `auto-release` workflow detects the merge
+2. It checks the PR labels to determine the bump type
+3. It bumps the version, commits, and creates a v-prefixed tag
+4. The tag triggers `v2-release` → builds, tests, and publishes to GitHub Packages
 
-# For new features
-yarn release:minor    # 4.0.1 → 4.1.0
+### Bump types
 
-# For breaking changes
-yarn release:major    # 4.1.0 → 5.0.0
-```
-
-That's it! The command will:
-
-1. Bump the version in package.json
-2. Create a git commit and tag
-3. Push to GitHub
-
-Then GitHub Actions automatically:
-
-- Builds the package
-- Runs tests
-- Publishes to GitHub Packages
-- Creates a GitHub Release with auto-generated notes
+| Bump type | How to trigger                                          | Example             |
+| --------- | ------------------------------------------------------- | ------------------- |
+| **Minor** | Merge a PR (default)                                    | `4.1.0` → `4.2.0`  |
+| **Patch** | Add the `patch` label to the PR before merging          | `4.2.0` → `4.2.1`  |
+| **Major** | Manual: `git tag v5.0.0 && git push origin v5.0.0`     | `4.9.0` → `5.0.0`  |
 
 ### Pre-release (beta)
 
-While v2 is in development, use beta releases for testing in parent repos:
+For testing in parent repos before an official release:
 
 ```bash
 yarn release:beta    # 4.0.0-beta.2 → 4.0.0-beta.3

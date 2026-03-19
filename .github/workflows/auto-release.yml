@@ -1,0 +1,118 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: release
+
+jobs:
+  publish:
+    if: github.actor != 'weka-version-bumper[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: 919414
+          private-key: ${{ secrets.WEKA_VERSION_BUMPER_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@users.noreply.github.com'
+
+      - run: git checkout main
+
+      - name: Find latest stable v-prefixed tag
+        id: latest_tag
+        run: |
+          LATEST_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | grep -vE '-(beta|alpha|rc)' | head -1)
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No stable v-prefixed tag found. Exiting gracefully."
+            echo "found=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "Latest stable tag: $LATEST_TAG"
+          echo "found=true" >> $GITHUB_OUTPUT
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Determine bump type from PR labels
+        if: steps.latest_tag.outputs.found == 'true'
+        id: bump
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # Find the merged PR for this commit
+          COMMIT_SHA="${{ github.sha }}"
+          PR_NUMBER=$(gh pr list --search "$COMMIT_SHA" --state merged --json number --jq '.[0].number')
+
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No merged PR found for commit $COMMIT_SHA. Defaulting to minor bump."
+            echo "type=minor" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Found merged PR #$PR_NUMBER"
+
+          # Check for patch label
+          HAS_PATCH=$(gh pr view "$PR_NUMBER" --json labels --jq '.labels[].name' | grep -c '^patch$' || true)
+
+          if [ "$HAS_PATCH" -gt 0 ]; then
+            echo "PR has 'patch' label → patch bump"
+            echo "type=patch" >> $GITHUB_OUTPUT
+          else
+            echo "No 'patch' label → minor bump"
+            echo "type=minor" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Compute next version
+        if: steps.latest_tag.outputs.found == 'true'
+        id: next_version
+        run: |
+          LATEST_TAG="${{ steps.latest_tag.outputs.tag }}"
+          BUMP_TYPE="${{ steps.bump.outputs.type }}"
+
+          # Strip v prefix
+          VERSION="${LATEST_TAG#v}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+
+          if [ "$BUMP_TYPE" = "patch" ]; then
+            NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          else
+            NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+          fi
+
+          echo "Bumping $BUMP_TYPE: $VERSION → $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update package.json version
+        if: steps.latest_tag.outputs.found == 'true'
+        run: npm version ${{ steps.next_version.outputs.version }} --no-git-tag-version --allow-same-version
+
+      - name: Commit and tag
+        if: steps.latest_tag.outputs.found == 'true'
+        run: |
+          git add package.json
+          git commit -m 'publish v${{ steps.next_version.outputs.version }}'
+          git tag 'v${{ steps.next_version.outputs.version }}'
+
+      - name: Push commit and tag
+        if: steps.latest_tag.outputs.found == 'true'
+        run: |
+          git push origin main
+          git push origin tag 'v${{ steps.next_version.outputs.version }}'
