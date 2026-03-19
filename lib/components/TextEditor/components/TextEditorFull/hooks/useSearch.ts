@@ -3,10 +3,8 @@ import type { IAceEditor } from 'react-ace/lib/types'
 
 import { EMPTY_STRING } from 'consts'
 
-export interface ExternalSearchNavigation {
-  row: number
-  columnStart: number
-  columnEnd: number
+export interface ExternalSearchAction {
+  type: 'next' | 'prev' | 'first' | 'last'
   key: number
 }
 
@@ -17,7 +15,8 @@ function useSearch({
   value,
   externalSearchTerm,
   externalSearchIsRegex = false,
-  externalSearchNavigation
+  externalSearchAction,
+  onSearchBoundary
 }: {
   allowSearch: boolean
   editorReady: boolean
@@ -25,7 +24,8 @@ function useSearch({
   value: string
   externalSearchTerm?: string
   externalSearchIsRegex?: boolean
-  externalSearchNavigation?: ExternalSearchNavigation
+  externalSearchAction?: ExternalSearchAction
+  onSearchBoundary?: (direction: 'next' | 'prev') => void
 }) {
   const [searchValue, setSearchValueState] = useState(EMPTY_STRING)
 
@@ -86,34 +86,76 @@ function useSearch({
     }
   }, [externalSearchTerm, externalSearchIsRegex, editor, editorReady, value])
 
-  const lastNavigationKeyRef = useRef(-1)
+  const lastActionKeyRef = useRef(-1)
+  const onSearchBoundaryRef = useRef(onSearchBoundary)
+  onSearchBoundaryRef.current = onSearchBoundary
 
   useEffect(() => {
     if (
-      !externalSearchNavigation ||
+      !externalSearchAction ||
       !editor ||
       !editorReady ||
-      lastNavigationKeyRef.current === externalSearchNavigation.key
+      !externalSearchTerm ||
+      lastActionKeyRef.current === externalSearchAction.key
     ) {
       return
     }
 
     const timeoutId = setTimeout(() => {
-      lastNavigationKeyRef.current = externalSearchNavigation.key
+      lastActionKeyRef.current = externalSearchAction.key
 
-      const Range = (window as any).ace.require('ace/range').Range
-      const range = new Range(
-        externalSearchNavigation.row,
-        externalSearchNavigation.columnStart,
-        externalSearchNavigation.row,
-        externalSearchNavigation.columnEnd
-      )
-      editor.selection.setRange(range)
-      editor.scrollToLine(externalSearchNavigation.row, true, true, () => {})
+      const findOptions = {
+        wrap: false,
+        regExp: externalSearchIsRegex,
+        caseSensitive: false,
+        wholeWord: false
+      }
+
+      if (externalSearchAction.type === 'next') {
+        const range = editor.find(externalSearchTerm, {
+          ...findOptions,
+          skipCurrent: true,
+          backwards: false
+        })
+        if (!range) {
+          onSearchBoundaryRef.current?.('next')
+        }
+      } else if (externalSearchAction.type === 'prev') {
+        const range = editor.find(externalSearchTerm, {
+          ...findOptions,
+          skipCurrent: true,
+          backwards: true
+        })
+        if (!range) {
+          onSearchBoundaryRef.current?.('prev')
+        }
+      } else if (externalSearchAction.type === 'first') {
+        editor.gotoLine(1, 0, false)
+        editor.find(externalSearchTerm, {
+          ...findOptions,
+          skipCurrent: false,
+          backwards: false
+        })
+      } else if (externalSearchAction.type === 'last') {
+        const lastLine = editor.session.getLength()
+        editor.gotoLine(lastLine, Infinity, false)
+        editor.find(externalSearchTerm, {
+          ...findOptions,
+          skipCurrent: false,
+          backwards: true
+        })
+      }
     }, 150)
 
     return () => clearTimeout(timeoutId)
-  }, [externalSearchNavigation, editor, editorReady, value])
+  }, [
+    externalSearchAction,
+    externalSearchTerm,
+    externalSearchIsRegex,
+    editor,
+    editorReady,
+    value
+  ])
 
   return searchValue
 }

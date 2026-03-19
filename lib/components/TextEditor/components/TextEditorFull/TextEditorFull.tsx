@@ -20,7 +20,7 @@ import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
 
-import type { ExternalSearchNavigation, ParsedData } from './hooks'
+import type { ExternalSearchAction, ParsedData } from './hooks'
 import {
   useDisableSyntaxCheck,
   useEditor,
@@ -82,7 +82,8 @@ export interface TextEditorFullProps {
   editorOptions?: Record<string, unknown>
   externalSearchTerm?: string
   externalSearchIsRegex?: boolean
-  externalSearchNavigation?: ExternalSearchNavigation
+  externalSearchAction?: ExternalSearchAction
+  onSearchBoundary?: (direction: 'next' | 'prev') => void
 }
 function TextEditorFull(props: TextEditorFullProps) {
   const {
@@ -106,7 +107,8 @@ function TextEditorFull(props: TextEditorFullProps) {
     editorOptions = {},
     externalSearchTerm,
     externalSearchIsRegex = false,
-    externalSearchNavigation,
+    externalSearchAction,
+    onSearchBoundary,
     ...rest
   } = props
 
@@ -155,7 +157,8 @@ function TextEditorFull(props: TextEditorFullProps) {
     value: options.value,
     externalSearchTerm,
     externalSearchIsRegex,
-    externalSearchNavigation
+    externalSearchAction,
+    onSearchBoundary
   })
 
   const jsonValue = useOnlyMatching({

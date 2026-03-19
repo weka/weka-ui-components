@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useHideContent } from './components/TextEditorFull/hooks'
-import type { ExternalSearchNavigation, ParsedData } from './components'
+import type { ExternalSearchAction, ParsedData } from './components'
 import {
   FoldAllButton,
   FontSizeControls,
@@ -47,9 +47,13 @@ interface TextEditorProps {
    */
   externalSearchIsRegex?: boolean
   /**
-   * Navigation target for external search - positions editor on a specific match
+   * Action to perform in Ace's native search (next/prev/first/last)
    */
-  externalSearchNavigation?: ExternalSearchNavigation
+  externalSearchAction?: ExternalSearchAction
+  /**
+   * Called when Ace's find reaches the boundary (no more matches in direction)
+   */
+  onSearchBoundary?: (direction: 'next' | 'prev') => void
 }
 
 function TextEditor(props: TextEditorProps) {
