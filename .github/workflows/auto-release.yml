@@ -41,7 +41,7 @@ jobs:
       - name: Find latest stable v-prefixed tag
         id: latest_tag
         run: |
-          LATEST_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | grep -vE '-(beta|alpha|rc)' | head -1)
+          LATEST_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | grep -v -e '-beta' -e '-alpha' -e '-rc' | head -1)
           if [ -z "$LATEST_TAG" ]; then
             echo "No stable v-prefixed tag found. Exiting gracefully."
             echo "found=false" >> $GITHUB_OUTPUT
