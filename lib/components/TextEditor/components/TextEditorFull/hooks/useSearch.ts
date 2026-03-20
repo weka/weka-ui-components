@@ -132,15 +132,16 @@ function useSearch({
       }
 
       const readCounter = () => {
-        const hasSearchBox = !!editor.searchBox
-        const hasUpdateCounter = typeof editor.searchBox?.$updateCounter === 'function'
-        const textBefore = editor.searchBox?.searchCounter?.textContent || ''
-        editor.searchBox?.$updateCounter?.()
-        const textAfter = editor.searchBox?.searchCounter?.textContent || ''
+        const searchBox = editor.searchBox
+        if (!searchBox) {
+          return
+        }
+        searchBox.$syncOptions()
+        const text = searchBox.searchCounter?.textContent || ''
         // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/d5aca3e1-3175-4dd3-9221-ccbe94b4f062',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'164f9d'},body:JSON.stringify({sessionId:'164f9d',location:'useSearch.ts:readCounter',message:'readCounter in action effect',data:{hasSearchBox,hasUpdateCounter,textBefore,textAfter},timestamp:Date.now(),hypothesisId:'H6'})}).catch(()=>{})
+        fetch('http://127.0.0.1:7242/ingest/d5aca3e1-3175-4dd3-9221-ccbe94b4f062',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'164f9d'},body:JSON.stringify({sessionId:'164f9d',location:'useSearch.ts:readCounter',message:'readCounter after $syncOptions',data:{text},timestamp:Date.now(),hypothesisId:'H7'})}).catch(()=>{})
         // #endregion
-        const m = textAfter.match(/^(\d+)\s+of\s+(\d+)/)
+        const m = text.match(/^(\d+)\s+of\s+(\d+)/)
         if (m) {
           onSearchCounterUpdateRef.current?.(
             parseInt(m[1], 10),
