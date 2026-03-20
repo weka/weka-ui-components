@@ -81,9 +81,6 @@ function useSearch({
           searchBox.$syncOptions()
 
           const text = searchBox.searchCounter?.textContent || ''
-          // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/d5aca3e1-3175-4dd3-9221-ccbe94b4f062',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'164f9d'},body:JSON.stringify({sessionId:'164f9d',location:'useSearch.ts:syncCounter',message:'Counter after $syncOptions',data:{text,hasCallback:!!onSearchCounterUpdateRef.current},timestamp:Date.now(),hypothesisId:'H2_H5'})}).catch(()=>{})
-          // #endregion
           const m = text.match(/^(\d+)\s+of\s+(\d+)/)
           if (m) {
             onSearchCounterUpdateRef.current?.(
@@ -138,9 +135,6 @@ function useSearch({
         }
         searchBox.$syncOptions()
         const text = searchBox.searchCounter?.textContent || ''
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/d5aca3e1-3175-4dd3-9221-ccbe94b4f062',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'164f9d'},body:JSON.stringify({sessionId:'164f9d',location:'useSearch.ts:readCounter',message:'readCounter after $syncOptions',data:{text},timestamp:Date.now(),hypothesisId:'H7'})}).catch(()=>{})
-        // #endregion
         const m = text.match(/^(\d+)\s+of\s+(\d+)/)
         if (m) {
           onSearchCounterUpdateRef.current?.(
