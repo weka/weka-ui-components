@@ -54,6 +54,10 @@ interface TextEditorProps {
    * Called when Ace's find reaches the boundary (no more matches in direction)
    */
   onSearchBoundary?: (direction: 'next' | 'prev') => void
+  /**
+   * Called with the current local match position and chunk total after each find action
+   */
+  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }
 
 function TextEditor(props: TextEditorProps) {

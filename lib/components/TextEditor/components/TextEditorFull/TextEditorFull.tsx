@@ -84,6 +84,7 @@ export interface TextEditorFullProps {
   externalSearchIsRegex?: boolean
   externalSearchAction?: ExternalSearchAction
   onSearchBoundary?: (direction: 'next' | 'prev') => void
+  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }
 function TextEditorFull(props: TextEditorFullProps) {
   const {
@@ -109,6 +110,7 @@ function TextEditorFull(props: TextEditorFullProps) {
     externalSearchIsRegex = false,
     externalSearchAction,
     onSearchBoundary,
+    onSearchCounterUpdate,
     ...rest
   } = props
 
@@ -158,7 +160,8 @@ function TextEditorFull(props: TextEditorFullProps) {
     externalSearchTerm,
     externalSearchIsRegex,
     externalSearchAction,
-    onSearchBoundary
+    onSearchBoundary,
+    onSearchCounterUpdate
   })
 
   const jsonValue = useOnlyMatching({

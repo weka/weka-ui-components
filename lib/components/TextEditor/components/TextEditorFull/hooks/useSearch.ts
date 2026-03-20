@@ -16,7 +16,8 @@ function useSearch({
   externalSearchTerm,
   externalSearchIsRegex = false,
   externalSearchAction,
-  onSearchBoundary
+  onSearchBoundary,
+  onSearchCounterUpdate
 }: {
   allowSearch: boolean
   editorReady: boolean
@@ -26,6 +27,7 @@ function useSearch({
   externalSearchIsRegex?: boolean
   externalSearchAction?: ExternalSearchAction
   onSearchBoundary?: (direction: 'next' | 'prev') => void
+  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }) {
   const [searchValue, setSearchValueState] = useState(EMPTY_STRING)
 
@@ -68,12 +70,27 @@ function useSearch({
   useEffect(() => {
     if (externalSearchTerm && editor && editorReady) {
       const timeoutId = setTimeout(() => {
-        editor.execCommand('find')
+        if (!editor.searchBox) {
+          editor.execCommand('find')
+          editor.searchBox?.searchInput?.blur()
+        }
         const searchBox = editor.searchBox
         if (searchBox) {
           searchBox.searchInput.value = externalSearchTerm
           searchBox.regExpOption.checked = externalSearchIsRegex
           searchBox.$syncOptions()
+
+          const text = searchBox.searchCounter?.textContent || ''
+          // #region agent log
+          fetch('http://127.0.0.1:7242/ingest/d5aca3e1-3175-4dd3-9221-ccbe94b4f062',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'164f9d'},body:JSON.stringify({sessionId:'164f9d',location:'useSearch.ts:syncCounter',message:'Counter after $syncOptions',data:{text,hasCallback:!!onSearchCounterUpdateRef.current},timestamp:Date.now(),hypothesisId:'H2_H5'})}).catch(()=>{})
+          // #endregion
+          const m = text.match(/^(\d+)\s+of\s+(\d+)/)
+          if (m) {
+            onSearchCounterUpdateRef.current?.(
+              parseInt(m[1], 10),
+              parseInt(m[2], 10)
+            )
+          }
         }
       }, 50)
       return () => clearTimeout(timeoutId)
@@ -83,12 +100,15 @@ function useSearch({
         searchBox.searchInput.value = EMPTY_STRING
         searchBox.$syncOptions()
       }
+      onSearchCounterUpdateRef.current?.(0, 0)
     }
   }, [externalSearchTerm, externalSearchIsRegex, editor, editorReady, value])
 
   const lastActionKeyRef = useRef(-1)
   const onSearchBoundaryRef = useRef(onSearchBoundary)
   onSearchBoundaryRef.current = onSearchBoundary
+  const onSearchCounterUpdateRef = useRef(onSearchCounterUpdate)
+  onSearchCounterUpdateRef.current = onSearchCounterUpdate
 
   useEffect(() => {
     if (
@@ -111,6 +131,24 @@ function useSearch({
         wholeWord: false
       }
 
+      const readCounter = () => {
+        const hasSearchBox = !!editor.searchBox
+        const hasUpdateCounter = typeof editor.searchBox?.$updateCounter === 'function'
+        const textBefore = editor.searchBox?.searchCounter?.textContent || ''
+        editor.searchBox?.$updateCounter?.()
+        const textAfter = editor.searchBox?.searchCounter?.textContent || ''
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/d5aca3e1-3175-4dd3-9221-ccbe94b4f062',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'164f9d'},body:JSON.stringify({sessionId:'164f9d',location:'useSearch.ts:readCounter',message:'readCounter in action effect',data:{hasSearchBox,hasUpdateCounter,textBefore,textAfter},timestamp:Date.now(),hypothesisId:'H6'})}).catch(()=>{})
+        // #endregion
+        const m = textAfter.match(/^(\d+)\s+of\s+(\d+)/)
+        if (m) {
+          onSearchCounterUpdateRef.current?.(
+            parseInt(m[1], 10),
+            parseInt(m[2], 10)
+          )
+        }
+      }
+
       if (externalSearchAction.type === 'next') {
         const range = editor.find(externalSearchTerm, {
           ...findOptions,
@@ -119,6 +157,8 @@ function useSearch({
         })
         if (!range) {
           onSearchBoundaryRef.current?.('next')
+        } else {
+          readCounter()
         }
       } else if (externalSearchAction.type === 'prev') {
         const range = editor.find(externalSearchTerm, {
@@ -128,6 +168,8 @@ function useSearch({
         })
         if (!range) {
           onSearchBoundaryRef.current?.('prev')
+        } else {
+          readCounter()
         }
       } else if (externalSearchAction.type === 'first') {
         editor.gotoLine(1, 0, false)
@@ -136,6 +178,7 @@ function useSearch({
           skipCurrent: false,
           backwards: false
         })
+        readCounter()
       } else if (externalSearchAction.type === 'last') {
         const lastLine = editor.session.getLength()
         editor.gotoLine(lastLine, Infinity, false)
@@ -144,6 +187,7 @@ function useSearch({
           skipCurrent: false,
           backwards: true
         })
+        readCounter()
       }
     }, 150)
 
