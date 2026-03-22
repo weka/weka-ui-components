@@ -6518,7 +6518,6 @@ __metadata:
     luxon: ^3.7.2
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-hook-form: ^7.71.2
     react-router-dom: ^6.6.2 || ^7.0.0
   languageName: unknown
   linkType: soft

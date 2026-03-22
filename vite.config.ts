@@ -31,7 +31,6 @@ export default defineConfig({
         'react',
         'react/jsx-runtime',
         'react-dom',
-        'react-hook-form',
         'react-router-dom',
         '@emotion/react',
         '@emotion/styled',
