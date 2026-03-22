@@ -33,8 +33,6 @@ export default defineConfig({
         'react-dom',
         'react-hook-form',
         'react-router-dom',
-        'react-select',
-        'react-select/creatable',
         '@emotion/react',
         '@emotion/styled',
         '@mui/material',
