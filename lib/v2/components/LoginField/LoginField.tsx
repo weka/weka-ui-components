@@ -3,9 +3,17 @@ import clsx from 'clsx'
 
 import styles from './loginField.module.scss'
 
+export const LOGIN_FIELD_TYPES = {
+  TEXT: 'text',
+  PASSWORD: 'password'
+} as const
+
+export type LoginFieldType =
+  (typeof LOGIN_FIELD_TYPES)[keyof typeof LOGIN_FIELD_TYPES]
+
 export interface LoginFieldProps {
   label: string
-  type?: 'text' | 'password'
+  type?: LoginFieldType
   value: string
   onChange: (value: string) => void
   error?: string
@@ -17,7 +25,7 @@ export interface LoginFieldProps {
 
 export function LoginField({
   label,
-  type = 'text',
+  type = LOGIN_FIELD_TYPES.TEXT,
   value,
   onChange,
   error,

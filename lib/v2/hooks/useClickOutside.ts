@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { useEffect } from 'react'
 
-import { EMPTY_REF_ARRAY, EMPTY_STRING_ARRAY } from '../utils/consts'
+import { DOM_EVENTS, EMPTY_REF_ARRAY, EMPTY_STRING_ARRAY } from '../utils/consts'
 
 interface UseClickOutsideOptions {
   additionalRefs?: RefObject<HTMLElement>[]
@@ -124,10 +124,10 @@ export const useClickOutside = (
       handler()
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside)
     }
   }, [
     ref,

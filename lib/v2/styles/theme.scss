@@ -152,6 +152,9 @@
   // Scrollbar
   --scrollbar-thumb: #{$gray-400};
 
+  // Popup
+  --popup-shadow: rgb(0 0 0 / 15%);
+
   // Backward Compatibility
   --background-primary: #{$gray-0};
   --background-secondary: #{$gray-50};
@@ -316,6 +319,9 @@
 
   // Scrollbar
   --scrollbar-thumb: #{$gray-600};
+
+  // Popup
+  --popup-shadow: rgb(0 0 0 / 70%);
 
   // Backward Compatibility
   --background-primary: #{$gray-1000};
