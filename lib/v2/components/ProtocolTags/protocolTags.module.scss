@@ -1,0 +1,43 @@
+@use '../../styles/colors' as *;
+
+.protocols {
+  display: flex;
+  gap: 4px;
+}
+
+.protocol {
+  width: 40px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 700;
+  font-family: var(--bold-font);
+  color: #{$gray-0};
+  box-sizing: border-box;
+}
+
+.protocolSmall {
+  font-size: 12px;
+}
+
+.protocolLarge {
+  font-size: 14px;
+}
+
+.protocolSmb {
+  background: linear-gradient(0deg, $cyan-500 0%, $cyan-300 100%);
+}
+
+.protocolNfs {
+  background: linear-gradient(0deg, $fuchsia-500 0%, $fuchsia-300 100%);
+}
+
+.protocolS3 {
+  background: linear-gradient(0deg, $peach-600 0%, $peach-400 100%);
+}
+
+.protocolTier {
+  background: linear-gradient(0deg, $purple-500 0%, $purple-300 100%);
+}

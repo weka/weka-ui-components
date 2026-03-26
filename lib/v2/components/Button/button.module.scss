@@ -1,0 +1,59 @@
+@use '../../styles/colors' as *;
+
+.button {
+  height: 28px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'IBMPlexSans', sans-serif;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  flex: 1;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  svg {
+    path {
+      fill: white;
+    }
+  }
+}
+
+.isRounded {
+  border-radius: 17px;
+  height: 33px;
+}
+
+.hasIcon {
+  gap: 2px;
+}
+
+.primary {
+  background: linear-gradient(0deg, $purple-600 0%, $purple-400 100%);
+  color: white;
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+}
+
+.secondary {
+  background: linear-gradient(0deg, $gray-300 0%, $gray-100 100%);
+  color: var(--gray-920);
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+}

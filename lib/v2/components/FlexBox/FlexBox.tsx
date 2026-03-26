@@ -2,20 +2,41 @@ import type { CSSProperties, ReactNode } from 'react'
 
 import { EMPTY_OBJECT, EMPTY_STRING } from '../../utils/consts'
 
-type JustifyContentValue =
-  | 'flex-start'
-  | 'center'
-  | 'flex-end'
-  | 'space-between'
-  | 'space-around'
-  | 'space-evenly'
+export const FLEX_DIRECTIONS = {
+  ROW: 'row',
+  COLUMN: 'column'
+} as const
+
+export type FlexDirection =
+  (typeof FLEX_DIRECTIONS)[keyof typeof FLEX_DIRECTIONS]
+
+export const FLEX_ALIGNS = {
+  FLEX_START: 'flex-start',
+  CENTER: 'center',
+  FLEX_END: 'flex-end',
+  STRETCH: 'stretch'
+} as const
+
+export type FlexAlign = (typeof FLEX_ALIGNS)[keyof typeof FLEX_ALIGNS]
+
+export const FLEX_JUSTIFIES = {
+  FLEX_START: 'flex-start',
+  CENTER: 'center',
+  FLEX_END: 'flex-end',
+  SPACE_BETWEEN: 'space-between',
+  SPACE_AROUND: 'space-around',
+  SPACE_EVENLY: 'space-evenly'
+} as const
+
+export type FlexJustify =
+  (typeof FLEX_JUSTIFIES)[keyof typeof FLEX_JUSTIFIES]
 
 export interface FlexBoxProps {
   children: ReactNode
-  direction?: 'row' | 'column'
+  direction?: FlexDirection
   gap?: number | string
-  align?: 'flex-start' | 'center' | 'flex-end' | 'stretch'
-  justify?: JustifyContentValue
+  align?: FlexAlign
+  justify?: FlexJustify
   wrap?: boolean
   extraClass?: string
   style?: CSSProperties
@@ -23,10 +44,10 @@ export interface FlexBoxProps {
 
 export function FlexBox({
   children,
-  direction = 'row',
+  direction = FLEX_DIRECTIONS.ROW,
   gap,
-  align = 'center',
-  justify = 'flex-start',
+  align = FLEX_ALIGNS.CENTER,
+  justify = FLEX_JUSTIFIES.FLEX_START,
   wrap = false,
   extraClass = EMPTY_STRING,
   style = EMPTY_OBJECT
