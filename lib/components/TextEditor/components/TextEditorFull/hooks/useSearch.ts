@@ -132,7 +132,15 @@ function useSearch({
       }
       onSearchCounterUpdateRef.current?.(0, 0)
     }
-  }, [externalSearchTerm, externalSearchIsRegex, editor, editorReady, value])
+  }, [
+    externalSearchTerm,
+    externalSearchIsRegex,
+    externalSearchCaseSensitive,
+    externalSearchWholeWord,
+    editor,
+    editorReady,
+    value
+  ])
 
   useEffect(() => {
     if (
