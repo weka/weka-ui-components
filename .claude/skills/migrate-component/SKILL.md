@@ -13,7 +13,7 @@ Migrate the specified component from `observe/frontend/src/components/` into `li
 
 ### Steps
 
-1. **Read the source component** in the observe/frontend repo at `/Users/sofiia.tatarinova/Projects/gohome/observe/frontend/src/components/<ComponentName>/`. Understand its props, dependencies, styles, and behavior.
+1. **Read the source component** in the observe/frontend repo at `observe/frontend/src/components/<ComponentName>/`. Understand its props, dependencies, styles, and behavior.
 
 2. **Design the v2 version** using the `ts-react-linter-driven-development:component-designing` skill. Plan any API improvements, type changes, or simplifications.
 
