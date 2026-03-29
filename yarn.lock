@@ -6483,7 +6483,7 @@ __metadata:
     eslint-plugin-unused-imports: "npm:^4.4.1"
     gh-pages: "npm:^5.0.0"
     globals: "npm:^14.0.0"
-    happy-dom: "npm:^20.8.4"
+    happy-dom: "npm:^20.8.9"
     jsdom: "npm:^27.4.0"
     luxon: "npm:^3.7.2"
     prettier: "npm:^2.8.4"
@@ -10209,9 +10209,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"happy-dom@npm:^20.8.4":
-  version: 20.8.4
-  resolution: "happy-dom@npm:20.8.4"
+"happy-dom@npm:^20.8.9":
+  version: 20.8.9
+  resolution: "happy-dom@npm:20.8.9"
   dependencies:
     "@types/node": "npm:>=20.0.0"
     "@types/whatwg-mimetype": "npm:^3.0.2"
@@ -10219,7 +10219,7 @@ __metadata:
     entities: "npm:^7.0.1"
     whatwg-mimetype: "npm:^3.0.0"
     ws: "npm:^8.18.3"
-  checksum: 10c0/c06eb49bcef10161248b3c5d97be2dc43eb759879a42895bf909a68fd698138c5880ca7839b0b64808f12e9f240073765cb5b5aef52c0e884219a14c1bfbf86b
+  checksum: 10c0/12fe9b85891b1289935b2a4f726e2839e7c92e3f55401bd20cb5500763dd994364645acaab20a754fd90d5e1b2ffdf734b39a32ea02704c3e3ee0c4d30cf958e
   languageName: node
   linkType: hard
 
