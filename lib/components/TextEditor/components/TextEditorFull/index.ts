@@ -1,3 +1,4 @@
-export type { ExternalSearchAction, ParsedData } from './hooks'
+export type { ExternalSearchAction, ParsedData, SearchDirection } from './hooks'
+export { SEARCH_DIRECTIONS } from './hooks'
 export type * from './TextEditorFull'
 export { default as TextEditorFull } from './TextEditorFull'

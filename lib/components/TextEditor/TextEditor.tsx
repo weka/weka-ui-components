@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect } from 'react'
 
 import { useHideContent } from './components/TextEditorFull/hooks'
-import type { ExternalSearchAction, ParsedData, TextEditorHandle } from './components'
+import type { ExternalSearchAction, ParsedData, SearchDirection, TextEditorHandle } from './components'
 import {
   FoldAllButton,
   FontSizeControls,
@@ -61,7 +61,7 @@ interface TextEditorProps {
   /**
    * Called when Ace's find reaches the boundary (no more matches in direction)
    */
-  onSearchBoundary?: (direction: 'next' | 'prev') => void
+  onSearchBoundary?: (direction: SearchDirection) => void
   /**
    * Called with the current local match position and chunk total after each find action
    */
