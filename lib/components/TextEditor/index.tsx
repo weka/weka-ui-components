@@ -1,3 +1,3 @@
-export type { ExternalSearchAction, TextEditorHandle } from './components'
-export { TagsInput } from './components'
+export type { ExternalSearchAction, SearchDirection, TextEditorHandle } from './components'
+export { SEARCH_DIRECTIONS, TagsInput } from './components'
 export { default } from './TextEditor'
