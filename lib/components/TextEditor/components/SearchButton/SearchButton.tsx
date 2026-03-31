@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconButton } from '@mui/material'
 
 import svgs from 'svgs'
@@ -19,7 +18,6 @@ function SearchButton() {
   let disabled: string | false = false
 
   if (isLiteMode) {
-    // TODO: review text
     disabled = 'Search is not supported for large files'
   }
 

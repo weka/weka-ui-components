@@ -3,8 +3,17 @@ import type { IAceEditor } from 'react-ace/lib/types'
 
 import { EMPTY_STRING } from 'consts'
 
+export const SEARCH_DIRECTIONS = {
+  NEXT: 'next',
+  PREV: 'prev',
+  FIRST: 'first',
+  LAST: 'last'
+} as const
+
+export type SearchDirection = (typeof SEARCH_DIRECTIONS)[keyof typeof SEARCH_DIRECTIONS]
+
 export interface ExternalSearchAction {
-  type: 'next' | 'prev' | 'first' | 'last'
+  type: SearchDirection
   key: number
 }
 
@@ -26,10 +35,10 @@ function readCounter(
   callback: ((current: number, total: number) => void) | undefined
 ) {
   searchBox.$syncOptions()
-  const text = searchBox.searchCounter?.textContent || ''
-  const m = text.match(/^(\d+)\s+of\s+(\d+)/)
-  if (m) {
-    callback?.(parseInt(m[1], 10), parseInt(m[2], 10))
+  const text = searchBox.searchCounter?.textContent || EMPTY_STRING
+  const counterMatch = text.match(/^(\d+)\s+of\s+(\d+)/)
+  if (counterMatch) {
+    callback?.(parseInt(counterMatch[1], 10), parseInt(counterMatch[2], 10))
   }
 }
 
@@ -55,7 +64,7 @@ function useSearch({
   externalSearchCaseSensitive?: boolean
   externalSearchWholeWord?: boolean
   externalSearchAction?: ExternalSearchAction
-  onSearchBoundary?: (direction: 'next' | 'prev') => void
+  onSearchBoundary?: (direction: SearchDirection) => void
   onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }) {
   const [searchValue, setSearchValueState] = useState(EMPTY_STRING)
@@ -132,7 +141,7 @@ function useSearch({
       }
       onSearchCounterUpdateRef.current?.(0, 0)
     }
-  }, [externalSearchTerm, externalSearchIsRegex, editor, editorReady, value])
+  }, [externalSearchTerm, externalSearchIsRegex, externalSearchCaseSensitive, externalSearchWholeWord, editor, editorReady, value])
 
   useEffect(() => {
     if (
@@ -163,29 +172,29 @@ function useSearch({
         }
       }
 
-      if (externalSearchAction.type === 'next') {
+      if (externalSearchAction.type === SEARCH_DIRECTIONS.NEXT) {
         const range = editor.find(externalSearchTerm, {
           ...findOptions,
           skipCurrent: true,
           backwards: false
         })
         if (!range) {
-          onSearchBoundaryRef.current?.('next')
+          onSearchBoundaryRef.current?.(SEARCH_DIRECTIONS.NEXT)
         } else {
           reportCounter()
         }
-      } else if (externalSearchAction.type === 'prev') {
+      } else if (externalSearchAction.type === SEARCH_DIRECTIONS.PREV) {
         const range = editor.find(externalSearchTerm, {
           ...findOptions,
           skipCurrent: true,
           backwards: true
         })
         if (!range) {
-          onSearchBoundaryRef.current?.('prev')
+          onSearchBoundaryRef.current?.(SEARCH_DIRECTIONS.PREV)
         } else {
           reportCounter()
         }
-      } else if (externalSearchAction.type === 'first') {
+      } else if (externalSearchAction.type === SEARCH_DIRECTIONS.FIRST) {
         editor.gotoLine(1, 0, false)
         editor.find(externalSearchTerm, {
           ...findOptions,
@@ -193,7 +202,7 @@ function useSearch({
           backwards: false
         })
         reportCounter()
-      } else if (externalSearchAction.type === 'last') {
+      } else if (externalSearchAction.type === SEARCH_DIRECTIONS.LAST) {
         const lastLine = editor.session.getLength()
         editor.gotoLine(lastLine, Infinity, false)
         editor.find(externalSearchTerm, {

@@ -22,7 +22,7 @@ import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
 
-import type { ExternalSearchAction, ParsedData } from './hooks'
+import type { ExternalSearchAction, ParsedData, SearchDirection } from './hooks'
 import {
   useDisableSyntaxCheck,
   useEditor,
@@ -91,7 +91,7 @@ export interface TextEditorFullProps {
   externalSearchCaseSensitive?: boolean
   externalSearchWholeWord?: boolean
   externalSearchAction?: ExternalSearchAction
-  onSearchBoundary?: (direction: 'next' | 'prev') => void
+  onSearchBoundary?: (direction: SearchDirection) => void
   onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }
 const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(function TextEditorFull({
