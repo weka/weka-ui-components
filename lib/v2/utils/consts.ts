@@ -37,6 +37,13 @@ export const KEYBOARD_KEYS = {
   ARROW_RIGHT: 'ArrowRight'
 } as const
 
+// DOM event names
+export const DOM_EVENTS = {
+  KEYDOWN: 'keydown',
+  MOUSEDOWN: 'mousedown',
+  RESIZE: 'resize'
+} as const
+
 // Tooltip placements
 export const TOOLTIP_PLACEMENTS = {
   TOP: 'top',

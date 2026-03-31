@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
+import { ArrowIcon } from './ArrowIcon'
 import { ChartIcon } from './ChartIcon'
 import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
 import { InfoIcon } from './InfoIcon'
+import { NavChevronLeftIcon } from './NavChevronLeftIcon'
+import { NavChevronRightIcon } from './NavChevronRightIcon'
 
 const meta: Meta = {
   title: 'v2/Icons'
@@ -48,6 +51,18 @@ export const AllIcons: Story = {
       <div style={iconStyle}>
         <InfoIcon />
         <span>InfoIcon</span>
+      </div>
+      <div style={iconStyle}>
+        <ArrowIcon />
+        <span>ArrowIcon</span>
+      </div>
+      <div style={iconStyle}>
+        <NavChevronLeftIcon />
+        <span>NavChevronLeft</span>
+      </div>
+      <div style={iconStyle}>
+        <NavChevronRightIcon />
+        <span>NavChevronRight</span>
       </div>
     </div>
   )
