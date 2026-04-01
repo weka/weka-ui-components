@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { forwardRef, useEffect } from 'react'
 
 import { useHideContent } from './components/TextEditorFull/hooks'
-import type { ParsedData } from './components'
+import type { ExternalSearchAction, ParsedData, SearchDirection, TextEditorHandle } from './components'
 import {
   FoldAllButton,
   FontSizeControls,
@@ -37,17 +37,52 @@ interface TextEditorProps {
   maxLines?: number
   loading?: boolean
   liteMode?: boolean
+  /**
+   * External search term that triggers Ace's find-all functionality
+   * to highlight matches in the editor
+   */
+  externalSearchTerm?: string
+  /**
+   * Whether the external search term should be treated as regex
+   */
+  externalSearchIsRegex?: boolean
+  /**
+   * Whether the external search should be case-sensitive
+   */
+  externalSearchCaseSensitive?: boolean
+  /**
+   * Whether the external search should match whole words only
+   */
+  externalSearchWholeWord?: boolean
+  /**
+   * Action to perform in Ace's native search (next/prev/first/last)
+   */
+  externalSearchAction?: ExternalSearchAction
+  /**
+   * Called when Ace's find reaches the boundary (no more matches in direction)
+   */
+  onSearchBoundary?: (direction: SearchDirection) => void
+  /**
+   * Called with the current local match position and chunk total after each find action
+   */
+  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
+  /**
+   * When true, disables tag-based line filtering and custom gutter renderer
+   * so the consumer can manage line numbering independently (e.g. chunked files)
+   */
+  disableTagsFilter?: boolean
 }
 
-function TextEditor(props: TextEditorProps) {
-  const { value, maxLines, liteMode, loading } = props
+const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEditor(props, ref) {
+  const { value, maxLines, liteMode, loading, disableTagsFilter } = props
   const context = useTextEditorContext(true)
   const setTextEditorContext = context?.setTextEditorContext
   const fontSize = context?.value.fontSize ?? DEFAULT_FONT_SIZE
 
   const filteredValue = useHideContent({ value })
 
-  const lines = useTags({ value: filteredValue })
+  const tagLines = useTags({ value: filteredValue })
+  const lines = disableTagsFilter ? undefined : tagLines
 
   useEffect(() => {
     setTextEditorContext?.((prev) => ({
@@ -72,20 +107,31 @@ function TextEditor(props: TextEditorProps) {
     />
   ) : (
     <TextEditorFull
+      ref={ref}
       {...props}
       fontSize={fontSize}
       lines={lines}
       value={filteredValue}
     />
   )
+})
+
+const TextEditorWithStatics = TextEditor as typeof TextEditor & {
+  Provider: typeof TextEditorProvider
+  TagsInput: typeof TagsInput
+  FoldAllButton: typeof FoldAllButton
+  FontSizeControls: typeof FontSizeControls
+  LinesCount: typeof LinesCount
+  SearchButton: typeof SearchButton
+  HideContentInput: typeof HideContentInput
 }
 
-TextEditor.Provider = TextEditorProvider
-TextEditor.TagsInput = TagsInput
-TextEditor.FoldAllButton = FoldAllButton
-TextEditor.FontSizeControls = FontSizeControls
-TextEditor.LinesCount = LinesCount
-TextEditor.SearchButton = SearchButton
-TextEditor.HideContentInput = HideContentInput
+TextEditorWithStatics.Provider = TextEditorProvider
+TextEditorWithStatics.TagsInput = TagsInput
+TextEditorWithStatics.FoldAllButton = FoldAllButton
+TextEditorWithStatics.FontSizeControls = FontSizeControls
+TextEditorWithStatics.LinesCount = LinesCount
+TextEditorWithStatics.SearchButton = SearchButton
+TextEditorWithStatics.HideContentInput = HideContentInput
 
-export default TextEditor
+export default TextEditorWithStatics
