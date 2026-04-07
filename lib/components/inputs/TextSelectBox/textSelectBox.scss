@@ -13,12 +13,12 @@
     left: 12px;
     top: 4px;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 
     svg {
       height: 12px;
-      position: absolute;
-      right: -16px;
-      top: -1px;
 
       path {
         fill: currentColor;
@@ -68,5 +68,13 @@
     font-size: 12px;
     color: var(--focus-key);
     white-space: nowrap;
+  }
+
+  .react-select__indicators {
+    height: 48px;
+  }
+
+  .spread-line {
+    height: 100%;
   }
 }

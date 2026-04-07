@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from 'consts'
+import svgs from 'svgs'
 import Utils from 'utils'
 
-import Info from '../../Info'
+import Tooltip from '../../Tooltip'
 import Select from '../Select'
 import TextBox from '../TextBox'
 
 import './textSelectBox.scss'
+
+const { Info } = svgs
 
 interface TextSelectBoxProps {
   label: string
@@ -70,7 +73,11 @@ function TextSelectBox({
       <span className='text-select-label field-1-label-content'>
         {label}
         {isRequired ? <span className='required-star'>*</span> : null}
-        {info ? <Info data={info} /> : null}
+        {!!info && (
+          <Tooltip data={info}>
+            <Info />
+          </Tooltip>
+        )}
       </span>
       <TextBox
         onChange={onTextChange}
