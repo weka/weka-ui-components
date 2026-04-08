@@ -1,0 +1,146 @@
+name: PR Preview in Observe
+
+# When a weka-ui-components PR is opened/updated, or a consumer repo
+# notifies us about a new PR, find matching PRs by ticket ID
+# (WH-xxx) and point the consumer's
+# @weka/weka-ui-components dependency at the weka-ui-components PR branch.
+
+permissions:
+  contents: read
+  packages: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches: [main]
+  repository_dispatch:
+    types: [consumer-pr-opened]
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      updates: ${{ steps.resolve.outputs.updates || '[]' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract tickets
+        id: tickets
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BRANCH: ${{ github.head_ref }}
+          DISPATCH_TICKETS: ${{ github.event.client_payload.tickets }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            TICKETS=$(echo "$PR_TITLE $PR_BRANCH" | grep -oE 'WH-[0-9]+' | sort -u | tr '\n' ',' || true)
+            echo "tickets=${TICKETS%,}" >> $GITHUB_OUTPUT
+          else
+            echo "tickets=$DISPATCH_TICKETS" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Find matching PRs
+        id: find
+        if: steps.tickets.outputs.tickets != ''
+        uses: ./.github/actions/find-prs-by-ticket
+        with:
+          tickets: ${{ steps.tickets.outputs.tickets }}
+          repo: ${{ github.event_name == 'pull_request' && 'weka/gohome' || 'weka/weka-ui-components' }}
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+
+      - name: Build update pairs
+        id: resolve
+        if: steps.find.outputs.prs != '[]' && steps.find.outputs.prs != ''
+        uses: actions/github-script@v8
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          FOUND_PRS: ${{ steps.find.outputs.prs }}
+          UIC_SHA: ${{ github.event.pull_request.head.sha }}
+          UIC_PR_NUMBER: ${{ github.event.pull_request.number }}
+          CONSUMER_BRANCH: ${{ github.event.client_payload.pr_branch }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const foundPrs = JSON.parse(process.env.FOUND_PRS);
+            let updates;
+
+            if (process.env.EVENT_NAME === 'pull_request') {
+              updates = foundPrs.map(pr => ({
+                consumer_branch: pr.branch,
+                uic_ref: process.env.UIC_SHA,
+                ticket: pr.ticket,
+                uic_pr_number: Number(process.env.UIC_PR_NUMBER),
+              }));
+            } else {
+              const updatesAsync = foundPrs.map(async (pr) => {
+                const { data } = await github.rest.pulls.get({
+                  owner: 'weka',
+                  repo: 'weka-ui-components',
+                  pull_number: pr.number,
+                });
+                return {
+                  consumer_branch: process.env.CONSUMER_BRANCH,
+                  uic_ref: data.head.sha,
+                  ticket: pr.ticket,
+                  uic_pr_number: pr.number,
+                };
+              });
+              updates = await Promise.all(updatesAsync);
+            }
+
+            core.setOutput('updates', JSON.stringify(updates));
+
+  update-observe-pr:
+    needs: resolve
+    if: needs.resolve.outputs.updates != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        update: ${{ fromJson(needs.resolve.outputs.updates) }}
+    steps:
+      - name: Checkout gohome PR branch
+        uses: actions/checkout@v4
+        with:
+          repository: weka/gohome
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          ref: ${{ matrix.update.consumer_branch }}
+
+      - name: Configure git auth for private repos
+        env:
+          TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+        run: git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@weka'
+
+      - name: Setup Yarn
+        run: corepack enable && corepack prepare yarn@4.9.2 --activate
+
+      - name: Update weka-ui-components to PR branch
+        working-directory: observe/frontend
+        env:
+          UIC_REF: ${{ matrix.update.uic_ref }}
+          WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+        run: yarn add "@weka/weka-ui-components@https://github.com/weka/weka-ui-components.git#$UIC_REF"
+
+      - name: Commit and push
+        env:
+          UIC_PR_NUMBER: ${{ matrix.update.uic_pr_number }}
+          TICKET: ${{ matrix.update.ticket }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet; then
+            exit 0
+          fi
+
+          git add observe/frontend/package.json observe/frontend/yarn.lock
+          git commit -m "chore: preview weka-ui-components PR #$UIC_PR_NUMBER ($TICKET)"
+          git push
