@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { CSS_VARS } from '../../utils/consts'
+
 import { EmptyChartState } from './EmptyChartState'
 
 vi.mock('../../icons', () => ({
@@ -43,7 +45,7 @@ describe('EmptyChartState', () => {
       render(<EmptyChartState />)
 
       const icon = screen.getByTestId('chart-icon')
-      expect(icon).toHaveAttribute('data-color', 'var(--gray-900-100)')
+      expect(icon).toHaveAttribute('data-color', CSS_VARS.GRAY_900_100)
     })
   })
 

@@ -1,0 +1,66 @@
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.switch {
+  width: 32px !important;
+  height: 18px !important;
+  padding: 0 !important;
+
+  :global(.MuiSwitch-switchBase) {
+    padding: 0 !important;
+    margin: 2px !important;
+    color: white !important;
+
+    &:global(.Mui-checked) {
+      transform: translateX(14px) !important;
+      color: white !important;
+
+      + :global(.MuiSwitch-track) {
+        background-color: var(--green-400) !important;
+        opacity: 1 !important;
+        border: 0 !important;
+      }
+    }
+
+    &:global(.Mui-disabled) {
+      color: white !important;
+      opacity: 0.5 !important;
+
+      + :global(.MuiSwitch-track) {
+        opacity: 0.5 !important;
+      }
+    }
+  }
+
+  :global(.MuiSwitch-thumb) {
+    width: 14px !important;
+    height: 14px !important;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%) !important;
+  }
+
+  :global(.MuiSwitch-track) {
+    border-radius: 9px !important;
+    background-color: var(--gray-350-650) !important;
+    opacity: 1 !important;
+    border: 0 !important;
+  }
+}
+
+.infoIconWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.infoIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--gray-500);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}

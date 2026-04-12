@@ -3,4 +3,4 @@ export type {
   ProtocolTagSize,
   ProtocolTagsProps
 } from './ProtocolTags'
-export { ProtocolTags, PROTOCOL_TAG_SIZES } from './ProtocolTags'
+export { PROTOCOL_TAG_SIZES, ProtocolTags } from './ProtocolTags'

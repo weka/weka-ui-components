@@ -1,0 +1,33 @@
+.tooltipWrapper {
+  display: block;
+  white-space: pre-line;
+  border: 1px solid var(--gray-450-550);
+  border-radius: 0 !important;
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+  color: var(--gray-900-100) !important;
+  background-color: var(--gray-50-920) !important;
+  box-shadow: 0 0 6px 2px rgb(0 0 0 / 12%) !important;
+  margin: 4px 4px 0 0 !important;
+  max-width: fit-content !important;
+
+  &.clearTooltip {
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.ellipsisWrapper {
+  display: inline-block;
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltipChildWrapper {
+  display: inline-flex;
+}

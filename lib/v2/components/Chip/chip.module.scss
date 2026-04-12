@@ -1,0 +1,96 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--gray-200-800);
+  color: var(--gray-900-100);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 400;
+  height: 22px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  line-height: 1.2;
+  position: relative;
+  flex-shrink: 0;
+  max-width: 100%;
+  min-width: 0;
+
+  > svg:not(.chipClose svg) {
+    width: 14px !important;
+    height: 14px !important;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+}
+
+.chipContent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  line-height: 1.2;
+  flex-shrink: 1;
+  min-width: 0;
+  order: 1;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  overflow: hidden;
+
+  > svg {
+    flex-shrink: 0;
+    width: 14px !important;
+    height: 14px !important;
+    color: currentColor !important;
+
+    path {
+      fill: currentColor !important;
+    }
+  }
+}
+
+.chipText {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  vertical-align: middle;
+
+  > svg {
+    flex-shrink: 0;
+    width: 14px !important;
+    height: 14px !important;
+    color: currentColor !important;
+
+    path {
+      fill: currentColor !important;
+    }
+  }
+}
+
+.chipClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-left: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  order: 2;
+  pointer-events: auto !important;
+
+  svg path {
+    opacity: 0.4;
+  }
+
+  &:hover svg path {
+    opacity: 0.6;
+  }
+}
