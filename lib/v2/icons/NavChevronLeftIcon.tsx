@@ -6,9 +6,11 @@ export interface NavChevronLeftIconProps {
   strokeWidth?: number
 }
 
+import { CSS_VARS } from '../utils/consts'
+
 export function NavChevronLeftIcon({
   extraClass,
-  color = 'var(--gray-900-100)',
+  color = CSS_VARS.GRAY_900_100,
   width = 18,
   height = 18,
   strokeWidth = 1.5

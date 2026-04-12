@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 
 import { NavChevronLeftIcon, NavChevronRightIcon } from '../../icons'
+import { CSS_VARS } from '../../utils/consts'
 
 import styles from './miniPagination.module.scss'
 
@@ -34,7 +35,7 @@ export function MiniPagination({
         })}
       >
         <NavChevronLeftIcon
-          color='var(--gray-900-100)'
+          color={CSS_VARS.GRAY_900_100}
           height={ARROW_SIZE}
           width={ARROW_SIZE}
         />
@@ -49,7 +50,7 @@ export function MiniPagination({
         })}
       >
         <NavChevronRightIcon
-          color='var(--gray-900-100)'
+          color={CSS_VARS.GRAY_900_100}
           height={ARROW_SIZE}
           width={ARROW_SIZE}
         />

@@ -44,10 +44,19 @@ export const DOM_EVENTS = {
   RESIZE: 'resize'
 } as const
 
+// Theme-aware CSS variable defaults
+export const CSS_VARS = {
+  GRAY_900_100: 'var(--gray-900-100)'
+} as const
+
 // Tooltip placements
 export const TOOLTIP_PLACEMENTS = {
   TOP: 'top',
+  TOP_START: 'top-start',
+  TOP_END: 'top-end',
   BOTTOM: 'bottom',
+  BOTTOM_START: 'bottom-start',
+  BOTTOM_END: 'bottom-end',
   LEFT: 'left',
   RIGHT: 'right'
 } as const

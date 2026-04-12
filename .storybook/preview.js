@@ -23,9 +23,12 @@ export const globalTypes = {
   }
 }
 
-// Decorator that applies theme to the story wrapper (using createElement to avoid JSX)
+// Decorator that applies theme to the story wrapper and document body
+// Body-level theming ensures portals (e.g., MUI Tooltip) also pick up CSS variables
 const withTheme = (Story, context) => {
   const theme = context.globals.theme
+
+  document.body.setAttribute('data-theme', theme)
 
   return createElement(
     'div',

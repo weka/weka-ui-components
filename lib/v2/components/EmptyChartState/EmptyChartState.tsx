@@ -1,4 +1,5 @@
 import { ChartIcon } from '../../icons'
+import { CSS_VARS } from '../../utils/consts'
 
 import styles from './emptyChartState.module.scss'
 
@@ -18,7 +19,7 @@ export function EmptyChartState({
     >
       <div className={styles.content}>
         <ChartIcon
-          color='var(--gray-900-100)'
+          color={CSS_VARS.GRAY_900_100}
           extraClass={styles.icon}
         />
         <p className={styles.message}>{message}</p>
