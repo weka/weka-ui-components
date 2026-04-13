@@ -63,7 +63,7 @@ export default defineConfig({
         'react-router-dom',
         '@emotion/react',
         '@emotion/styled',
-        '@mui/material',
+        /^@mui\/material/,
         'luxon',
         'clsx'
       ],
