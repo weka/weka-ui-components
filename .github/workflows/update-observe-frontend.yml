@@ -1,0 +1,87 @@
+name: Update Observe Frontend
+
+# Called by v2-release.yml after a successful publish.
+# Finds open gohome PRs that share the same ticket ID (WH-xxx)
+# and updates their @weka/weka-ui-components dependency to the new version.
+
+permissions:
+  contents: read
+  packages: read
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      tickets:
+        required: true
+        type: string
+
+jobs:
+  find-prs:
+    runs-on: ubuntu-latest
+    outputs:
+      prs: ${{ steps.find.outputs.prs || '[]' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/actions
+
+      - name: Find gohome PRs matching release tickets
+        id: find
+        if: inputs.tickets != ''
+        uses: ./.github/actions/find-prs-by-ticket
+        with:
+          tickets: ${{ inputs.tickets }}
+          repo: weka/gohome
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+
+  update-pr:
+    needs: find-prs
+    if: needs.find-prs.outputs.prs != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pr: ${{ fromJson(needs.find-prs.outputs.prs) }}
+    steps:
+      - name: Checkout gohome PR branch
+        uses: actions/checkout@v4
+        with:
+          repository: weka/gohome
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          ref: ${{ matrix.pr.branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@weka'
+
+      - name: Setup Yarn
+        run: corepack enable && corepack prepare yarn@4.9.2 --activate
+
+      - name: Update weka-ui-components
+        working-directory: observe/frontend
+        env:
+          VERSION: ${{ inputs.version }}
+          WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+        run: yarn add "@weka/weka-ui-components@^${VERSION#v}"
+
+      - name: Commit and push
+        env:
+          VERSION: ${{ inputs.version }}
+          TICKET: ${{ matrix.pr.ticket }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet; then
+            exit 0
+          fi
+
+          git add observe/frontend/package.json observe/frontend/yarn.lock
+          git commit -m "chore: update @weka/weka-ui-components to $VERSION ($TICKET)"
+          git push

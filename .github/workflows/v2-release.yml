@@ -8,6 +8,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    outputs:
+      tickets: ${{ steps.tickets.outputs.value }}
     permissions:
       contents: write # For creating GitHub Release
       packages: write # For publishing to GitHub Packages
@@ -52,9 +54,20 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Extract tickets from source commits
+        id: tickets
+        run: |
+          PREV_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | grep -v -e '-beta' -e '-alpha' -e '-rc' -e "^${GITHUB_REF_NAME}$" | head -1)
+          if [ -n "$PREV_TAG" ]; then
+            TICKETS=$(git log --format='%B' "$PREV_TAG..HEAD" --grep='^publish v' --invert-grep | grep -oE 'WH-[0-9]+' | sort -u | tr '\n' ',' || true)
+          else
+            TICKETS=""
+          fi
+          echo "value=${TICKETS%,}" >> $GITHUB_OUTPUT
+
       - name: Sync version from git tag
         run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"  # Strip 'v' prefix
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
           echo "Setting version to: $TAG_VERSION"
           npm version "$TAG_VERSION" --no-git-tag-version --allow-same-version
 
@@ -78,3 +91,14 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update-observe:
+    needs: publish
+    permissions:
+      contents: read
+      packages: read
+    uses: ./.github/workflows/update-observe-frontend.yml
+    with:
+      version: ${{ github.ref_name }}
+      tickets: ${{ needs.publish.outputs.tickets }}
+    secrets: inherit

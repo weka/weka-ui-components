@@ -1,0 +1,57 @@
+name: Find PRs by Ticket
+description: Search open PRs in a target repo for matching ticket IDs (WH-xxx)
+
+inputs:
+  tickets:
+    description: Comma-separated ticket IDs (e.g. WH-123,WH-456)
+    required: true
+  repo:
+    description: Target repo to search (e.g. weka/gohome)
+    required: true
+  token:
+    description: GitHub token with read access to the target repo
+    required: true
+
+outputs:
+  prs:
+    description: JSON array of matched PRs ({ number, branch, ticket })
+    value: ${{ steps.find.outputs.prs || '[]' }}
+
+runs:
+  using: composite
+  steps:
+    - name: Find PRs matching tickets
+      id: find
+      uses: actions/github-script@v8
+      env:
+        TICKETS: ${{ inputs.tickets }}
+        TARGET_REPO: ${{ inputs.repo }}
+      with:
+        github-token: ${{ inputs.token }}
+        script: |
+          function prMatchesTicket(pr, tickets) {
+            const searchText = `${pr.title}\n${pr.body || ''}\n${pr.head.ref}`.toUpperCase();
+            return tickets.find(t => new RegExp(`\\b${t.toUpperCase()}\\b`).test(searchText));
+          }
+
+          const tickets = process.env.TICKETS.split(',')
+            .filter(t => /^WH-\d+$/i.test(t));
+          const [owner, repo] = process.env.TARGET_REPO.split('/');
+
+          const pulls = await github.paginate(github.rest.pulls.list, {
+            owner,
+            repo,
+            state: 'open',
+            per_page: 100,
+          });
+
+          const matched = pulls
+            .map(pr => ({ pr, ticket: prMatchesTicket(pr, tickets) }))
+            .filter(({ ticket }) => ticket)
+            .map(({ pr, ticket }) => ({
+              number: pr.number,
+              branch: pr.head.ref,
+              ticket,
+            }));
+
+          core.setOutput('prs', JSON.stringify(matched));
