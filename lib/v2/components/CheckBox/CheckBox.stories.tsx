@@ -18,6 +18,23 @@ const meta: Meta<typeof Checkbox> = {
 export default meta
 type Story = StoryObj<typeof Checkbox>
 
+export const Interactive: Story = {
+  args: {
+    checked: false,
+    partiallyChecked: true
+  },
+
+  render: function InteractiveCheckbox() {
+    const [checked, setChecked] = useState(false)
+    return (
+      <Checkbox
+        checked={checked}
+        onChange={setChecked}
+      />
+    )
+  }
+}
+
 export const Unchecked: Story = {
   args: {
     checked: false,
@@ -37,31 +54,6 @@ export const PartiallyChecked: Story = {
     checked: false,
     partiallyChecked: true,
     onChange: NOOP
-  }
-}
-
-export const WithCustomClass: Story = {
-  args: {
-    checked: true,
-    wrapperClass: 'custom-checkbox-class',
-    onChange: NOOP
-  }
-}
-
-export const Interactive: Story = {
-  args: {
-    checked: false,
-    partiallyChecked: true
-  },
-
-  render: function InteractiveCheckbox() {
-    const [checked, setChecked] = useState(false)
-    return (
-      <Checkbox
-        checked={checked}
-        onChange={setChecked}
-      />
-    )
   }
 }
 

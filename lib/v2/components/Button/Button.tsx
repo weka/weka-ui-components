@@ -1,4 +1,9 @@
-import type { ComponentType, ReactNode } from 'react'
+import {
+  type ComponentType,
+  forwardRef,
+  type ReactNode,
+  type CSSProperties
+} from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '../../utils/consts'
@@ -32,34 +37,43 @@ export interface ButtonProps {
   Icon?: ComponentType<{ color?: string; width?: number; height?: number }>
   title?: string
   dataTestId?: string
+  style?: CSSProperties
 }
 
-export function Button({
-  variant = BUTTON_VARIANTS.PRIMARY,
-  children,
-  onClick,
-  disabled = false,
-  type = BUTTON_TYPES.BUTTON,
-  isRounded = false,
-  extraClass = EMPTY_STRING,
-  title,
-  Icon,
-  dataTestId
-}: Readonly<ButtonProps>) {
-  return (
-    <button
-      data-testid={dataTestId}
-      disabled={disabled}
-      onClick={onClick}
-      title={title}
-      type={type}
-      className={clsx(styles.button, styles[variant], extraClass, {
-        [styles.isRounded]: isRounded,
-        [styles.hasIcon]: !!Icon
-      })}
-    >
-      {Icon ? <Icon /> : null}
-      {children}
-    </button>
-  )
-}
+export const Button = forwardRef<HTMLButtonElement, Readonly<ButtonProps>>(
+  function Button(
+    {
+      variant = BUTTON_VARIANTS.PRIMARY,
+      children,
+      onClick,
+      disabled = false,
+      type = BUTTON_TYPES.BUTTON,
+      isRounded = false,
+      extraClass = EMPTY_STRING,
+      title,
+      Icon,
+      dataTestId,
+      style
+    },
+    ref
+  ) {
+    return (
+      <button
+        ref={ref}
+        data-testid={dataTestId}
+        disabled={disabled}
+        onClick={onClick}
+        title={title}
+        type={type}
+        style={style}
+        className={clsx(styles.button, styles[variant], extraClass, {
+          [styles.isRounded]: isRounded,
+          [styles.hasIcon]: !!Icon
+        })}
+      >
+        {Icon ? <Icon /> : null}
+        {children}
+      </button>
+    )
+  }
+)

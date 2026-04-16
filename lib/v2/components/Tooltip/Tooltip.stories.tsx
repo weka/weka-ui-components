@@ -51,7 +51,7 @@ export const RightPlacement: Story = {
 
 export const Ellipsis: Story = {
   render: () => (
-    <div style={{ width: '120px' }}>
+    <div style={{ width: '120px', color: 'var(--text-primary)' }}>
       <Tooltip
         data='This is a very long text that will be truncated with ellipsis'
         ellipsis
@@ -70,4 +70,3 @@ export const WithCustomDelay: Story = {
     children: <Button onClick={NOOP}>Custom delay</Button>
   }
 }
-

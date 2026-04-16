@@ -1,0 +1,126 @@
+import clsx from 'clsx'
+
+import type { GradientColorKey } from '../../styles/gradientColors'
+import type { Severity } from '../../utils/consts'
+import { SEVERITY_TYPES } from '../../utils/consts'
+import { GradientAlertIcon } from '../GradientAlertIcon'
+
+import styles from './alertStatusBadge.module.scss'
+
+export const ALERT_ICON_PATHS = {
+  circle:
+    'M27 4.5C22.5499 4.5 18.1998 5.8196 14.4997 8.29193C10.7996 10.7643 7.91569 14.2783 6.21272 18.3896C4.50975 22.501 4.06417 27.025 4.93234 31.3895C5.80051 35.7541 7.94343 39.7632 11.0901 42.9099C14.2368 46.0566 18.2459 48.1995 22.6105 49.0677C26.975 49.9358 31.499 49.4902 35.6104 47.7873C39.7217 46.0843 43.2357 43.2004 45.7081 39.5003C48.1804 35.8002 49.5 31.4501 49.5 27C49.498 21.0332 47.1268 15.3114 42.9077 11.0923C38.6886 6.87315 32.9668 4.50199 27 4.5ZM27 40.5C26.4067 40.5 25.8266 40.324 25.3333 39.9944C24.8399 39.6648 24.4554 39.1962 24.2284 38.648C24.0013 38.0999 23.9419 37.4967 24.0576 36.9147C24.1734 36.3328 24.4591 35.7982 24.8787 35.3787C25.2982 34.9591 25.8328 34.6734 26.4147 34.5576C26.9967 34.4419 27.5999 34.5013 28.1481 34.7284C28.6962 34.9554 29.1648 35.3399 29.4944 35.8333C29.8241 36.3266 30 36.9066 30 37.5C29.9976 38.2949 29.6808 39.0566 29.1187 39.6187C28.5566 40.1808 27.7949 40.4976 27 40.5ZM30.435 17.235L29.43 29.265C29.3776 29.8734 29.0989 30.4399 28.649 30.8528C28.199 31.2656 27.6106 31.4947 27 31.4947C26.3894 31.4947 25.801 31.2656 25.351 30.8528C24.9011 30.4399 24.6224 29.8734 24.57 29.265L23.565 17.235C23.5217 16.769 23.5736 16.2991 23.7176 15.8538C23.8616 15.4086 24.0947 14.9973 24.4027 14.6449C24.7107 14.2926 25.0871 14.0066 25.5091 13.8043C25.9312 13.6021 26.3899 13.4878 26.8575 13.4684C27.3251 13.4491 27.7917 13.5251 28.229 13.6917C28.6663 13.8584 29.0651 14.1123 29.4011 14.438C29.7372 14.7637 30.0035 15.1543 30.1838 15.5862C30.3641 16.018 30.4547 16.482 30.45 16.95C30.4525 17.0452 30.4475 17.1405 30.435 17.235Z',
+  triangle:
+    'M48.6004 37.3997L32.835 9.79514C30.26 5.23495 23.7482 5.23495 21.1824 9.79514L5.40769 37.3997C2.83262 41.9599 6.03757 47.625 11.234 47.625H42.7185C47.915 47.625 51.1755 41.9037 48.6004 37.3997ZM26.9994 41.5011C25.6285 41.5011 24.4892 40.3493 24.4892 38.9635C24.4892 37.5776 25.6285 36.4259 26.9994 36.4259C28.3703 36.4259 29.5097 37.5776 29.4541 39.029C29.5189 40.3493 28.3148 41.5011 26.9994 41.5011ZM29.2874 25.0956C29.1762 27.062 29.0558 29.0191 28.9446 30.9855C28.8891 31.6222 28.8891 32.2028 28.8891 32.8302C28.8335 33.8695 28.0276 34.6748 26.9994 34.6748C25.9713 34.6748 25.1746 33.9257 25.1098 32.8863C24.9431 29.8244 24.7671 26.8186 24.6003 23.7566C24.5448 22.9513 24.4892 22.1367 24.4244 21.3314C24.4244 20.0017 25.1654 18.9061 26.3696 18.5597C27.5737 18.2694 28.7686 18.85 29.2874 20.0017C29.4634 20.4044 29.5189 20.807 29.5189 21.2752C29.4634 22.558 29.3429 23.8315 29.2874 25.0956Z',
+  diamond:
+    'M48.04 23.4724L30.5251 5.9575C29.5886 5.02097 28.3364 4.50537 27 4.50537C25.6636 4.50537 24.4114 5.02097 23.4749 5.9575L5.96002 23.4724C4.01333 25.4138 4.01333 28.5811 5.96002 30.5278L23.4749 48.0375C24.4114 48.974 25.6636 49.4949 27 49.4949C28.3364 49.4949 29.5886 48.974 30.5251 48.0375L48.04 30.5278C49.9867 28.5811 49.9867 25.4138 48.04 23.4724ZM27.1368 42.7867C25.1954 42.7867 23.7538 41.3398 23.7538 39.2195C23.7538 37.1886 25.1954 35.6997 27.1368 35.6997C29.0309 35.6997 30.4777 37.1886 30.4777 39.2195C30.4777 41.3398 29.0309 42.7867 27.1368 42.7867ZM30.1147 17.7323C29.3045 22.6516 28.7152 27.4394 28.0365 32.4955C27.947 33.0375 26.1898 33.0796 26.1003 32.4955C25.4216 27.4394 24.7902 22.6516 24.0221 17.7323C23.7538 16.0171 23.6591 15.2963 23.6591 14.4861C23.6591 13.4443 24.3378 12.6762 27.0894 12.6762C29.7517 12.6762 30.5198 13.4443 30.5198 14.4861C30.5198 15.2963 30.383 16.0171 30.1147 17.7323Z'
+} as const
+
+export type AlertIconShape = keyof typeof ALERT_ICON_PATHS
+
+export const ALERT_ICON_SHAPES = {
+  CIRCLE: 'circle',
+  TRIANGLE: 'triangle',
+  DIAMOND: 'diamond'
+} as const
+
+export const ALERT_STATUS_BADGE_SIZES = {
+  SMALL: 'small',
+  LARGE: 'large'
+} as const
+
+export type AlertStatusBadgeSize =
+  (typeof ALERT_STATUS_BADGE_SIZES)[keyof typeof ALERT_STATUS_BADGE_SIZES]
+
+const ICON_SIZE_SMALL = 40
+const ICON_SIZE_LARGE = 54
+
+export interface AlertStatusBadgeProps {
+  severity: Severity
+  startTime?: string
+  size?: AlertStatusBadgeSize
+}
+
+interface SeverityConfigItem {
+  gradientColor: GradientColorKey
+  label: string
+  shape: AlertIconShape
+  className: string
+}
+
+type AlertStatusSeverity = Exclude<
+  Severity,
+  typeof SEVERITY_TYPES.INFO | typeof SEVERITY_TYPES.DEBUG
+>
+
+const severityConfig: Record<AlertStatusSeverity, SeverityConfigItem> = {
+  [SEVERITY_TYPES.CRITICAL]: {
+    gradientColor: 'red',
+    label: 'Critical',
+    className: styles.critical,
+    shape: ALERT_ICON_SHAPES.TRIANGLE
+  },
+  [SEVERITY_TYPES.MAJOR]: {
+    gradientColor: 'backupRed',
+    label: 'Major',
+    className: styles.major,
+    shape: ALERT_ICON_SHAPES.CIRCLE
+  },
+  [SEVERITY_TYPES.MINOR]: {
+    gradientColor: 'orange',
+    label: 'Minor',
+    className: styles.minor,
+    shape: ALERT_ICON_SHAPES.TRIANGLE
+  },
+  [SEVERITY_TYPES.WARNING]: {
+    gradientColor: 'yellow',
+    label: 'Warning',
+    className: styles.warning,
+    shape: ALERT_ICON_SHAPES.DIAMOND
+  },
+  [SEVERITY_TYPES.DEFAULT]: {
+    gradientColor: 'gray',
+    label: 'Info',
+    className: styles.default,
+    shape: ALERT_ICON_SHAPES.CIRCLE
+  }
+}
+
+function isAlertStatusSeverity(
+  severity: Severity
+): severity is AlertStatusSeverity {
+  return severity in severityConfig
+}
+
+export function AlertStatusBadge({
+  severity = SEVERITY_TYPES.DEFAULT,
+  startTime,
+  size = ALERT_STATUS_BADGE_SIZES.LARGE
+}: Readonly<AlertStatusBadgeProps>) {
+  const config = isAlertStatusSeverity(severity)
+    ? severityConfig[severity]
+    : severityConfig[SEVERITY_TYPES.DEFAULT]
+
+  const iconSize =
+    size === ALERT_STATUS_BADGE_SIZES.SMALL ? ICON_SIZE_SMALL : ICON_SIZE_LARGE
+
+  return (
+    <div
+      className={clsx(
+        styles.badge,
+        size === ALERT_STATUS_BADGE_SIZES.SMALL && styles.small
+      )}
+    >
+      <GradientAlertIcon
+        gradientColor={config.gradientColor}
+        id={`alert-${severity}`}
+        shape={config.shape}
+        size={iconSize}
+      />
+      <span className={clsx(styles.label, config.className)}>
+        {config.label}
+      </span>
+      {startTime ? <span className={styles.time}>{startTime}</span> : null}
+    </div>
+  )
+}

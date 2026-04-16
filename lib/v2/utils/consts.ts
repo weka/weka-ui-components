@@ -63,3 +63,55 @@ export const TOOLTIP_PLACEMENTS = {
 
 export type TooltipPlacement =
   (typeof TOOLTIP_PLACEMENTS)[keyof typeof TOOLTIP_PLACEMENTS]
+
+// Severity
+export const SEVERITY_TYPES = {
+  CRITICAL: 'critical',
+  MAJOR: 'major',
+  MINOR: 'minor',
+  WARNING: 'warning',
+  INFO: 'info',
+  DEBUG: 'debug',
+  DEFAULT: 'default'
+} as const
+
+export type Severity = (typeof SEVERITY_TYPES)[keyof typeof SEVERITY_TYPES]
+
+export type BaseSeverity = Exclude<Severity, typeof SEVERITY_TYPES.DEFAULT>
+
+export type SeverityLevel = (typeof SEVERITY_ORDER_ASC)[number]
+
+export const SEVERITY_ORDER_ASC = [
+  SEVERITY_TYPES.INFO,
+  SEVERITY_TYPES.WARNING,
+  SEVERITY_TYPES.MINOR,
+  SEVERITY_TYPES.MAJOR,
+  SEVERITY_TYPES.CRITICAL
+] as const
+
+export const SEVERITY_ORDER_DESC = [
+  SEVERITY_TYPES.CRITICAL,
+  SEVERITY_TYPES.MAJOR,
+  SEVERITY_TYPES.MINOR,
+  SEVERITY_TYPES.WARNING,
+  SEVERITY_TYPES.INFO
+] as const
+
+export const SEVERITY_LABELS = {
+  [SEVERITY_TYPES.CRITICAL]: 'Critical',
+  [SEVERITY_TYPES.MAJOR]: 'Major',
+  [SEVERITY_TYPES.MINOR]: 'Minor',
+  [SEVERITY_TYPES.WARNING]: 'Warning',
+  [SEVERITY_TYPES.INFO]: 'Info',
+  [SEVERITY_TYPES.DEBUG]: 'Debug',
+  [SEVERITY_TYPES.DEFAULT]: 'Info'
+} as const
+
+// Cloud icon variants
+export const CLOUD_ICON_VARIANTS = {
+  DEFAULT: 'default',
+  HEADER: 'header'
+} as const
+
+export type CloudIconVariant =
+  (typeof CLOUD_ICON_VARIANTS)[keyof typeof CLOUD_ICON_VARIANTS]

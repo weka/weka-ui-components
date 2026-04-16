@@ -5,6 +5,14 @@
 
 @use 'theme';
 
+// Register bold weight under the same IBMPlexSans family
+// so font-weight: 700 resolves to the actual bold font file
+@font-face {
+  font-family: 'IBMPlexSans';
+  font-weight: 700;
+  src: url('../../fonts/IBMPlexSans-Bold.ttf');
+}
+
 // Base variables
 :root {
   --halfspread: 4px;
@@ -12,7 +20,7 @@
   --spread2: 16px;
   --spread3: 24px;
   --body-font: 'IBMPlexSans', 'Exo 2', 'Roboto', sans-serif;
-  --bold-font: 'IBMPlexSans', 'Exo 2', 'Roboto', sans-serif;
+  --bold-font: 'IBMPlexSans Bold', 'Exo 2', 'Roboto', sans-serif;
   --font-family: 'IBMPlexSans', 'Exo 2', 'Roboto', sans-serif;
 }
 
