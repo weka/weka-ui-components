@@ -40,6 +40,7 @@
   --gray-300: #{$gray-300};
   --gray-500: #{$gray-500};
   --gray-800: #{$gray-800};
+  --gray-920: #{$gray-920};
 
   // Purple Theme Variables
   --purple-20-950: #{$purple-20};
@@ -155,6 +156,13 @@
   // Popup
   --popup-shadow: rgb(0 0 0 / 15%);
 
+  // Container
+  --ld-container-bg: #{$gray-0};
+  --ld-shadow-v2: #{$gray-150};
+
+  // Shadow
+  --shadow-color-strong: #{rgba($gray-1000, 0.6)};
+
   // Backward Compatibility
   --background-primary: #{$gray-0};
   --background-secondary: #{$gray-50};
@@ -208,6 +216,7 @@
   --gray-300: #{$gray-300};
   --gray-500: #{$gray-500};
   --gray-800: #{$gray-800};
+  --gray-920: #{$gray-920};
 
   // Purple Theme Variables
   --purple-20-950: #{$purple-950};
@@ -322,6 +331,13 @@
 
   // Popup
   --popup-shadow: rgb(0 0 0 / 70%);
+
+  // Container
+  --ld-container-bg: #{$gray-900};
+  --ld-shadow-v2: #{$gray-1000};
+
+  // Shadow
+  --shadow-color-strong: #{rgba($gray-1000, 0.6)};
 
   // Backward Compatibility
   --background-primary: #{$gray-1000};

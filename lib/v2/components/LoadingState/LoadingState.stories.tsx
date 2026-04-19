@@ -73,22 +73,3 @@ export const WithChildren: Story = {
     </LoadingState>
   )
 }
-
-export const AllStates: Story = {
-  render: () => (
-    <div style={{ display: 'flex', gap: '24px' }}>
-      <div style={{ flex: 1 }}>
-        <h4 style={{ marginBottom: '8px' }}>Loading</h4>
-        <LoadingState type='loading' />
-      </div>
-      <div style={{ flex: 1 }}>
-        <h4 style={{ marginBottom: '8px' }}>Error</h4>
-        <LoadingState type='error' />
-      </div>
-      <div style={{ flex: 1 }}>
-        <h4 style={{ marginBottom: '8px' }}>No Data</h4>
-        <LoadingState type='noData' />
-      </div>
-    </div>
-  )
-}

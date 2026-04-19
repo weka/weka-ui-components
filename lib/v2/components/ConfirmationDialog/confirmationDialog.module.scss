@@ -1,0 +1,70 @@
+@use '../../styles/colors' as *;
+
+.content {
+  padding: 8px 0;
+}
+
+.message {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.subMessage {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+
+  button {
+    min-width: 100px !important;
+    max-width: 150px !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    flex: 0 0 auto !important;
+  }
+}
+
+.dangerButton {
+  background: var(--red-600-400) !important;
+  color: #{$gray-50} !important;
+  border-color: var(--red-600-400) !important;
+
+  &:hover:not(:disabled) {
+    background: var(--red-700-300) !important;
+    border-color: var(--red-700-300) !important;
+    color: #{$gray-50} !important;
+    opacity: 1 !important;
+  }
+
+  &:disabled {
+    background: var(--red-400-600) !important;
+    border-color: var(--red-400-600) !important;
+    color: #{$gray-50} !important;
+    opacity: 0.7 !important;
+  }
+}
+
+.primaryButton {
+  background: linear-gradient(0deg, $purple-700 0%, $purple-500 100%) !important;
+  color: #{$gray-50} !important;
+  border: none !important;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9 !important;
+  }
+
+  &:disabled {
+    opacity: 0.6 !important;
+  }
+}

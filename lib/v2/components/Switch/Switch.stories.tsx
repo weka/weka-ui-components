@@ -14,17 +14,16 @@ const meta: Meta<typeof Switch> = {
 export default meta
 type Story = StoryObj<typeof Switch>
 
-export const Default: Story = {
-  args: {
-    checked: false,
-    onChange: NOOP
-  }
-}
-
-export const Checked: Story = {
-  args: {
-    checked: true,
-    onChange: NOOP
+export const Interactive: Story = {
+  render: function InteractiveSwitch() {
+    const [checked, setChecked] = useState(false)
+    return (
+      <Switch
+        checked={checked}
+        onChange={(_, value) => setChecked(value)}
+        tooltip='Click to toggle'
+      />
+    )
   }
 }
 
@@ -49,18 +48,5 @@ export const WithTooltip: Story = {
     checked: false,
     onChange: NOOP,
     tooltip: 'Toggle this setting to enable the feature'
-  }
-}
-
-export const Interactive: Story = {
-  render: function InteractiveSwitch() {
-    const [checked, setChecked] = useState(false)
-    return (
-      <Switch
-        checked={checked}
-        onChange={(_, value) => setChecked(value)}
-        tooltip='Click to toggle'
-      />
-    )
   }
 }

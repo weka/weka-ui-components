@@ -1,14 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { ArrowIcon } from './ArrowIcon'
+import { ARROW_DIRECTIONS, ArrowIcon } from './ArrowIcon'
+import { BugIcon } from './BugIcon'
 import { ChartIcon } from './ChartIcon'
 import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
 import { InfoIcon } from './InfoIcon'
+import { LinkIcon } from './LinkIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
+import { SettingsIcon } from './SettingsIcon'
+import { WarningCircleIcon } from './WarningCircleIcon'
+import { WarningIcon } from './WarningIcon'
+import { WarningTriangleIcon } from './WarningTriangleIcon'
 
 const meta: Meta = {
   title: 'v2/Icons'
@@ -17,52 +23,114 @@ const meta: Meta = {
 export default meta
 type Story = StoryObj
 
-const iconStyle = {
+const gridStyle = {
   display: 'flex',
   flexDirection: 'column' as const,
+  gap: '16px'
+}
+const rowStyle = {
+  display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: '12px',
   fontSize: '12px'
 }
 
-export const AllIcons: Story = {
+export const GeneralIcons: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-end' }}>
-      <div style={iconStyle}>
+    <div style={gridStyle}>
+      <div style={rowStyle}>
+        <ArrowIcon direction={ARROW_DIRECTIONS.UP} />
+        <span>ArrowIcon (up)</span>
+      </div>
+      <div style={rowStyle}>
+        <ArrowIcon direction={ARROW_DIRECTIONS.DOWN} />
+        <span>ArrowIcon (down)</span>
+      </div>
+      <div style={rowStyle}>
+        <ArrowIcon direction={ARROW_DIRECTIONS.LEFT} />
+        <span>ArrowIcon (left)</span>
+      </div>
+      <div style={rowStyle}>
+        <ArrowIcon direction={ARROW_DIRECTIONS.RIGHT} />
+        <span>ArrowIcon (right)</span>
+      </div>
+      <div style={rowStyle}>
+        <BugIcon
+          height={16}
+          width={16}
+        />
+        <span>BugIcon</span>
+      </div>
+      <div style={rowStyle}>
         <ChartIcon />
         <span>ChartIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <CheckboxCheckedIcon />
-        <span>CheckboxChecked</span>
+        <span>CheckboxCheckedIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <CheckboxPartialIcon />
-        <span>CheckboxPartial</span>
+        <span>CheckboxPartialIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <CheckboxUncheckedIcon />
-        <span>CheckboxUnchecked</span>
+        <span>CheckboxUncheckedIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <CloseWithBgIcon />
-        <span>CloseWithBg</span>
+        <span>CloseWithBgIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <InfoIcon />
         <span>InfoIcon</span>
       </div>
-      <div style={iconStyle}>
-        <ArrowIcon />
-        <span>ArrowIcon</span>
+      <div style={rowStyle}>
+        <LinkIcon />
+        <span>LinkIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <NavChevronLeftIcon />
-        <span>NavChevronLeft</span>
+        <span>NavChevronLeftIcon</span>
       </div>
-      <div style={iconStyle}>
+      <div style={rowStyle}>
         <NavChevronRightIcon />
-        <span>NavChevronRight</span>
+        <span>NavChevronRightIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <SettingsIcon
+          height={16}
+          width={16}
+        />
+        <span>SettingsIcon (filled)</span>
+      </div>
+      <div style={rowStyle}>
+        <SettingsIcon
+          height={16}
+          variant='outline'
+          width={16}
+        />
+        <span>SettingsIcon (outline)</span>
+      </div>
+      <div style={rowStyle}>
+        <WarningCircleIcon />
+        <span>WarningCircleIcon (outline)</span>
+      </div>
+      <div style={rowStyle}>
+        <WarningCircleIcon filled />
+        <span>WarningCircleIcon (filled)</span>
+      </div>
+      <div style={rowStyle}>
+        <WarningIcon />
+        <span>WarningIcon (outline)</span>
+      </div>
+      <div style={rowStyle}>
+        <WarningIcon filled />
+        <span>WarningIcon (filled)</span>
+      </div>
+      <div style={rowStyle}>
+        <WarningTriangleIcon />
+        <span>WarningTriangleIcon</span>
       </div>
     </div>
   )

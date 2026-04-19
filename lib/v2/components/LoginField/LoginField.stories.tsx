@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { EMPTY_STRING, NOOP } from '../../utils/consts'
 
 import { LoginField } from './LoginField'
+import { Button } from '../Button'
 
 const meta: Meta<typeof LoginField> = {
   title: 'v2/LoginField',
@@ -22,58 +23,6 @@ const meta: Meta<typeof LoginField> = {
 
 export default meta
 type Story = StoryObj<typeof LoginField>
-
-export const Default: Story = {
-  args: {
-    label: 'Email',
-    value: EMPTY_STRING,
-    onChange: NOOP
-  }
-}
-
-export const WithValue: Story = {
-  args: {
-    label: 'Email',
-    value: 'user@example.com',
-    onChange: NOOP
-  }
-}
-
-export const Required: Story = {
-  args: {
-    label: 'Email',
-    value: EMPTY_STRING,
-    isRequired: true,
-    onChange: NOOP
-  }
-}
-
-export const WithError: Story = {
-  args: {
-    label: 'Email',
-    value: 'invalid-email',
-    error: 'Please enter a valid email address',
-    onChange: NOOP
-  }
-}
-
-export const Password: Story = {
-  args: {
-    label: 'Password',
-    type: 'password',
-    value: EMPTY_STRING,
-    onChange: NOOP
-  }
-}
-
-export const Disabled: Story = {
-  args: {
-    label: 'Email',
-    value: 'disabled@example.com',
-    disabled: true,
-    onChange: NOOP
-  }
-}
 
 export const Interactive: Story = {
   render: function InteractiveLoginField() {
@@ -98,6 +47,55 @@ export const Interactive: Story = {
         value={value}
       />
     )
+  }
+}
+
+export const Default: Story = {
+  args: {
+    label: 'Email',
+    value: EMPTY_STRING,
+    onChange: NOOP
+  }
+}
+
+export const Required: Story = {
+  args: {
+    label: 'Email',
+    value: EMPTY_STRING,
+    isRequired: true,
+    onChange: NOOP
+  }
+}
+
+export const WithError: Story = {
+  args: {
+    label: 'Email',
+    value: 'invalid-email',
+    error: 'Please enter a valid email address',
+    onChange: NOOP
+  }
+}
+
+export const Password: Story = {
+  render: function InteractivePassword() {
+    const [value, setValue] = useState(EMPTY_STRING)
+    return (
+      <LoginField
+        label='Password'
+        onChange={setValue}
+        type='password'
+        value={value}
+      />
+    )
+  }
+}
+
+export const Disabled: Story = {
+  args: {
+    label: 'Email',
+    value: 'disabled@example.com',
+    disabled: true,
+    onChange: NOOP
   }
 }
 
@@ -128,13 +126,13 @@ export const LoginForm: Story = {
           type='password'
           value={password}
         />
-        <button
+        <Button
           onClick={() => alert(`Email: ${email}, Password: ${password}`)}
-          style={{ padding: '12px', cursor: 'pointer' }}
+          style={{ padding: '12px' }}
           type='button'
         >
           Sign In
-        </button>
+        </Button>
       </div>
     )
   }

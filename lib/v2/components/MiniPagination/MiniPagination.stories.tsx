@@ -14,6 +14,21 @@ const meta: Meta<typeof MiniPagination> = {
 export default meta
 type Story = StoryObj<typeof MiniPagination>
 
+export const Interactive: Story = {
+  render: function InteractivePagination() {
+    const [page, setPage] = useState(0)
+    const totalPages = 5
+    return (
+      <MiniPagination
+        currentPage={page}
+        onNextPage={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+        onPrevPage={() => setPage((p) => Math.max(p - 1, 0))}
+        totalPages={totalPages}
+      />
+    )
+  }
+}
+
 export const Default: Story = {
   args: {
     currentPage: 2,
@@ -38,20 +53,5 @@ export const LastPage: Story = {
     totalPages: 10,
     onPrevPage: NOOP,
     onNextPage: NOOP
-  }
-}
-
-export const Interactive: Story = {
-  render: function InteractivePagination() {
-    const [page, setPage] = useState(0)
-    const totalPages = 5
-    return (
-      <MiniPagination
-        currentPage={page}
-        onNextPage={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
-        onPrevPage={() => setPage((p) => Math.max(p - 1, 0))}
-        totalPages={totalPages}
-      />
-    )
   }
 }

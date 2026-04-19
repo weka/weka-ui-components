@@ -111,35 +111,3 @@ export const WithWrap: Story = {
     </FlexBox>
   )
 }
-
-export const AllJustifyOptions: Story = {
-  render: () => (
-    <FlexBox
-      direction='column'
-      gap={16}
-    >
-      {(
-        [
-          'flex-start',
-          'center',
-          'flex-end',
-          'space-between',
-          'space-around',
-          'space-evenly'
-        ] as const
-      ).map((justify) => (
-        <div key={justify}>
-          <div style={{ marginBottom: '4px', fontSize: '12px' }}>{justify}</div>
-          <FlexBox
-            justify={justify}
-            style={{ border: '1px solid #ccc', padding: '8px' }}
-          >
-            <Box>A</Box>
-            <Box>B</Box>
-            <Box>C</Box>
-          </FlexBox>
-        </div>
-      ))}
-    </FlexBox>
-  )
-}

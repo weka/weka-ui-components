@@ -1,0 +1,30 @@
+@use 'colors' as *;
+
+@mixin severity-colors {
+  .critical {
+    background: linear-gradient(0deg, $red-800 0%, $red-600 100%);
+    color: $gray-0;
+  }
+
+  .major {
+    background: linear-gradient(0deg, $red-500 0%, $red-300 100%);
+    color: $gray-0;
+  }
+
+  .minor {
+    background: linear-gradient(0deg, $orange-600 0%, $orange-400 100%);
+    color: $gray-0;
+  }
+
+  .warning {
+    background: linear-gradient(0deg, $yellow-600 0%, $yellow-400 100%);
+    color: $gray-800;
+  }
+
+  .debug,
+  .default,
+  .info {
+    background: linear-gradient(0deg, $gray-600 0%, $gray-400 100%);
+    color: $gray-0;
+  }
+}

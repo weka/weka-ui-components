@@ -15,30 +15,6 @@ const meta: Meta<typeof Popup> = {
 export default meta
 type Story = StoryObj<typeof Popup>
 
-export const Default: Story = {
-  args: {
-    open: true,
-    title: 'Popup Title',
-    onClose: NOOP,
-    children: 'This is the popup content.'
-  }
-}
-
-export const WithActions: Story = {
-  args: {
-    open: true,
-    title: 'Confirm Action',
-    onClose: NOOP,
-    children: 'Are you sure you want to proceed?',
-    actions: (
-      <>
-        <Button variant='secondary'>Cancel</Button>
-        <Button variant='primary'>Confirm</Button>
-      </>
-    )
-  }
-}
-
 export const Interactive: Story = {
   render: function InteractivePopup() {
     const [open, setOpen] = useState(false)
@@ -60,6 +36,30 @@ export const Interactive: Story = {
         >
           Click the close button or press Escape to close.
         </Popup>
+      </>
+    )
+  }
+}
+
+export const Default: Story = {
+  args: {
+    open: true,
+    title: 'Popup Title',
+    onClose: NOOP,
+    children: 'This is the popup content.'
+  }
+}
+
+export const WithActions: Story = {
+  args: {
+    open: true,
+    title: 'Confirm Action',
+    onClose: NOOP,
+    children: 'Are you sure you want to proceed?',
+    actions: (
+      <>
+        <Button variant='secondary'>Cancel</Button>
+        <Button variant='primary'>Confirm</Button>
       </>
     )
   }

@@ -1,0 +1,139 @@
+@use '../../styles/colors' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 320px;
+  padding: 0 12px 12px;
+  box-sizing: border-box;
+  background: var(--ld-container-bg);
+  border: 1px solid var(--gray-300-700);
+  box-shadow: 0 0 16px 4px var(--ld-shadow-v2);
+  overflow: hidden;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--gray-300-700);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+  line-height: 20px;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-700-300);
+  font-family: var(--font-family);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+
+.infoIcon {
+  display: flex;
+  align-items: center;
+  stroke: var(--gray-650-350);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge {
+  background: linear-gradient(0deg, $red-600 0%, $red-400 100%);
+  color: $gray-20;
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+  width: 33px;
+  padding: 2px 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.menuButton {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-icon, var(--gray-100-900));
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: var(--bg-hover, var(--gray-100-900));
+  }
+
+  &.active {
+    background: var(--icon-bg-active, var(--gray-200-800));
+  }
+}
+
+.menuIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--gray-700-300);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  overflow: hidden;
+}
