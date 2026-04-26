@@ -1,0 +1,35 @@
+.cellDay {
+  display: flex;
+  margin: 1px;
+  font-size: 12px;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cellDayDisabled {
+  composes: cellDay;
+  cursor: not-allowed;
+  color: var(--gray-400-600);
+}
+
+.cellDayActive {
+  composes: cellDay;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--gray-300-700);
+  }
+}
+
+.cellDaySelected {
+  composes: cellDay;
+  background-color: var(--gray-700-300);
+  color: var(--gray-50-950);
+
+  &:hover {
+    background-color: var(--gray-700-300);
+  }
+}

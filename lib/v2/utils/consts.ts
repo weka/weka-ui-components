@@ -17,6 +17,7 @@ export const EMPTY_SET = new Set<never>()
 export const NOOP = () => {}
 export const NOT_APPLICABLE = 'N/A'
 export const COMMA_SEPARATOR = ', '
+export const SEARCH_PLACEHOLDER = 'Search...'
 
 // Percentage constants
 export const PERCENTAGE = {
@@ -115,3 +116,52 @@ export const CLOUD_ICON_VARIANTS = {
 
 export type CloudIconVariant =
   (typeof CLOUD_ICON_VARIANTS)[keyof typeof CLOUD_ICON_VARIANTS]
+
+// Date/time constants
+export const DAYS_IN_WEEK = 7
+
+export const SHORT_DAY_OF_WEEK = [
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat',
+  'Sun'
+] as const
+
+export const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+] as const
+
+export const TIME_PARTS = {
+  HOUR: 'hour',
+  MINUTE: 'minute',
+  SECOND: 'second'
+} as const
+
+export type TimePart = (typeof TIME_PARTS)[keyof typeof TIME_PARTS]
+
+export const TIME_FORMATS = {
+  DATE: 'yyyy-MM-dd',
+  MONTH_DAY_TIME: 'MMM dd HH:mm',
+  MONTH_DAY: 'MMM dd',
+  DATE_TIME: 'yyyy-MM-dd HH:mm',
+  DATE_TIME_SECONDS: 'yyyy-MM-dd HH:mm:ss',
+  DATE_TIME_SECONDS_MS: 'yyyy-MM-dd HH:mm:ss.SSS',
+  HOUR_MIN: 'HH:mm',
+  MAIN_DATE_TIME_FORMAT: 'MMM dd, yyyy HH:mm'
+} as const
+
+export type TimeFormat = (typeof TIME_FORMATS)[keyof typeof TIME_FORMATS]

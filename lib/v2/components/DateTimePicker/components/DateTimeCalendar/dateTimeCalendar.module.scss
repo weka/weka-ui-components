@@ -1,0 +1,23 @@
+.calendarWrapper {
+  background-color: var(--gray-100-900);
+  border: 1px solid var(--gray-300-700);
+  padding: 8px;
+  box-sizing: border-box;
+  width: 298px;
+}
+
+.calendarActions {
+  padding: 0 12px 10px;
+  box-sizing: border-box;
+}
+
+.calendarActionsSub {
+  padding-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.fullSize {
+  flex: 1;
+}

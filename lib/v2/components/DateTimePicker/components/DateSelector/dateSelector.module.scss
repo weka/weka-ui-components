@@ -1,0 +1,59 @@
+.datetimeCalendar {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+
+.dateToolbar {
+  margin: 10px;
+  font-weight: bold;
+  font-family: var(--bold-font);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dateController {
+  cursor: pointer;
+  width: 14px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+
+    path {
+      fill: var(--purple-600-400);
+    }
+  }
+}
+
+.calendarDaysOfWeek {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid var(--gray-300-700);
+}
+
+.dayOfWeek {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+  justify-content: center;
+  align-items: center;
+  color: var(--gray-700-300);
+
+  &:first-child {
+    padding-left: 3px;
+  }
+
+  &:last-child {
+    padding-right: 3px;
+  }
+}
+
+.calendarRow {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 2px;
+}

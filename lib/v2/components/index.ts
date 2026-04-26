@@ -48,8 +48,12 @@ export {
 } from './ConfirmationDialog'
 export type { DashboardCardProps } from './DashboardCard'
 export { DASHBOARD_CARD_TEST_IDS, DashboardCard } from './DashboardCard'
+export type { DateTimePickerProps } from './DateTimePicker'
+export { DateTimePicker } from './DateTimePicker'
 export type { EmptyChartStateProps } from './EmptyChartState'
 export { EmptyChartState } from './EmptyChartState'
+export type { ExpandableSearchProps } from './ExpandableSearch'
+export { ExpandableSearch } from './ExpandableSearch'
 export type {
   FlexAlign,
   FlexBoxProps,
@@ -72,6 +76,8 @@ export type { MenuPopoverProps } from './MenuPopover'
 export { MenuPopover } from './MenuPopover'
 export type { MiniPaginationProps } from './MiniPagination'
 export { MiniPagination } from './MiniPagination'
+export type { NumInputSpinButtonProps } from './NumInputSpinButton'
+export { NumInputSpinButton } from './NumInputSpinButton'
 export type { ContentOverflow, PopupProps } from './Popup'
 export { CONTENT_OVERFLOWS, Popup } from './Popup'
 export type {
@@ -80,6 +86,17 @@ export type {
   ProtocolTagsProps
 } from './ProtocolTags'
 export { PROTOCOL_TAG_SIZES, ProtocolTags } from './ProtocolTags'
+export type {
+  SearchAutocompleteProps,
+  SearchOption
+} from './SearchAutocomplete'
+export { SearchAutocomplete } from './SearchAutocomplete'
+export type { SeverityChipProps } from './SeverityChip'
+export {
+  getFilterSeverityChips,
+  getSeverityChip,
+  SeverityChip
+} from './SeverityChip'
 export type { SwitchProps } from './Switch'
 export { Switch } from './Switch'
 export type {

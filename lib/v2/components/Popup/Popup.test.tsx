@@ -1,6 +1,8 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { KEYBOARD_KEYS } from '../../utils/consts'
+
 import { Popup } from './Popup'
 
 beforeEach(() => {
@@ -162,7 +164,7 @@ describe('Popup - User Interactions', () => {
       </Popup>
     )
 
-    fireEvent.keyDown(document, { key: 'Escape' })
+    fireEvent.keyDown(document, { key: KEYBOARD_KEYS.ESCAPE })
 
     expect(handleClose).toHaveBeenCalledTimes(1)
   })
@@ -179,7 +181,7 @@ describe('Popup - User Interactions', () => {
       </Popup>
     )
 
-    fireEvent.keyDown(document, { key: 'Enter' })
+    fireEvent.keyDown(document, { key: KEYBOARD_KEYS.ENTER })
 
     expect(handleClose).not.toHaveBeenCalled()
   })

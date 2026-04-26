@@ -1,0 +1,13 @@
+// Storybook-only overrides: make MUI portal-rendered surfaces follow the
+// v2 theme. The actual app uses a MUI ThemeProvider that handles this; in
+// Storybook we don't, so MUI Paper paints its default white/black even when
+// the rest of the page is in dark mode. These rules force inheritance from
+// our theme-aware CSS variables.
+
+body[data-theme='dark'] {
+  .MuiPaper-root {
+    background-color: var(--gray-100-900) !important;
+    background-image: none !important;
+    color: var(--text-primary) !important;
+  }
+}
