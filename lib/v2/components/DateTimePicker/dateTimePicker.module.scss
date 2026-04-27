@@ -1,0 +1,56 @@
+.datetimePicker {
+  width: 224px;
+  position: relative;
+}
+
+.pickerLabel {
+  padding: 6px 4px 8px 8px;
+  border: 1px solid var(--gray-300-700);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--gray-50-950);
+  color: var(--text-color-primary);
+  outline: none;
+  transition: all 0.2s ease;
+  min-width: 0;
+  height: 34px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &::placeholder {
+    color: var(--gray-450-550);
+  }
+
+  &:hover {
+    border-color: var(--gray-400-600);
+  }
+
+  svg {
+    position: absolute;
+    top: calc(50% - 10px);
+    right: 6px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.popperWrapper {
+  z-index: 1400;
+}
+
+.menuPopper {
+  margin: 0 4px;
+}
+
+.menuPopperCalendar {
+  margin-top: 2px;
+  border-radius: 4px;
+  width: 298px;
+}
+
+.growTransition {
+  transform-origin: center top;
+}

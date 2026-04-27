@@ -1,0 +1,39 @@
+.datetimeTime {
+  border-top: 1px solid var(--gray-300-700);
+  margin: 0 15px;
+}
+
+.datetimeTimeHourMinOnly {
+  composes: datetimeTime;
+
+  .timeSelector {
+    width: 73%;
+    margin: auto;
+  }
+}
+
+.timeSelector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  gap: 8px;
+
+  input {
+    background-color: var(--gray-100-900);
+    width: 20px;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+}
+
+.timeSelectorNowBtn {
+  min-width: 50px;
+  height: 24px;
+}
+
+.timeSelectorNoNow {
+  composes: timeSelector;
+  justify-content: center;
+  gap: 12px;
+}

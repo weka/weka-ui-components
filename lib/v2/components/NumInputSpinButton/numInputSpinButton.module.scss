@@ -1,0 +1,38 @@
+.numSpinBtn {
+  position: absolute;
+  right: 5px;
+  top: 6px;
+  display: flex;
+  flex-direction: column;
+
+  > button {
+    border: none;
+    max-height: 12px;
+    width: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray-200);
+    padding: 2px;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}
+
+.numSpinUp {
+  border-radius: 4px 4px 0 0;
+}
+
+.numSpinDown {
+  border-radius: 0 0 4px 4px;
+}
+
+.numSpinIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--gray-850);
+}

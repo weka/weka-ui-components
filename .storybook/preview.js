@@ -4,6 +4,7 @@ import '../lib/style/theme.scss'
 import '../lib/style/app.scss'
 import '../lib/style/fonts.scss'
 import '../lib/v2/styles/index.scss'
+import './storybook-mui-overrides.scss'
 
 // Theme configuration for toolbar
 export const globalTypes = {

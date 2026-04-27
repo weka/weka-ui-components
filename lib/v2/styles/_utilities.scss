@@ -1,0 +1,11 @@
+// ========================================
+// V2 GLOBAL UTILITIES
+// ========================================
+// Shared utility classes available to all v2 components and consumers.
+// Loaded once via lib/v2/styles/index.scss — components reference these by
+// plain className strings (e.g., className='capitalizedText') instead of
+// re-declaring the same rules in every component's CSS Module.
+
+.capitalizedText {
+  text-transform: capitalize;
+}

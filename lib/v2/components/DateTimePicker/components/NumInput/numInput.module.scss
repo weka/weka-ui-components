@@ -1,0 +1,75 @@
+.numInputController {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 10px 4px 10px 8px;
+  border: 1px solid var(--gray-300-700);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: var(--gray-50-950);
+  color: var(--text-color-primary);
+  outline: none;
+  transition: all 0.2s ease;
+  min-width: 0;
+  height: 34px;
+  box-sizing: border-box;
+
+  &:hover {
+    border-color: var(--gray-400-600);
+  }
+
+  input {
+    border: none;
+    color: var(--gray-950-20);
+    background-color: var(--gray-50-950) !important;
+    margin-right: 5px;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+.numInputControllerActive {
+  composes: numInputController;
+  border: 1px solid var(--purple-20-950);
+}
+
+.arrowButtons {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.arrowBtn {
+  display: flex;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  svg {
+    height: 12px;
+    width: 12px;
+
+    path {
+      fill: var(--text-primary) !important;
+    }
+  }
+}

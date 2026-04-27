@@ -6,11 +6,14 @@ import { ChartIcon } from './ChartIcon'
 import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
+import { CloseIcon } from './CloseIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
+import { DateTimeIcon } from './DateTimeIcon'
 import { InfoIcon } from './InfoIcon'
 import { LinkIcon } from './LinkIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
+import { SearchIcon } from './SearchIcon'
 import { SettingsIcon } from './SettingsIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
 import { WarningIcon } from './WarningIcon'
@@ -78,8 +81,16 @@ export const GeneralIcons: Story = {
         <span>CheckboxUncheckedIcon</span>
       </div>
       <div style={rowStyle}>
+        <CloseIcon />
+        <span>CloseIcon</span>
+      </div>
+      <div style={rowStyle}>
         <CloseWithBgIcon />
         <span>CloseWithBgIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <DateTimeIcon />
+        <span>DateTimeIcon</span>
       </div>
       <div style={rowStyle}>
         <InfoIcon />
@@ -96,6 +107,13 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <NavChevronRightIcon />
         <span>NavChevronRightIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <SearchIcon
+          height={20}
+          width={20}
+        />
+        <span>SearchIcon</span>
       </div>
       <div style={rowStyle}>
         <SettingsIcon

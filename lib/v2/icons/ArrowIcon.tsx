@@ -1,3 +1,24 @@
+/**
+ * ⚠️ NAMING WARNING: The visual direction is inverted vs. the constant name.
+ *
+ * The base SVG path is a chevron pointing LEFT (apex on the left side of the
+ * viewBox). The rotation map applies CSS `transform: rotate()` to that base.
+ *
+ * Because of how rotation interacts with the left-pointing base:
+ * - `UP` / `ASC` → rotates -90° → tip ends at the BOTTOM → renders **↓ (visually DOWN)**
+ * - `DOWN` / `DESC` → rotates 90° → tip ends at the TOP → renders **↑ (visually UP)**
+ * - `LEFT` → no rotation → renders **◀ (visually LEFT)**
+ * - `RIGHT` → rotates 180° → tip ends at the RIGHT → renders **▶ (visually RIGHT)**
+ *
+ * In short: when picking a direction, choose the one whose visual you want,
+ * **NOT** the one whose name matches your semantic intent. For a spin-button
+ * top-up arrow you want `ARROW_DIRECTIONS.DOWN` (because it renders ↑).
+ *
+ * Why we don't fix it: existing consumers (e.g. observe's NumInputSpinButton,
+ * sort indicators, charts) depend on the current behavior. A rename would be a
+ * silent visual flip across the codebase. If migrating, prefer wrapping with a
+ * helper or adding a comment at the call site.
+ */
 export const ARROW_DIRECTIONS = {
   ASC: 'asc',
   DESC: 'desc',

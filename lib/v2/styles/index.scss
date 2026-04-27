@@ -4,6 +4,7 @@
 // Import this file to get v2 theme support
 
 @use 'theme';
+@use 'utilities';
 
 // Register bold weight under the same IBMPlexSans family
 // so font-weight: 700 resolves to the actual bold font file
