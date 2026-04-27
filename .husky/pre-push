@@ -1,0 +1,40 @@
+FAILED=0
+
+DIRTY_BEFORE=$(git diff --stat)
+
+FILES=$(git diff --name-only origin/main...HEAD -- 'lib/' 'plugins/' | grep -E '\.(ts|tsx|js|jsx)$' 2>/dev/null)
+if [ -n "$FILES" ]; then
+  echo "ESLint: $(echo "$FILES" | wc -l | tr -d ' ') changed files..."
+  yarn exec eslint --fix $FILES || FAILED=1
+fi
+
+HAS_FIXES=0
+DIRTY_AFTER=$(git diff --stat)
+if [ "$DIRTY_BEFORE" != "$DIRTY_AFTER" ]; then
+  HAS_FIXES=1
+fi
+
+if [ $FAILED -eq 1 ] && [ $HAS_FIXES -eq 1 ]; then
+  echo ""
+  echo "ESLint found errors and auto-fixed some of them."
+  echo "Fix the remaining errors, then commit everything and push again."
+  echo ""
+  echo "To skip this check: git push --no-verify"
+  echo ""
+elif [ $FAILED -eq 1 ]; then
+  echo ""
+  echo "ESLint found errors that require manual fixes."
+  echo "Fix them, commit, and push again."
+  echo ""
+  echo "To skip this check: git push --no-verify"
+  echo ""
+elif [ $HAS_FIXES -eq 1 ]; then
+  echo ""
+  echo "ESLint auto-fixed all issues. Commit the fixes and push again."
+  echo ""
+  echo "To skip this check: git push --no-verify"
+  echo ""
+  FAILED=1
+fi
+
+exit $FAILED
