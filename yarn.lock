@@ -6668,13 +6668,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ace-builds@npm:^1.32.8":
-  version: 1.36.2
-  resolution: "ace-builds@npm:1.36.2"
-  checksum: 10c0/86b4e6d5f7342418e3c9d66d817c6bd3e23f3925392a5098b0b15e6c3189ad163b5e177e1729ca15744cb0772b8333780deea7a42d1a6c88010ef8b97bad90ce
-  languageName: node
-  linkType: hard
-
 "ace-builds@npm:^1.43.6":
   version: 1.43.6
   resolution: "ace-builds@npm:1.43.6"
