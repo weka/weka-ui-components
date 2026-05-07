@@ -6572,6 +6572,7 @@ __metadata:
     eslint: "npm:^9.0.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-import-resolver-typescript: "npm:^4.4.4"
+    eslint-plugin-diff: "npm:^2.1.7"
     eslint-plugin-import: "npm:^2.32.0"
     eslint-plugin-jsx-a11y: "npm:^6.10.2"
     eslint-plugin-promise: "npm:^7.2.1"
@@ -9344,6 +9345,15 @@ __metadata:
   peerDependencies:
     eslint: ">=4.0.0"
   checksum: 10c0/c73e054c3cf3c5392e8ea7e56f41db3859b9d7c0dd347c28a5f08ae87889cc4879fcddfe227ee1ec075a9ab62e34e245d7e6e723180dfa36d07397c2cbb2c1a1
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-diff@npm:^2.1.7":
+  version: 2.1.7
+  resolution: "eslint-plugin-diff@npm:2.1.7"
+  peerDependencies:
+    eslint: ">=6.7.0"
+  checksum: 10c0/b7942e61ca4807e29a80dcb6dbec5891a2d77cb03be964664edf7baeb0ef6055e63ed64f2be76b060f477ce92887feacfbea948d655118938be94c7bc3ce8211
   languageName: node
   linkType: hard
 

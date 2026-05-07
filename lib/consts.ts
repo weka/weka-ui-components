@@ -11,7 +11,6 @@ const {
   AccidentCritical
 } = svgs
 
-// eslint-disable-next-line
 export const EMPTY_STRING = ''
 export const EMPTY_CONTENT = '—'
 export const ZERO_STRING = '0'

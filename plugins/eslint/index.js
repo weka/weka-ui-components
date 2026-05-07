@@ -105,6 +105,7 @@ export const eslintConfig = tseslint.config(
       'weka/no-empty-content': 'error',
       'weka/no-zero-string': 'error',
       'weka/no-tag-separator': 'error',
+      'weka/no-nop': 'error',
       'no-debugger': 'warn',
       'no-param-reassign': 'off',
       'no-unused-expressions': 'off',
@@ -299,7 +300,12 @@ export const eslintConfig = tseslint.config(
       '@typescript-eslint/naming-convention': [
         'error',
         { selector: 'variable', format: ['UPPER_CASE'], modifiers: ['const'] }
-      ]
+      ],
+      'weka/no-empty-strings': 'off',
+      'weka/no-empty-content': 'off',
+      'weka/no-zero-string': 'off',
+      'weka/no-tag-separator': 'off',
+      'weka/no-nop': 'off'
     }
   },
   {

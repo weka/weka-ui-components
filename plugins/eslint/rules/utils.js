@@ -25,7 +25,14 @@ export function stringLiteralRule(value, constantName) {
               message: `Use ${constantName} from 'consts' instead of the literal ${JSON.stringify(
                 value
               )}.`,
-              fix: (fixer) => fixer.replaceText(node, constantName)
+              fix: (fixer) => {
+                const isJsxAttributeValue =
+                  parent?.type === 'JSXAttribute' && parent.value === node
+                const replacement = isJsxAttributeValue
+                  ? `{${constantName}}`
+                  : constantName
+                return fixer.replaceText(node, replacement)
+              }
             })
           }
         }
