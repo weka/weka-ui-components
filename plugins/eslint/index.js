@@ -1,7 +1,7 @@
 import { fixupPluginRules } from '@eslint/compat'
 import js from '@eslint/js'
-import wekaPlugin from '@weka/eslint-plugin-weka'
 import eslintConfigPrettier from 'eslint-config-prettier'
+import { localRules } from './rules/index.js'
 import importPlugin from 'eslint-plugin-import'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import promise from 'eslint-plugin-promise'
@@ -50,7 +50,7 @@ export const eslintConfig = tseslint.config(
       react,
       promise,
       'unused-imports': unusedImports,
-      '@weka/weka': wekaPlugin,
+      weka: { rules: localRules },
       import: fixupPluginRules(importPlugin),
       'jsx-a11y': jsxA11y,
       'simple-import-sort': simpleImportSort
@@ -101,7 +101,10 @@ export const eslintConfig = tseslint.config(
       ],
       '@typescript-eslint/return-await': ['warn', 'in-try-catch'],
       '@typescript-eslint/require-await': 'off',
-      '@weka/weka/no-empty-strings': 'error',
+      'weka/no-empty-strings': 'error',
+      'weka/no-empty-content': 'error',
+      'weka/no-zero-string': 'error',
+      'weka/no-tag-separator': 'error',
       'no-debugger': 'warn',
       'no-param-reassign': 'off',
       'no-unused-expressions': 'off',
