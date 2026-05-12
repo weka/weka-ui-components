@@ -5,7 +5,7 @@ DIRTY_BEFORE=$(git diff --stat)
 FILES=$(git diff --name-only origin/main...HEAD -- 'lib/' 'plugins/' | grep -E '\.(ts|tsx|js|jsx)$' 2>/dev/null)
 if [ -n "$FILES" ]; then
   echo "ESLint: $(echo "$FILES" | wc -l | tr -d ' ') changed files..."
-  yarn exec eslint --fix $FILES || FAILED=1
+  ESLINT_PLUGIN_DIFF_COMMIT=origin/main yarn exec eslint --fix --config eslint.diff.config.mjs $FILES || FAILED=1
 fi
 
 HAS_FIXES=0
