@@ -16,7 +16,6 @@ export const EMPTY_CONTENT = '—'
 export const ZERO_STRING = '0'
 
 export const NOP = () => {}
-export const TAG_SEPARATOR = ','
 
 export const EVENT_KEYS = {
   ENTER: 'Enter',

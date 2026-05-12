@@ -6,7 +6,7 @@ import { FormControl } from '@mui/material'
 import clsx from 'clsx'
 import type Option from 'types'
 
-import { EMPTY_STRING, EVENT_KEYS, TAG_SEPARATOR } from 'consts'
+import { EMPTY_STRING, EVENT_KEYS } from 'consts'
 import svgs from 'svgs'
 import Utils from 'utils'
 
@@ -14,6 +14,8 @@ import { useHighlightInput } from '../../../hooks'
 import Tooltip from '../../Tooltip'
 
 import './tagsBox.scss'
+
+const TAG_SEPARATOR = ','
 
 const { Info } = svgs
 

@@ -104,7 +104,6 @@ export const eslintConfig = tseslint.config(
       'weka/no-empty-strings': 'error',
       'weka/no-empty-content': 'error',
       'weka/no-zero-string': 'error',
-      'weka/no-tag-separator': 'error',
       'weka/no-nop': 'error',
       'no-debugger': 'warn',
       'no-param-reassign': 'off',
@@ -304,7 +303,6 @@ export const eslintConfig = tseslint.config(
       'weka/no-empty-strings': 'off',
       'weka/no-empty-content': 'off',
       'weka/no-zero-string': 'off',
-      'weka/no-tag-separator': 'off',
       'weka/no-nop': 'off'
     }
   },
