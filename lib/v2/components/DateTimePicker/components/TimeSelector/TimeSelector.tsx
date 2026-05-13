@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import { DateTime } from 'luxon'
 
-import { TIME_PARTS } from '../../../../utils/consts'
 import { Button } from '../../../Button'
 import { clampDateTime } from '../../utils/dateTimeUtils'
 import { NumInput } from '../NumInput'
 
 import styles from './timeSelector.module.scss'
+
+const TIME_PARTS = {
+  HOUR: 'hour',
+  MINUTE: 'minute',
+  SECOND: 'second'
+} as const
 
 const MAX_HOUR = 23
 const MAX_MIN_SEC = 59

@@ -6,6 +6,7 @@ import { ChartIcon } from './ChartIcon'
 import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
+import { ChevronDownSmallIcon } from './ChevronDownSmallIcon'
 import { CloseIcon } from './CloseIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
 import { DateTimeIcon } from './DateTimeIcon'
@@ -79,6 +80,10 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <CheckboxUncheckedIcon />
         <span>CheckboxUncheckedIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <ChevronDownSmallIcon />
+        <span>ChevronDownSmallIcon</span>
       </div>
       <div style={rowStyle}>
         <CloseIcon />

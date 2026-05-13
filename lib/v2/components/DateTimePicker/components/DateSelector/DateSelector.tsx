@@ -2,13 +2,37 @@ import { useMemo, useState } from 'react'
 import { DateTime } from 'luxon'
 
 import { ARROW_DIRECTIONS, ArrowIcon } from '../../../../icons'
-import { MONTHS, SHORT_DAY_OF_WEEK } from '../../../../utils/consts'
 import { getDaysOfTheMonth } from '../../../../utils/timeUtils'
 import { DayCell } from '../DayCell'
 
 import styles from './dateSelector.module.scss'
 
 const NOW_KEY = 'now'
+
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+] as const
+
+const SHORT_DAY_OF_WEEK = [
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat',
+  'Sun'
+] as const
 
 export interface DateSelectorProps {
   date: DateTime

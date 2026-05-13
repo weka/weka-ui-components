@@ -1,0 +1,80 @@
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+
+  &:has(input:disabled) .label {
+    opacity: 0.6;
+  }
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-700-300);
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.required {
+  color: var(--red-500);
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  background: var(--gray-50-920);
+  border: 1px solid var(--gray-350-650);
+  border-radius: 4px;
+  color: var(--gray-950-20);
+  font-size: 13px;
+  font-weight: 400;
+  height: 36px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  cursor: text;
+  pointer-events: auto;
+
+  &:hover:not(:disabled, :read-only, :focus) {
+    border-color: var(--gray-400-600);
+    background-color: var(--gray-150-800);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 1px var(--purple-500);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: var(--gray-920-50);
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+}
+
+.inputWithArrows {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.withArrowsPadding {
+  padding-right: 32px !important;
+}
