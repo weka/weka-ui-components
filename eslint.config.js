@@ -7,6 +7,11 @@ export default tseslint.config(
   },
   ...wekaConfig,
   {
+    settings: {
+      weka: { constsPath: 'consts' }
+    }
+  },
+  {
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: import.meta.dirname
