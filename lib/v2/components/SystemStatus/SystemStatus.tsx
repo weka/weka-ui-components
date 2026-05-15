@@ -1,8 +1,9 @@
+import type { ProtectionStatusInfo } from './protectionStatus'
+
 import clsx from 'clsx'
 
-import { EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
-import type { ProtectionStatusInfo } from './protectionStatus'
 import { getStatusColorClass, mapLegacyStatus } from './protectionStatus'
 
 import styles from './systemStatus.module.scss'

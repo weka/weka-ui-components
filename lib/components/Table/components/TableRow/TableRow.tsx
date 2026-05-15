@@ -1,17 +1,17 @@
-import React from 'react'
-import type { VirtualItem } from '@tanstack/react-virtual'
-import clsx from 'clsx'
-
-import svgs from 'svgs'
-
-import { Utils } from '../../../../main'
-import { ROW_HEIGHT } from '../../tableConsts'
 import type {
   ExtendedColumn,
   ExtendedRow,
   RowAction,
   TableExtraClasses
 } from '../../types'
+import type { VirtualItem } from '@tanstack/react-virtual'
+
+import React from 'react'
+import clsx from 'clsx'
+import svgs from '#svgs'
+
+import { Utils } from '../../../../main'
+import { ROW_HEIGHT } from '../../tableConsts'
 import ActionsCell from '../ActionsCell'
 import TableCell from '../TableCell'
 

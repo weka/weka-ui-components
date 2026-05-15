@@ -1,6 +1,5 @@
 import { IconButton } from '@mui/material'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import Tooltip from '../../../Tooltip'
 import { useTextEditorContext } from '../../context'

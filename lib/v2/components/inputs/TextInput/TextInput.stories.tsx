@@ -1,8 +1,10 @@
-import type { CSSProperties } from 'react'
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
 
-import { EMPTY_STRING } from '../../../utils/consts'
+import { useState } from 'react'
+
+import { NOP } from '#consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { TEXT_INPUT_TYPES, TextInput } from './TextInput'
 
@@ -52,13 +54,13 @@ function TextInputDemo() {
         disabled
         id='disabled'
         label='Disabled'
-        onChange={() => {}}
+        onChange={NOP}
         value='cannot edit'
       />
       <TextInput
         id='readonly'
         label='Read only'
-        onChange={() => {}}
+        onChange={NOP}
         readOnly
         value='look, no edits'
       />

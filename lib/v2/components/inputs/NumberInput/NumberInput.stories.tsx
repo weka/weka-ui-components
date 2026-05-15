@@ -1,6 +1,9 @@
-import type { CSSProperties } from 'react'
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
+
+import { useState } from 'react'
+
+import { NOP } from '#consts'
 
 import { NumberInput } from './NumberInput'
 
@@ -59,7 +62,7 @@ function NumberInputDemo() {
         disabled
         id='disabled'
         label='Disabled'
-        onChange={() => {}}
+        onChange={NOP}
         showArrows
         value='42'
       />

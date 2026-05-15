@@ -1,6 +1,6 @@
 import type { KeyboardEvent } from 'react'
 
-import { KEYBOARD_KEYS } from '../../../utils/consts'
+import { KEYBOARD_KEYS } from '#v2/utils/consts'
 
 interface KeyboardState {
   inputValue: string
@@ -37,10 +37,7 @@ function handleBackspace(
   return 'handled'
 }
 
-function handleArrowDown(
-  state: KeyboardState,
-  actions: KeyboardActions
-): void {
+function handleArrowDown(state: KeyboardState, actions: KeyboardActions): void {
   actions.setSelectedIndex((prev) =>
     prev < state.filteredOptions.length - 1 ? prev + 1 : 0
   )

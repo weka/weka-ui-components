@@ -1,7 +1,8 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React from 'react'
 
 import CapacityBar from '../../../../CapacityBar'
-import type { ExtendedCellProps } from '../../../types'
 
 import './barCell.scss'
 

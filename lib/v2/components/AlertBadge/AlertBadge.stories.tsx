@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { SEVERITY_TYPES } from '../../utils/consts'
+import { SEVERITY_TYPES } from '#v2/utils/consts'
 
 import { ALERT_BADGE_VARIANTS, AlertBadge } from './AlertBadge'
 

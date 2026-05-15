@@ -1,7 +1,8 @@
 import type { ChangeEvent, MouseEvent } from 'react'
 
+import { EMPTY_STRING, NOOP } from '#v2/utils/consts'
+
 import { ARROW_DIRECTIONS, ArrowIcon } from '../../../../icons'
-import { EMPTY_STRING, NOOP } from '../../../../utils/consts'
 
 import styles from './numInput.module.scss'
 

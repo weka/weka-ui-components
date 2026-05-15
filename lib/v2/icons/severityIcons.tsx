@@ -1,7 +1,7 @@
+import type { Severity } from '#v2/utils/consts'
 import type { ReactElement } from 'react'
 
-import type { Severity } from '../utils/consts'
-import { SEVERITY_TYPES } from '../utils/consts'
+import { SEVERITY_TYPES } from '#v2/utils/consts'
 
 import { BugIcon } from './BugIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'

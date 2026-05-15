@@ -1,12 +1,12 @@
 import {
   type ComponentType,
+  type CSSProperties,
   forwardRef,
-  type ReactNode,
-  type CSSProperties
+  type ReactNode
 } from 'react'
 import clsx from 'clsx'
 
-import { EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import styles from './button.module.scss'
 
@@ -63,9 +63,9 @@ export const Button = forwardRef<HTMLButtonElement, Readonly<ButtonProps>>(
         data-testid={dataTestId}
         disabled={disabled}
         onClick={onClick}
+        style={style}
         title={title}
         type={type}
-        style={style}
         className={clsx(styles.button, styles[variant], extraClass, {
           [styles.isRounded]: isRounded,
           [styles.hasIcon]: !!Icon

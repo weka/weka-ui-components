@@ -1,7 +1,7 @@
 import type { DateTime } from 'luxon'
 
-import { EMPTY_STRING } from '../../../../utils/consts'
-import { formatDate } from '../../../../utils/timeUtils'
+import { EMPTY_STRING } from '#v2/utils/consts'
+import { formatDate } from '#v2/utils/timeUtils'
 
 const DATE_PORTION_END_INDEX = 9
 const SHOULD_SHOW_MILI = false

@@ -1,6 +1,7 @@
+import type { DurationUnits } from 'luxon'
+
 import React from 'react'
 import { toast } from 'react-toastify'
-import type { DurationUnits } from 'luxon'
 import { DateTime } from 'luxon'
 
 import {
@@ -14,10 +15,10 @@ import {
   TOASTER_DIALOG,
   TOASTER_DIALOG_DISMISS,
   TOASTER_TYPES
-} from 'consts'
+} from '#consts'
+import svgs from '#svgs'
 
 import { Toast, Tooltip } from './components'
-import svgs from './svgs'
 
 const { Approve, Hide, View: Show, Warning } = svgs
 
@@ -476,7 +477,7 @@ const utils = {
       return 'Not Valid DateTime Object'
     }
     return utils.formatISODate(
-      dateIn.toISO() ?? '',
+      dateIn.toISO() ?? EMPTY_STRING,
       showMili,
       showSeconds,
       showTime

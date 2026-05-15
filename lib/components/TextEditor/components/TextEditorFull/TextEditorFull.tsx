@@ -1,3 +1,6 @@
+import type { ExternalSearchAction, ParsedData, SearchDirection } from './hooks'
+import type { IAceEditor } from 'react-ace/lib/types'
+
 import React, {
   forwardRef,
   lazy,
@@ -10,19 +13,15 @@ import React, {
   useRef,
   useState
 } from 'react'
-import type { IAceEditor } from 'react-ace/lib/types'
 import { CircularProgress } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import { useToggle } from 'hooks'
+import { EMPTY_STRING } from '#consts'
+import { useToggle } from '#hooks'
 
 import Copy from '../../../Copy'
 import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
-
-import type { ExternalSearchAction, ParsedData, SearchDirection } from './hooks'
 import {
   useDisableSyntaxCheck,
   useEditor,
@@ -94,190 +93,198 @@ export interface TextEditorFullProps {
   onSearchBoundary?: (direction: SearchDirection) => void
   onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
 }
-const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(function TextEditorFull({
-  readOnly,
-  value = EMPTY_STRING,
-  onChange,
-  onValidate,
-  allowSearch = false,
-  allowCopy = false,
-  foldAll = false,
-  extraClass = EMPTY_STRING,
-  valueForMatched,
-  isValueForMatchedLoading = false,
-  mode = 'json',
-  initialLine,
-  onScroll,
-  maxLines,
-  loading,
-  lines,
-  fontSize,
-  editorOptions = {},
-  externalSearchTerm,
-  externalSearchIsRegex = false,
-  externalSearchCaseSensitive = false,
-  externalSearchWholeWord = false,
-  externalSearchAction,
-  onSearchBoundary,
-  onSearchCounterUpdate,
-  ...rest
-}, ref) {
-
-  const editorContext = useTextEditorContext(true)
-  const editorContextValue = editorContext?.value
-  const setTextEditorContext = editorContext?.setTextEditorContext
-
-  useEffect(() => {
-    setTextEditorContext?.((prev) => ({ ...prev, mode }))
-  }, [setTextEditorContext, mode])
-
-  const id = useId()
-  const editorRef = useRef<{ editor: IAceEditor }>(null)
-  const editor = editorRef.current?.editor
-
-  const [onlyMatching, toggleOnlyMatching] = useToggle(false)
-  const [editorReady, setEditorReady] = useState(false)
-
-  useImperativeHandle(ref, () => ({
-    getEditor: () => editorRef.current?.editor
-  }), [editorReady])
-
-  const handleLoad = () => {
-    setEditorReady(true)
-  }
-
-  const options = useMemo(
-    () => ({
-      mode,
-      disableFolding: false,
-      foldAll: editorContextValue?.foldAll ?? foldAll,
-      allowSearch: editorContextValue?.allowSearch ?? allowSearch,
-      value: lines?.map((line) => line.text).join('\n') ?? value
-    }),
-    [
-      allowSearch,
-      editorContextValue?.allowSearch,
-      editorContextValue?.foldAll,
+const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
+  function TextEditorFull(
+    {
+      readOnly,
+      value = EMPTY_STRING,
+      onChange,
+      onValidate,
+      allowSearch = false,
+      allowCopy = false,
+      foldAll = false,
+      extraClass = EMPTY_STRING,
+      valueForMatched,
+      isValueForMatchedLoading = false,
+      mode = 'json',
+      initialLine,
+      onScroll,
+      maxLines,
+      loading,
       lines,
-      mode,
-      foldAll,
-      value
-    ]
-  )
+      fontSize,
+      editorOptions = {},
+      externalSearchTerm,
+      externalSearchIsRegex = false,
+      externalSearchCaseSensitive = false,
+      externalSearchWholeWord = false,
+      externalSearchAction,
+      onSearchBoundary,
+      onSearchCounterUpdate,
+      ...rest
+    },
+    ref
+  ) {
+    const editorContext = useTextEditorContext(true)
+    const editorContextValue = editorContext?.value
+    const setTextEditorContext = editorContext?.setTextEditorContext
 
-  const searchValue = useSearch({
-    editor,
-    allowSearch: options.allowSearch,
-    editorReady,
-    value: options.value,
-    externalSearchTerm,
-    externalSearchIsRegex,
-    externalSearchCaseSensitive,
-    externalSearchWholeWord,
-    externalSearchAction,
-    onSearchBoundary,
-    onSearchCounterUpdate
-  })
+    useEffect(() => {
+      setTextEditorContext?.((prev) => ({ ...prev, mode }))
+    }, [setTextEditorContext, mode])
 
-  const jsonValue = useOnlyMatching({
-    allowSearch: options.allowSearch,
-    onlyMatching,
-    searchValue,
-    value,
-    valueForMatched
-  })
+    const id = useId()
+    const editorRef = useRef<{ editor: IAceEditor }>(null)
+    const editor = editorRef.current?.editor
 
-  useFoldAll({
-    editor,
-    foldAll: options.foldAll,
-    value: options.value
-  })
+    const [onlyMatching, toggleOnlyMatching] = useToggle(false)
+    const [editorReady, setEditorReady] = useState(false)
 
-  useLinePosition({
-    initialLine,
-    onScroll,
-    editor
-  })
+    useImperativeHandle(
+      ref,
+      () => ({
+        getEditor: () => editorRef.current?.editor
+      }),
+      [editorReady]
+    )
 
-  useForcedLineNumbers({
-    editor,
-    value: options.value,
-    lines
-  })
+    const handleLoad = () => {
+      setEditorReady(true)
+    }
 
-  useDisableSyntaxCheck({
-    editor
-  })
+    const options = useMemo(
+      () => ({
+        mode,
+        disableFolding: false,
+        foldAll: editorContextValue?.foldAll ?? foldAll,
+        allowSearch: editorContextValue?.allowSearch ?? allowSearch,
+        value: lines?.map((line) => line.text).join('\n') ?? value
+      }),
+      [
+        allowSearch,
+        editorContextValue?.allowSearch,
+        editorContextValue?.foldAll,
+        lines,
+        mode,
+        foldAll,
+        value
+      ]
+    )
 
-  useEditor({
-    editor,
-    onlyMatching,
-    value: options.value
-  })
+    const searchValue = useSearch({
+      editor,
+      allowSearch: options.allowSearch,
+      editorReady,
+      value: options.value,
+      externalSearchTerm,
+      externalSearchIsRegex,
+      externalSearchCaseSensitive,
+      externalSearchWholeWord,
+      externalSearchAction,
+      onSearchBoundary,
+      onSearchCounterUpdate
+    })
 
-  const isScrollbarVisible = useIsScrollbarVisible({ editorReady })
+    const jsonValue = useOnlyMatching({
+      allowSearch: options.allowSearch,
+      onlyMatching,
+      searchValue,
+      value,
+      valueForMatched
+    })
 
-  const classes = clsx({
-    'text-editor-wrapper': true,
-    'read-only': readOnly,
-    'hide-search': !options.allowSearch,
-    'text-editor-wrapper-with-copy': allowCopy,
-    'text-editor-wrapper-only-matching-lines': onlyMatching,
-    'disable-folding': !!(lines && lines.length > 0),
-    [extraClass]: true
-  })
+    useFoldAll({
+      editor,
+      foldAll: options.foldAll,
+      value: options.value
+    })
 
-  return loading ? (
-    <Loader />
-  ) : (
-    <div className={classes}>
-      {allowCopy ? (
-        <Copy
-          extraClass='copy-btn'
-          text={jsonValue}
-        />
-      ) : null}
-      {(valueForMatched || isValueForMatchedLoading) &&
-      options.allowSearch &&
-      isScrollbarVisible !== null ? (
-        <div
-          className={clsx('matching-toggle', {
-            'with-scrollbar': isScrollbarVisible
-          })}
-        >
-          <span>Show only matching lines</span>
-          {isValueForMatchedLoading ? (
-            <CircularProgress size={16} />
-          ) : (
-            <Checkbox
-              checked={onlyMatching}
-              onChange={toggleOnlyMatching}
-            />
-          )}
-        </div>
-      ) : null}
-      <Suspense fallback={<Loader />}>
-        <AceEditor
-          ref={editorRef}
-          editorProps={{ $blockScrolling: true }}
-          fontSize={fontSize}
-          height='100%'
-          highlightActiveLine={false}
-          mode={mode}
-          name={id}
-          onChange={onChange}
-          onLoad={handleLoad}
-          onValidate={onValidate}
-          readOnly={readOnly}
-          setOptions={{ maxLines, ...editorOptions }}
-          showPrintMargin={false}
-          value={onlyMatching ? jsonValue : options.value}
-          width='calc(100% - 16px)'
-          {...rest}
-        />
-      </Suspense>
-    </div>
-  )
-})
+    useLinePosition({
+      initialLine,
+      onScroll,
+      editor
+    })
+
+    useForcedLineNumbers({
+      editor,
+      value: options.value,
+      lines
+    })
+
+    useDisableSyntaxCheck({
+      editor
+    })
+
+    useEditor({
+      editor,
+      onlyMatching,
+      value: options.value
+    })
+
+    const isScrollbarVisible = useIsScrollbarVisible({ editorReady })
+
+    const classes = clsx({
+      'text-editor-wrapper': true,
+      'read-only': readOnly,
+      'hide-search': !options.allowSearch,
+      'text-editor-wrapper-with-copy': allowCopy,
+      'text-editor-wrapper-only-matching-lines': onlyMatching,
+      'disable-folding': !!(lines && lines.length > 0),
+      [extraClass]: true
+    })
+
+    return loading ? (
+      <Loader />
+    ) : (
+      <div className={classes}>
+        {allowCopy ? (
+          <Copy
+            extraClass='copy-btn'
+            text={jsonValue}
+          />
+        ) : null}
+        {(valueForMatched || isValueForMatchedLoading) &&
+        options.allowSearch &&
+        isScrollbarVisible !== null ? (
+          <div
+            className={clsx('matching-toggle', {
+              'with-scrollbar': isScrollbarVisible
+            })}
+          >
+            <span>Show only matching lines</span>
+            {isValueForMatchedLoading ? (
+              <CircularProgress size={16} />
+            ) : (
+              <Checkbox
+                checked={onlyMatching}
+                onChange={toggleOnlyMatching}
+              />
+            )}
+          </div>
+        ) : null}
+        <Suspense fallback={<Loader />}>
+          <AceEditor
+            ref={editorRef}
+            editorProps={{ $blockScrolling: true }}
+            fontSize={fontSize}
+            height='100%'
+            highlightActiveLine={false}
+            mode={mode}
+            name={id}
+            onChange={onChange}
+            onLoad={handleLoad}
+            onValidate={onValidate}
+            readOnly={readOnly}
+            setOptions={{ maxLines, ...editorOptions }}
+            showPrintMargin={false}
+            value={onlyMatching ? jsonValue : options.value}
+            width='calc(100% - 16px)'
+            {...rest}
+          />
+        </Suspense>
+      </div>
+    )
+  }
+)
 
 export default memo(TextEditorFull)

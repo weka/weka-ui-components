@@ -1,17 +1,17 @@
+import type { ExtendedColumn } from '../../types'
 import type { ReactElement } from 'react'
+
 import React, { useRef } from 'react'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import { useKeyEvent, useToggle } from 'hooks'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import { useKeyEvent, useToggle } from '#hooks'
+import svgs from '#svgs'
+import Utils from '#utils'
 
 import Button from '../../../Button'
 import Tooltip from '../../../Tooltip'
 import { tableUtils } from '../../tableUtils'
-import type { ExtendedColumn } from '../../types'
 
 import './filterWrapper.scss'
 

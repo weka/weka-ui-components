@@ -1,10 +1,11 @@
+import type { TooltipProps } from '../Tooltip'
+
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
 
-import { EMPTY_STRING } from 'consts'
-import Utils from 'utils'
+import { EMPTY_STRING } from '#consts'
+import Utils from '#utils'
 
-import type { TooltipProps } from '../Tooltip'
 import Tooltip from '../Tooltip'
 
 import './spanTooltip.scss'

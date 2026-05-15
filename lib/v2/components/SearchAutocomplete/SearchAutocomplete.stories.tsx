@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import type { SearchOption } from './SearchAutocomplete'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { EMPTY_STRING } from '../../utils/consts'
+import { useMemo, useState } from 'react'
 
-import type { SearchOption } from './SearchAutocomplete'
+import { EMPTY_STRING } from '#v2/utils/consts'
+
 import { SearchAutocomplete } from './SearchAutocomplete'
 
 const CONTAINER_STYLE = {

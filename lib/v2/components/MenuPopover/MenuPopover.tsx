@@ -1,6 +1,6 @@
 import { type ReactNode, type RefObject, useRef } from 'react'
 
-import { useClickOutside, usePopoverPosition } from '../../hooks'
+import { useClickOutside, usePopoverPosition } from '#v2/hooks'
 
 import styles from './menuPopover.module.scss'
 

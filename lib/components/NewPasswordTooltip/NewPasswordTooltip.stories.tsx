@@ -1,7 +1,7 @@
-import React from 'react'
 import type { Meta, StoryObj } from 'storybook-solidjs'
 
-import { EMPTY_STRING } from 'consts'
+import React from 'react'
+import { EMPTY_STRING } from '#consts'
 
 import { default as NewPasswordTooltipComponent } from './NewPasswordTooltip'
 

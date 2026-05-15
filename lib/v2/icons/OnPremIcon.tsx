@@ -1,4 +1,4 @@
-import { CLOUD_ICON_VARIANTS, EMPTY_STRING } from '../utils/consts'
+import { CLOUD_ICON_VARIANTS, EMPTY_STRING } from '#v2/utils/consts'
 
 export interface OnPremIconProps {
   size?: number

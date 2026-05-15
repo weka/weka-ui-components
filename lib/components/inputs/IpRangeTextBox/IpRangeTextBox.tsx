@@ -1,10 +1,10 @@
 import type { ChangeEvent } from 'react'
+
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
 import Tooltip from '../../Tooltip'
 

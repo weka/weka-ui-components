@@ -1,15 +1,14 @@
-import type { FC } from 'react'
-import React, { useCallback, useState } from 'react'
+import type { ScheduleData } from './types'
 import type { Meta, StoryFn } from '@storybook/react'
+import type { FC } from 'react'
 
-import Utils from 'utils'
+import React, { useCallback, useState } from 'react'
+import Utils from '#utils'
 
 import { TextEditor } from '../index'
 import { Select } from '../inputs'
-
 import ScheduleSelector from './ScheduleSelector'
 import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'
-import type { ScheduleData } from './types'
 
 const initialScheduleData: ScheduleData = {
   daily: {

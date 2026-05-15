@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { LoginField } from './LoginField'
 

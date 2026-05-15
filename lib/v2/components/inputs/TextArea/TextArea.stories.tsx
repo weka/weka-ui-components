@@ -1,8 +1,10 @@
-import type { CSSProperties } from 'react'
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
 
-import { EMPTY_STRING } from '../../../utils/consts'
+import { useState } from 'react'
+
+import { NOP } from '#consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { TextArea } from './TextArea'
 
@@ -42,13 +44,13 @@ function TextAreaDemo() {
         disabled
         id='disabled'
         label='Disabled'
-        onChange={() => {}}
+        onChange={NOP}
         value='Cannot be edited.'
       />
       <TextArea
         id='readonly'
         label='Read only'
-        onChange={() => {}}
+        onChange={NOP}
         readOnly
         value='Look, no edits allowed here.'
       />

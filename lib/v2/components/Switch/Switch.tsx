@@ -1,4 +1,5 @@
 import type { ChangeEvent } from 'react'
+
 import MuiSwitch from '@mui/material/Switch'
 
 import { InfoIcon } from '../../icons'

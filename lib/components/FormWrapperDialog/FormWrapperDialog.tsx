@@ -6,9 +6,8 @@ import {
   DialogTitle
 } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import utils from 'utils'
+import { EMPTY_STRING } from '#consts'
+import utils from '#utils'
 
 import Button from '../Button'
 import Info from '../Info'

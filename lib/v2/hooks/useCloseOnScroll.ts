@@ -1,6 +1,6 @@
 import { type RefObject, useEffect, useRef } from 'react'
 
-import { DOM_EVENTS } from '../utils/consts'
+import { DOM_EVENTS } from '#v2/utils/consts'
 
 const SCROLL_CLOSE_THRESHOLD = 15
 const LINE_HEIGHT_PX = 20

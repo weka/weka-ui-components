@@ -9,6 +9,6 @@
  */
 
 export * from './components'
-export * from './hooks'
 export * from './icons'
-export * from './utils'
+export * from '#v2/hooks'
+export * from '#v2/utils/index'

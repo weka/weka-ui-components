@@ -1,6 +1,6 @@
-import React from 'react'
-
 import type { ExtendedCellProps } from '../../../types'
+
+import React from 'react'
 
 export type ProgressCellValue = {
   status: string

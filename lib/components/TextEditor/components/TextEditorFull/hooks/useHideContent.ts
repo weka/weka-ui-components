@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 import { useTextEditorContext } from '../../../context'
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-
-import Utils from 'utils'
+import Utils from '#utils'
 
 import Button from '../Button'
 import Loader from '../Loader'

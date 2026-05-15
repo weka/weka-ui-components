@@ -1,7 +1,8 @@
 import type { SetStateAction } from 'react'
+
 import { useEffect, useRef, useState } from 'react'
 
-import { EMPTY_STRING } from '../../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 const INITIAL_SEARCH_DELAY_MS = 100
 const DEBOUNCE_SEARCH_DELAY_MS = 300

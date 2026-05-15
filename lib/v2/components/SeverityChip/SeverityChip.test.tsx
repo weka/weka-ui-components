@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { SEVERITY_TYPES } from '../../utils/consts'
+import { SEVERITY_TYPES } from '#v2/utils/consts'
 
 import { SeverityChip } from './SeverityChip'
 import { getFilterSeverityChips, getSeverityChip } from './severityChipUtils'

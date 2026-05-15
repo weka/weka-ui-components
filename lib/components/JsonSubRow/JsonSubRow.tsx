@@ -1,5 +1,6 @@
-import React from 'react'
 import type { Row } from '@tanstack/react-table'
+
+import React from 'react'
 
 import TextEditor from '../TextEditor'
 

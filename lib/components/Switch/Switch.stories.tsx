@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
 import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import React, { useState } from 'react'
 
 import { default as SwitchComponent } from './Switch'
 

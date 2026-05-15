@@ -1,8 +1,9 @@
 // Tooltip.stories.tsx
-import React from 'react'
+import type { TooltipProps } from './Tooltip'
 import type { Meta, StoryFn } from '@storybook/react'
 
-import type { TooltipProps } from './Tooltip'
+import React from 'react'
+
 import Tooltip from './Tooltip'
 
 export default {

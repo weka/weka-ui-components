@@ -1,16 +1,17 @@
 import type { KeyboardEvent, MouseEvent, ReactElement } from 'react'
+import type Option from 'types'
+
 import React, { useEffect, useState } from 'react'
 import { type MenuPosition, type MultiValue } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
-import type Option from 'types'
+import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { useHighlightInput } from '#hooks'
 
-import { useHighlightInput } from '../../../hooks'
 import Tooltip from '../../Tooltip'
 
 import './tagsBox.scss'

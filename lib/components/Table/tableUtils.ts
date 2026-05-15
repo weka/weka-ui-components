@@ -1,16 +1,15 @@
-import type { Severities } from 'consts'
-import { Duration } from 'luxon'
+import type { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
+import type { Severities } from '#consts'
 
-import { EMPTY_STRING, SEVERITIES } from 'consts'
-import utils from 'utils'
+import { EMPTY_STRING, SEVERITIES } from '#consts'
+import { Duration } from 'luxon'
+import utils from '#utils'
 
 import { Utils } from '../../main'
-
 import {
   COMPARE_OPERATORS,
   type CompareOperator
 } from './components/filters/DurationFilter'
-import type { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
 
 export const FILTER_MODES = {
   INCLUDE: 'include',

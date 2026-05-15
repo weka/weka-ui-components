@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
+
 import React, { useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
 import copy from 'copy-to-clipboard'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import Tooltip from '../Tooltip'
 

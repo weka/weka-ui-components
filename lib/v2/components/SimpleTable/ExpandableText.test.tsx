@@ -1,6 +1,9 @@
 import type { ReactElement } from 'react'
+
 import { cleanup, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { NOP } from '#consts'
 
 import { ExpandableText } from './ExpandableText'
 import { ExpandableTextProvider } from './ExpandableTextContext'
@@ -51,7 +54,7 @@ describe('ExpandableText - Rendering', () => {
 
 describe('ExpandableText - Context integration', () => {
   it('throws error when used outside provider', () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(NOP)
 
     expect(() => render(<ExpandableText text={TEST_TEXT} />)).toThrow(
       'useExpandableTextContext must be used within an ExpandableTextProvider'

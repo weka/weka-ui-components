@@ -1,10 +1,10 @@
-import React from 'react'
+import type { ExtendedCellProps } from '../../../types'
 
-import { ORIGIN_OPTIONS } from 'consts'
-import svgs from 'svgs'
+import React from 'react'
+import { ORIGIN_OPTIONS } from '#consts'
+import svgs from '#svgs'
 
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './entityCell.scss'
 

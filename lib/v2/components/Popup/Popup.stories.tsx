@@ -1,9 +1,10 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { NOOP } from '../../utils/consts'
-import { Button } from '../Button'
+import { useState } from 'react'
 
+import { NOOP } from '#v2/utils/consts'
+
+import { Button } from '../Button'
 import { Popup } from './Popup'
 
 const meta: Meta<typeof Popup> = {

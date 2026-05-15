@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { EMPTY_STRING, TOOLTIP_PLACEMENTS } from '../../utils/consts'
+import { EMPTY_STRING, TOOLTIP_PLACEMENTS } from '#v2/utils/consts'
 
 import { Tooltip } from './Tooltip'
 

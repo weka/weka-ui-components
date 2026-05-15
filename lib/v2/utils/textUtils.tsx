@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react'
+
 import { Fragment } from 'react'
 
 const REGEX_ESCAPE_PATTERN = /[.*+?^${}()|[\]\\]/g

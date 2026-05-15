@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react'
-import React from 'react'
 
-import { PER_PAGE_OPTIONS } from 'consts'
+import React from 'react'
+import { PER_PAGE_OPTIONS } from '#consts'
 
 import Select from '../../../inputs/Select'
 

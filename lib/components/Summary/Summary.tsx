@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
+
 import React from 'react'
 import clsx from 'clsx'
-
-import { useToggle } from 'hooks'
-import svgs from 'svgs'
+import { useToggle } from '#hooks'
+import svgs from '#svgs'
 
 import SpanTooltip from '../SpanTooltip/SpanTooltip'
 

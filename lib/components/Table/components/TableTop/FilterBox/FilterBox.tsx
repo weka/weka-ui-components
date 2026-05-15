@@ -1,19 +1,19 @@
-import React, { useMemo } from 'react'
-import { DateTime } from 'luxon'
-
-import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from 'consts'
-import svgs from 'svgs'
-import utils from 'utils'
-
 import type { SelectFilterMode, TextFilterValue } from '../../../tableUtils'
+import type { ExtendedColumn } from '../../../types'
+import type { DateFilterValue } from '../../filters'
+
+import React, { useMemo } from 'react'
+import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from '#consts'
+import { DateTime } from 'luxon'
+import svgs from '#svgs'
+import utils from '#utils'
+
 import {
   isMultiSelectFilterValue,
   isSelectFilterValue,
   isTextFilterValue,
   tableUtils
 } from '../../../tableUtils'
-import type { ExtendedColumn } from '../../../types'
-import type { DateFilterValue } from '../../filters'
 import { isDateFilterValue, isDurationFilterValue } from '../../filters'
 
 import './filterBox.scss'

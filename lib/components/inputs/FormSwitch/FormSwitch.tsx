@@ -1,7 +1,6 @@
 import React from 'react'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
 
 import Switch from '../../Switch'
 import Tooltip from '../../Tooltip'

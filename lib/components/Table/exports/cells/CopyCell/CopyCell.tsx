@@ -1,8 +1,9 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React from 'react'
 import { CircularProgress } from '@mui/material'
 
 import Copy from '../../../../Copy'
-import type { ExtendedCellProps } from '../../../types'
 
 import './copyCell.scss'
 

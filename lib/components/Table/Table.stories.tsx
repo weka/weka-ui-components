@@ -1,11 +1,12 @@
+import type { TableProps } from './Table'
+import type { ExtendedColumnDef, RowAction } from './types'
+import type { Decorator, Meta, StoryFn } from '@storybook/react'
+
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { action } from '@storybook/addon-actions'
-import type { Decorator, Meta, StoryFn } from '@storybook/react'
 
-import type { TableProps } from './Table'
 import Table from './Table'
-import type { ExtendedColumnDef, RowAction } from './types'
 
 const RouterDecorator: Decorator = (Story) => (
   <Router>

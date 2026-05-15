@@ -1,5 +1,13 @@
+import type { CloudIconVariant } from '#v2/utils/consts'
+
 import { type ComponentType } from 'react'
 import clsx from 'clsx'
+
+import {
+  CLOUD_ICON_VARIANTS,
+  EMPTY_STRING,
+  TOOLTIP_PLACEMENTS
+} from '#v2/utils/consts'
 
 import {
   AWSClusterIcon,
@@ -10,12 +18,6 @@ import {
   OnPremIcon,
   WekaClusterIcon
 } from '../../icons'
-import type { CloudIconVariant } from '../../utils/consts'
-import {
-  CLOUD_ICON_VARIANTS,
-  EMPTY_STRING,
-  TOOLTIP_PLACEMENTS
-} from '../../utils/consts'
 import { Tooltip } from '../Tooltip'
 
 import styles from './clusterIcon.module.scss'

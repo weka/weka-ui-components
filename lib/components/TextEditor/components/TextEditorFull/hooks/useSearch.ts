@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
 import type { IAceEditor } from 'react-ace/lib/types'
 
-import { EMPTY_STRING } from 'consts'
+import { useEffect, useRef, useState } from 'react'
+import { EMPTY_STRING } from '#consts'
 
 export const SEARCH_DIRECTIONS = {
   NEXT: 'next',
@@ -10,7 +10,8 @@ export const SEARCH_DIRECTIONS = {
   LAST: 'last'
 } as const
 
-export type SearchDirection = (typeof SEARCH_DIRECTIONS)[keyof typeof SEARCH_DIRECTIONS]
+export type SearchDirection =
+  (typeof SEARCH_DIRECTIONS)[keyof typeof SEARCH_DIRECTIONS]
 
 export interface ExternalSearchAction {
   type: SearchDirection
@@ -123,10 +124,16 @@ function useSearch({
         if (searchBox) {
           searchBox.searchInput.value = externalSearchTerm
           searchBox.regExpOption.checked = externalSearchIsRegex
-          if (searchBox.caseSensitiveOption && externalSearchCaseSensitive !== undefined) {
+          if (
+            searchBox.caseSensitiveOption &&
+            externalSearchCaseSensitive !== undefined
+          ) {
             searchBox.caseSensitiveOption.checked = externalSearchCaseSensitive
           }
-          if (searchBox.wholeWordOption && externalSearchWholeWord !== undefined) {
+          if (
+            searchBox.wholeWordOption &&
+            externalSearchWholeWord !== undefined
+          ) {
             searchBox.wholeWordOption.checked = externalSearchWholeWord
           }
           readCounter(searchBox, onSearchCounterUpdateRef.current)
@@ -141,7 +148,15 @@ function useSearch({
       }
       onSearchCounterUpdateRef.current?.(0, 0)
     }
-  }, [externalSearchTerm, externalSearchIsRegex, externalSearchCaseSensitive, externalSearchWholeWord, editor, editorReady, value])
+  }, [
+    externalSearchTerm,
+    externalSearchIsRegex,
+    externalSearchCaseSensitive,
+    externalSearchWholeWord,
+    editor,
+    editorReady,
+    value
+  ])
 
   useEffect(() => {
     if (

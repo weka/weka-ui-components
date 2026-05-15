@@ -1,11 +1,11 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './iconButtonCell.scss'
 

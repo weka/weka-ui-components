@@ -1,12 +1,14 @@
-import type { CSSProperties } from 'react'
-import { useCallback, useState } from 'react'
+import type { SelectOption } from './Select'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
 
-import { EMPTY_STRING, type Severity } from '../../../utils/consts'
+import { useCallback, useState } from 'react'
+
+import { NOP } from '#consts'
+import { EMPTY_STRING, type Severity } from '#v2/utils/consts'
+
 import { Checkbox } from '../../CheckBox'
 import { SeverityChip } from '../../SeverityChip'
-
-import type { SelectOption } from './Select'
 import { Select } from './Select'
 
 const CONTAINER_STYLE: CSSProperties = {
@@ -72,7 +74,7 @@ const ASYNC_DEBOUNCE_MS = 400
 const ASYNC_RESULT_LIMIT = 12
 const ASYNC_INITIAL_OPTIONS = MANY_OPTIONS.slice(0, ASYNC_RESULT_LIMIT)
 
-const NOOP = () => {}
+const NOOP = NOP
 
 function SelectDemo() {
   const [region, setRegion] = useState<string | string[]>(EMPTY_STRING)
@@ -83,8 +85,9 @@ function SelectDemo() {
   const [anyAllowed, setAnyAllowed] = useState<string | string[]>([ANY_VALUE])
   const [bucket, setBucket] = useState<string | string[]>(EMPTY_STRING)
 
-  const [asyncResults, setAsyncResults] =
-    useState<SelectOption[]>(ASYNC_INITIAL_OPTIONS)
+  const [asyncResults, setAsyncResults] = useState<SelectOption[]>(
+    ASYNC_INITIAL_OPTIONS
+  )
   const [asyncLoading, setAsyncLoading] = useState(false)
   const [asyncPick, setAsyncPick] = useState<string | string[]>(EMPTY_STRING)
 
@@ -175,8 +178,9 @@ function SelectDemo() {
         value={anyAllowed}
       />
       <div style={HELP_STYLE}>
-        Try selecting items, then “Any” — others get cleared. Deselect everything
-        — “Any” auto-selects. That’s the difference from the row above.
+        Try selecting items, then “Any” — others get cleared. Deselect
+        everything — “Any” auto-selects. That’s the difference from the row
+        above.
       </div>
       <Select
         label='Bucket (searchable)'
@@ -195,12 +199,13 @@ function SelectDemo() {
         value={asyncPick}
       />
       <div style={HELP_STYLE}>
-        Typing fires <code>onSearch</code>; results refresh after a 400ms debounce.
+        Typing fires <code>onSearch</code>; results refresh after a 400ms
+        debounce.
       </div>
       <Select
         disabled
         label='Disabled'
-        onChange={() => {}}
+        onChange={NOP}
         options={REGIONS}
         value='us-east-1'
       />

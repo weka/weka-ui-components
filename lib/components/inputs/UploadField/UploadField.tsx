@@ -1,10 +1,10 @@
 import type { ReactElement, ReactNode } from 'react'
+
 import React, { useId, useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING, ENCODING_TYPES, NOP } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING, ENCODING_TYPES, NOP } from '#consts'
+import svgs from '#svgs'
 
 import Info from '../../Info'
 import SpanTooltip from '../../SpanTooltip'

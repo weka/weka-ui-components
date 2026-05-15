@@ -1,7 +1,7 @@
+import type { Severity } from '#v2/utils/consts'
 import type { ReactNode } from 'react'
 
 import { InfoIcon } from '../../icons'
-import type { Severity } from '../../utils/consts'
 import { AlertBadge } from '../AlertBadge'
 import { Tooltip } from '../Tooltip'
 

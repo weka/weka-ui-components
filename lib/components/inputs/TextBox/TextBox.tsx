@@ -1,15 +1,15 @@
 import type { ChangeEvent, ReactElement } from 'react'
+
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
+import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { useHighlightInput, useToggle } from '#hooks'
 
-import { useHighlightInput, useToggle } from '../../../hooks'
 import InputLoader from '../../InputLoader'
 import Tooltip from '../../Tooltip'
-
 import { useAutosizeWidth } from './hooks'
 
 import './textBox.scss'

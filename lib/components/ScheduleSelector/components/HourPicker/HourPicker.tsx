@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-
-import { ZERO_STRING } from 'consts'
+import { ZERO_STRING } from '#consts'
 
 import { ToggleButton } from '../../../index'
 

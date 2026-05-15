@@ -1,11 +1,11 @@
-import React from 'react'
+import type { ExtendedCellProps } from '../../../types'
 
-import Utils from 'utils'
+import React from 'react'
+import Utils from '#utils'
 
 import CapacityBar from '../../../../CapacityBar'
 import SpanTooltip from '../../../../SpanTooltip'
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './capacityCell.scss'
 

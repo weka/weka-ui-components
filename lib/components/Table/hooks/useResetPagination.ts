@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
+import type { ExtendedColumnFilter, ExtendedTable } from '../types'
 import type { SortingState } from '@tanstack/react-table'
 
-import type { ExtendedColumnFilter, ExtendedTable } from '../types'
+import { useEffect, useRef } from 'react'
 
 function useResetPagination<Data>({
   table,

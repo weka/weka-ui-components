@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 
-import { EMPTY_OBJECT, EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_OBJECT, EMPTY_STRING } from '#v2/utils/consts'
 
 export const FLEX_DIRECTIONS = {
   ROW: 'row',
@@ -28,8 +28,7 @@ export const FLEX_JUSTIFIES = {
   SPACE_EVENLY: 'space-evenly'
 } as const
 
-export type FlexJustify =
-  (typeof FLEX_JUSTIFIES)[keyof typeof FLEX_JUSTIFIES]
+export type FlexJustify = (typeof FLEX_JUSTIFIES)[keyof typeof FLEX_JUSTIFIES]
 
 export interface FlexBoxProps {
   children: ReactNode

@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING } from '../../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { NumberInput } from './NumberInput'
 
@@ -68,21 +68,27 @@ describe('NumberInput - Rendering', () => {
 
   it('renders with label', () => {
     render(
-      <NumberInput {...createProps({ label: QUANTITY_LABEL, id: QUANTITY_ID })} />
+      <NumberInput
+        {...createProps({ label: QUANTITY_LABEL, id: QUANTITY_ID })}
+      />
     )
     expect(screen.getByText(QUANTITY_LABEL)).toBeInTheDocument()
   })
 
   it('renders required indicator when required is true', () => {
     render(
-      <NumberInput {...createProps({ label: QUANTITY_LABEL, required: true })} />
+      <NumberInput
+        {...createProps({ label: QUANTITY_LABEL, required: true })}
+      />
     )
     expect(screen.getByText(REQUIRED_INDICATOR)).toBeInTheDocument()
   })
 
   it('does not render required indicator when required is false', () => {
     render(
-      <NumberInput {...createProps({ label: QUANTITY_LABEL, required: false })} />
+      <NumberInput
+        {...createProps({ label: QUANTITY_LABEL, required: false })}
+      />
     )
     expect(screen.queryByText(REQUIRED_INDICATOR)).not.toBeInTheDocument()
   })
@@ -358,6 +364,9 @@ describe('NumberInput - Accessibility', () => {
 
   it('has autocomplete off by default', () => {
     render(<NumberInput {...createProps()} />)
-    expect(screen.getByRole('spinbutton')).toHaveAttribute('autocomplete', 'off')
+    expect(screen.getByRole('spinbutton')).toHaveAttribute(
+      'autocomplete',
+      'off'
+    )
   })
 })

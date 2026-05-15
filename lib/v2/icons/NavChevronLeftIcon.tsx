@@ -6,7 +6,7 @@ export interface NavChevronLeftIconProps {
   strokeWidth?: number
 }
 
-import { CSS_VARS } from '../utils/consts'
+import { CSS_VARS } from '#v2/utils/consts'
 
 export function NavChevronLeftIcon({
   extraClass,

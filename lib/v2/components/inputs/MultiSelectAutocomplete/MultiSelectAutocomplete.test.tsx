@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING, KEYBOARD_KEYS } from '../../../utils/consts'
+import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { MultiSelectAutocomplete } from './MultiSelectAutocomplete'
 
@@ -127,10 +127,14 @@ describe('MultiSelectAutocomplete - Arrow navigation', () => {
     fireEvent.change(input, { target: { value: SEARCH_QUERY } })
 
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ARROW_DOWN })
-    expect(document.querySelector('[data-option-index="0"]')).toBeInTheDocument()
+    expect(
+      document.querySelector('[data-option-index="0"]')
+    ).toBeInTheDocument()
 
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ARROW_DOWN })
-    expect(document.querySelector('[data-option-index="1"]')).toBeInTheDocument()
+    expect(
+      document.querySelector('[data-option-index="1"]')
+    ).toBeInTheDocument()
   })
 
   it('wraps to first option when reaching end with ArrowDown', () => {
@@ -150,7 +154,9 @@ describe('MultiSelectAutocomplete - Arrow navigation', () => {
       fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ARROW_DOWN })
     }
 
-    expect(document.querySelector('[data-option-index="0"]')).toBeInTheDocument()
+    expect(
+      document.querySelector('[data-option-index="0"]')
+    ).toBeInTheDocument()
   })
 
   it('cycles backward with ArrowUp', () => {
@@ -167,10 +173,14 @@ describe('MultiSelectAutocomplete - Arrow navigation', () => {
     fireEvent.change(input, { target: { value: SEARCH_QUERY } })
 
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ARROW_UP })
-    expect(document.querySelector('[data-option-index="3"]')).toBeInTheDocument()
+    expect(
+      document.querySelector('[data-option-index="3"]')
+    ).toBeInTheDocument()
 
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ARROW_UP })
-    expect(document.querySelector('[data-option-index="2"]')).toBeInTheDocument()
+    expect(
+      document.querySelector('[data-option-index="2"]')
+    ).toBeInTheDocument()
   })
 
   it('does not navigate when dropdown is closed', () => {
@@ -186,7 +196,9 @@ describe('MultiSelectAutocomplete - Arrow navigation', () => {
       key: KEYBOARD_KEYS.ARROW_DOWN
     })
 
-    expect(document.querySelector(OPTION_INDEX_SELECTOR)).not.toBeInTheDocument()
+    expect(
+      document.querySelector(OPTION_INDEX_SELECTOR)
+    ).not.toBeInTheDocument()
   })
 
   it('does not navigate when no options are available', () => {
@@ -325,7 +337,9 @@ describe('MultiSelectAutocomplete - Escape key', () => {
 
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ESCAPE })
 
-    expect(document.querySelector(OPTION_INDEX_SELECTOR)).not.toBeInTheDocument()
+    expect(
+      document.querySelector(OPTION_INDEX_SELECTOR)
+    ).not.toBeInTheDocument()
   })
 
   it('closes dropdown when pressed even with no matching options', () => {
@@ -520,7 +534,9 @@ describe('MultiSelectAutocomplete - Edge cases', () => {
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ARROW_DOWN })
     fireEvent.keyDown(input, { key: KEYBOARD_KEYS.ENTER })
 
-    expect(document.querySelector(OPTION_INDEX_SELECTOR)).not.toBeInTheDocument()
+    expect(
+      document.querySelector(OPTION_INDEX_SELECTOR)
+    ).not.toBeInTheDocument()
   })
 })
 

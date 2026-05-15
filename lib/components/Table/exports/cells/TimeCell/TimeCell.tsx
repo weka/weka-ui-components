@@ -1,10 +1,10 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React from 'react'
+import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from '#consts'
 import { Duration } from 'luxon'
 
-import { EMPTY_STRING, TIME_PARTS_SHORTENINGS } from 'consts'
-
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 export type TimeCellValue = number
 

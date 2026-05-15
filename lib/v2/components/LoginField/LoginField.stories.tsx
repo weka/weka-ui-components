@@ -1,10 +1,11 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { EMPTY_STRING, NOOP } from '../../utils/consts'
+import { useState } from 'react'
 
-import { LoginField } from './LoginField'
+import { EMPTY_STRING, NOOP } from '#v2/utils/consts'
+
 import { Button } from '../Button'
+import { LoginField } from './LoginField'
 
 const meta: Meta<typeof LoginField> = {
   title: 'v2/LoginField',

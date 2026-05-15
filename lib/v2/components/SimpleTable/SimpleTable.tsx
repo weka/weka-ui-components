@@ -1,8 +1,10 @@
 import type { CSSProperties, ReactNode } from 'react'
+
 import clsx from 'clsx'
 import SimpleBar from 'simplebar-react'
 
-import { EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
+
 import { Tooltip } from '../Tooltip'
 
 import 'simplebar-react/dist/simplebar.min.css'

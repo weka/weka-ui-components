@@ -1,7 +1,8 @@
+import type { Severity } from '#v2/utils/consts'
+
 import clsx from 'clsx'
 
 import { SEVERITY_ICONS, WarningIcon } from '../../icons'
-import type { Severity } from '../../utils/consts'
 
 import styles from './alertBadge.module.scss'
 

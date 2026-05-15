@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import Tooltip from '../../../Tooltip'
 

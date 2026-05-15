@@ -1,4 +1,13 @@
+import type {
+  ExtendedColumnDef,
+  ExtendedColumnFilter,
+  ExtendedRow,
+  RowAction,
+  TableExtraClasses
+} from './types'
+import type { ColumnFilter, FilterFn } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
+
 import React, {
   useEffect,
   useLayoutEffect,
@@ -6,7 +15,6 @@ import React, {
   useRef,
   useState
 } from 'react'
-import type { ColumnFilter, FilterFn } from '@tanstack/react-table'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -19,20 +27,18 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import clsx from 'clsx'
-
 import {
   COLUMN_RESIZING_LISTENER,
   EMPTY_STRING,
   NOP,
   SAVED_RESIZED,
   SAVED_RESIZING_ENABLED
-} from 'consts'
-import { useToggle } from 'hooks'
-import Utils from 'utils'
+} from '#consts'
+import { useToggle } from '#hooks'
+import Utils from '#utils'
 
 import localStorageService from '../../localStorageService'
 import Loader from '../Loader'
-
 import { ColumnHeader, Pagination, TableBody, TableTop } from './components'
 import { AggregatedTotalCell, DefaultCell } from './exports'
 import {
@@ -47,13 +53,6 @@ import {
 } from './hooks'
 import { TABLE_FILTERS_MAP } from './tableConsts'
 import { clearUniqueCountCache, getCustomSortingFns } from './tableUtils'
-import type {
-  ExtendedColumnDef,
-  ExtendedColumnFilter,
-  ExtendedRow,
-  RowAction,
-  TableExtraClasses
-} from './types'
 
 import './table.scss'
 

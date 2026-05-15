@@ -1,8 +1,8 @@
-import React from 'react'
 import type { Control } from 'react-hook-form'
-import { Controller } from 'react-hook-form'
 
-import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
+import React from 'react'
+import { Controller } from 'react-hook-form'
+import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
 
 import Select from '../../inputs/Select'
 

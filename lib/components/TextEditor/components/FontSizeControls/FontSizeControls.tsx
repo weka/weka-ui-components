@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLocalStorage } from 'react-use'
 import { IconButton } from '@mui/material'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import Tooltip from '../../../Tooltip/Tooltip'
 import { DEFAULT_FONT_SIZE, FONT_SIZE_STORAGE_KEY } from '../../consts'

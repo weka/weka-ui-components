@@ -8,7 +8,7 @@ export default tseslint.config(
   ...wekaConfig,
   {
     settings: {
-      weka: { constsPath: 'consts' }
+      weka: { constsPath: '#consts' }
     }
   },
   {

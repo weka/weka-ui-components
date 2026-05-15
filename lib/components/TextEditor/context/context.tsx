@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react'
+
 import React, { createContext, useContext, useMemo, useState } from 'react'
 
 import { DEFAULT_FONT_SIZE, FONT_SIZE_STORAGE_KEY } from '../consts'

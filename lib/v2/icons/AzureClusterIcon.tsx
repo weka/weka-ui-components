@@ -1,5 +1,6 @@
-import type { CloudIconVariant } from '../utils/consts'
-import { CLOUD_ICON_VARIANTS, EMPTY_STRING } from '../utils/consts'
+import type { CloudIconVariant } from '#v2/utils/consts'
+
+import { CLOUD_ICON_VARIANTS, EMPTY_STRING } from '#v2/utils/consts'
 
 const TRANSLATE_RATIO = 0.15
 

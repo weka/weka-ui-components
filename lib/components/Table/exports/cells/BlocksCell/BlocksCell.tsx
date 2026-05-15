@@ -1,10 +1,9 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React, { useLayoutEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
-
-import { DRIVES_STATUSES, NODES_STATUSES } from 'consts'
-
-import type { ExtendedCellProps } from '../../../types'
+import { DRIVES_STATUSES, NODES_STATUSES } from '#consts'
 
 import './blocksCell.scss'
 

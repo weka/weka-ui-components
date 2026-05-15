@@ -7,8 +7,9 @@ import {
 } from 'react'
 import { clsx } from 'clsx'
 
+import { CSS_VARS, EMPTY_STRING, TOOLTIP_PLACEMENTS } from '#v2/utils/consts'
+
 import { CloseWithBgIcon } from '../../icons'
-import { CSS_VARS, EMPTY_STRING, TOOLTIP_PLACEMENTS } from '../../utils/consts'
 import { Tooltip } from '../Tooltip'
 
 import styles from './chip.module.scss'

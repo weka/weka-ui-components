@@ -1,8 +1,9 @@
-import type { CSSProperties } from 'react'
-import { useCallback, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
 
-import { EMPTY_STRING_ARRAY } from '../../../utils/consts'
+import { useCallback, useState } from 'react'
+
+import { EMPTY_STRING_ARRAY } from '#v2/utils/consts'
 
 import { MultiSelectAutocomplete } from './MultiSelectAutocomplete'
 

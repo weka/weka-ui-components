@@ -1,5 +1,6 @@
+import { CSS_VARS } from '#v2/utils/consts'
+
 import { ChartIcon } from '../../icons'
-import { CSS_VARS } from '../../utils/consts'
 
 import styles from './emptyChartState.module.scss'
 

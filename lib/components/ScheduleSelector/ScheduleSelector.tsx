@@ -1,8 +1,9 @@
+import type { ScheduleData } from './types'
 import type { FC } from 'react'
+
 import React, { useCallback } from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 import {
   DailySelector,
@@ -12,7 +13,6 @@ import {
   WeeklySelector
 } from './components'
 import { SCHEDULER_TYPES } from './ScheduleSelectorConsts'
-import type { ScheduleData } from './types'
 
 interface ScheduleSelectorProps {
   type: string

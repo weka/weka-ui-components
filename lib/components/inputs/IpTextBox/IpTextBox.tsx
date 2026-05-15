@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
+import { EMPTY_STRING, EVENT_KEYS, NOP } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
-import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { useHighlightInput } from '#hooks'
 
-import { useHighlightInput } from '../../../hooks'
 import Copy from '../../Copy'
 import Tooltip from '../../Tooltip'
 

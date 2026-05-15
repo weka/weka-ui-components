@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react'
-
-import svgs from 'svgs'
-import Utils from 'utils'
-
-import { Select } from '../../../../inputs'
 import type {
   MultiSelectFilterValue,
   SelectFilterMode
 } from '../../../tableUtils'
-import { FILTER_MODES } from '../../../tableUtils'
 import type { ExtendedFilterProps } from '../../../types'
+
+import React, { useEffect, useMemo, useState } from 'react'
+import svgs from '#svgs'
+import Utils from '#utils'
+
+import { Select } from '../../../../inputs'
+import { FILTER_MODES } from '../../../tableUtils'
 import FilterWrapper from '../../FilterWrapper'
 
 import './multiSelectFilter.scss'

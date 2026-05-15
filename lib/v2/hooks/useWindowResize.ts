@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { DOM_EVENTS } from '../utils/consts'
+import { DOM_EVENTS } from '#v2/utils/consts'
 
 /**
  * Hook to execute a callback when the window is resized

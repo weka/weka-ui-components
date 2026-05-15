@@ -1,18 +1,4 @@
 import type {
-  Cell,
-  Column,
-  ColumnDef,
-  ColumnFilter,
-  FilterFn,
-  HeaderGroup,
-  Row,
-  SortingFn,
-  Table
-} from '@tanstack/react-table'
-
-import '@tanstack/react-table'
-
-import type {
   DateFilterOptions,
   FilterTypes,
   MultiSelectFilterOptions,
@@ -43,6 +29,19 @@ import type {
   SwitchCellName,
   SwitchCellOptions
 } from './exports'
+import type {
+  Cell,
+  Column,
+  ColumnDef,
+  ColumnFilter,
+  FilterFn,
+  HeaderGroup,
+  Row,
+  SortingFn,
+  Table
+} from '@tanstack/react-table'
+
+import '@tanstack/react-table'
 
 export type ExtendedTable<Data> = Table<Data>
 

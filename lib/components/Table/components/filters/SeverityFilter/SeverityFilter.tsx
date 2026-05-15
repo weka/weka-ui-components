@@ -1,10 +1,10 @@
+import type { ExtendedFilterProps } from '../../../types'
+
 import React from 'react'
 import clsx from 'clsx'
+import { SEVERITIES, SEVERITIES_ICONS } from '#consts'
+import { useToggle } from '#hooks'
 
-import { SEVERITIES, SEVERITIES_ICONS } from 'consts'
-import { useToggle } from 'hooks'
-
-import type { ExtendedFilterProps } from '../../../types'
 import FilterWrapper from '../../FilterWrapper'
 
 import './severityFilter.scss'

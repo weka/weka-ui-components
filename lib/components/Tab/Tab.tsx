@@ -1,10 +1,10 @@
 import type { ReactElement } from 'react'
+
 import React from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
 
 import Tooltip from '../Tooltip'
 import ValidityIndicator from '../ValidityIndicator'

@@ -3,8 +3,8 @@ import {
   SAVED_HIDDEN,
   SAVED_RESIZED,
   SAVED_RESIZING_ENABLED
-} from './consts'
-import Utils from './utils'
+} from '#consts'
+import Utils from '#utils'
 
 const localStorageService = {
   setItem(key: string, item: string | boolean) {

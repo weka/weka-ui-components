@@ -1,9 +1,10 @@
 import type { GradientColorKey } from '../../styles/gradientColors'
+import type { AlertIconShape } from '../AlertStatusBadge'
+
 import {
   createGradientId,
   getGradientColors
 } from '../../styles/gradientColors'
-import type { AlertIconShape } from '../AlertStatusBadge'
 import { ALERT_ICON_PATHS } from '../AlertStatusBadge'
 
 export interface GradientAlertIconProps {

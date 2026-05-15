@@ -1,13 +1,12 @@
-import type { FC } from 'react'
-import React, { useCallback, useMemo } from 'react'
+import type { ExtendedCell, ExtendedRow, TableExtraClasses } from '../../types'
 import type { ColumnMeta } from '@tanstack/react-table'
+import type { FC } from 'react'
+
+import React, { useCallback, useMemo } from 'react'
 import { flexRender } from '@tanstack/react-table'
 import clsx from 'clsx'
-
-import svgs from 'svgs'
-import Utils from 'utils'
-
-import type { ExtendedCell, ExtendedRow, TableExtraClasses } from '../../types'
+import svgs from '#svgs'
+import Utils from '#utils'
 
 const { Arrow } = svgs
 

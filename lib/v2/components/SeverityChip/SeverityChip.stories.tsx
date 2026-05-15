@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { NOOP, SEVERITY_TYPES } from '../../utils/consts'
+import { NOOP, SEVERITY_TYPES } from '#v2/utils/consts'
 
 import { SeverityChip } from './SeverityChip'
 

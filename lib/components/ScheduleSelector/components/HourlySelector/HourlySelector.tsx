@@ -1,7 +1,7 @@
 import type { FC } from 'react'
-import React, { useCallback } from 'react'
 
-import { EMPTY_STRING } from 'consts'
+import React, { useCallback } from 'react'
+import { EMPTY_STRING } from '#consts'
 
 import { Select } from '../../../inputs'
 import {

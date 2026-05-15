@@ -1,14 +1,14 @@
+import type { menuItem } from '../MenuPopper/MenuPopper'
 import type { ReactNode } from 'react'
+
 import React, { useRef } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import { useToggle } from 'hooks'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import { useToggle } from '#hooks'
+import svgs from '#svgs'
 
 import Info from '../Info'
-import type { menuItem } from '../MenuPopper/MenuPopper'
 import MenuPopper from '../MenuPopper/MenuPopper'
 import SpanTooltip from '../SpanTooltip'
 import Tooltip from '../Tooltip'

@@ -2,6 +2,8 @@
 import { act, cleanup, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { NOP } from '#consts'
+
 import {
   ExpandableTextProvider,
   useExpandableTextContext
@@ -140,7 +142,7 @@ describe('ExpandableTextProvider', () => {
 
 describe('useExpandableTextContext', () => {
   it('throws error when used outside provider', () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(NOP)
 
     expect(() => render(<TestConsumer />)).toThrow(
       'useExpandableTextContext must be used within an ExpandableTextProvider'

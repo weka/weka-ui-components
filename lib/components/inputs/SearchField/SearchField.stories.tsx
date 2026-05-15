@@ -1,8 +1,9 @@
-import React from 'react'
-import { action } from '@storybook/addon-actions'
+import type { SearchFieldProps } from './SearchField'
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import type { SearchFieldProps } from './SearchField'
+import React from 'react'
+import { action } from '@storybook/addon-actions'
+
 import { default as SearchFieldComponent } from './SearchField'
 
 export default {

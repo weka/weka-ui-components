@@ -1,10 +1,10 @@
-import React from 'react'
+import type { ExtendedCellProps } from '../../../types'
 
-import { DRIVES_STATUSES, STATUS } from 'consts'
-import svgs from 'svgs'
+import React from 'react'
+import { DRIVES_STATUSES, STATUS } from '#consts'
+import svgs from '#svgs'
 
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './statusCell.scss'
 

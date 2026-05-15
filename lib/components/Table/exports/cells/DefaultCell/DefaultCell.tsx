@@ -1,12 +1,12 @@
+import type { ExtendedCell, ExtendedCellProps } from '../../../types'
+
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import clsx from 'clsx'
-
-import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from 'consts'
-import Utils from 'utils'
+import { COLUMN_RESIZING_LISTENER, EMPTY_STRING } from '#consts'
+import Utils from '#utils'
 
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCell, ExtendedCellProps } from '../../../types'
 
 import './defaultCell.scss'
 

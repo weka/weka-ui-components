@@ -1,12 +1,13 @@
-import type { ReactElement, ReactNode } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
 import type { PopperProps } from '@mui/material'
+import type { TooltipPlacement } from '#v2/utils/consts'
+import type { ReactElement, ReactNode } from 'react'
+
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Tooltip as MuiTooltip } from '@mui/material'
 import clsx from 'clsx'
 
-import { useWindowResize } from '../../hooks'
-import type { TooltipPlacement } from '../../utils/consts'
-import { EMPTY_STRING, TOOLTIP_PLACEMENTS } from '../../utils/consts'
+import { useWindowResize } from '#v2/hooks'
+import { EMPTY_STRING, TOOLTIP_PLACEMENTS } from '#v2/utils/consts'
 
 import styles from './tooltip.module.scss'
 

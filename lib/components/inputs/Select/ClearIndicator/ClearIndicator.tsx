@@ -1,8 +1,8 @@
-import React from 'react'
 import type { ClearIndicatorProps } from 'react-select'
-import { components } from 'react-select'
 
-import { EMPTY_STRING } from 'consts'
+import React from 'react'
+import { components } from 'react-select'
+import { EMPTY_STRING } from '#consts'
 
 import Tooltip from '../../../Tooltip'
 

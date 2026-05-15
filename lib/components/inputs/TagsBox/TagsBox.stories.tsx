@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import type { TagsBoxProps } from './TagsBox'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import type { TagsBoxProps } from './TagsBox'
+import React, { useState } from 'react'
+
 import { default as TagsBoxComponent } from './TagsBox'
 
 const meta: Meta<typeof TagsBoxComponent> = {

@@ -1,8 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING, NOP } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING, NOP } from '#consts'
+import svgs from '#svgs'
 
 import './NumInput.scss'
 

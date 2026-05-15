@@ -4,14 +4,14 @@ export {
   getGradientColors,
   GRADIENT_COLORS
 } from '../styles/gradientColors'
-export { calculateVisibleChips } from './chipMeasurement'
+export { calculateVisibleChips } from '#v2/utils/chipMeasurement'
 export type {
   BaseSeverity,
   CloudIconVariant,
   Severity,
   SeverityLevel,
   TooltipPlacement
-} from './consts'
+} from '#v2/utils/consts'
 export {
   CLOUD_ICON_VARIANTS,
   COMMA_SEPARATOR,
@@ -30,6 +30,10 @@ export {
   SEVERITY_ORDER_DESC,
   SEVERITY_TYPES,
   TOOLTIP_PLACEMENTS
-} from './consts'
-export { highlightText } from './textUtils'
-export { formatDate, formatISODate, getDaysOfTheMonth } from './timeUtils'
+} from '#v2/utils/consts'
+export { highlightText } from '#v2/utils/textUtils'
+export {
+  formatDate,
+  formatISODate,
+  getDaysOfTheMonth
+} from '#v2/utils/timeUtils'
