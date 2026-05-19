@@ -1,0 +1,49 @@
+name: Build and Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        if: github.event_name == 'pull_request'
+        run: git fetch origin ${{ github.base_ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Lint (changed files only)
+        if: github.event_name == 'pull_request'
+        env:
+          ESLINT_PLUGIN_DIFF_COMMIT: origin/${{ github.base_ref }}
+        run: yarn exec eslint . --config eslint.diff.config.mjs
+
+
+      - name: Test
+        run: yarn test:run
+
+      - name: Build
+        run: yarn build

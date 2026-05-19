@@ -11,6 +11,17 @@
   "version": "4.14.3",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
+  "imports": {
+    "#consts": "./lib/consts.ts",
+    "#utils": "./lib/utils.tsx",
+    "#hooks": "./lib/hooks/index.ts",
+    "#context": "./lib/context/index.ts",
+    "#svgs": "./lib/svgs/index.ts",
+    "#types": "./lib/types/global.d.ts",
+    "#v2/utils/textUtils": "./lib/v2/utils/textUtils.tsx",
+    "#v2/utils/*": "./lib/v2/utils/*.ts",
+    "#v2/hooks": "./lib/v2/hooks/index.ts"
+  },
   "typesVersions": {
     "*": {
       "v2": [

@@ -66,6 +66,13 @@ export const eslintConfig = tseslint.config(
       react: { version: 'detect' }
     },
     rules: {
+      // local
+      'weka/prefer-package-imports': 'warn',
+      'weka/no-empty-strings': 'error',
+      'weka/no-empty-content': 'error',
+      'weka/no-nop': 'error',
+
+      // global
       ...reactHooks.configs.recommended.rules,
       'no-trailing-spaces': 'error',
       'react-refresh/only-export-components': [
@@ -76,14 +83,17 @@ export const eslintConfig = tseslint.config(
         'error',
         {
           groups: [
+            ['^.+\\u0000$'],
             ['^node:'],
             ['^react', '^@?\\w'],
+            ['^#'],
             [
-              '^(utils|hooks|components|types|context|static|consts|svgs)(/.*|$)'
+              '^\\.\\.(?!/?$)',
+              '^\\.\\./?$',
+              '^\\./(?=.*/)(?!/?$)',
+              '^\\.(?!/?$)',
+              '^\\./?$'
             ],
-            ['^\\u0000'],
-            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
-            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
             ['^.+\\.(css|scss)$']
           ]
         }
@@ -101,10 +111,6 @@ export const eslintConfig = tseslint.config(
       ],
       '@typescript-eslint/return-await': ['warn', 'in-try-catch'],
       '@typescript-eslint/require-await': 'off',
-      'weka/no-empty-strings': 'error',
-      'weka/no-empty-content': 'error',
-      'weka/no-zero-string': 'error',
-      'weka/no-nop': 'error',
       'no-debugger': 'warn',
       'no-param-reassign': 'off',
       'no-unused-expressions': 'off',
@@ -298,11 +304,18 @@ export const eslintConfig = tseslint.config(
     rules: {
       '@typescript-eslint/naming-convention': [
         'error',
-        { selector: 'variable', format: ['UPPER_CASE'], modifiers: ['const'] }
+        {
+          selector: 'variable',
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase']
+        },
+        {
+          selector: 'variable',
+          modifiers: ['const', 'exported'],
+          format: ['UPPER_CASE']
+        }
       ],
       'weka/no-empty-strings': 'off',
       'weka/no-empty-content': 'off',
-      'weka/no-zero-string': 'off',
       'weka/no-nop': 'off'
     }
   },

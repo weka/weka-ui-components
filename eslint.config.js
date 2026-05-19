@@ -3,7 +3,7 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['vite.config.ts', 'vitest.config.ts']
+    ignores: ['vite.config.ts', 'vitest.config.ts', 'dist/**', 'types/**']
   },
   ...wekaConfig,
   {
