@@ -1,0 +1,394 @@
+.formControl {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+
+  :global(.MuiFormControl-root) {
+    pointer-events: auto !important;
+  }
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-700-300);
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.required {
+  color: var(--red-500);
+}
+
+.select {
+  cursor: pointer !important;
+
+  &:global(.MuiInputBase-root.MuiOutlinedInput-root) {
+    background: var(--gray-50-920) !important;
+    border-radius: 4px !important;
+    color: var(--gray-950-20) !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    font-family: 'IBMPlexSans', sans-serif !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease;
+    min-height: 36px !important;
+    height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+
+    :global(.MuiSelect-select) {
+      cursor: pointer !important;
+      padding: 6px 32px 6px 10px !important;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      min-height: unset !important;
+      height: 100% !important;
+      max-height: 36px !important;
+      line-height: 24px;
+      overflow: hidden;
+      box-sizing: border-box !important;
+    }
+
+    :global(.MuiSelect-icon) {
+      right: 10px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+
+    :global(.MuiSelect-nativeInput) {
+      pointer-events: none !important;
+    }
+
+    &:hover {
+      background-color: var(--gray-150-800) !important;
+
+      :global(.MuiOutlinedInput-notchedOutline) {
+        border-color: var(--gray-400-600) !important;
+      }
+    }
+
+    &:global(.Mui-focused) {
+      :global(.MuiOutlinedInput-notchedOutline) {
+        border-color: var(--purple-500) !important;
+        box-shadow: 0 0 0 1px var(--purple-500) !important;
+      }
+    }
+
+    &:global(.Mui-disabled) {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    :global(.MuiOutlinedInput-notchedOutline) {
+      border: 1px solid var(--gray-350-650) !important;
+    }
+
+    > svg:not(.MuiSelect-select svg) {
+      position: absolute;
+      right: 10px !important;
+      color: var(--gray-600-400) !important;
+      width: 20px !important;
+      height: 20px !important;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+  }
+}
+
+.placeholder {
+  color: var(--gray-920-50) !important;
+  font-weight: 400;
+  pointer-events: none !important;
+}
+
+.selectedValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+}
+
+.selectMultiple:global(.MuiInputBase-root.MuiOutlinedInput-root) {
+  height: auto !important;
+  min-height: 36px !important;
+  max-height: 72px !important;
+
+  :global(.MuiSelect-select) {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    min-height: 24px !important;
+    max-height: 60px !important;
+    overflow-y: auto !important;
+  }
+}
+
+.chipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0;
+  pointer-events: auto !important;
+  align-items: center;
+
+  > * {
+    pointer-events: auto !important;
+  }
+}
+
+.moreChipsIndicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  background: var(--gray-200-800);
+  color: var(--gray-700-300);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  height: 22px;
+  box-sizing: border-box;
+}
+
+:global(.MuiPopover-root) {
+  z-index: 2100 !important;
+
+  :global(.MuiPaper-root) {
+    background: var(--gray-50-920) !important;
+  }
+}
+
+.menuPaper {
+  background: var(--gray-50-920) !important;
+  border: 1px solid var(--gray-350-650) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%) !important;
+  margin-top: 4px !important;
+  max-height: 300px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.menuListWrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  max-height: 300px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.stickyHeader {
+  flex-shrink: 0 !important;
+  z-index: 10 !important;
+  background: var(--gray-50-920) !important;
+}
+
+.scrollableList {
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-y: auto !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  list-style: none !important;
+}
+
+.searchMenuItem {
+  &:global(.MuiMenuItem-root) {
+    padding: 0 !important;
+    cursor: default !important;
+    pointer-events: auto !important;
+    border-bottom: 1px solid var(--gray-350-650) !important;
+    background: var(--gray-50-920) !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+    display: block !important;
+
+    &:hover {
+      background: var(--gray-50-920) !important;
+    }
+
+    &:focus {
+      background: var(--gray-50-920) !important;
+    }
+  }
+}
+
+.searchContainer {
+  padding: 8px 16px;
+  width: 100%;
+  background: var(--gray-50-920);
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--gray-100-900);
+  border: 1px solid var(--gray-350-650);
+  border-radius: 4px;
+  padding: 6px 8px;
+  gap: 8px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 1px var(--purple-500);
+  }
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  color: var(--gray-600-400);
+  pointer-events: none;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--gray-950-20);
+  font-size: 13px;
+  font-weight: 400;
+  font-family: 'IBMPlexSans', sans-serif;
+  outline: none;
+  padding: 0;
+
+  &::placeholder {
+    color: var(--gray-600-400);
+  }
+}
+
+.searchClearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--gray-600-400);
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--gray-950-20);
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+.menuItem {
+  &:global(.MuiMenuItem-root) {
+    padding: 6px 16px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    color: var(--gray-950-20) !important;
+    font-family: 'IBMPlexSans', sans-serif !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex-shrink: 0 !important;
+
+    &:hover {
+      background: var(--gray-200-800) !important;
+    }
+
+    &:global(.Mui-selected) {
+      background: transparent !important;
+      color: var(--purple-500-300) !important;
+      font-weight: 700 !important;
+
+      &:hover {
+        background: var(--gray-200-800) !important;
+      }
+    }
+  }
+
+  .searchMenuItem + & {
+    overflow-y: auto !important;
+    max-height: 224px !important;
+  }
+}
+
+.highlighted {
+  &:global(.MuiMenuItem-root) {
+    background: var(--gray-200-800) !important;
+  }
+}
+
+.menuItemContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  overflow: hidden;
+
+  > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+}
+
+.menuItemIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 14px !important;
+    height: 14px !important;
+    display: block;
+
+    path {
+      fill: var(--gray-900-100) !important;
+    }
+  }
+}
+
+.highlight {
+  background-color: var(--purple-100-400);
+  color: var(--gray-920-50);
+  font-weight: 600;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: var(--gray-700-300);
+  font-size: 13px;
+}
+
+.loadingSpinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--gray-300-700);
+  border-top-color: var(--purple-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

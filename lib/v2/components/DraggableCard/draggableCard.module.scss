@@ -1,0 +1,19 @@
+@use '../../styles/colors' as *;
+
+.draggableCard {
+  cursor: default;
+  position: relative;
+
+  &.nearEdge {
+    cursor: move;
+  }
+
+  &.dragging {
+    opacity: 0.6;
+  }
+
+  &.dropTarget {
+    outline: 2px dashed $cyan-500;
+    outline-offset: 4px;
+  }
+}

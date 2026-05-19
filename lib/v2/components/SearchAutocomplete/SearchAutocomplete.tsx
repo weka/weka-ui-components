@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 import { CloseIcon, SearchIcon } from '../../icons'
 import {
+  DOM_EVENTS,
   EMPTY_ARRAY,
   EMPTY_STRING,
   KEYBOARD_KEYS,
@@ -226,8 +227,9 @@ export function SearchAutocomplete({
     }
 
     if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
+      document.addEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside)
+      return () =>
+        document.removeEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside)
     }
   }, [showDropdown])
 

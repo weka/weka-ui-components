@@ -1,10 +1,21 @@
 import type { DateTime } from 'luxon'
 
-import { EMPTY_STRING, TIME_FORMATS } from '../../../../utils/consts'
+import { EMPTY_STRING } from '../../../../utils/consts'
 import { formatDate } from '../../../../utils/timeUtils'
 
 const DATE_PORTION_END_INDEX = 9
 const SHOULD_SHOW_MILI = false
+
+const TIME_FORMATS = {
+  DATE: 'yyyy-MM-dd',
+  MONTH_DAY_TIME: 'MMM dd HH:mm',
+  MONTH_DAY: 'MMM dd',
+  DATE_TIME: 'yyyy-MM-dd HH:mm',
+  DATE_TIME_SECONDS: 'yyyy-MM-dd HH:mm:ss',
+  DATE_TIME_SECONDS_MS: 'yyyy-MM-dd HH:mm:ss.SSS',
+  HOUR_MIN: 'HH:mm',
+  MAIN_DATE_TIME_FORMAT: 'MMM dd, yyyy HH:mm'
+} as const
 
 export interface DateTimeLabelProps {
   date?: DateTime | null

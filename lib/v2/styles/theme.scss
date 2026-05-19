@@ -10,10 +10,12 @@
   --gray-0-920: #{$gray-0};
   --gray-0-1000: #{$gray-0};
   --gray-20-950: #{$gray-20};
+  --gray-50-900: #{$gray-50};
   --gray-50-920: #{$gray-50};
   --gray-50-950: #{$gray-50};
   --gray-100-850: #{$gray-100};
   --gray-100-900: #{$gray-100};
+  --gray-150-800: #{$gray-150};
   --gray-150-850: #{$gray-150};
   --gray-200-800: #{$gray-200};
   --gray-250-750: #{$gray-250};
@@ -160,6 +162,10 @@
   --ld-container-bg: #{$gray-0};
   --ld-shadow-v2: #{$gray-150};
 
+  // Tabs
+  --ld-tab-bg: #{$gray-150};
+  --ld-tab-inactive-bg: #{$gray-100};
+
   // Shadow
   --shadow-color-strong: #{rgba($gray-1000, 0.6)};
 
@@ -186,10 +192,12 @@
   --gray-0-920: #{$gray-920};
   --gray-0-1000: #{$gray-1000};
   --gray-20-950: #{$gray-950};
+  --gray-50-900: #{$gray-900};
   --gray-50-920: #{$gray-920};
   --gray-50-950: #{$gray-950};
   --gray-100-850: #{$gray-850};
   --gray-100-900: #{$gray-900};
+  --gray-150-800: #{$gray-800};
   --gray-150-850: #{$gray-850};
   --gray-200-800: #{$gray-800};
   --gray-250-750: #{$gray-750};
@@ -335,6 +343,10 @@
   // Container
   --ld-container-bg: #{$gray-900};
   --ld-shadow-v2: #{$gray-1000};
+
+  // Tabs
+  --ld-tab-bg: #{$gray-750};
+  --ld-tab-inactive-bg: #{$gray-850};
 
   // Shadow
   --shadow-color-strong: #{rgba($gray-1000, 0.6)};

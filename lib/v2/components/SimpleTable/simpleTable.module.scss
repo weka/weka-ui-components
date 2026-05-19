@@ -1,0 +1,163 @@
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.list {
+  flex: 1;
+  padding-top: 5px;
+  min-height: 0;
+  max-height: 100%;
+
+  :global {
+    .simplebar-track.simplebar-vertical {
+      right: 0;
+      width: 8px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      display: block !important;
+    }
+
+    .simplebar-scrollbar::before {
+      background: var(--scrollbar-thumb);
+      border-radius: 8px;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+
+    .simplebar-content-wrapper[style*='overflow'] + .simplebar-track.simplebar-vertical {
+      display: block !important;
+    }
+  }
+
+  &:hover {
+    :global {
+      .simplebar-track.simplebar-vertical {
+        opacity: 1;
+      }
+
+      .simplebar-scrollbar::before {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+:global {
+  .simplebar-track.simplebar-vertical {
+    right: 0;
+    width: 8px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .simplebar-scrollbar::before {
+    background: var(--scrollbar-thumb);
+    border-radius: 8px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, background 0.2s ease;
+  }
+
+  .simplebar-wrapper:hover .simplebar-track.simplebar-vertical {
+    opacity: 1;
+  }
+
+  .simplebar-wrapper:hover .simplebar-scrollbar::before {
+    opacity: 1;
+    background: var(--scrollbar-thumb);
+  }
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  height: 32px;
+  background: var(--gray-50-900);
+  border-bottom: 1px solid var(--gray-300-700);
+  flex-shrink: 0;
+}
+
+.headerCell {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-700-300);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  height: 40px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--gray-200-800);
+
+  &:hover {
+    background: var(--gray-50-920);
+  }
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.cell {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltipCell {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.tabBar {
+  display: flex;
+  background: var(--ld-tab-bg);
+  font-size: 12px;
+  height: 38px;
+}
+
+.tab,
+.tabActive {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+.tabActive {
+  background: var(--ld-tab-bg);
+  color: var(--gray-900-100);
+  border-bottom: 4px solid var(--gray-900-100);
+}
+
+.tab {
+  background: var(--ld-tab-inactive-bg);
+  color: var(--gray-450-550);
+}

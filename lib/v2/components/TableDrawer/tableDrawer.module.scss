@@ -1,0 +1,158 @@
+@use '../../styles/colors' as *;
+
+.drawer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  min-width: 300px;
+  border-radius: 4px;
+  background: var(--gray-100-900);
+  border: 1px solid var(--gray-300-700);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: slide-in 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  padding: 16px 12px 12px;
+  pointer-events: auto;
+
+  &.animationComplete {
+    animation: none;
+    transform: translateX(0);
+  }
+
+  &.resizing {
+    transition: none;
+    user-select: none;
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.resizeHandle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: transparent;
+  cursor: col-resize;
+  z-index: 10;
+  transition: all 0.2s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 60px;
+    background: var(--border-color);
+    border-radius: 1px;
+    opacity: 0;
+    transition: all 0.2s ease;
+  }
+
+  &:hover {
+    background: rgba($purple-500, 0.1);
+
+    &::before {
+      opacity: 1;
+      background: var(--purple-500);
+      width: 3px;
+      box-shadow: 0 0 8px rgba($purple-500, 0.3);
+    }
+  }
+
+  &:active {
+    background: rgba($purple-500, 0.15);
+
+    &::before {
+      background: $purple-600;
+      box-shadow: 0 0 12px rgba($purple-500, 0.5);
+    }
+  }
+}
+
+.drawerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 0 12px;
+  min-height: 48px;
+  position: relative;
+}
+
+.titleContainer {
+  flex: 1;
+  overflow: hidden;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+
+  &:hover {
+    background: var(--background-tertiary);
+    color: var(--text-primary);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  }
+
+  &:active {
+    transform: rotate(90deg) scale(0.95);
+  }
+}
+
+.drawerContent {
+  flex: 1;
+  overflow: auto;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: auto;
+  scrollbar-color: var(--gray-400-600) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-400-600);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--scrollbar-thumb);
+    }
+  }
+}

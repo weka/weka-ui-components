@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
 
-import { DAYS_IN_WEEK, EMPTY_STRING } from './consts'
+import { EMPTY_STRING } from './consts'
 
+const DAYS_IN_WEEK = 7
 const INVALID_MESSAGE = 'Invalid DateTime'
 const NOT_DATETIME_MESSAGE = 'Not Valid DateTime Object'
 
