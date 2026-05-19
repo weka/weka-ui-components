@@ -1,3 +1,5 @@
+import { buildImportFix, DEFAULT_CONSTS_PATH } from './utils.js'
+
 export default {
   meta: {
     type: 'suggestion',
@@ -10,6 +12,7 @@ export default {
     schema: []
   },
   create(context) {
+    const constsPath = context.settings?.weka?.constsPath ?? DEFAULT_CONSTS_PATH
     return {
       ArrowFunctionExpression(node) {
         const isSingleLine = node.loc.start.line === node.loc.end.line
@@ -21,9 +24,20 @@ export default {
         ) {
           context.report({
             node,
-            message:
-              "Use NOP from 'consts' instead of an empty arrow function.",
-            fix: (fixer) => fixer.replaceText(node, 'NOP')
+            message: `Use NOP from '${constsPath}' instead of an empty arrow function.`,
+            fix: (fixer) => {
+              const fixes = [fixer.replaceText(node, 'NOP')]
+              const importFix = buildImportFix(
+                fixer,
+                context.sourceCode,
+                'NOP',
+                constsPath
+              )
+              if (importFix) {
+                fixes.push(importFix)
+              }
+              return fixes
+            }
           })
         }
       }
