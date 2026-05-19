@@ -1,11 +1,11 @@
-import React from 'react'
+import type { ExtendedCellProps } from '../../../types'
 
-import { OBS_IS_DETACHING, OBS_MODES } from 'consts'
-import svgs from 'svgs'
+import React from 'react'
+import { OBS_IS_DETACHING, OBS_MODES } from '#consts'
+import svgs from '#svgs'
 
 import CircularProgress from '../../../../CircularProgress'
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './tieringCell.scss'
 

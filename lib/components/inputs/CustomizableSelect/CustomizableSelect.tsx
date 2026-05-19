@@ -1,14 +1,15 @@
 import type { MouseEvent, ReactElement } from 'react'
+
 import React, { useEffect, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
+import { EMPTY_STRING, EVENT_KEYS, NOP } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
-import { EMPTY_STRING, EVENT_KEYS, NOP } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { useHighlightInput } from '#hooks'
 
-import { useHighlightInput } from '../../../hooks'
 import Tooltip from '../../Tooltip'
 import { CommonSelectComponents, getStyle } from '../Select/Select'
 

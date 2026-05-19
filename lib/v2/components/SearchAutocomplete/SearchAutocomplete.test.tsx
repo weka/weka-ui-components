@@ -1,9 +1,14 @@
+import type { SearchOption } from './SearchAutocomplete'
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING, KEYBOARD_KEYS, SEARCH_PLACEHOLDER } from '../../utils/consts'
+import {
+  EMPTY_STRING,
+  KEYBOARD_KEYS,
+  SEARCH_PLACEHOLDER
+} from '#v2/utils/consts'
 
-import type { SearchOption } from './SearchAutocomplete'
 import { SearchAutocomplete } from './SearchAutocomplete'
 
 const SAMPLE_OPTIONS: readonly SearchOption[] = [

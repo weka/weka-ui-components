@@ -1,12 +1,12 @@
+import type { TextFilterMode, TextFilterValue } from '../../../tableUtils'
+import type { ExtendedFilterProps } from '../../../types'
+
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 import { Select } from '../../../../inputs'
-import type { TextFilterMode, TextFilterValue } from '../../../tableUtils'
 import { FILTER_MODES, validateRegexPattern } from '../../../tableUtils'
-import type { ExtendedFilterProps } from '../../../types'
 import FilterWrapper from '../../FilterWrapper'
 
 import './textFilter.scss'

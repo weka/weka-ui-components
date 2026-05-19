@@ -1,10 +1,11 @@
-import React from 'react'
+import type { CharCounterProps } from './CharCounter'
 import type { Meta, StoryFn } from '@storybook/react'
 
-import { EMPTY_STRING } from '../../consts'
-import { TextBox } from '../inputs'
+import React from 'react'
 
-import type { CharCounterProps } from './CharCounter'
+import { EMPTY_STRING } from '#consts'
+
+import { TextBox } from '../inputs'
 import CharCounter from './CharCounter'
 
 export default {

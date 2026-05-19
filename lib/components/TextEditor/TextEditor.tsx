@@ -1,7 +1,13 @@
+import type {
+  ExternalSearchAction,
+  ParsedData,
+  SearchDirection,
+  TextEditorHandle
+} from './components'
+
 import React, { forwardRef, useEffect } from 'react'
 
 import { useHideContent } from './components/TextEditorFull/hooks'
-import type { ExternalSearchAction, ParsedData, SearchDirection, TextEditorHandle } from './components'
 import {
   FoldAllButton,
   FontSizeControls,
@@ -73,48 +79,50 @@ interface TextEditorProps {
   disableTagsFilter?: boolean
 }
 
-const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEditor(props, ref) {
-  const { value, maxLines, liteMode, loading, disableTagsFilter } = props
-  const context = useTextEditorContext(true)
-  const setTextEditorContext = context?.setTextEditorContext
-  const fontSize = context?.value.fontSize ?? DEFAULT_FONT_SIZE
+const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
+  function TextEditor(props, ref) {
+    const { value, maxLines, liteMode, loading, disableTagsFilter } = props
+    const context = useTextEditorContext(true)
+    const setTextEditorContext = context?.setTextEditorContext
+    const fontSize = context?.value.fontSize ?? DEFAULT_FONT_SIZE
 
-  const filteredValue = useHideContent({ value })
+    const filteredValue = useHideContent({ value })
 
-  const tagLines = useTags({ value: filteredValue })
-  const lines = disableTagsFilter ? undefined : tagLines
+    const tagLines = useTags({ value: filteredValue })
+    const lines = disableTagsFilter ? undefined : tagLines
 
-  useEffect(() => {
-    setTextEditorContext?.((prev) => ({
-      ...prev,
-      loading
-    }))
-  }, [loading, setTextEditorContext])
+    useEffect(() => {
+      setTextEditorContext?.((prev) => ({
+        ...prev,
+        loading
+      }))
+    }, [loading, setTextEditorContext])
 
-  useLinesCount({
-    value,
-    lines,
-    filteredValue
-  })
+    useLinesCount({
+      value,
+      lines,
+      filteredValue
+    })
 
-  return liteMode ? (
-    <TextViewerLite
-      key={fontSize}
-      fontSize={fontSize}
-      lines={lines}
-      maxLines={maxLines}
-      value={filteredValue}
-    />
-  ) : (
-    <TextEditorFull
-      ref={ref}
-      {...props}
-      fontSize={fontSize}
-      lines={lines}
-      value={filteredValue}
-    />
-  )
-})
+    return liteMode ? (
+      <TextViewerLite
+        key={fontSize}
+        fontSize={fontSize}
+        lines={lines}
+        maxLines={maxLines}
+        value={filteredValue}
+      />
+    ) : (
+      <TextEditorFull
+        ref={ref}
+        {...props}
+        fontSize={fontSize}
+        lines={lines}
+        value={filteredValue}
+      />
+    )
+  }
+)
 
 const TextEditorWithStatics = TextEditor as typeof TextEditor & {
   Provider: typeof TextEditorProvider

@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { KEYBOARD_KEYS } from '../../utils/consts'
+import { KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { Popup } from './Popup'
 

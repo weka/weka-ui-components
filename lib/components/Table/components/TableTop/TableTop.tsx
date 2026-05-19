@@ -1,14 +1,13 @@
+import type { ExtendedTable } from '../../types'
+
 import React from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
 
 import { Utils } from '../../../../main'
 import Tooltip from '../../../Tooltip'
-import type { ExtendedTable } from '../../types'
-
 import FilterBox from './FilterBox'
 import ShowColumns from './ShowColumns'
 

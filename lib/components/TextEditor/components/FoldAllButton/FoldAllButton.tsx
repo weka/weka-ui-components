@@ -1,6 +1,5 @@
 import React from 'react'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 import ExpandCollapseButton from '../../../ExpandCollapseButton'
 import { useTextEditorContext } from '../../context'

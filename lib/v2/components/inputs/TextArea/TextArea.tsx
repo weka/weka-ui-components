@@ -1,7 +1,8 @@
 import type { ChangeEvent } from 'react'
+
 import clsx from 'clsx'
 
-import { EMPTY_STRING } from '../../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import styles from './textArea.module.scss'
 

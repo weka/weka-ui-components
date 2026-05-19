@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import type { ExpandableSearchProps } from './ExpandableSearch'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { EMPTY_STRING, SEARCH_PLACEHOLDER } from '../../utils/consts'
+import { useEffect, useRef, useState } from 'react'
 
-import type { ExpandableSearchProps } from './ExpandableSearch'
+import { EMPTY_STRING, SEARCH_PLACEHOLDER } from '#v2/utils/consts'
+
 import { ExpandableSearch } from './ExpandableSearch'
 
 const STATUS_TEXT_STYLE = { fontSize: '12px' }

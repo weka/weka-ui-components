@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { IconButton } from '@mui/material'
-
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import svgs from '#svgs'
 
 import { TextBox } from '../inputs'
 import Tooltip from '../Tooltip'

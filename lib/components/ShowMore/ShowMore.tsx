@@ -1,8 +1,7 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import Tooltip from '../Tooltip'
 

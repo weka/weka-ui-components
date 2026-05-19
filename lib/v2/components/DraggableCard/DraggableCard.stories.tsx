@@ -1,6 +1,7 @@
-import type { CSSProperties } from 'react'
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
+
+import { useState } from 'react'
 
 import { DraggableCard } from './DraggableCard'
 

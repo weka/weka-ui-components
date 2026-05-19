@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING } from '../../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { TextArea } from './TextArea'
 
@@ -49,17 +49,13 @@ describe('TextArea - Rendering', () => {
 
   it('renders with label', () => {
     render(
-      <TextArea
-        {...createProps({ label: LABEL_TEXT, id: DESCRIPTION_ID })}
-      />
+      <TextArea {...createProps({ label: LABEL_TEXT, id: DESCRIPTION_ID })} />
     )
     expect(screen.getByText(LABEL_TEXT)).toBeInTheDocument()
   })
 
   it('renders required indicator when required is true', () => {
-    render(
-      <TextArea {...createProps({ label: LABEL_TEXT, required: true })} />
-    )
+    render(<TextArea {...createProps({ label: LABEL_TEXT, required: true })} />)
     expect(screen.getByText(REQUIRED_INDICATOR)).toBeInTheDocument()
   })
 
@@ -82,12 +78,18 @@ describe('TextArea - Rendering', () => {
 
   it('renders with default 4 rows', () => {
     render(<TextArea {...createProps()} />)
-    expect(screen.getByRole('textbox')).toHaveAttribute('rows', DEFAULT_ROWS_ATTR)
+    expect(screen.getByRole('textbox')).toHaveAttribute(
+      'rows',
+      DEFAULT_ROWS_ATTR
+    )
   })
 
   it('renders with custom rows', () => {
     render(<TextArea {...createProps({ rows: CUSTOM_ROWS })} />)
-    expect(screen.getByRole('textbox')).toHaveAttribute('rows', CUSTOM_ROWS_ATTR)
+    expect(screen.getByRole('textbox')).toHaveAttribute(
+      'rows',
+      CUSTOM_ROWS_ATTR
+    )
   })
 })
 

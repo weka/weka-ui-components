@@ -1,12 +1,12 @@
-import React from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
 
-import Utils from 'utils'
+import React from 'react'
+import Utils from '#utils'
 
-import { DialogProvider } from '../../context'
+import { DialogProvider } from '#context'
+
 import Button from '../Button'
 import ToasterContainer from '../Toast/ToasterContainer'
-
 import { default as ToasterDialogComponent } from './ToasterDialog'
 
 interface DialogStoryArgs {

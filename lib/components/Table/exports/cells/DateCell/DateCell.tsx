@@ -1,12 +1,12 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
+import { TIME_FORMATS } from '#consts'
 import { DateTime } from 'luxon'
-
-import { TIME_FORMATS } from 'consts'
-import Utils from 'utils'
+import Utils from '#utils'
 
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './dateCell.scss'
 

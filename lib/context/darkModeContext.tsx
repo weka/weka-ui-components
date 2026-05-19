@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react'
+
 import React, {
   createContext,
   useCallback,
@@ -7,8 +8,7 @@ import React, {
   useMemo,
   useState
 } from 'react'
-
-import { LOCAL_STORAGE_UPDATE_EVENT } from 'consts'
+import { LOCAL_STORAGE_UPDATE_EVENT } from '#consts'
 
 type Theme = {
   isDarkMode: boolean

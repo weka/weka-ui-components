@@ -1,7 +1,8 @@
+import type { SimpleTableColumn } from './SimpleTable'
+
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { SimpleTableColumn } from './SimpleTable'
 import { SimpleTable } from './SimpleTable'
 
 interface TestItem {
@@ -308,8 +309,6 @@ describe('SimpleTable - Column Configuration', () => {
       />
     )
 
-    expect(
-      container.querySelector(`.${NAME_COLUMN_CLASS}`)
-    ).toBeInTheDocument()
+    expect(container.querySelector(`.${NAME_COLUMN_CLASS}`)).toBeInTheDocument()
   })
 })

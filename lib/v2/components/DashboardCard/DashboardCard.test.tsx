@@ -1,9 +1,10 @@
+import type { DashboardCardProps } from './DashboardCard'
+
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { SEVERITY_TYPES } from '../../utils/consts'
+import { SEVERITY_TYPES } from '#v2/utils/consts'
 
-import type { DashboardCardProps } from './DashboardCard'
 import { DashboardCard } from './DashboardCard'
 
 const TEST_ID = 'test-card'

@@ -1,7 +1,8 @@
+import type { BaseFilterProps } from '../../types'
+
 import React from 'react'
 
 import { TABLE_FILTERS_MAP } from '../../tableConsts'
-import type { BaseFilterProps } from '../../types'
 
 export type FilterTypes = keyof typeof TABLE_FILTERS_MAP
 

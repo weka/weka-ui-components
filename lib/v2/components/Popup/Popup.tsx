@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
+
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 
-import { DOM_EVENTS, KEYBOARD_KEYS } from '../../utils/consts'
+import { DOM_EVENTS, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import styles from './popup.module.scss'
 

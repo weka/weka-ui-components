@@ -3,10 +3,11 @@ import type {
   MouseEvent as ReactMouseEvent,
   ReactNode
 } from 'react'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 
-import { DOM_EVENTS, EMPTY_STRING } from '../../utils/consts'
+import { DOM_EVENTS, EMPTY_STRING } from '#v2/utils/consts'
 
 import {
   DEFAULT_EDGE_THRESHOLD,

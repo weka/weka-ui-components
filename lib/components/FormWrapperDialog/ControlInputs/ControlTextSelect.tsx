@@ -1,11 +1,11 @@
-import React from 'react'
 import type { Control } from 'react-hook-form'
+
+import React from 'react'
 import { Controller } from 'react-hook-form'
 import clsx from 'clsx'
-
-import { EMPTY_STRING, FORM_VALIDATIONS } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
 import Select from '../../inputs/Select'
 import TextBox from '../../inputs/TextBox'

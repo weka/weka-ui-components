@@ -1,17 +1,17 @@
 import type { ReactElement } from 'react'
+
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import ReactSelect from 'react-select'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
+import { EMPTY_STRING, NOP } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
-import { EMPTY_STRING, NOP } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { useHighlightInput } from '#hooks'
 
-import { useHighlightInput } from '../../../hooks'
 import InputLoader from '../../InputLoader'
 import Tooltip from '../../Tooltip'
-
 import ClearIndicator from './ClearIndicator'
 import MultiValue from './MultiValue'
 import SelectOption from './SelectOption'

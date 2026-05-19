@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-
-import { DEFAULT_DEBOUNCE_DELAY, EMPTY_STRING } from 'consts'
-import { useDebounce } from 'hooks'
+import { DEFAULT_DEBOUNCE_DELAY, EMPTY_STRING } from '#consts'
+import { useDebounce } from '#hooks'
 
 import TextBox from '../TextBox'
 

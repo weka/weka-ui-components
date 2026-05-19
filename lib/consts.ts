@@ -1,6 +1,6 @@
-import svgs from 'svgs'
+import svgs from '#svgs'
 
-import utils from './utils'
+import utils from '#utils'
 
 const {
   EventInfo,

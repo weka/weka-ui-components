@@ -1,6 +1,7 @@
+import type { DateTime } from 'luxon'
+
 import React from 'react'
 import clsx from 'clsx'
-import type { DateTime } from 'luxon'
 
 import './DayCell.scss'
 

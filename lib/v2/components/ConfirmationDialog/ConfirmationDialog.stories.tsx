@@ -1,8 +1,10 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Button } from '../Button'
+import { useState } from 'react'
 
+import { NOP } from '#consts'
+
+import { Button } from '../Button'
 import {
   CONFIRM_BUTTON_VARIANTS,
   ConfirmationDialog
@@ -48,8 +50,8 @@ export const DangerConfirm: Story = {
     subMessage: 'This action cannot be undone.',
     confirmText: 'Delete',
     confirmButtonVariant: CONFIRM_BUTTON_VARIANTS.DANGER,
-    onConfirm: () => {},
-    onCancel: () => {}
+    onConfirm: NOP,
+    onCancel: NOP
   }
 }
 
@@ -60,8 +62,8 @@ export const PrimaryConfirm: Story = {
     message: 'Do you want to save the current configuration?',
     confirmText: 'Save',
     confirmButtonVariant: CONFIRM_BUTTON_VARIANTS.PRIMARY,
-    onConfirm: () => {},
-    onCancel: () => {}
+    onConfirm: NOP,
+    onCancel: NOP
   }
 }
 
@@ -72,7 +74,7 @@ export const Confirming: Story = {
     message: 'Are you sure you want to delete this tab?',
     confirmText: 'Delete',
     isConfirming: true,
-    onConfirm: () => {},
-    onCancel: () => {}
+    onConfirm: NOP,
+    onCancel: NOP
   }
 }

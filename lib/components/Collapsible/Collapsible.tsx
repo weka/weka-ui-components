@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
 
 import { Info } from '../index'
 

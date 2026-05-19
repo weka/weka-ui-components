@@ -1,5 +1,6 @@
-import React from 'react'
 import type { Meta, StoryObj } from 'storybook-solidjs'
+
+import React from 'react'
 
 import { default as TextEditorComponent } from './TextEditor'
 

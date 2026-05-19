@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import type { ExtendedColumn, ExtendedColumnDefWithId } from '../types'
 import type { VisibilityState } from '@tanstack/react-table'
 
-import { SAVED_HIDDEN } from 'consts'
+import { useCallback, useMemo } from 'react'
+import { SAVED_HIDDEN } from '#consts'
 
 import localStorageService from '../../../localStorageService'
-import type { ExtendedColumn, ExtendedColumnDefWithId } from '../types'
 
 function useHiddenColumns<Data, Value>({
   columns,

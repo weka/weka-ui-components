@@ -1,10 +1,9 @@
 import React, { useRef } from 'react'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import { useToggle } from 'hooks'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import { useToggle } from '#hooks'
+import svgs from '#svgs'
 
 import Tooltip from '../../../../Tooltip'
 

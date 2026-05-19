@@ -1,5 +1,6 @@
-import React from 'react'
 import type { MultiValueProps } from 'react-select'
+
+import React from 'react'
 import { components } from 'react-select'
 
 import Tooltip from '../../../Tooltip'

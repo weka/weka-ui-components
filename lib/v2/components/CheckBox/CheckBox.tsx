@@ -1,11 +1,12 @@
 import clsx from 'clsx'
 
+import { KEYBOARD_KEYS } from '#v2/utils/consts'
+
 import {
   CheckboxCheckedIcon,
   CheckboxPartialIcon,
   CheckboxUncheckedIcon
 } from '../../icons'
-import { KEYBOARD_KEYS } from '../../utils/consts'
 
 import styles from './checkBox.module.scss'
 

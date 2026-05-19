@@ -2,9 +2,6 @@ name: Build and Test
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 permissions:
   contents: read
@@ -19,7 +16,6 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch base branch
-        if: github.event_name == 'pull_request'
         run: git fetch origin ${{ github.base_ref }}
 
       - uses: actions/setup-node@v4
@@ -33,7 +29,6 @@ jobs:
         run: yarn install --immutable
 
       - name: Typecheck (changed files only)
-        if: github.event_name == 'pull_request'
         continue-on-error: true
         run: |
           CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(ts|tsx)$' | tr '\n' '\0' | xargs -0 printf '%s|' | sed 's/|$//')
@@ -44,7 +39,6 @@ jobs:
           yarn typecheck 2>&1 | grep -E "$CHANGED" || true
 
       - name: Lint (changed files only)
-        if: github.event_name == 'pull_request'
         env:
           ESLINT_PLUGIN_DIFF_COMMIT: origin/${{ github.base_ref }}
         run: yarn exec eslint . --config eslint.diff.config.mjs

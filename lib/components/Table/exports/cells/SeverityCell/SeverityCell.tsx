@@ -1,10 +1,10 @@
+import type { ExtendedCellProps } from '../../../types'
+
 import React from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING, SEVERITIES_ICONS } from 'consts'
+import { EMPTY_STRING, SEVERITIES_ICONS } from '#consts'
 
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps } from '../../../types'
 
 import './severityCell.scss'
 

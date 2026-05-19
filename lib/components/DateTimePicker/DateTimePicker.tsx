@@ -1,10 +1,10 @@
+import type { DateTime } from 'luxon'
+
 import React, { useRef, useState } from 'react'
 import { ClickAwayListener, Grow, Paper, Popper } from '@mui/material'
 import clsx from 'clsx'
-import type { DateTime } from 'luxon'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
 
 import DateTimeCalendar from './components/DateTimeCalendar'
 import DateTimeLabel from './components/DateTimeLabel'

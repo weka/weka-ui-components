@@ -1,4 +1,5 @@
 import type { ForwardedRef, InputHTMLAttributes } from 'react'
+
 import React, { forwardRef } from 'react'
 
 import './checkbox.scss'

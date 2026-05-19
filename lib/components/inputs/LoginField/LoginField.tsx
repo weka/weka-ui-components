@@ -1,10 +1,10 @@
 import type { ReactElement } from 'react'
+
 import React from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import { useToggle } from 'hooks'
-import Utils from 'utils'
+import { EMPTY_STRING } from '#consts'
+import { useToggle } from '#hooks'
+import Utils from '#utils'
 
 import Info from '../../Info/Info'
 

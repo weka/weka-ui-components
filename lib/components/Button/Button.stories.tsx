@@ -1,7 +1,8 @@
-import React from 'react'
+import type { ButtonProps } from './Button'
 import type { Meta, StoryObj } from 'storybook-solidjs'
 
-import type { ButtonProps } from './Button'
+import React from 'react'
+
 import { default as ButtonComponent } from './Button'
 
 const meta: Meta<typeof ButtonComponent> = {

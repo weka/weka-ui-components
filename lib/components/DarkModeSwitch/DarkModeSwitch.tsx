@@ -1,7 +1,8 @@
 import React, { useId, useState } from 'react'
 import clsx from 'clsx'
 
-import { useDarkMode } from '../../context'
+import { useDarkMode } from '#context'
+
 import { Checkbox } from '../inputs'
 import Tooltip from '../Tooltip'
 

@@ -1,9 +1,9 @@
-import React from 'react'
+import type { SingleToggleProps } from './SingleToggle'
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { useToggle } from 'hooks'
+import React from 'react'
+import { useToggle } from '#hooks'
 
-import type { SingleToggleProps } from './SingleToggle'
 import { default as SingleToggleComponent } from './SingleToggle'
 
 export default {

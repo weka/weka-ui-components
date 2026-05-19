@@ -1,8 +1,8 @@
 import type { ReactElement } from 'react'
+
 import React, { forwardRef } from 'react'
 import clsx from 'clsx'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import Tooltip from '../Tooltip'
 

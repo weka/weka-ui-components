@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import type { SelectFilterMode, SelectFilterValue } from '../../../tableUtils'
+import type { ExtendedFilterProps } from '../../../types'
 
-import { EMPTY_STRING } from 'consts'
-import Utils from 'utils'
+import React, { useEffect, useMemo, useState } from 'react'
+import { EMPTY_STRING } from '#consts'
+import Utils from '#utils'
 
 import Select from '../../../../inputs/Select'
-import type { SelectFilterMode, SelectFilterValue } from '../../../tableUtils'
 import { FILTER_MODES } from '../../../tableUtils'
-import type { ExtendedFilterProps } from '../../../types'
 import FilterWrapper from '../../FilterWrapper'
 
 import './selectFilter.scss'

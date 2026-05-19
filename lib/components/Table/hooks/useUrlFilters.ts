@@ -1,13 +1,13 @@
+import type { ExtendedColumnFilter, UrlFilterParser } from '../types'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-
-import { SAVED_FILTERS } from 'consts'
-import { useStaticProps } from 'hooks'
+import { SAVED_FILTERS } from '#consts'
+import { useStaticProps } from '#hooks'
 
 import localStorageService from '../../../localStorageService'
 import { Utils } from '../../../main'
 import { urlFilterParsers } from '../tableUtils'
-import type { ExtendedColumnFilter, UrlFilterParser } from '../types'
 
 const defaultFilterParser = urlFilterParsers.string
 

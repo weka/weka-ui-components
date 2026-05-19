@@ -1,10 +1,10 @@
-import React from 'react'
-import { action } from '@storybook/addon-actions'
+import type { SideBlockProps } from './SideBlock'
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { useToggle } from 'hooks'
+import React from 'react'
+import { action } from '@storybook/addon-actions'
+import { useToggle } from '#hooks'
 
-import type { SideBlockProps } from './SideBlock'
 import { default as SideBlockComponent } from './SideBlock'
 
 export default {

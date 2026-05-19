@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import type { ExtendedCell, ExtendedCellProps } from '../../../types'
 
-import { EMPTY_STRING } from 'consts'
+import React, { useEffect, useState } from 'react'
+import { EMPTY_STRING } from '#consts'
 
 import SpanTooltip from '../../../../SpanTooltip'
 import Spinner from '../../../../Spinner'
-import type { ExtendedCell, ExtendedCellProps } from '../../../types'
 
 export interface ApiCallCellOptions<Data, Value> {
   apiCall: (cell: ExtendedCell<Data, Value>) => Promise<string>

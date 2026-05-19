@@ -1,4 +1,4 @@
-import { EMPTY_STRING } from '../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 export interface CloseIconProps {
   extraClass?: string

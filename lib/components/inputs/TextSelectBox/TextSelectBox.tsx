@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
-import Utils from 'utils'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
+import Utils from '#utils'
 
 import Tooltip from '../../Tooltip'
 import Select from '../Select'

@@ -1,4 +1,4 @@
-import { CLOUD_ICON_VARIANTS, EMPTY_STRING } from '../utils/consts'
+import { CLOUD_ICON_VARIANTS, EMPTY_STRING } from '#v2/utils/consts'
 
 const TRANSLATE_X_RATIO = 0.15
 const TRANSLATE_Y_DEFAULT_RATIO = 0.3

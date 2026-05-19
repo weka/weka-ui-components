@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 function useToggle(initialState: boolean): [boolean, () => void]
 

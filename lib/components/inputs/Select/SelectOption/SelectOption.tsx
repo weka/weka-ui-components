@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
 import type { OptionProps } from 'react-select'
-import { components } from 'react-select'
 
-import { EMPTY_STRING } from 'consts'
+import React, { useEffect, useRef, useState } from 'react'
+import { components } from 'react-select'
+import { EMPTY_STRING } from '#consts'
 
 import Tooltip from '../../../Tooltip'
 

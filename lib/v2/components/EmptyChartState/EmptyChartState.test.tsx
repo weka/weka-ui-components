@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { CSS_VARS } from '../../utils/consts'
+import { CSS_VARS } from '#v2/utils/consts'
 
 import { EmptyChartState } from './EmptyChartState'
 

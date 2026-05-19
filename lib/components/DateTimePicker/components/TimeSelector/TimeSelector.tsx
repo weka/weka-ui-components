@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
+import { TIME_PARTS } from '#consts'
 import { DateTime } from 'luxon'
-
-import { TIME_PARTS } from 'consts'
 
 import Button from '../../../Button'
 import NumInput from '../NumInput'

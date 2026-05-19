@@ -1,7 +1,12 @@
 import type { RefObject } from 'react'
+
 import { useEffect } from 'react'
 
-import { DOM_EVENTS, EMPTY_REF_ARRAY, EMPTY_STRING_ARRAY } from '../utils/consts'
+import {
+  DOM_EVENTS,
+  EMPTY_REF_ARRAY,
+  EMPTY_STRING_ARRAY
+} from '#v2/utils/consts'
 
 interface UseClickOutsideOptions {
   additionalRefs?: RefObject<HTMLElement>[]

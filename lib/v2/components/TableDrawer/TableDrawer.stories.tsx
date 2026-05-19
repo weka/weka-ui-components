@@ -1,10 +1,11 @@
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties, MouseEvent as ReactMouseEvent } from 'react'
 
-import { DOM_EVENTS } from '../../utils/consts'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { DOM_EVENTS } from '#v2/utils/consts'
+
 import { Button } from '../Button'
-
 import { TableDrawer } from './TableDrawer'
 
 const CONTAINER_STYLE: CSSProperties = {

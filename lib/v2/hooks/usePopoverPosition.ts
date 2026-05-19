@@ -7,7 +7,7 @@ import {
   useState
 } from 'react'
 
-import { DOM_EVENTS } from '../utils/consts'
+import { DOM_EVENTS } from '#v2/utils/consts'
 
 const DEFAULT_OFFSET_PX = 4
 const DEFAULT_SCROLL_THRESHOLD_PX = 50

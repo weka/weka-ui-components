@@ -1,7 +1,6 @@
 import React from 'react'
 import { Controller } from 'react-hook-form'
-
-import utils from 'utils'
+import utils from '#utils'
 
 import UploadField from '../../inputs/UploadField'
 

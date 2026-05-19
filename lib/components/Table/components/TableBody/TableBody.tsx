@@ -1,13 +1,14 @@
-import type { RefObject } from 'react'
-import React from 'react'
-
-import { useInfiniteScroll } from '../../hooks'
 import type {
   ExtendedRow,
   ExtendedTable,
   RowAction,
   TableExtraClasses
 } from '../../types'
+import type { RefObject } from 'react'
+
+import React from 'react'
+
+import { useInfiniteScroll } from '../../hooks'
 import TableRow from '../TableRow'
 
 interface TableBodyProps<Data> {

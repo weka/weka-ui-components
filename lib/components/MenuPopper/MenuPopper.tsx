@@ -9,9 +9,8 @@ import {
   Popper
 } from '@mui/material'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import Utils from 'utils'
+import { EMPTY_STRING } from '#consts'
+import Utils from '#utils'
 
 import Tooltip from '../Tooltip'
 

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { KEYBOARD_KEYS, SEARCH_PLACEHOLDER } from '../../utils'
+import { KEYBOARD_KEYS, SEARCH_PLACEHOLDER } from '#v2/utils/index'
 
 import { ExpandableSearch } from './ExpandableSearch'
 

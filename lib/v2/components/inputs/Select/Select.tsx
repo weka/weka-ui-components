@@ -17,17 +17,17 @@ import {
 } from '@mui/material'
 import clsx from 'clsx'
 
-import { useCloseOnScroll } from '../../../hooks'
-import { ChevronDownSmallIcon, CloseIcon, SearchIcon } from '../../../icons'
+import { useCloseOnScroll } from '#v2/hooks'
 import {
   COMMA_SEPARATOR,
   EMPTY_STRING,
   KEYBOARD_KEYS,
   SEARCH_PLACEHOLDER
-} from '../../../utils/consts'
-import { highlightText } from '../../../utils/textUtils'
-import { Chip } from '../../Chip'
+} from '#v2/utils/consts'
+import { highlightText } from '#v2/utils/textUtils'
 
+import { ChevronDownSmallIcon, CloseIcon, SearchIcon } from '../../../icons'
+import { Chip } from '../../Chip'
 import { SplitMenuList } from './SplitMenuList'
 
 import styles from './select.module.scss'

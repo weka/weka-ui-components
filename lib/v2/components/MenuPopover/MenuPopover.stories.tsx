@@ -1,8 +1,8 @@
-import { type RefObject, useRef, useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Button } from '../Button'
+import { type RefObject, useRef, useState } from 'react'
 
+import { Button } from '../Button'
 import { MENU_POPOVER_STYLES, MenuPopover } from './MenuPopover'
 
 const meta: Meta<typeof MenuPopover> = {

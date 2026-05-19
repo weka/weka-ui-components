@@ -2,7 +2,6 @@ import { useEffect, useId, useRef, useState } from 'react'
 import clsx from 'clsx'
 
 import { ARROW_DIRECTIONS, ArrowIcon } from '../../icons'
-
 import { useExpandableTextContext } from './ExpandableTextContext'
 
 import styles from './expandableText.module.scss'

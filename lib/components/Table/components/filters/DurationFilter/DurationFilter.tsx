@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import type { ExtendedFilterProps } from '../../../types'
 
-import { EMPTY_STRING, EVENT_KEYS } from 'consts'
-import { useToggle } from 'hooks'
-import utils from 'utils'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import { useToggle } from '#hooks'
+import utils from '#utils'
 
 import Button from '../../../../Button'
 import { TextField } from '../../../../inputs'
 import Select from '../../../../inputs/Select'
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedFilterProps } from '../../../types'
 import FilterWrapper from '../../FilterWrapper'
 
 import './durationFilter.scss'

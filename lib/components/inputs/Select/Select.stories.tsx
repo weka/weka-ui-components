@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { EMPTY_STRING } from 'consts'
+import React, { useState } from 'react'
+import { EMPTY_STRING } from '#consts'
 
 import Select from './Select'
 

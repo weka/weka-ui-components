@@ -1,7 +1,7 @@
-import React from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
 
-import { useToggle } from 'hooks'
+import React from 'react'
+import { useToggle } from '#hooks'
 
 import Collapsible from './Collapsible'
 

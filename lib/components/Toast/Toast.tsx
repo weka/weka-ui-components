@@ -1,8 +1,7 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
 import copy from 'copy-to-clipboard'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import './toast.scss'
 

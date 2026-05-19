@@ -1,9 +1,9 @@
-import React from 'react'
 import type { Control } from 'react-hook-form'
+
+import React from 'react'
 import { Controller } from 'react-hook-form'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
+import { EMPTY_STRING } from '#consts'
 
 import FormSwitch from '../../inputs/FormSwitch'
 

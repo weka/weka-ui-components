@@ -1,9 +1,10 @@
-import { type CSSProperties, type RefObject, useEffect } from 'react'
+import type { ExtendedRow } from '../types'
 import type { VirtualItem } from '@tanstack/react-virtual'
+
+import { type CSSProperties, type RefObject, useEffect } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { ROW_HEIGHT } from '../tableConsts'
-import type { ExtendedRow } from '../types'
 
 const useInfiniteScroll = <Data>({
   data,

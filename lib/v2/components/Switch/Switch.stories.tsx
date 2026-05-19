@@ -1,7 +1,8 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { NOOP } from '../../utils/consts'
+import { useState } from 'react'
+
+import { NOOP } from '#v2/utils/consts'
 
 import { Switch } from './Switch'
 

@@ -1,7 +1,8 @@
-import React from 'react'
+import type { CursorTooltipProps } from './CursorTooltip'
 import type { Meta, StoryFn } from '@storybook/react'
 
-import type { CursorTooltipProps } from './CursorTooltip'
+import React from 'react'
+
 import CursorTooltip from './CursorTooltip'
 
 export default {

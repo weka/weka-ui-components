@@ -1,14 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-
-import { EMPTY_STRING } from 'consts'
-
-import { getUniqueCount } from '../../../tableUtils'
 import type {
   ExtendedCellProps,
   ExtendedColumn,
   ExtendedRow
 } from '../../../types'
+
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { EMPTY_STRING } from '#consts'
+
+import { getUniqueCount } from '../../../tableUtils'
 
 export interface AggregatedTotalCellOptions<Data, Value> {
   getUrl?: (options: {

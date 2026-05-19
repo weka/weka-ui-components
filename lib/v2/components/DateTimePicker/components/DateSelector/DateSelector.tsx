@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 import { DateTime } from 'luxon'
 
+import { getDaysOfTheMonth } from '#v2/utils/timeUtils'
+
 import { ARROW_DIRECTIONS, ArrowIcon } from '../../../../icons'
-import { getDaysOfTheMonth } from '../../../../utils/timeUtils'
 import { DayCell } from '../DayCell'
 
 import styles from './dateSelector.module.scss'

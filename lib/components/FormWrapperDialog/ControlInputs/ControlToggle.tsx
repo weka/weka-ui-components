@@ -1,5 +1,6 @@
-import React from 'react'
 import type { Control } from 'react-hook-form'
+
+import React from 'react'
 import { Controller } from 'react-hook-form'
 
 import ToggleButton from '../../ToggleButton'

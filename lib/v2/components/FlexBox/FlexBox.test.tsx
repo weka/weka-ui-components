@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { EMPTY_STRING } from '../../utils/consts'
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { FlexBox } from './FlexBox'
 

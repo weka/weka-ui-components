@@ -1,3 +1,5 @@
+import type { ExtendedTable } from '../../../types'
+
 import React, { useRef, useState } from 'react'
 import {
   ClickAwayListener,
@@ -6,13 +8,11 @@ import {
   Paper,
   Popper
 } from '@mui/material'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import { Checkbox } from '../../../../inputs'
 import Tooltip from '../../../../Tooltip'
 import { tableUtils } from '../../../tableUtils'
-import type { ExtendedTable } from '../../../types'
 
 import './showColumns.scss'
 

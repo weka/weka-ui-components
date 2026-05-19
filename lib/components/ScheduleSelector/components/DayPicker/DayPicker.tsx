@@ -1,7 +1,8 @@
+import type { Option } from '../../../ToggleButton/ToggleButton'
+
 import React, { useCallback, useMemo } from 'react'
 
 import { ToggleButton } from '../../../index'
-import type { Option } from '../../../ToggleButton/ToggleButton'
 import {
   DAYS_OF_WEEK,
   SELECT_ALL,

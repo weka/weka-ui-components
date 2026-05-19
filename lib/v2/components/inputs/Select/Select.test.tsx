@@ -1,3 +1,5 @@
+import type { SelectOption } from './Select'
+
 import {
   cleanup,
   fireEvent,
@@ -11,9 +13,8 @@ import {
   EMPTY_STRING,
   KEYBOARD_KEYS,
   SEARCH_PLACEHOLDER
-} from '../../../utils/consts'
+} from '#v2/utils/consts'
 
-import type { SelectOption } from './Select'
 import { Select } from './Select'
 
 const TEST_ID = 'my-select'
@@ -101,7 +102,10 @@ describe('Select - Rendering', () => {
 
   it('renders as disabled when disabled is true', () => {
     render(<Select {...createProps({ disabled: true })} />)
-    expect(screen.getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-disabled',
+      'true'
+    )
   })
 })
 
@@ -174,9 +178,7 @@ describe('Select - Multiple Select', () => {
 
   it('allows selecting multiple options', async () => {
     const onChange = vi.fn()
-    render(
-      <Select {...createProps({ multiple: true, value: [], onChange })} />
-    )
+    render(<Select {...createProps({ multiple: true, value: [], onChange })} />)
 
     openSelect()
     await waitFor(() => {
@@ -237,10 +239,7 @@ describe('Select - Multiple Select', () => {
 describe('Select - anyValue behavior', () => {
   it('auto-selects "Any" when the last chip is removed via close button', () => {
     const onChange = vi.fn()
-    const optionsWithAny = [
-      { value: ANY_VALUE, label: 'Any' },
-      ...mockOptions
-    ]
+    const optionsWithAny = [{ value: ANY_VALUE, label: 'Any' }, ...mockOptions]
 
     render(
       <Select
@@ -262,10 +261,7 @@ describe('Select - anyValue behavior', () => {
 
   it('removes chip without anyValue fallback when other chips remain', () => {
     const onChange = vi.fn()
-    const optionsWithAny = [
-      { value: ANY_VALUE, label: 'Any' },
-      ...mockOptions
-    ]
+    const optionsWithAny = [{ value: ANY_VALUE, label: 'Any' }, ...mockOptions]
 
     render(
       <Select
@@ -287,10 +283,7 @@ describe('Select - anyValue behavior', () => {
 
   it('deselects other options when anyValue is selected from menu', async () => {
     const onChange = vi.fn()
-    const optionsWithAny = [
-      { value: ANY_VALUE, label: 'Any' },
-      ...mockOptions
-    ]
+    const optionsWithAny = [{ value: ANY_VALUE, label: 'Any' }, ...mockOptions]
 
     render(
       <Select
@@ -315,10 +308,7 @@ describe('Select - anyValue behavior', () => {
 
   it('deselects other options when anyValue is selected via keyboard Enter', async () => {
     const onChange = vi.fn()
-    const optionsWithAny = [
-      { value: ANY_VALUE, label: 'Any' },
-      ...mockOptions
-    ]
+    const optionsWithAny = [{ value: ANY_VALUE, label: 'Any' }, ...mockOptions]
 
     render(
       <Select
@@ -343,10 +333,7 @@ describe('Select - anyValue behavior', () => {
 
   it('removes anyValue when a regular option is selected via keyboard Enter', async () => {
     const onChange = vi.fn()
-    const optionsWithAny = [
-      { value: ANY_VALUE, label: 'Any' },
-      ...mockOptions
-    ]
+    const optionsWithAny = [{ value: ANY_VALUE, label: 'Any' }, ...mockOptions]
 
     render(
       <Select
@@ -372,10 +359,7 @@ describe('Select - anyValue behavior', () => {
 
   it('falls back to anyValue when the last regular option is deselected via keyboard Enter', async () => {
     const onChange = vi.fn()
-    const optionsWithAny = [
-      { value: ANY_VALUE, label: 'Any' },
-      ...mockOptions
-    ]
+    const optionsWithAny = [{ value: ANY_VALUE, label: 'Any' }, ...mockOptions]
 
     render(
       <Select
@@ -402,16 +386,21 @@ describe('Select - anyValue behavior', () => {
 
 describe('Select - Search functionality', () => {
   it('shows search input when options exceed threshold', async () => {
-    const manyOptions = Array.from({ length: SEARCH_THRESHOLD_OPTIONS }, (_, i) => ({
-      value: `option${i}`,
-      label: `Option ${i}`
-    }))
+    const manyOptions = Array.from(
+      { length: SEARCH_THRESHOLD_OPTIONS },
+      (_, i) => ({
+        value: `option${i}`,
+        label: `Option ${i}`
+      })
+    )
 
     render(<Select {...createProps({ options: manyOptions })} />)
     openSelect()
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(SEARCH_PLACEHOLDER)).toBeInTheDocument()
+      expect(
+        screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
+      ).toBeInTheDocument()
     })
   })
 
@@ -420,7 +409,9 @@ describe('Select - Search functionality', () => {
     openSelect()
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(SEARCH_PLACEHOLDER)).toBeInTheDocument()
+      expect(
+        screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
+      ).toBeInTheDocument()
     })
 
     fireEvent.change(screen.getByPlaceholderText(SEARCH_PLACEHOLDER), {
@@ -442,7 +433,9 @@ describe('Select - Search functionality', () => {
     openSelect()
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(SEARCH_PLACEHOLDER)).toBeInTheDocument()
+      expect(
+        screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
+      ).toBeInTheDocument()
     })
 
     fireEvent.change(screen.getByPlaceholderText(SEARCH_PLACEHOLDER), {
@@ -455,16 +448,21 @@ describe('Select - Search functionality', () => {
   })
 
   it('clears search when clear button is clicked', async () => {
-    const manyOptions = Array.from({ length: SEARCH_THRESHOLD_OPTIONS }, (_, i) => ({
-      value: `option${i}`,
-      label: `Option ${i}`
-    }))
+    const manyOptions = Array.from(
+      { length: SEARCH_THRESHOLD_OPTIONS },
+      (_, i) => ({
+        value: `option${i}`,
+        label: `Option ${i}`
+      })
+    )
 
     render(<Select {...createProps({ options: manyOptions })} />)
     openSelect()
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(SEARCH_PLACEHOLDER)).toBeInTheDocument()
+      expect(
+        screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
+      ).toBeInTheDocument()
     })
 
     const searchInput = screen.getByPlaceholderText(SEARCH_PLACEHOLDER)

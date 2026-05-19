@@ -1,17 +1,19 @@
 import type { ChangeEvent, KeyboardEvent, ReactElement, ReactNode } from 'react'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 
-import { CloseIcon, SearchIcon } from '../../icons'
 import {
   DOM_EVENTS,
   EMPTY_ARRAY,
   EMPTY_STRING,
   KEYBOARD_KEYS,
   SEARCH_PLACEHOLDER
-} from '../../utils/consts'
-import { highlightText } from '../../utils/textUtils'
+} from '#v2/utils/consts'
+import { highlightText } from '#v2/utils/textUtils'
+
+import { CloseIcon, SearchIcon } from '../../icons'
 import { Tooltip } from '../Tooltip'
 
 import styles from './searchAutocomplete.module.scss'

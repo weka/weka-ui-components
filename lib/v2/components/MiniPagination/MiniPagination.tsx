@@ -1,7 +1,8 @@
 import clsx from 'clsx'
 
+import { CSS_VARS } from '#v2/utils/consts'
+
 import { NavChevronLeftIcon, NavChevronRightIcon } from '../../icons'
-import { CSS_VARS } from '../../utils/consts'
 
 import styles from './miniPagination.module.scss'
 

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
+
 import clsx from 'clsx'
 
-import { highlightText } from '../../../utils/textUtils'
+import { highlightText } from '#v2/utils/textUtils'
 
 import styles from './multiSelectAutocomplete.module.scss'
 
@@ -84,7 +85,12 @@ export function DropdownContent({
           <span>
             {option === anyValue
               ? anyValue
-              : highlightText(option, inputValue, 'mark', styles.optionHighlight)}
+              : highlightText(
+                  option,
+                  inputValue,
+                  'mark',
+                  styles.optionHighlight
+                )}
           </span>
         </div>
       ))}

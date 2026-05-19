@@ -1,8 +1,10 @@
+import type { GradientColorKey } from '../../styles/gradientColors'
+import type { Severity } from '#v2/utils/consts'
+
 import clsx from 'clsx'
 
-import type { GradientColorKey } from '../../styles/gradientColors'
-import type { Severity } from '../../utils/consts'
-import { SEVERITY_TYPES } from '../../utils/consts'
+import { SEVERITY_TYPES } from '#v2/utils/consts'
+
 import { GradientAlertIcon } from '../GradientAlertIcon'
 
 import styles from './alertStatusBadge.module.scss'

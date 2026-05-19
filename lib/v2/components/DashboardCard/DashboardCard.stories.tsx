@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { LinkIcon, SettingsIcon } from '../../icons'
-import { SEVERITY_TYPES } from '../../utils/consts'
+import { SEVERITY_TYPES } from '#v2/utils/consts'
 
+import { LinkIcon, SettingsIcon } from '../../icons'
 import { DashboardCard } from './DashboardCard'
 
 const meta: Meta<typeof DashboardCard> = {

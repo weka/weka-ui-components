@@ -1,8 +1,7 @@
-import { useMemo } from 'react'
-
-import Utils from 'utils'
-
 import type { ExtendedTable } from '../types'
+
+import { useMemo } from 'react'
+import Utils from '#utils'
 
 /**
  * Instead of calling `column.getSize()` on every render for every header

@@ -1,7 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-
-import svgs from 'svgs'
+import svgs from '#svgs'
 
 import './validityIndicator.scss'
 

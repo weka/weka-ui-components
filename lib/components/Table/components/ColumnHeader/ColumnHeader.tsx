@@ -1,14 +1,14 @@
-import React from 'react'
+import type { ExtendedHeaderGroup, ExtendedTable, RowAction } from '../../types'
 import type { ColumnMeta } from '@tanstack/react-table'
+
+import React from 'react'
 import { flexRender } from '@tanstack/react-table'
 import clsx from 'clsx'
-
-import { EMPTY_STRING } from 'consts'
-import svgs from 'svgs'
+import { EMPTY_STRING } from '#consts'
+import svgs from '#svgs'
 
 import { Utils } from '../../../../main'
 import Tooltip from '../../../Tooltip'
-import type { ExtendedHeaderGroup, ExtendedTable, RowAction } from '../../types'
 import ScrollToTop from '../ScrollToTop'
 import TableFilter from '../TableFilter'
 

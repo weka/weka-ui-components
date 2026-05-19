@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { NOOP } from '../../utils/consts'
+import { NOOP } from '#v2/utils/consts'
 
 import { Chip } from './Chip'
 
@@ -41,4 +41,3 @@ export const WithMaxWidth: Story = {
     maxWidth: '150px'
   }
 }
-

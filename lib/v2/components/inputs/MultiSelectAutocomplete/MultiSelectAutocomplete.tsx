@@ -3,22 +3,23 @@ import type {
   KeyboardEvent as ReactKeyboardEvent,
   ReactNode
 } from 'react'
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 
-import { useCloseOnScroll } from '../../../hooks'
-import { SearchIcon } from '../../../icons'
-import { calculateVisibleChips } from '../../../utils/chipMeasurement'
+import { useCloseOnScroll } from '#v2/hooks'
+import { calculateVisibleChips } from '#v2/utils/chipMeasurement'
 import {
   DOM_EVENTS,
   EMPTY_STRING,
   EMPTY_STRING_ARRAY,
   TOOLTIP_PLACEMENTS
-} from '../../../utils/consts'
+} from '#v2/utils/consts'
+
+import { SearchIcon } from '../../../icons'
 import { Chip } from '../../Chip'
 import { Tooltip } from '../../Tooltip'
-
 import { DropdownContent } from './DropdownContent'
 import { createKeyDownHandler } from './keyboardHandlers'
 import { useRemoteSearch } from './useRemoteSearch'

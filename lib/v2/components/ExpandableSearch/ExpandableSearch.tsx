@@ -1,11 +1,12 @@
 import { type KeyboardEvent, type MouseEvent, useRef, useState } from 'react'
 
-import { SearchIcon } from '../../icons'
 import {
   EMPTY_STRING,
   KEYBOARD_KEYS,
   SEARCH_PLACEHOLDER
-} from '../../utils/consts'
+} from '#v2/utils/consts'
+
+import { SearchIcon } from '../../icons'
 
 import styles from './expandableSearch.module.scss'
 

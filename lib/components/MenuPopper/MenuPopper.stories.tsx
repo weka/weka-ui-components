@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import Button from '../Button'
+import React, { useState } from 'react'
 
+import Button from '../Button'
 import { default as MenuPopperComponent } from './MenuPopper'
 
 export default {

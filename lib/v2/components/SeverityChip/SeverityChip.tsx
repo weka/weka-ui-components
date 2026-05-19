@@ -1,5 +1,6 @@
+import { type Severity, SEVERITY_TYPES } from '#v2/utils/consts'
+
 import { SEVERITY_ICONS } from '../../icons'
-import { type Severity, SEVERITY_TYPES } from '../../utils/consts'
 import { Chip } from '../Chip'
 
 import styles from './severityChip.module.scss'

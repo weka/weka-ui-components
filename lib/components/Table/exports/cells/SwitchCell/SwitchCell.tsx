@@ -1,11 +1,11 @@
+import type { ExtendedCellProps, ExtendedRow } from '../../../types'
 import type { SyntheticEvent } from 'react'
-import React from 'react'
 
-import { EMPTY_STRING } from 'consts'
+import React from 'react'
+import { EMPTY_STRING } from '#consts'
 
 import Switch from '../../../../Switch'
 import Tooltip from '../../../../Tooltip'
-import type { ExtendedCellProps, ExtendedRow } from '../../../types'
 
 import './switchCell.scss'
 

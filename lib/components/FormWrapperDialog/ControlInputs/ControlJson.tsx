@@ -1,8 +1,8 @@
-import React from 'react'
 import type { Control } from 'react-hook-form'
-import { Controller } from 'react-hook-form'
 
-import { FORM_VALIDATIONS } from 'consts'
+import React from 'react'
+import { Controller } from 'react-hook-form'
+import { FORM_VALIDATIONS } from '#consts'
 
 import JsonBox from '../../inputs/JsonBox'
 

@@ -1,10 +1,11 @@
-import type { CSSProperties } from 'react'
-import { useState } from 'react'
+import type { SimpleTableColumn } from './SimpleTable'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
+
+import { useState } from 'react'
 
 import { ExpandableText } from './ExpandableText'
 import { ExpandableTextProvider } from './ExpandableTextContext'
-import type { SimpleTableColumn } from './SimpleTable'
 import { SimpleTable } from './SimpleTable'
 
 interface Row {
@@ -39,7 +40,8 @@ const COLUMNS: SimpleTableColumn<Row>[] = [
   }
 ]
 
-const SHORT_TEXT = 'Brief alert description that fits in two lines without any clipping.'
+const SHORT_TEXT =
+  'Brief alert description that fits in two lines without any clipping.'
 
 const MEDIUM_TEXT =
   'This alert description is long enough that it might overflow the visible row height and trigger the expand chevron to appear next to the row content.'
