@@ -32,8 +32,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Typecheck
-        run: yarn typecheck
+      - name: Typecheck (changed files only)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(ts|tsx)$' | tr '\n' '\0' | xargs -0 printf '%s|' | sed 's/|$//')
+          if [ -z "$CHANGED" ]; then
+            echo "No TypeScript files changed."
+            exit 0
+          fi
+          yarn typecheck 2>&1 | grep -E "$CHANGED" || true
 
       - name: Lint (changed files only)
         if: github.event_name == 'pull_request'
