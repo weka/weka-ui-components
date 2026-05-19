@@ -6,6 +6,52 @@ import { libInjectCss } from 'vite-plugin-lib-inject-css'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
+import pkg from './package.json' with { type: 'json' }
+
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+const v1ExternalPatterns: (string | RegExp)[] = [
+  'react',
+  'react/jsx-runtime',
+  'react-dom',
+  'react-router-dom',
+  '@emotion/react',
+  '@emotion/styled',
+  /^@mui\/material/,
+  'luxon',
+  'clsx'
+]
+
+const v2DeclaredDeps = [
+  ...Object.keys(pkg.dependencies ?? {}),
+  ...Object.keys(pkg.peerDependencies ?? {})
+]
+
+const v2ExternalPatterns: RegExp[] = v2DeclaredDeps.map(
+  (name) => new RegExp(`^${escapeRegex(name)}(\\/|$)`)
+)
+
+function matchesAny(
+  source: string,
+  patterns: (string | RegExp)[]
+): boolean {
+  return patterns.some((pattern) =>
+    typeof pattern === 'string' ? pattern === source : pattern.test(source)
+  )
+}
+
+function isExternalImport(source: string, importer: string | undefined) {
+  if (!importer) {
+    return false
+  }
+  const isFromV2 = importer.replace(/\\/g, '/').includes('/lib/v2/')
+  return isFromV2
+    ? matchesAny(source, v2ExternalPatterns)
+    : matchesAny(source, v1ExternalPatterns)
+}
+
 /**
  * Renames `.module.css` assets to `.css` in the build output so that consuming
  * bundlers don't drop or re-process them — the class names are already hashed.
@@ -56,17 +102,7 @@ export default defineConfig({
     copyPublicDir: false,
     sourcemap: true,
     rollupOptions: {
-      external: [
-        'react',
-        'react/jsx-runtime',
-        'react-dom',
-        'react-router-dom',
-        '@emotion/react',
-        '@emotion/styled',
-        /^@mui\/material/,
-        'luxon',
-        'clsx'
-      ],
+      external: isExternalImport,
       output: {
         // Preserve module structure for v2 - ensures relative imports work
         preserveModules: true,
