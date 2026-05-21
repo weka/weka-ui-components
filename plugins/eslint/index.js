@@ -26,7 +26,7 @@ export const eslintConfig = tseslint.config(
   {
     extends: [
       js.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.recommended,
       sonarjs.configs.recommended,
       eslintConfigPrettier
     ],
@@ -74,6 +74,8 @@ export const eslintConfig = tseslint.config(
 
       // global
       ...reactHooks.configs.recommended.rules,
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
       'no-trailing-spaces': 'error',
       'react-refresh/only-export-components': [
         'warn',
