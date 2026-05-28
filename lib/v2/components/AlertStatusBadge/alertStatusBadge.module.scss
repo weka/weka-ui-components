@@ -1,37 +1,3 @@
-@use '../../styles/colors' as *;
-
-%severity-base {
-  color: $gray-0;
-}
-
-.critical {
-  @extend %severity-base;
-
-  background: $red-700;
-}
-
-.major {
-  @extend %severity-base;
-
-  background: $red-500;
-}
-
-.minor {
-  @extend %severity-base;
-
-  background: $orange-600;
-}
-
-.warning {
-  background: $yellow-500;
-  color: $gray-950;
-}
-
-.info {
-  background: var(--gray-200-800);
-  color: var(--gray-900-100);
-}
-
 .statusBadge {
   display: flex;
   align-items: center;
@@ -72,7 +38,7 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 22px;
-  color: inherit;
+  color: var(--text-primary);
 }
 
 .small .statusLabel {

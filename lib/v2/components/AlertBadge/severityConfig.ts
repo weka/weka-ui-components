@@ -36,7 +36,6 @@ export const ALERT_LIMITS = {
 export const SEVERITY_ICON_TYPES = {
   CIRCLE: 'circle',
   DIAMOND: 'diamond',
-  INFO: 'info',
   TRIANGLE: 'triangle'
 } as const
 
