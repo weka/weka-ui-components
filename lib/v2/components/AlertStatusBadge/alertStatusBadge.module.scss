@@ -1,41 +1,29 @@
 .statusBadge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   width: fit-content;
-  gap: 10px;
-  color: inherit;
+  border-radius: 20px;
 }
 
 .small {
-  gap: 8px;
+  gap: 6px;
+  padding: 4px 12px;
 }
 
 .large {
-  gap: 12px;
+  gap: 8px;
+  padding: 6px 16px;
 }
 
 .statusIcon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 4px;
-}
-
-.small .statusIcon {
-  width: 32px;
-  height: 32px;
-}
-
-.large .statusIcon {
-  width: 48px;
-  height: 48px;
+  color: currentColor;
 }
 
 .statusLabel {
-  font-size: 18px;
   font-weight: 700;
   line-height: 22px;
 }
@@ -45,7 +33,12 @@
   line-height: 18px;
 }
 
+.large .statusLabel {
+  font-size: 18px;
+  line-height: 22px;
+}
+
 .statusTime {
   font-size: 12px;
-  color: inherit;
+  opacity: 0.85;
 }

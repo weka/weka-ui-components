@@ -29,8 +29,8 @@ export const ALERT_LIMITS = {
   MAX_ALERTS_NUM_TO_SHOW: 9,
   ALERT_BADGE_ICON_SIZE: 16,
   ALERT_BADGE_COUNTER_ICON_SIZE: 14,
-  ALERT_STATUS_ICON_SIZE_SMALL: 24,
-  ALERT_STATUS_ICON_SIZE_LARGE: 48
+  ALERT_STATUS_ICON_SIZE_SMALL: 16,
+  ALERT_STATUS_ICON_SIZE_LARGE: 24
 } as const
 
 export const SEVERITY_ICON_TYPES = {
@@ -44,7 +44,6 @@ export type SeverityIconType =
 
 interface SeverityConfigEntry {
   className: string
-  textColorClassName: string
   iconType: SeverityIconType
   label: string
 }
@@ -52,43 +51,36 @@ interface SeverityConfigEntry {
 export const SEVERITY_CONFIG: Record<Severity, SeverityConfigEntry> = {
   [SEVERITY_TYPES.CRITICAL]: {
     className: styles.critical,
-    textColorClassName: styles.criticalText,
     iconType: SEVERITY_ICON_TYPES.TRIANGLE,
     label: SEVERITY_LABELS[SEVERITY_TYPES.CRITICAL]
   },
   [SEVERITY_TYPES.MAJOR]: {
     className: styles.major,
-    textColorClassName: styles.majorText,
     iconType: SEVERITY_ICON_TYPES.CIRCLE,
     label: SEVERITY_LABELS[SEVERITY_TYPES.MAJOR]
   },
   [SEVERITY_TYPES.MINOR]: {
     className: styles.minor,
-    textColorClassName: styles.minorText,
     iconType: SEVERITY_ICON_TYPES.TRIANGLE,
     label: SEVERITY_LABELS[SEVERITY_TYPES.MINOR]
   },
   [SEVERITY_TYPES.WARNING]: {
     className: styles.warning,
-    textColorClassName: styles.warningText,
     iconType: SEVERITY_ICON_TYPES.DIAMOND,
     label: SEVERITY_LABELS[SEVERITY_TYPES.WARNING]
   },
   [SEVERITY_TYPES.INFO]: {
     className: styles.info,
-    textColorClassName: styles.infoText,
     iconType: SEVERITY_ICON_TYPES.CIRCLE,
     label: SEVERITY_LABELS[SEVERITY_TYPES.INFO]
   },
   [SEVERITY_TYPES.DEBUG]: {
     className: styles.info,
-    textColorClassName: styles.infoText,
     iconType: SEVERITY_ICON_TYPES.CIRCLE,
     label: SEVERITY_LABELS[SEVERITY_TYPES.DEBUG]
   },
   [SEVERITY_TYPES.DEFAULT]: {
     className: styles.info,
-    textColorClassName: styles.infoText,
     iconType: SEVERITY_ICON_TYPES.CIRCLE,
     label: SEVERITY_LABELS[SEVERITY_TYPES.DEFAULT]
   }

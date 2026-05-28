@@ -63,12 +63,12 @@ describe('AlertStatusBadge', () => {
   })
 
   describe('Styling', () => {
-    it('applies severity-specific class to the status icon', () => {
+    it('applies severity-specific class to the badge container', () => {
       const { container } = render(
         <AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />
       )
-      const icon = container.querySelector('[class*="statusIcon"]')
-      expect(icon?.className).toContain('critical')
+      const badge = container.firstChild as HTMLElement
+      expect(badge.className).toContain('critical')
     })
 
     it('applies statusBadge class to container', () => {

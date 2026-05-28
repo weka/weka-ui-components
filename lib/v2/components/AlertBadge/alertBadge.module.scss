@@ -32,20 +32,6 @@
   color: var(--gray-900-100);
 }
 
-.criticalText,
-.majorText,
-.minorText {
-  color: $gray-0;
-}
-
-.warningText {
-  color: $gray-950;
-}
-
-.infoText {
-  color: var(--text-primary);
-}
-
 .alertBadge {
   display: flex;
   align-items: center;

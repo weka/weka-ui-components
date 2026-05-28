@@ -34,20 +34,16 @@ export function AlertStatusBadge({
       : ALERT_LIMITS.ALERT_STATUS_ICON_SIZE_LARGE
 
   return (
-    <div className={clsx(styles.statusBadge, styles[size])}>
-      <span className={clsx(styles.statusIcon, config.className)}>
+    <div className={clsx(styles.statusBadge, styles[size], config.className)}>
+      <span className={styles.statusIcon}>
         <SeverityIcon
           severity={displaySeverity}
           size={iconSize}
         />
       </span>
-      <span className={clsx(styles.statusLabel, config.textColorClassName)}>
-        {config.label}
-      </span>
+      <span className={styles.statusLabel}>{config.label}</span>
       {startTime ? (
-        <span className={clsx(styles.statusTime, config.textColorClassName)}>
-          {startTime}
-        </span>
+        <span className={styles.statusTime}>{startTime}</span>
       ) : null}
     </div>
   )
