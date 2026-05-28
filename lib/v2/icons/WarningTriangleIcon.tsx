@@ -17,7 +17,7 @@ export function WarningTriangleIcon({
         className={extraClass}
         fill='none'
         height={size}
-        viewBox='0 0 14 13'
+        viewBox='0 0 14 14'
         width={size}
         xmlns='http://www.w3.org/2000/svg'
       >

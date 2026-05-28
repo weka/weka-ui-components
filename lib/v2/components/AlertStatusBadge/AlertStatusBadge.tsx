@@ -41,9 +41,13 @@ export function AlertStatusBadge({
           size={iconSize}
         />
       </span>
-      <span className={styles.statusLabel}>{config.label}</span>
+      <span className={clsx(styles.statusLabel, config.textColorClassName)}>
+        {config.label}
+      </span>
       {startTime ? (
-        <span className={styles.statusTime}>{startTime}</span>
+        <span className={clsx(styles.statusTime, config.textColorClassName)}>
+          {startTime}
+        </span>
       ) : null}
     </div>
   )
