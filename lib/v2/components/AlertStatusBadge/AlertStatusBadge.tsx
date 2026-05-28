@@ -7,9 +7,9 @@ import {
   ALERT_STATUS_BADGE_SIZES,
   type AlertStatusBadgeSize,
   normalizeSeverity,
-  SEVERITY_CONFIG
+  SEVERITY_CONFIG,
+  SeverityIcon
 } from '../AlertBadge'
-import { SeverityIcon } from '../AlertBadge'
 
 import styles from './alertStatusBadge.module.scss'
 

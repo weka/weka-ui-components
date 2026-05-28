@@ -1,8 +1,10 @@
 import type { Severity } from '#v2/utils/consts'
 
-import { WarningCircleIcon } from '../../icons'
-import { WarningIcon } from '../../icons'
-import { WarningTriangleIcon } from '../../icons'
+import {
+  WarningCircleIcon,
+  WarningIcon,
+  WarningTriangleIcon
+} from '../../icons'
 import {
   SEVERITY_CONFIG,
   SEVERITY_ICON_TYPES,
