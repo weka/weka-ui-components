@@ -1,33 +1,86 @@
-.badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: fit-content;
-  border-radius: 10px;
-  padding: 16px;
+@use '../../styles/colors' as *;
 
-  &.small {
-    padding: 0;
-
-    .icon {
-      width: 40px;
-      height: 40px;
-    }
-  }
+%severity-base {
+  color: $gray-0;
 }
 
-.label {
-  font-size: 14px;
-  font-weight: 700;
+.critical {
+  @extend %severity-base;
+
+  background: $red-700;
+}
+
+.major {
+  @extend %severity-base;
+
+  background: $red-500;
+}
+
+.minor {
+  @extend %severity-base;
+
+  background: $orange-600;
+}
+
+.warning {
+  background: $yellow-500;
+  color: $gray-950;
+}
+
+.info {
+  background: var(--gray-200-800);
   color: var(--gray-900-100);
 }
 
-.time {
-  font-size: 12px;
-  color: var(--text-secondary);
+.statusBadge {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 10px;
+  color: inherit;
 }
 
-.icon {
-  width: 54px;
-  height: 54px;
+.small {
+  gap: 8px;
+}
+
+.large {
+  gap: 12px;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+}
+
+.small .statusIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.large .statusIcon {
+  width: 48px;
+  height: 48px;
+}
+
+.statusLabel {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  color: inherit;
+}
+
+.small .statusLabel {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.statusTime {
+  font-size: 12px;
+  color: inherit;
 }

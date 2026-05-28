@@ -2,28 +2,23 @@ import type { Severity } from '#v2/utils/consts'
 
 import clsx from 'clsx'
 
-import { SEVERITY_ICONS, WarningIcon } from '../../icons'
+import {
+  ALERT_BADGE_TEST_IDS,
+  ALERT_BADGE_VARIANTS,
+  ALERT_LIMITS,
+  type AlertBadgeVariant,
+  normalizeSeverity,
+  SEVERITY_CONFIG
+} from './severityConfig'
+import { SeverityIcon } from './SeverityIcon'
 
 import styles from './alertBadge.module.scss'
 
-export const ALERT_BADGE_VARIANTS = {
-  ICON_WITH_NUMBER: 'iconWithNumber',
-  ICON_ONLY: 'iconOnly'
-} as const
-
-export type AlertBadgeVariant =
-  (typeof ALERT_BADGE_VARIANTS)[keyof typeof ALERT_BADGE_VARIANTS]
-
-const MAX_ALERTS_NUM_TO_SHOW = 9
-
-export const ALERT_BADGE_TEST_IDS = {
-  ICON_ONLY: 'alert-badge-icon-only',
-  ICON_WITH_NUMBER: 'alert-badge-icon-with-number'
-} as const
+export { ALERT_BADGE_TEST_IDS, ALERT_BADGE_VARIANTS, type AlertBadgeVariant }
 
 export interface AlertBadgeProps {
   count?: number
-  severity: Severity
+  severity: Severity | string
   variant?: AlertBadgeVariant
   dataTestId?: string
 }
@@ -34,21 +29,29 @@ export function AlertBadge({
   variant = ALERT_BADGE_VARIANTS.ICON_WITH_NUMBER,
   dataTestId
 }: Readonly<AlertBadgeProps>) {
-  const numIsTwoSymbols = count > MAX_ALERTS_NUM_TO_SHOW
-  const displayCount = numIsTwoSymbols ? `${MAX_ALERTS_NUM_TO_SHOW}+` : count
-  const severityIcon = SEVERITY_ICONS[severity] || <WarningIcon />
+  const displaySeverity = normalizeSeverity(severity)
+  const countExceedsLimit = count > ALERT_LIMITS.MAX_ALERTS_NUM_TO_SHOW
+  const displayCount = countExceedsLimit
+    ? `${ALERT_LIMITS.MAX_ALERTS_NUM_TO_SHOW}+`
+    : count
+  const config = SEVERITY_CONFIG[displaySeverity]
 
   if (variant === ALERT_BADGE_VARIANTS.ICON_ONLY) {
     return (
       <div
-        className={clsx(styles.alertBadge, styles[severity], styles.iconOnly)}
+        className={clsx(styles.alertBadge, config.className, styles.iconOnly)}
         data-testid={
           dataTestId
             ? `${dataTestId}-icon-only`
             : ALERT_BADGE_TEST_IDS.ICON_ONLY
         }
       >
-        {severityIcon}
+        <span className={styles.icon}>
+          <SeverityIcon
+            severity={displaySeverity}
+            size={ALERT_LIMITS.ALERT_BADGE_ICON_SIZE}
+          />
+        </span>
       </div>
     )
   }
@@ -57,9 +60,9 @@ export function AlertBadge({
     <div
       className={clsx(
         styles.alertBadge,
-        styles[severity],
+        config.className,
         styles.iconWithNumber,
-        { [styles.iconWithTwoNumbers]: numIsTwoSymbols }
+        { [styles.iconWithTwoNumbers]: countExceedsLimit }
       )}
       data-testid={
         dataTestId
@@ -67,7 +70,12 @@ export function AlertBadge({
           : ALERT_BADGE_TEST_IDS.ICON_WITH_NUMBER
       }
     >
-      <span className={styles.icon}>{severityIcon}</span>
+      <span className={styles.icon}>
+        <SeverityIcon
+          severity={displaySeverity}
+          size={ALERT_LIMITS.ALERT_BADGE_COUNTER_ICON_SIZE}
+        />
+      </span>
       <span className={styles.count}>{displayCount}</span>
     </div>
   )

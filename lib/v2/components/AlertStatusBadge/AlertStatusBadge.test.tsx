@@ -16,13 +16,11 @@ describe('AlertStatusBadge', () => {
       expect(screen.getByText('Info')).toBeInTheDocument()
     })
 
-    it('renders SVG icon', () => {
+    it('renders an SVG icon', () => {
       const { container } = render(
         <AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />
       )
-      const svg = container.querySelector('svg')
-      expect(svg).toBeInTheDocument()
-      expect(svg).toHaveAttribute('viewBox', '0 0 54 54')
+      expect(container.querySelector('svg')).toBeInTheDocument()
     })
 
     it('renders startTime when provided', () => {
@@ -39,7 +37,9 @@ describe('AlertStatusBadge', () => {
       const { container } = render(
         <AlertStatusBadge severity={SEVERITY_TYPES.MINOR} />
       )
-      const timeElements = container.querySelectorAll('[class*="time"]')
+      const timeElements = container.querySelectorAll(
+        '[class*="statusTime"]'
+      )
       expect(timeElements).toHaveLength(0)
     })
   })
@@ -50,6 +50,8 @@ describe('AlertStatusBadge', () => {
       { severity: SEVERITY_TYPES.MAJOR, expectedLabel: 'Major' },
       { severity: SEVERITY_TYPES.MINOR, expectedLabel: 'Minor' },
       { severity: SEVERITY_TYPES.WARNING, expectedLabel: 'Warning' },
+      { severity: SEVERITY_TYPES.INFO, expectedLabel: 'Info' },
+      { severity: SEVERITY_TYPES.DEBUG, expectedLabel: 'Debug' },
       { severity: SEVERITY_TYPES.DEFAULT, expectedLabel: 'Info' }
     ])(
       'renders "$expectedLabel" label for $severity severity',
@@ -60,37 +62,21 @@ describe('AlertStatusBadge', () => {
     )
   })
 
-  describe('Gradient Colors', () => {
-    it('renders gradient stops', () => {
-      const { container } = render(
-        <AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />
-      )
-      const stops = container.querySelectorAll('stop')
-      expect(stops).toHaveLength(2)
-    })
-
-    it('creates unique gradient ID per severity', () => {
-      const { container } = render(
-        <AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />
-      )
-      const gradient = container.querySelector('linearGradient')
-      expect(gradient).toHaveAttribute('id', 'alert-criticalGradient-triangle')
-    })
-  })
-
   describe('Styling', () => {
-    it('applies severity-specific class to label', () => {
-      render(<AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />)
-      const label = screen.getByText('Critical')
-      expect(label.className).toContain('critical')
+    it('applies severity-specific class to the status icon', () => {
+      const { container } = render(
+        <AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />
+      )
+      const icon = container.querySelector('[class*="statusIcon"]')
+      expect(icon?.className).toContain('critical')
     })
 
-    it('applies badge class to container', () => {
+    it('applies statusBadge class to container', () => {
       const { container } = render(
         <AlertStatusBadge severity={SEVERITY_TYPES.MAJOR} />
       )
       const badge = container.firstChild as HTMLElement
-      expect(badge.className).toContain('badge')
+      expect(badge.className).toContain('statusBadge')
     })
 
     it('applies small class when size is small', () => {
@@ -103,6 +89,14 @@ describe('AlertStatusBadge', () => {
       const badge = container.firstChild as HTMLElement
       expect(badge.className).toContain('small')
     })
+
+    it('applies large class when size is large (default)', () => {
+      const { container } = render(
+        <AlertStatusBadge severity={SEVERITY_TYPES.CRITICAL} />
+      )
+      const badge = container.firstChild as HTMLElement
+      expect(badge.className).toContain('large')
+    })
   })
 
   describe('Fallback Behavior', () => {
@@ -111,14 +105,9 @@ describe('AlertStatusBadge', () => {
       expect(screen.getByText('Info')).toBeInTheDocument()
     })
 
-    it('falls back to default config for info severity', () => {
-      render(<AlertStatusBadge severity={SEVERITY_TYPES.INFO} />)
-      expect(screen.getByText('Info')).toBeInTheDocument()
-    })
-
-    it('falls back to default config for debug severity', () => {
-      render(<AlertStatusBadge severity={SEVERITY_TYPES.DEBUG} />)
-      expect(screen.getByText('Info')).toBeInTheDocument()
+    it('accepts loose severity strings via normalizeSeverity', () => {
+      render(<AlertStatusBadge severity='CRITICAL' />)
+      expect(screen.getByText('Critical')).toBeInTheDocument()
     })
   })
 })
