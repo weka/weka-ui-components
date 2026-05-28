@@ -1,19 +1,22 @@
-export type { AlertBadgeProps, AlertBadgeVariant } from './AlertBadge'
+export type {
+  AlertBadgeProps,
+  AlertBadgeVariant,
+  AlertStatusBadgeSize,
+  SeverityIconType
+} from './AlertBadge'
 export {
   ALERT_BADGE_TEST_IDS,
   ALERT_BADGE_VARIANTS,
-  AlertBadge
-} from './AlertBadge'
-export type { AlertIconShape } from './AlertStatusBadge'
-export type {
-  AlertStatusBadgeProps,
-  AlertStatusBadgeSize
-} from './AlertStatusBadge'
-export {
-  ALERT_ICON_PATHS,
+  ALERT_LIMITS,
   ALERT_STATUS_BADGE_SIZES,
-  AlertStatusBadge
-} from './AlertStatusBadge'
+  AlertBadge,
+  normalizeSeverity,
+  SEVERITY_CONFIG,
+  SEVERITY_ICON_TYPES,
+  SeverityIcon
+} from './AlertBadge'
+export type { AlertStatusBadgeProps } from './AlertStatusBadge'
+export { AlertStatusBadge } from './AlertStatusBadge'
 export type { ButtonProps, ButtonType, ButtonVariant } from './Button'
 export { Button, BUTTON_TYPES, BUTTON_VARIANTS } from './Button'
 export type {
@@ -77,8 +80,15 @@ export {
   FLEX_JUSTIFIES,
   FlexBox
 } from './FlexBox'
-export type { GradientAlertIconProps } from './GradientAlertIcon'
-export { GradientAlertIcon } from './GradientAlertIcon'
+export type {
+  AlertIconShape,
+  GradientAlertIconProps
+} from './GradientAlertIcon'
+export {
+  ALERT_ICON_PATHS,
+  ALERT_ICON_SHAPES,
+  GradientAlertIcon
+} from './GradientAlertIcon'
 export type { MultiSelectAutocompleteProps } from './inputs/MultiSelectAutocomplete'
 export { MultiSelectAutocomplete } from './inputs/MultiSelectAutocomplete'
 export type { NumberInputProps } from './inputs/NumberInput'

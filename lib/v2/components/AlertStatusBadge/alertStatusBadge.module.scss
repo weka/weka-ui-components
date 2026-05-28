@@ -1,33 +1,44 @@
-.badge {
-  display: flex;
+.statusBadge {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
   width: fit-content;
-  border-radius: 10px;
-  padding: 16px;
-
-  &.small {
-    padding: 0;
-
-    .icon {
-      width: 40px;
-      height: 40px;
-    }
-  }
+  border-radius: 20px;
 }
 
-.label {
-  font-size: 14px;
+.small {
+  gap: 6px;
+  padding: 4px 12px;
+}
+
+.large {
+  gap: 8px;
+  padding: 6px 16px;
+}
+
+.statusIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.statusLabel {
   font-weight: 700;
-  color: var(--gray-900-100);
+  line-height: 22px;
 }
 
-.time {
+.small .statusLabel {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.large .statusLabel {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.statusTime {
   font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.icon {
-  width: 54px;
-  height: 54px;
+  opacity: 0.85;
 }
