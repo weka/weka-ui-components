@@ -1,0 +1,87 @@
+name: Update Consumer Paths
+description: Checkout a consumer PR branch, bump @weka/weka-ui-components in one or more paths, and push a single commit.
+
+inputs:
+  repo:
+    description: Consumer repo (e.g. weka/gohome)
+    required: true
+  branch:
+    description: Consumer PR branch to update
+    required: true
+  paths:
+    description: JSON array of paths inside the repo to update (e.g. '["observe/frontend","frontend"]')
+    required: true
+  spec:
+    description: yarn add argument (e.g. @weka/weka-ui-components@^4.19.0 or @weka/weka-ui-components@https://github.com/weka/weka-ui-components.git#<sha>)
+    required: true
+  commit_message:
+    description: Commit message for the single combined commit
+    required: true
+  token:
+    description: Token with push access to the consumer repo and read:packages for the npm registry
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # Check out the consumer repo into a subdirectory so it does not clobber the
+    # weka-ui-components checkout at the workspace root — that root checkout holds
+    # this composite's action.yml, which GitHub re-reads during post-cleanup.
+    - name: Checkout consumer PR branch
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repo }}
+        ref: ${{ inputs.branch }}
+        token: ${{ inputs.token }}
+        path: consumer
+
+    - name: Configure git auth for private git deps
+      shell: bash
+      env:
+        TOKEN: ${{ inputs.token }}
+      run: git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@weka'
+
+    - name: Enable Corepack
+      shell: bash
+      # Yarn version comes from each path's packageManager field, not a hardcoded version.
+      run: corepack enable
+
+    - name: yarn add in each target path
+      shell: bash
+      working-directory: consumer
+      env:
+        PATHS_JSON: ${{ inputs.paths }}
+        SPEC: ${{ inputs.spec }}
+        NODE_AUTH_TOKEN: ${{ inputs.token }}
+        WEKA_COMPONENTS_NPM_TOKEN: ${{ inputs.token }}
+      run: |
+        set -euo pipefail
+        for p in $(echo "$PATHS_JSON" | jq -r '.[]'); do
+          echo "::group::yarn add $SPEC in $p"
+          ( cd "$p" && corepack yarn add "$SPEC" )
+          git add "$p/package.json" "$p/yarn.lock"
+          echo "::endgroup::"
+        done
+
+    - name: Commit and push (single commit for all paths)
+      shell: bash
+      working-directory: consumer
+      env:
+        MSG: ${{ inputs.commit_message }}
+      run: |
+        set -euo pipefail
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        if git diff --cached --quiet; then
+          echo "No changes — nothing to commit"
+          exit 0
+        fi
+        git commit -m "$MSG"
+        git push
