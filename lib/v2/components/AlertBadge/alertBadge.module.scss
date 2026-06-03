@@ -23,7 +23,7 @@
 }
 
 .warning {
-  background: $yellow-500;
+  background: $yellow-600;
   color: $gray-950;
 }
 
@@ -41,15 +41,14 @@
 }
 
 .iconWithNumber {
-  min-width: 48px;
   gap: 4px;
   flex-direction: row;
-  padding: 3px 7px 3px 5px;
+  padding: 4px;
   border-radius: 20px;
 }
 
 .iconWithTwoNumbers {
-  padding-right: 8px;
+  padding-right: 6px;
 }
 
 .iconOnly {
