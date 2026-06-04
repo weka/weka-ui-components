@@ -92,12 +92,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  update-observe:
+  update-consumers:
     needs: publish
     permissions:
       contents: read
       packages: read
-    uses: ./.github/workflows/update-observe-frontend.yml
+    uses: ./.github/workflows/update-consumers.yml
     with:
       version: ${{ github.ref_name }}
       tickets: ${{ needs.publish.outputs.tickets }}

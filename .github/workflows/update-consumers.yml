@@ -1,0 +1,105 @@
+name: Update Consumers
+
+# Called by v2-release.yml after a successful publish.
+# Finds open PRs in every repo listed in .github/consumer-targets.json that
+# share a release ticket (WH-xxx) and bumps their @weka/weka-ui-components
+# dependency to the released version. When a repo has multiple configured
+# paths, all of them are bumped in a single commit per consumer PR.
+
+permissions:
+  contents: read
+  packages: read
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      tickets:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Released version (e.g. v4.19.0)
+        required: true
+        type: string
+      tickets:
+        description: Comma-separated tickets (e.g. WH-123,WH-456)
+        required: true
+        type: string
+
+concurrency:
+  group: update-consumers-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      repo_paths: ${{ steps.cfg.outputs.repo_paths }}
+      prs: ${{ steps.find.outputs.prs || '[]' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
+      - name: Read consumer targets
+        id: cfg
+        run: |
+          set -euo pipefail
+          REPOS=$(jq -c '[.[].repo] | unique' .github/consumer-targets.json)
+          REPO_PATHS=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: map(.path)}) | from_entries' .github/consumer-targets.json)
+          echo "repos=$REPOS" >> "$GITHUB_OUTPUT"
+          echo "repo_paths=$REPO_PATHS" >> "$GITHUB_OUTPUT"
+
+      - name: Find consumer PRs matching release tickets
+        id: find
+        if: inputs.tickets != ''
+        uses: ./.github/actions/find-prs-by-ticket
+        with:
+          tickets: ${{ inputs.tickets }}
+          repos: ${{ steps.cfg.outputs.repos }}
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+
+  update-pr:
+    needs: discover
+    if: needs.discover.outputs.prs != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        pr: ${{ fromJson(needs.discover.outputs.prs) }}
+    steps:
+      - name: Checkout weka-ui-components (for local action)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/actions
+
+      - name: Resolve paths and spec
+        id: prep
+        env:
+          REPO_PATHS: ${{ needs.discover.outputs.repo_paths }}
+          REPO: ${{ matrix.pr.repo }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          PATHS=$(echo "$REPO_PATHS" | jq -c --arg r "$REPO" '.[$r]')
+          if [ "$PATHS" = "null" ]; then
+            echo "::error::$REPO is not configured in .github/consumer-targets.json"
+            exit 1
+          fi
+          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+          echo "spec=@weka/weka-ui-components@^${VERSION#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Update consumer paths
+        uses: ./.github/actions/update-consumer-paths
+        with:
+          repo: ${{ matrix.pr.repo }}
+          branch: ${{ matrix.pr.branch }}
+          paths: ${{ steps.prep.outputs.paths }}
+          spec: ${{ steps.prep.outputs.spec }}
+          commit_message: "chore: update @weka/weka-ui-components to ${{ inputs.version }} (${{ matrix.pr.ticket }})"
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}

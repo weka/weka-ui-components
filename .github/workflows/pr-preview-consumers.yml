@@ -1,0 +1,189 @@
+name: PR Preview in Consumers
+
+# Points a consumer repo's @weka/weka-ui-components dependency at a
+# weka-ui-components PR branch (git#sha) so cross-repo breakage surfaces early.
+#
+# Two flows:
+#   - pull_request (a UIC PR is opened/updated): find matching PRs by ticket
+#     across every repo in .github/consumer-targets.json and preview the UIC
+#     PR's head sha in each.
+#   - repository_dispatch / workflow_dispatch (a consumer notifies us about its
+#     PR): search weka-ui-components for matching UIC PRs and preview their head
+#     sha in the dispatching consumer repo only.
+#
+# When a consumer repo has multiple configured paths, all are bumped in a single
+# commit per consumer PR.
+
+permissions:
+  contents: read
+  packages: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches: [main]
+  repository_dispatch:
+    types: [consumer-pr-opened]
+  workflow_dispatch:
+    inputs:
+      tickets:
+        description: Comma-separated tickets to match UIC PRs (e.g. WH-123)
+        required: true
+        type: string
+      consumer_repo:
+        description: Consumer repo to update (e.g. weka/gohome)
+        required: true
+        type: string
+      pr_branch:
+        description: Consumer PR branch to update
+        required: true
+        type: string
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number || format('{0}-{1}', github.event.client_payload.consumer_repo || inputs.consumer_repo, github.event.client_payload.pr_branch || inputs.pr_branch) }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      updates: ${{ steps.build.outputs.updates || '[]' }}
+      repo_paths: ${{ steps.cfg.outputs.repo_paths }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
+      - name: Read consumer targets
+        id: cfg
+        run: |
+          set -euo pipefail
+          REPOS=$(jq -c '[.[].repo] | unique' .github/consumer-targets.json)
+          REPO_PATHS=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: map(.path)}) | from_entries' .github/consumer-targets.json)
+          echo "repos=$REPOS" >> "$GITHUB_OUTPUT"
+          echo "repo_paths=$REPO_PATHS" >> "$GITHUB_OUTPUT"
+
+      - name: Extract tickets and search target
+        id: tickets
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BRANCH: ${{ github.head_ref }}
+          DISPATCH_TICKETS: ${{ github.event.client_payload.tickets || inputs.tickets }}
+          CONFIG_REPOS: ${{ steps.cfg.outputs.repos }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            TICKETS=$(echo "$PR_TITLE $PR_BRANCH" | grep -oE 'WH-[0-9]+' | sort -u | tr '\n' ',' || true)
+            echo "tickets=${TICKETS%,}" >> "$GITHUB_OUTPUT"
+            # A UIC PR was opened — search every configured consumer repo.
+            echo "search_repos=$CONFIG_REPOS" >> "$GITHUB_OUTPUT"
+          else
+            echo "tickets=$DISPATCH_TICKETS" >> "$GITHUB_OUTPUT"
+            # A consumer notified us — search weka-ui-components for matching PRs.
+            echo 'search_repos=["weka/weka-ui-components"]' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Find matching PRs
+        id: find
+        if: steps.tickets.outputs.tickets != ''
+        uses: ./.github/actions/find-prs-by-ticket
+        with:
+          tickets: ${{ steps.tickets.outputs.tickets }}
+          repos: ${{ steps.tickets.outputs.search_repos }}
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+
+      - name: Build update tuples
+        id: build
+        if: steps.find.outputs.prs != '[]' && steps.find.outputs.prs != ''
+        uses: actions/github-script@v8
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          FOUND_PRS: ${{ steps.find.outputs.prs }}
+          UIC_SHA: ${{ github.event.pull_request.head.sha }}
+          UIC_PR_NUMBER: ${{ github.event.pull_request.number }}
+          CONSUMER_REPO: ${{ github.event.client_payload.consumer_repo || inputs.consumer_repo }}
+          CONSUMER_BRANCH: ${{ github.event.client_payload.pr_branch || inputs.pr_branch }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const foundPrs = JSON.parse(process.env.FOUND_PRS);
+            let updates;
+
+            if (process.env.EVENT_NAME === 'pull_request') {
+              // foundPrs are consumer PRs (already carry their repo).
+              updates = foundPrs.map(pr => ({
+                repo: pr.repo,
+                branch: pr.branch,
+                uic_ref: process.env.UIC_SHA,
+                ticket: pr.ticket,
+                uic_pr_number: Number(process.env.UIC_PR_NUMBER),
+              }));
+            } else {
+              // foundPrs are weka-ui-components PRs; preview each in the
+              // dispatching consumer repo only.
+              const consumerRepo = process.env.CONSUMER_REPO;
+              const consumerBranch = process.env.CONSUMER_BRANCH;
+              if (!consumerRepo || !consumerBranch) {
+                core.setFailed('Dispatch flow requires both consumer_repo and pr_branch.');
+                return;
+              }
+              const updatesAsync = foundPrs.map(async (pr) => {
+                const { data } = await github.rest.pulls.get({
+                  owner: 'weka',
+                  repo: 'weka-ui-components',
+                  pull_number: pr.number,
+                });
+                return {
+                  repo: consumerRepo,
+                  branch: consumerBranch,
+                  uic_ref: data.head.sha,
+                  ticket: pr.ticket,
+                  uic_pr_number: pr.number,
+                };
+              });
+              updates = await Promise.all(updatesAsync);
+            }
+
+            core.setOutput('updates', JSON.stringify(updates));
+
+  update-pr:
+    needs: discover
+    if: needs.discover.outputs.updates != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        update: ${{ fromJson(needs.discover.outputs.updates) }}
+    steps:
+      - name: Checkout weka-ui-components (for local action)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/actions
+
+      - name: Resolve paths and spec
+        id: prep
+        env:
+          REPO_PATHS: ${{ needs.discover.outputs.repo_paths }}
+          REPO: ${{ matrix.update.repo }}
+          UIC_REF: ${{ matrix.update.uic_ref }}
+        run: |
+          set -euo pipefail
+          PATHS=$(echo "$REPO_PATHS" | jq -c --arg r "$REPO" '.[$r]')
+          if [ "$PATHS" = "null" ]; then
+            echo "::error::$REPO is not configured in .github/consumer-targets.json"
+            exit 1
+          fi
+          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+          echo "spec=@weka/weka-ui-components@https://github.com/weka/weka-ui-components.git#${UIC_REF}" >> "$GITHUB_OUTPUT"
+
+      - name: Update consumer paths
+        uses: ./.github/actions/update-consumer-paths
+        with:
+          repo: ${{ matrix.update.repo }}
+          branch: ${{ matrix.update.branch }}
+          paths: ${{ steps.prep.outputs.paths }}
+          spec: ${{ steps.prep.outputs.spec }}
+          commit_message: "chore: preview weka-ui-components PR #${{ matrix.update.uic_pr_number }} (${{ matrix.update.ticket }})"
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}

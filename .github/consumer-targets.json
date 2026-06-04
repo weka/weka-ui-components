@@ -1,0 +1,10 @@
+[
+  {
+    "repo": "weka/gohome",
+    "path": "observe/frontend"
+  },
+  {
+    "repo": "weka/gohome",
+    "path": "frontend"
+  }
+]

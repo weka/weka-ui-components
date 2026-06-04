@@ -1,20 +1,23 @@
 name: Find PRs by Ticket
-description: Search open PRs in a target repo for matching ticket IDs (WH-xxx)
+description: Search open PRs in one or more target repos for matching ticket IDs (WH-xxx)
 
 inputs:
   tickets:
     description: Comma-separated ticket IDs (e.g. WH-123,WH-456)
     required: true
   repo:
-    description: Target repo to search (e.g. weka/gohome)
-    required: true
+    description: Single target repo to search (e.g. weka/gohome). Use this OR repos.
+    required: false
+  repos:
+    description: JSON array of target repos to search (e.g. '["weka/gohome"]'). Takes precedence over repo.
+    required: false
   token:
-    description: GitHub token with read access to the target repo
+    description: GitHub token with read access to the target repo(s)
     required: true
 
 outputs:
   prs:
-    description: JSON array of matched PRs ({ number, branch, ticket })
+    description: JSON array of matched PRs ({ repo, number, branch, ticket })
     value: ${{ steps.find.outputs.prs || '[]' }}
 
 runs:
@@ -26,6 +29,7 @@ runs:
       env:
         TICKETS: ${{ inputs.tickets }}
         TARGET_REPO: ${{ inputs.repo }}
+        TARGET_REPOS: ${{ inputs.repos }}
       with:
         github-token: ${{ inputs.token }}
         script: |
@@ -35,23 +39,39 @@ runs:
           }
 
           const tickets = process.env.TICKETS.split(',')
+            .map(t => t.trim())
             .filter(t => /^WH-\d+$/i.test(t));
-          const [owner, repo] = process.env.TARGET_REPO.split('/');
 
-          const pulls = await github.paginate(github.rest.pulls.list, {
-            owner,
-            repo,
-            state: 'open',
-            per_page: 100,
-          });
+          const repos = process.env.TARGET_REPOS
+            ? JSON.parse(process.env.TARGET_REPOS)
+            : [process.env.TARGET_REPO].filter(Boolean);
+          const uniqueRepos = [...new Set(repos)];
 
-          const matched = pulls
-            .map(pr => ({ pr, ticket: prMatchesTicket(pr, tickets) }))
-            .filter(({ ticket }) => ticket)
-            .map(({ pr, ticket }) => ({
-              number: pr.number,
-              branch: pr.head.ref,
-              ticket,
-            }));
+          if (uniqueRepos.length === 0) {
+            core.setFailed('No target repo(s) provided — set either `repo` or `repos`.');
+            return;
+          }
+
+          const matched = [];
+          for (const fullRepo of uniqueRepos) {
+            const [owner, repo] = fullRepo.split('/');
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+            for (const pr of pulls) {
+              const ticket = prMatchesTicket(pr, tickets);
+              if (ticket) {
+                matched.push({
+                  repo: fullRepo,
+                  number: pr.number,
+                  branch: pr.head.ref,
+                  ticket,
+                });
+              }
+            }
+          }
 
           core.setOutput('prs', JSON.stringify(matched));
