@@ -37,13 +37,12 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  height: 24px;
 }
 
 .iconWithNumber {
   gap: 4px;
   flex-direction: row;
-  padding: 4px;
+  padding: 4px 6px 4px 4px;
   border-radius: 20px;
 }
 
