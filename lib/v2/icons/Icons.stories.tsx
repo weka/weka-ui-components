@@ -8,14 +8,20 @@ import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
 import { ChevronDownSmallIcon } from './ChevronDownSmallIcon'
 import { CloseIcon } from './CloseIcon'
+import { CloseRoundedIcon } from './CloseRoundedIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
 import { DateTimeIcon } from './DateTimeIcon'
+import { DownloadIcon } from './DownloadIcon'
+import { FilterIcon } from './FilterIcon'
 import { InfoIcon } from './InfoIcon'
 import { LinkIcon } from './LinkIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
+import { ResetIcon } from './ResetIcon'
 import { SearchIcon } from './SearchIcon'
 import { SettingsIcon } from './SettingsIcon'
+import { SortIcon } from './SortIcon'
+import { SortUpDownIcon } from './SortUpDownIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
 import { WarningIcon } from './WarningIcon'
 import { WarningTriangleIcon } from './WarningTriangleIcon'
@@ -90,12 +96,24 @@ export const GeneralIcons: Story = {
         <span>CloseIcon</span>
       </div>
       <div style={rowStyle}>
+        <CloseRoundedIcon />
+        <span>CloseRoundedIcon</span>
+      </div>
+      <div style={rowStyle}>
         <CloseWithBgIcon />
         <span>CloseWithBgIcon</span>
       </div>
       <div style={rowStyle}>
         <DateTimeIcon />
         <span>DateTimeIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <DownloadIcon />
+        <span>DownloadIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <FilterIcon />
+        <span>FilterIcon</span>
       </div>
       <div style={rowStyle}>
         <InfoIcon />
@@ -112,6 +130,10 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <NavChevronRightIcon />
         <span>NavChevronRightIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <ResetIcon />
+        <span>ResetIcon</span>
       </div>
       <div style={rowStyle}>
         <SearchIcon
@@ -134,6 +156,14 @@ export const GeneralIcons: Story = {
           width={16}
         />
         <span>SettingsIcon (outline)</span>
+      </div>
+      <div style={rowStyle}>
+        <SortIcon />
+        <span>SortIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <SortUpDownIcon />
+        <span>SortUpDownIcon</span>
       </div>
       <div style={rowStyle}>
         <WarningCircleIcon />

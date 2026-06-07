@@ -1,0 +1,243 @@
+.popover {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 250px;
+  background: var(--gray-50-920);
+  box-shadow:
+    0 0 0 1px var(--gray-450-550),
+    0 8px 24px rgb(0 0 0 / 25%);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 400px;
+  overflow: hidden;
+  padding: 16px 12px;
+}
+
+.popoverHeader {
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-350-650);
+  margin-bottom: 8px;
+
+  h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color-primary);
+  }
+}
+
+.popoverContent {
+  flex: 1;
+  overflow-y: hidden;
+  z-index: 10002;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.popoverActions {
+  flex-direction: column;
+  gap: 8px;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  background: var(--gray-50-920);
+  z-index: 10001;
+}
+
+.applyWrapper {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.selectAll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--gray-350-650);
+  padding: 8px 8px 16px;
+}
+
+.selectAllTitle {
+  user-select: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.dropdownContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown {
+  padding: 8px 12px;
+  border: 1px solid var(--gray-300-700);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--gray-50-950);
+  color: var(--text-color-primary);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  position: relative;
+  z-index: 10002;
+  width: 100%;
+
+  &:focus {
+    border-color: var(--cyan-500);
+    box-shadow: 0 0 0 2px rgb(51 138 204 / 10%);
+    z-index: 10003;
+    background: var(--gray-50-950);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cyan-500);
+    outline-offset: 1px;
+  }
+
+  option {
+    background: var(--gray-50-950);
+    color: var(--text-color-primary);
+    padding: 8px 12px;
+  }
+}
+
+.customDropdownContainer {
+  position: relative;
+  width: 100%;
+}
+
+.customDropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 1px solid var(--gray-300-700);
+  border-radius: 4px;
+  background: var(--gray-50-950);
+  color: var(--text-color-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  position: relative;
+
+  &:hover {
+    border-color: var(--gray-400-600);
+  }
+
+  &:focus-within {
+    border-color: var(--cyan-500);
+    box-shadow: 0 0 0 2px rgb(51 138 204 / 10%);
+  }
+}
+
+.selectedOption {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.placeholder {
+  color: var(--gray-600-400);
+  font-size: 14px;
+}
+
+.dropdownArrow {
+  display: flex;
+  align-items: center;
+  color: var(--gray-600-400);
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+}
+
+.customDropdownOptions {
+  background: var(--gray-50-950);
+  border: 1px solid var(--gray-300-700);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+  overflow: hidden;
+  position: fixed;
+  z-index: 99999;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.customOption {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+
+  &:hover {
+    background: var(--gray-100-850);
+  }
+
+  &.selected {
+    background: var(--cyan-50-900);
+    color: var(--cyan-600-400);
+  }
+}
+
+.multiselectContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 186px;
+  overflow-y: auto;
+}
+
+.noMatchesFound {
+  padding: 16px 12px;
+  text-align: center;
+  color: var(--gray-600-400);
+  font-size: 14px;
+}
+
+.datetimeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dateField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dateFieldLabel {
+  font-size: 14px;
+  color: var(--gray-700-300);
+  margin: 0 0 2px 8px;
+  font-weight: 700;
+}
+
+.optionsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.optionsList::-webkit-scrollbar-track {
+  background: var(--gray-200-800);
+  border-radius: 3px;
+}
+
+.optionsList::-webkit-scrollbar-thumb {
+  background: var(--gray-400-600);
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--gray-500);
+  }
+}

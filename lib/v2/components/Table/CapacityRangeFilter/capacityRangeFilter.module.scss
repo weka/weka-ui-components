@@ -1,0 +1,41 @@
+.capacityRangeFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  min-width: 220px;
+  background: var(--gray-50-920);
+}
+
+.toggleContainer {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.toggleButton {
+  flex: 1;
+  padding: 2px;
+  border: 0;
+  background: var(--gray-150-850);
+  color: var(--gray-600-400);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover:not(.toggleButtonActive) {
+    background: var(--gray-200-800);
+    color: var(--gray-700-300);
+  }
+
+  &.toggleButtonActive {
+    background: var(--purple-500);
+    color: white;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

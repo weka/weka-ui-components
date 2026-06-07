@@ -11,6 +11,20 @@ export const EMPTY_OBJECT: Record<string, never> = {}
 export const NOOP = () => {}
 export const COMMA_SEPARATOR = ', '
 export const SEARCH_PLACEHOLDER = 'Search...'
+export const ANY_LABEL = 'Any'
+
+export const FILTER_TYPES = {
+  TEXT: 'text',
+  DROPDOWN: 'dropdown',
+  MULTISELECT: 'multiSelect',
+  DATETIME: 'datetime',
+  AUTOCOMPLETE: 'autocomplete',
+  CAPACITY_RANGE: 'capacityRange',
+  NUM_RANGE: 'numRange',
+  REDUCTION_RANGE: 'reductionRange'
+} as const
+
+export type FilterType = (typeof FILTER_TYPES)[keyof typeof FILTER_TYPES]
 
 export const KEYBOARD_KEYS = {
   ENTER: 'Enter',
