@@ -8,7 +8,7 @@ export const GRADIENT_COLORS = {
     end: '#59B267'
   },
   orange: {
-    start: '#BF6B00',
+    start: '#CC7200',
     end: '#FFAB40'
   },
   yellow: {
