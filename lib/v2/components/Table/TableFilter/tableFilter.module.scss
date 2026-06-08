@@ -1,0 +1,171 @@
+.filterPopoverContainer {
+  position: fixed;
+  z-index: 10000;
+  width: 250px;
+}
+
+.headerIconsContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.filterButton {
+  padding: 4px;
+  margin-left: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--gray-600-400);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+
+  th:hover & {
+    opacity: 1;
+  }
+
+  &.hasFilter {
+    opacity: 1;
+    color: var(--gray-900-100);
+    background-color: var(--icon-bg-active);
+
+    &:not(.hasActiveSort) {
+      order: -1;
+    }
+
+    th:hover &:not(.hasActiveSort, .popoverOpen) {
+      order: 1;
+    }
+
+    &.popoverOpen:not(.hasActiveSort) {
+      order: 1;
+    }
+  }
+
+  &.active {
+    opacity: 1;
+    color: var(--gray-600-400);
+    background-color: var(--icon-bg-active);
+
+    &:hover {
+      background-color: var(--icon-bg-active) !important;
+    }
+  }
+
+  &.popoverOpen {
+    transition: none !important;
+    opacity: 1 !important;
+  }
+
+  &:hover {
+    background-color: var(--icon-bg-hover);
+  }
+
+  &:focus {
+    background-color: var(--icon-bg-active);
+    outline: none;
+    color: var(--gray-600-400);
+  }
+
+  &.hasFilter {
+    &:hover {
+      background-color: var(--icon-bg-hover);
+      color: var(--gray-850-150);
+    }
+
+    &:focus {
+      background-color: var(--icon-bg-active);
+      color: var(--cyan-500);
+      outline: none;
+    }
+  }
+
+  &.active {
+    &:hover {
+      background-color: var(--icon-bg-active);
+      color: var(--gray-600-400);
+    }
+
+    &:focus {
+      background-color: var(--icon-bg-active);
+      color: var(--gray-600-400);
+      outline: none;
+    }
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.sortButton {
+  padding: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--gray-600-400);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+
+  &:hover {
+    background-color: var(--icon-bg-hover);
+  }
+
+  &:focus {
+    background-color: var(--icon-bg-active);
+    outline: none;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.inactiveSortButton {
+  opacity: 0;
+
+  th:hover & {
+    opacity: 1;
+  }
+}
+
+.activeSortButton {
+  opacity: 1;
+  color: var(--gray-900-100);
+  background-color: var(--icon-bg-active);
+
+  &:hover {
+    background-color: var(--icon-bg-hover);
+    color: var(--gray-850-150);
+  }
+
+  &:focus {
+    background-color: var(--icon-bg-active);
+    color: var(--gray-900-100);
+    outline: none;
+  }
+}
+
+.sortAsc {
+  transform: rotate(180deg);
+}
+
+.sortDesc {
+  /* Default orientation for down arrow */
+}

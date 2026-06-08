@@ -1,0 +1,47 @@
+.capacityCell {
+  display: grid;
+  grid-template-columns: 60% 1fr;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+.capacityBarContainer {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.capacityBar {
+  width: 100%;
+}
+
+.capacityText {
+  color: var(--text-primary);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.usedValue {
+  font-weight: 400;
+}
+
+.separator {
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin: 0 4px;
+}
+
+.totalValue {
+  font-weight: 700;
+}
+
+.number {
+  font-size: 14px;
+}
+
+.unit {
+  font-size: 12px;
+}

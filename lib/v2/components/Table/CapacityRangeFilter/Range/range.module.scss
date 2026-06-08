@@ -1,0 +1,116 @@
+.rangeSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputLabel {
+  font-size: 14px;
+  color: var(--gray-700-300);
+  margin: 0 0 2px 8px;
+  font-weight: 700;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.unitDropdownContainer {
+  position: relative;
+  min-width: 80px;
+
+  &:focus-within .unitDropdownMenu {
+    display: block;
+  }
+}
+
+.unitDropdown {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px 10px 8px;
+  border: 1px solid var(--gray-300-700);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--gray-50-950);
+  color: var(--text-color-primary);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  gap: 8px;
+  height: 36px;
+
+  &:hover {
+    border-color: var(--gray-400-600);
+    background: var(--gray-100-900);
+  }
+
+  &.unitDropdownOpen {
+    border-bottom: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    background: var(--gray-50-950);
+  }
+
+  &:focus:not(.unitDropdownOpen) {
+    background: var(--gray-50-950);
+  }
+}
+
+.dropdownArrow {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+
+  path {
+    fill: var(--gray-920-50);
+  }
+
+  &.dropdownArrowUp {
+    transform: rotate(180deg);
+  }
+}
+
+.unitDropdownMenu {
+  position: fixed;
+  background: var(--gray-50-920);
+  border: 1px solid var(--gray-300-700);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 6px 12px -4px rgb(0 0 0 / 25%);
+  z-index: 10000;
+  overflow: hidden;
+  min-width: 80px;
+  padding: 4px;
+}
+
+.unitOption {
+  display: block;
+  width: 100%;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-color-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+  border-radius: 6px;
+  margin-bottom: 2px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: var(--gray-150-850);
+  }
+
+  &.unitOptionSelected {
+    background: var(--gray-200-800);
+    color: var(--text-color-primary);
+    font-weight: 500;
+  }
+}

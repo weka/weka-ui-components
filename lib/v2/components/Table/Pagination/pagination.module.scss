@@ -1,0 +1,97 @@
+@use '../../../styles/colors' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-right: 24px;
+  height: 100%;
+}
+
+.pageNumbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+%basePageControl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    user-select: none;
+  }
+}
+
+.navButton {
+  @extend %basePageControl;
+
+  gap: 4px;
+  height: 20px;
+  padding: 0 8px;
+  color: var(--gray-650-350);
+  background: transparent;
+
+  &:hover:not(:disabled):not(.disabled) {
+    color: $gray-50;
+    background: linear-gradient(0deg, $gray-500 0%, $gray-300 100%);
+  }
+}
+
+.prevArrow,
+.nextArrow {
+  width: 16px;
+  height: 16px;
+}
+
+.activePageButton {
+  @extend %basePageControl;
+
+  width: 40px;
+  height: 20px;
+  color: $gray-50;
+  background: linear-gradient(0deg, $gray-500 0%, $gray-300 100%);
+
+  &:hover {
+    background: linear-gradient(0deg, $gray-600 0%, $gray-400 100%);
+  }
+}
+
+.pageButton {
+  @extend %basePageControl;
+
+  min-width: 24px;
+  height: 20px;
+  padding: 0 8px;
+  color: var(--gray-650-350);
+  background: transparent;
+
+  &:hover:not(:disabled):not(.disabled) {
+    color: $gray-50;
+    background: linear-gradient(0deg, $gray-500 0%, $gray-300 100%);
+  }
+}
+
+.ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-650-350);
+  pointer-events: none;
+}

@@ -1,4 +1,5 @@
 export { useClickOutside } from './useClickOutside'
 export { useCloseOnScroll } from './useCloseOnScroll'
+export { useFilterKeyboardNavigation } from './useFilterKeyboardNavigation'
 export { usePopoverPosition } from './usePopoverPosition'
 export { useWindowResize } from './useWindowResize'

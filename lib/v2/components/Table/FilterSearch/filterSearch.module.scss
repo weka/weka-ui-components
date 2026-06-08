@@ -1,0 +1,107 @@
+.searchContainer {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  background: var(--gray-100-900);
+  border: 1px solid var(--gray-550-450);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 32px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, border-radius 0.2s ease;
+}
+
+.searchIcon {
+  padding: 0 4px 0 6px;
+  color: var(--gray-500);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    fill: currentColor;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0 8px 0 0;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: var(--gray-950-20);
+  outline: none;
+  height: 100%;
+
+  &::placeholder {
+    color: var(--gray-850-150);
+    font-size: 14px;
+  }
+}
+
+.clearButton {
+  padding: 6px 8px;
+  margin-right: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+    color: var(--gray-600-400);
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  &:hover {
+    background: var(--gray-100-850);
+  }
+
+  &:hover svg {
+    opacity: 1;
+    color: var(--gray-950-20);
+  }
+}
+
+.loadingSpinner {
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gray-550-450);
+  border-top: 2px solid var(--purple-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (width <= 768px) {
+  .searchContainer {
+    max-width: 100%;
+  }
+}

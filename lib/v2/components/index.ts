@@ -148,6 +148,99 @@ export type {
   SystemStatusProps
 } from './SystemStatus'
 export { mapLegacyStatus, STATUS_COLORS, SystemStatus } from './SystemStatus'
+export type { CapacityCellProps } from './Table/CapacityCell'
+export { CapacityCell } from './Table/CapacityCell'
+export type {
+  CapacityRangeFilterProps,
+  CapacityRangeFilterRuntime,
+  CapacityRangeFilterType,
+  CapacityRangeMode,
+  CapacityRangeValueRuntime,
+  CapacityThreshold,
+  CapacityUnit,
+  MinMaxCapacityRaw
+} from './Table/CapacityRangeFilter'
+export {
+  calculateBytesFromOption,
+  calculateFilterBound,
+  CAPACITY_RANGE_MODES,
+  CapacityRangeFilter,
+  isCapacityRangeEmpty,
+  isValidBytes,
+  isValidCapacityRange,
+  isWithinRange
+} from './Table/CapacityRangeFilter'
+export type { DefaultCellOptions, DefaultCellValue } from './Table/DefaultCell'
+export { DefaultCell } from './Table/DefaultCell'
+export type { FilterChipsProps } from './Table/FilterChips'
+export { FilterChips } from './Table/FilterChips'
+export type { FilterOptionRowProps } from './Table/FilterOptionRow'
+export { FilterOptionRow } from './Table/FilterOptionRow'
+export type {
+  CustomFilterChip,
+  CustomFilterContext,
+  CustomFilterDefinition,
+  CustomFilters
+} from './Table/FilterPopover'
+export { FilterPopover } from './Table/FilterPopover'
+export type { FilterSearchProps } from './Table/FilterSearch'
+export { FilterSearch } from './Table/FilterSearch'
+export type {
+  ActiveFilter,
+  ColumnDef,
+  ColumnWithHeader,
+  DateRangeValue,
+  FilterConfig,
+  FilterMeta,
+  FilterOption,
+  FilterValue
+} from './Table/filterUtils'
+export {
+  createDateTimeFilter,
+  createDropdownFilter,
+  createFilterConfigByType,
+  createMultiselectFilter,
+  createTextFilter,
+  findColumn,
+  getColumnId,
+  getColumnLabel,
+  getRawOptions,
+  isDateRangeEmpty,
+  isDateRangeValue,
+  isEmptyArray,
+  isEmptyPrimitive,
+  isFilterValueEmpty,
+  isNumRangeEmpty,
+  isNumRangeValue,
+  normalizeFilterOptions
+} from './Table/filterUtils'
+export type { NumberRangeProps, NumRangeFilterType } from './Table/NumberRange'
+export { NumberRange } from './Table/NumberRange'
+export type { PaginationProps } from './Table/Pagination'
+export { Pagination } from './Table/Pagination'
+export type {
+  ReductionRangeFilterProps,
+  ReductionRangeFilterType,
+  ReductionRangeMode
+} from './Table/ReductionRangeFilter'
+export {
+  isReductionRangeEmpty,
+  REDUCTION_RANGE_LABELS,
+  REDUCTION_RANGE_MODES,
+  ReductionRangeFilter
+} from './Table/ReductionRangeFilter'
+export type { PaginationState, SortDirection, TableProps } from './Table/Table'
+export { Table } from './Table/Table'
+export type { TableFilterProps } from './Table/TableFilter'
+export { TableFilter } from './Table/TableFilter'
+export type { TableHeaderProps } from './Table/TableHeader'
+export { TableHeader } from './Table/TableHeader'
+export {
+  buildTableColumns,
+  extractColumnIds,
+  getCanShowFilter,
+  isSortableColumn
+} from './Table/tableUtils'
 export type { TableDrawerProps } from './TableDrawer'
 export { TableDrawer } from './TableDrawer'
 export type { TooltipProps } from './Tooltip'
