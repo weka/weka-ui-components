@@ -17,9 +17,8 @@
 }
 
 .minor {
-  @extend %severity-base;
-
-  background: $orange-600;
+  background: $orange-400;
+  color: $gray-950;
 }
 
 .warning {
