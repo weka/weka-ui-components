@@ -35,6 +35,7 @@ import styles from './select.module.scss'
 const DEFAULT_SEARCH_THRESHOLD = 8
 const DEFAULT_SEARCH_DEBOUNCE_MS = 300
 const DEFAULT_MIN_SEARCH_LENGTH = 2
+const MENU_MAX_HEIGHT = 300
 const SEARCH_FOCUS_DELAY_MS = 100
 const NO_HIGHLIGHT = -1
 const CHEVRON_ICON_SIZE = 16
@@ -122,8 +123,10 @@ export function Select({
 }: Readonly<SelectProps>) {
   const [searchQuery, setSearchQuery] = useState(EMPTY_STRING)
   const [isOpen, setIsOpen] = useState(false)
+  const [openUpward, setOpenUpward] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(NO_HIGHLIGHT)
   const formControlRef = useRef<HTMLDivElement | null>(null)
+  const selectFieldRef = useRef<HTMLDivElement | null>(null)
   const menuPaperRef = useRef<HTMLDivElement | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -271,12 +274,19 @@ export function Select({
   }
 
   const handleMenuOpen = () => {
+    const rect = (
+      selectFieldRef.current ?? formControlRef.current
+    )?.getBoundingClientRect()
+    const spaceBelow = rect ? window.innerHeight - rect.bottom : Infinity
+    const spaceAbove = rect ? rect.top : 0
+    setOpenUpward(spaceBelow < MENU_MAX_HEIGHT && spaceAbove > spaceBelow)
     setIsOpen(true)
     setSearchQuery(EMPTY_STRING)
   }
 
   const handleMenuClose = useCallback(() => {
     setIsOpen(false)
+    setOpenUpward(false)
     setSearchQuery(EMPTY_STRING)
     setHighlightedIndex(NO_HIGHLIGHT)
   }, [])
@@ -492,6 +502,7 @@ export function Select({
         </label>
       ) : null}
       <MuiSelect
+        ref={selectFieldRef}
         className={clsx(styles.select, multiple && styles.selectMultiple)}
         data-testid={dataTestId}
         displayEmpty
@@ -512,7 +523,7 @@ export function Select({
         MenuProps={{
           PaperProps: {
             ref: menuPaperRef,
-            className: styles.menuPaper,
+            className: clsx(styles.menuPaper, openUpward && styles.menuPaperUp),
             onKeyDown: handleKeyDown
           },
           MenuListProps: {
@@ -522,11 +533,11 @@ export function Select({
           disableAutoFocusItem: true,
           disableScrollLock: true,
           anchorOrigin: {
-            vertical: 'bottom',
+            vertical: openUpward ? 'top' : 'bottom',
             horizontal: 'left'
           },
           transformOrigin: {
-            vertical: 'top',
+            vertical: openUpward ? 'bottom' : 'top',
             horizontal: 'left'
           }
         }}
