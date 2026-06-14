@@ -33,11 +33,13 @@ const SEARCH_THRESHOLD_OPTIONS = 15
 const MAX_VISIBLE_CHIPS = 2
 const REMAINING_INDICATOR = '+1'
 const MENU_PAPER_UP_CLASS = 'menuPaperUp'
+const SELECT_FIELD_CLASS = 'select'
 const VIEWPORT_HEIGHT = 800
 const SPACE_BELOW_TOO_SMALL = 10
 const SPACE_ABOVE_LARGE = 780
 const SPACE_BELOW_LARGE = 740
 const SPACE_ABOVE_SMALL = 40
+const FORM_CONTROL_TOP_WITH_LABEL = 0
 
 const mockOptions: SelectOption[] = [
   { value: 'option1', label: OPTION_1 },
@@ -586,5 +588,36 @@ describe('Select - Menu placement', () => {
     expect(
       document.querySelector(`.${MENU_PAPER_UP_CLASS}`)
     ).not.toBeInTheDocument()
+  })
+
+  it('measures the select field, not the label, when deciding placement', async () => {
+    const fieldBottom = VIEWPORT_HEIGHT - SPACE_BELOW_TOO_SMALL
+    rectSpy = vi
+      .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+      .mockImplementation(function (this: HTMLElement) {
+        const isField = this.classList.contains(SELECT_FIELD_CLASS)
+        const top = isField ? SPACE_ABOVE_LARGE : FORM_CONTROL_TOP_WITH_LABEL
+        return {
+          top,
+          bottom: fieldBottom,
+          left: 0,
+          right: 0,
+          width: 0,
+          height: fieldBottom - top,
+          x: 0,
+          y: top,
+          toJSON: () => ({})
+        } as DOMRect
+      })
+    render(<Select {...createProps({ label: LABEL_TEXT })} />)
+
+    openSelect()
+
+    await waitFor(() => {
+      expect(screen.getByRole('listbox')).toBeInTheDocument()
+    })
+    expect(
+      document.querySelector(`.${MENU_PAPER_UP_CLASS}`)
+    ).toBeInTheDocument()
   })
 })

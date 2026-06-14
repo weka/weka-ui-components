@@ -126,6 +126,7 @@ export function Select({
   const [openUpward, setOpenUpward] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(NO_HIGHLIGHT)
   const formControlRef = useRef<HTMLDivElement | null>(null)
+  const selectFieldRef = useRef<HTMLDivElement | null>(null)
   const menuPaperRef = useRef<HTMLDivElement | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -273,7 +274,9 @@ export function Select({
   }
 
   const handleMenuOpen = () => {
-    const rect = formControlRef.current?.getBoundingClientRect()
+    const rect = (
+      selectFieldRef.current ?? formControlRef.current
+    )?.getBoundingClientRect()
     const spaceBelow = rect ? window.innerHeight - rect.bottom : Infinity
     const spaceAbove = rect ? rect.top : 0
     setOpenUpward(spaceBelow < MENU_MAX_HEIGHT && spaceAbove > spaceBelow)
@@ -499,6 +502,7 @@ export function Select({
         </label>
       ) : null}
       <MuiSelect
+        ref={selectFieldRef}
         className={clsx(styles.select, multiple && styles.selectMultiple)}
         data-testid={dataTestId}
         displayEmpty
