@@ -7,7 +7,7 @@ import {
   screen,
   waitFor
 } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   EMPTY_STRING,
@@ -32,6 +32,12 @@ const ANY_VALUE = 'any'
 const SEARCH_THRESHOLD_OPTIONS = 15
 const MAX_VISIBLE_CHIPS = 2
 const REMAINING_INDICATOR = '+1'
+const MENU_PAPER_UP_CLASS = 'menuPaperUp'
+const VIEWPORT_HEIGHT = 800
+const SPACE_BELOW_TOO_SMALL = 10
+const SPACE_ABOVE_LARGE = 780
+const SPACE_BELOW_LARGE = 740
+const SPACE_ABOVE_SMALL = 40
 
 const mockOptions: SelectOption[] = [
   { value: 'option1', label: OPTION_1 },
@@ -513,5 +519,72 @@ describe('Select - Empty state', () => {
     await waitFor(() => {
       expect(screen.getByText(NO_OPTIONS_TEXT)).toBeInTheDocument()
     })
+  })
+})
+
+describe('Select - Menu placement', () => {
+  let rectSpy: ReturnType<typeof vi.spyOn> | undefined
+  let originalInnerHeight: number
+
+  const mockControlSpace = (spaceAbove: number, spaceBelow: number) => {
+    const top = spaceAbove
+    const bottom = VIEWPORT_HEIGHT - spaceBelow
+    rectSpy = vi
+      .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+      .mockReturnValue({
+        top,
+        bottom,
+        left: 0,
+        right: 0,
+        width: 0,
+        height: bottom - top,
+        x: 0,
+        y: top,
+        toJSON: () => ({})
+      } as DOMRect)
+  }
+
+  beforeEach(() => {
+    originalInnerHeight = window.innerHeight
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: VIEWPORT_HEIGHT
+    })
+  })
+
+  afterEach(() => {
+    rectSpy?.mockRestore()
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: originalInnerHeight
+    })
+  })
+
+  it('opens the menu upward when there is not enough space below', async () => {
+    mockControlSpace(SPACE_ABOVE_LARGE, SPACE_BELOW_TOO_SMALL)
+    render(<Select {...createProps()} />)
+
+    openSelect()
+
+    await waitFor(() => {
+      expect(screen.getByRole('listbox')).toBeInTheDocument()
+    })
+    expect(
+      document.querySelector(`.${MENU_PAPER_UP_CLASS}`)
+    ).toBeInTheDocument()
+  })
+
+  it('opens the menu downward when there is enough space below', async () => {
+    mockControlSpace(SPACE_ABOVE_SMALL, SPACE_BELOW_LARGE)
+    render(<Select {...createProps()} />)
+
+    openSelect()
+
+    await waitFor(() => {
+      expect(screen.getByRole('listbox')).toBeInTheDocument()
+    })
+    expect(
+      document.querySelector(`.${MENU_PAPER_UP_CLASS}`)
+    ).not.toBeInTheDocument()
   })
 })

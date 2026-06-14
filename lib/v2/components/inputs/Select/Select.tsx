@@ -274,17 +274,16 @@ export function Select({
 
   const handleMenuOpen = () => {
     const rect = formControlRef.current?.getBoundingClientRect()
-    if (rect) {
-      const spaceBelow = window.innerHeight - rect.bottom
-      const spaceAbove = rect.top
-      setOpenUpward(spaceBelow < MENU_MAX_HEIGHT && spaceAbove > spaceBelow)
-    }
+    const spaceBelow = rect ? window.innerHeight - rect.bottom : Infinity
+    const spaceAbove = rect ? rect.top : 0
+    setOpenUpward(spaceBelow < MENU_MAX_HEIGHT && spaceAbove > spaceBelow)
     setIsOpen(true)
     setSearchQuery(EMPTY_STRING)
   }
 
   const handleMenuClose = useCallback(() => {
     setIsOpen(false)
+    setOpenUpward(false)
     setSearchQuery(EMPTY_STRING)
     setHighlightedIndex(NO_HIGHLIGHT)
   }, [])
