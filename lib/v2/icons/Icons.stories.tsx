@@ -7,21 +7,33 @@ import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
 import { ChevronDownSmallIcon } from './ChevronDownSmallIcon'
+import { ChevronLeftIcon } from './ChevronLeftIcon'
 import { CloseIcon } from './CloseIcon'
 import { CloseRoundedIcon } from './CloseRoundedIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
+import { ConfigureIcon } from './ConfigureIcon'
+import { DarkModeIcon } from './DarkModeIcon'
 import { DateTimeIcon } from './DateTimeIcon'
 import { DownloadIcon } from './DownloadIcon'
 import { FilterIcon } from './FilterIcon'
 import { InfoIcon } from './InfoIcon'
+import { InvestigateIcon } from './InvestigateIcon'
+import { LightModeIcon } from './LightModeIcon'
 import { LinkIcon } from './LinkIcon'
+import { LogoutIcon } from './LogoutIcon'
+import { ManageIcon } from './ManageIcon'
+import { MonitorIcon } from './MonitorIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
+import { NotificationsIcon } from './NotificationsIcon'
 import { ResetIcon } from './ResetIcon'
 import { SearchIcon } from './SearchIcon'
 import { SettingsIcon } from './SettingsIcon'
 import { SortIcon } from './SortIcon'
 import { SortUpDownIcon } from './SortUpDownIcon'
+import { SwapIcon } from './SwapIcon'
+import { ThreeDotsMenuIcon } from './ThreeDotsMenuIcon'
+import { VcheckFillIcon } from './VcheckFillIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
 import { WarningIcon } from './WarningIcon'
 import { WarningTriangleIcon } from './WarningTriangleIcon'
@@ -92,6 +104,10 @@ export const GeneralIcons: Story = {
         <span>ChevronDownSmallIcon</span>
       </div>
       <div style={rowStyle}>
+        <ChevronLeftIcon />
+        <span>ChevronLeftIcon</span>
+      </div>
+      <div style={rowStyle}>
         <CloseIcon />
         <span>CloseIcon</span>
       </div>
@@ -102,6 +118,14 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <CloseWithBgIcon />
         <span>CloseWithBgIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <ConfigureIcon />
+        <span>ConfigureIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <DarkModeIcon />
+        <span>DarkModeIcon</span>
       </div>
       <div style={rowStyle}>
         <DateTimeIcon />
@@ -120,8 +144,28 @@ export const GeneralIcons: Story = {
         <span>InfoIcon</span>
       </div>
       <div style={rowStyle}>
+        <InvestigateIcon />
+        <span>InvestigateIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <LightModeIcon />
+        <span>LightModeIcon</span>
+      </div>
+      <div style={rowStyle}>
         <LinkIcon />
         <span>LinkIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <LogoutIcon />
+        <span>LogoutIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <ManageIcon />
+        <span>ManageIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <MonitorIcon />
+        <span>MonitorIcon</span>
       </div>
       <div style={rowStyle}>
         <NavChevronLeftIcon />
@@ -130,6 +174,10 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <NavChevronRightIcon />
         <span>NavChevronRightIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <NotificationsIcon />
+        <span>NotificationsIcon</span>
       </div>
       <div style={rowStyle}>
         <ResetIcon />
@@ -164,6 +212,18 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <SortUpDownIcon />
         <span>SortUpDownIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <SwapIcon />
+        <span>SwapIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <ThreeDotsMenuIcon />
+        <span>ThreeDotsMenuIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <VcheckFillIcon height={24} width={24} />
+        <span>VcheckFillIcon</span>
       </div>
       <div style={rowStyle}>
         <WarningCircleIcon />

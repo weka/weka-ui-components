@@ -89,6 +89,15 @@ export {
   ALERT_ICON_SHAPES,
   GradientAlertIcon
 } from './GradientAlertIcon'
+export type { HeaderProps } from './Header'
+export { Header } from './Header'
+export type {
+  HeaderMetaBannerProps,
+  HeaderMetaItem
+} from './HeaderMetaBanner'
+export { HeaderMetaBanner } from './HeaderMetaBanner'
+export type { IconButtonProps } from './IconButton'
+export { IconButton } from './IconButton'
 export type { MultiSelectAutocompleteProps } from './inputs/MultiSelectAutocomplete'
 export { MultiSelectAutocomplete } from './inputs/MultiSelectAutocomplete'
 export type { NumberInputProps } from './inputs/NumberInput'
@@ -104,7 +113,7 @@ export { LoadingState } from './LoadingState'
 export type { LoginFieldProps, LoginFieldType } from './LoginField'
 export { LOGIN_FIELD_TYPES, LoginField } from './LoginField'
 export type { MenuPopoverProps } from './MenuPopover'
-export { MenuPopover } from './MenuPopover'
+export { MENU_POPOVER_STYLES, MenuPopover } from './MenuPopover'
 export type { MiniPaginationProps } from './MiniPagination'
 export { MiniPagination } from './MiniPagination'
 export type { NumInputSpinButtonProps } from './NumInputSpinButton'
@@ -128,6 +137,8 @@ export {
   getSeverityChip,
   SeverityChip
 } from './SeverityChip'
+export type { SidebarItem, SidebarProps, SidebarSubItem } from './Sidebar'
+export { Sidebar } from './Sidebar'
 export type {
   ExpandableTextProps,
   SimpleTableColumn,
