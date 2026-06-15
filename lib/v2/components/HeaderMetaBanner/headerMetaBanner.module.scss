@@ -1,0 +1,38 @@
+.metaBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 8px;
+  background: var(--gray-100-900);
+}
+
+.metaAtom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.15px;
+  white-space: nowrap;
+}
+
+.metaLabel {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  color: var(--gray-920-50);
+}
+
+.metaValue {
+  display: inline-flex;
+  align-items: center;
+  color: var(--purple-800-200);
+}
+
+.spacer {
+  width: 1px;
+  height: 12px;
+  margin: 0 2px;
+  background: var(--gray-400-600);
+}

@@ -1,0 +1,48 @@
+@use '../../styles/colors' as *;
+
+.iconButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+
+  &:hover {
+    background: var(--icon-bg-hover);
+  }
+
+  &:active {
+    background: var(--icon-bg-active);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+    background: transparent;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 5px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 12px;
+  padding: 2px;
+  border-radius: 8px;
+  background: $red-300;
+  color: $gray-0;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+}

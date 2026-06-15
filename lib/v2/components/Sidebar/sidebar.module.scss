@@ -1,0 +1,208 @@
+@use '../../styles/colors' as *;
+
+.sidebar,
+.sidebar * {
+  box-sizing: border-box;
+}
+
+.sidebar {
+  z-index: 20;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 64px;
+  position: relative;
+  overflow: visible;
+  font-family: var(--body-font, 'IBM Plex Sans', 'Exo 2', 'Roboto', sans-serif);
+  color: $gray-0;
+  background: linear-gradient(0deg, #0f051a 13.47%, #4b2370 88.95%);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgb(255 255 255 / 10%);
+  transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+  transform: translateZ(0);
+
+  &.expanded {
+    width: 256px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
+
+    .logoCompact {
+      opacity: 0;
+    }
+
+    .logoFull {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 5;
+    }
+  }
+
+  &:not(.expanded) {
+    .logoCompact {
+      opacity: 1;
+    }
+
+    .logoFull {
+      opacity: 0;
+    }
+  }
+
+  &:hover .expandButton,
+  & .expandButton:focus-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.headerSection {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 11px;
+}
+
+.expandButton {
+  position: absolute;
+  top: 25px;
+  right: -25px;
+  z-index: 21;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 32px;
+  padding: 8px 4px;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  background: $fuchsia-400;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    background: $fuchsia-300;
+  }
+
+  &:active {
+    background: $fuchsia-500;
+  }
+}
+
+.expandIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+
+  &.rotated {
+    transform: rotate(0deg);
+  }
+}
+
+.topLogoWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  padding: 8px 16px;
+  cursor: pointer;
+
+  .logoCompact {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 20%));
+    transition: opacity 300ms ease;
+  }
+
+  .logoFull {
+    position: absolute;
+    left: 50%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 20%));
+    transition: opacity 300ms ease;
+  }
+}
+
+.nav {
+  flex: 1;
+  margin-top: 0;
+  position: relative;
+
+  > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /*
+   * Scroll only when expanded: the collapsed rail renders hover flyouts
+   * outside the sidebar, which any non-visible overflow would clip.
+   */
+  .sidebar.expanded & {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+.separator {
+  width: calc(100% - 24px);
+  height: 1px;
+  margin: 8px 12px;
+  background: $purple-200;
+}
+
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 16px;
+  padding-bottom: 1rem;
+
+  .bottomNav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

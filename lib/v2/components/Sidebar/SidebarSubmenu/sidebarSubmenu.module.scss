@@ -1,0 +1,206 @@
+@use '../../../styles/colors' as *;
+
+.subItems {
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.subItems.flyout {
+  position: absolute;
+  top: -8px;
+  left: 64px;
+  z-index: 100;
+  width: 216px;
+  margin-top: 0;
+  padding: 12px 8px 12px 16px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 8px;
+    z-index: -1;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 4px;
+    background: var(--gray-100-900);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    pointer-events: none;
+  }
+
+  .submenuList {
+    margin-left: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.submenuList {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 0 0 38px;
+  padding: 0;
+  list-style: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -15px;
+    width: 1px;
+    background: $purple-200;
+    pointer-events: none;
+  }
+}
+
+.subItem {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.subNavLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  margin: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+
+  .navLinkText {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &:hover {
+    color: $gray-0;
+    background: $fuchsia-300;
+  }
+
+  &.active {
+    color: $gray-0;
+    background: $fuchsia-500;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: $fuchsia-500;
+  color: $gray-0;
+  font-size: 11px;
+}
+
+.default {
+  background: $fuchsia-500;
+}
+
+.simplebarContainer {
+  width: 100%;
+  height: 100%;
+  max-height: 216px;
+
+  :global {
+    .simplebar-wrapper {
+      max-height: 216px;
+    }
+
+    .simplebar-mask {
+      z-index: auto;
+    }
+
+    .simplebar-content-wrapper {
+      max-height: 216px;
+      overflow-x: hidden !important;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .simplebar-content {
+      max-height: 216px;
+    }
+
+    .simplebar-track {
+      &.simplebar-horizontal {
+        display: none !important;
+      }
+
+      &.simplebar-vertical {
+        left: -17px;
+        width: 5px;
+        z-index: 10;
+        background: transparent !important;
+        border: none !important;
+        opacity: 1 !important;
+
+        &::after {
+          display: none !important;
+        }
+      }
+    }
+
+    .simplebar-scrollbar {
+      width: 5px !important;
+      left: 0 !important;
+      right: auto !important;
+      border: none !important;
+      border-radius: 0;
+      background: $fuchsia-500 !important;
+      opacity: 1 !important;
+
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        background: $fuchsia-500 !important;
+        opacity: 1 !important;
+      }
+
+      &:hover {
+        background: $fuchsia-400 !important;
+
+        &::before {
+          background: $fuchsia-400 !important;
+        }
+      }
+    }
+
+    .simplebar-horizontal {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+    }
+  }
+}

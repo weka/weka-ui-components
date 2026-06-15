@@ -9,3 +9,26 @@
 .capitalizedText {
   text-transform: capitalize;
 }
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--gray-400-600) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--gray-400-600);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--scrollbar-thumb);
+  }
+}

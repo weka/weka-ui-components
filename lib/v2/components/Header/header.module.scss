@@ -1,0 +1,40 @@
+.header,
+.header * {
+  box-sizing: border-box;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  height: 52px;
+  padding: 0 24px;
+  background: transparent;
+  border-bottom: 1px solid var(--gray-400-600);
+  color: var(--gray-920-50);
+  font-family: var(--body-font, 'IBM Plex Sans', 'Exo 2', 'Roboto', sans-serif);
+}
+
+.leftContent {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.centerContent {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.rightContent {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
