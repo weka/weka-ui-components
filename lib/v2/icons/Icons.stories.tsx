@@ -26,6 +26,7 @@ import { MonitorIcon } from './MonitorIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
 import { NotificationsIcon } from './NotificationsIcon'
+import { PauseIcon } from './PauseIcon'
 import { ResetIcon } from './ResetIcon'
 import { SearchIcon } from './SearchIcon'
 import { SettingsIcon } from './SettingsIcon'
@@ -178,6 +179,13 @@ export const GeneralIcons: Story = {
       <div style={rowStyle}>
         <NotificationsIcon />
         <span>NotificationsIcon</span>
+      </div>
+      <div style={rowStyle}>
+        <PauseIcon
+          height={16}
+          width={16}
+        />
+        <span>PauseIcon</span>
       </div>
       <div style={rowStyle}>
         <ResetIcon />
