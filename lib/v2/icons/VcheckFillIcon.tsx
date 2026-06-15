@@ -1,5 +1,4 @@
 const DEFAULT_SIZE = 54
-const DEFAULT_FILL = '#3D994B'
 
 export interface VcheckFillIconProps {
   extraClass?: string
@@ -10,7 +9,7 @@ export interface VcheckFillIconProps {
 
 export function VcheckFillIcon({
   extraClass,
-  fill = DEFAULT_FILL,
+  fill = 'currentColor',
   width = DEFAULT_SIZE,
   height = DEFAULT_SIZE
 }: Readonly<VcheckFillIconProps>) {
