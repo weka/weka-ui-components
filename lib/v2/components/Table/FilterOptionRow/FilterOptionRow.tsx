@@ -20,6 +20,7 @@ export interface FilterOptionRowProps {
   shouldHighlightMatches?: boolean
   dataOptionIndex?: number
   dataTestId?: string
+  disabled?: boolean
 }
 
 const HIGHLIGHT_ELEMENT = 'span'
@@ -34,7 +35,8 @@ export function FilterOptionRow({
   searchQuery,
   shouldHighlightMatches = false,
   dataOptionIndex,
-  dataTestId
+  dataTestId,
+  disabled = false
 }: Readonly<FilterOptionRowProps>) {
   const renderLabel = () => {
     if (shouldHighlightMatches && searchQuery) {
@@ -52,17 +54,22 @@ export function FilterOptionRow({
     <div
       data-option-index={dataOptionIndex}
       {...(dataTestId && { 'data-testid': dataTestId })}
-      tabIndex={0}
+      tabIndex={disabled ? -1 : 0}
       className={clsx(styles.filterOptionWrapper, {
-        [styles.hovered]: isHovered
+        [styles.hovered]: isHovered && !disabled,
+        [styles.disabled]: disabled
       })}
       onClick={(e) => {
         e.stopPropagation()
+        if (disabled) {
+          return
+        }
         onChange(isSelected)
       }}
     >
       <Checkbox
         checked={isSelected}
+        disabled={disabled}
         onChange={onChange}
       />
       {chipElement ? (

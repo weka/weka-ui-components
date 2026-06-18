@@ -117,6 +117,37 @@ describe('FilterOptionRow - selection', () => {
   })
 })
 
+describe('FilterOptionRow - disabled', () => {
+  it('does not invoke onChange when the checkbox is clicked while disabled', () => {
+    const onChange = vi.fn()
+    render(
+      <FilterOptionRow
+        disabled
+        isSelected
+        label={OPTION_LABEL}
+        onChange={onChange}
+      />
+    )
+    fireEvent.click(screen.getByRole('checkbox'))
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('does not invoke onChange when the row is clicked while disabled', () => {
+    const onChange = vi.fn()
+    render(
+      <FilterOptionRow
+        dataTestId={OPTION_TEST_ID}
+        disabled
+        isSelected
+        label={OPTION_LABEL}
+        onChange={onChange}
+      />
+    )
+    fireEvent.click(screen.getByTestId(OPTION_TEST_ID))
+    expect(onChange).not.toHaveBeenCalled()
+  })
+})
+
 describe('FilterOptionRow - highlighting', () => {
   it('wraps the matched substring in its own element when highlighting is enabled', () => {
     render(

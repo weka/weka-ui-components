@@ -218,3 +218,55 @@ describe('Checkbox', () => {
     })
   })
 })
+
+describe('Checkbox - disabled', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('does not call onChange when clicked while disabled', () => {
+    const handleChange = vi.fn()
+    render(
+      <Checkbox
+        checked
+        disabled
+        onChange={handleChange}
+      />
+    )
+
+    fireEvent.click(screen.getByTestId('custom-checkbox'))
+
+    expect(handleChange).not.toHaveBeenCalled()
+  })
+
+  it('does not call onChange on keyboard activation while disabled', () => {
+    const handleChange = vi.fn()
+    render(
+      <Checkbox
+        checked
+        disabled
+        onChange={handleChange}
+      />
+    )
+
+    const checkbox = screen.getByTestId('custom-checkbox')
+    fireEvent.keyDown(checkbox, { key: ' ' })
+    fireEvent.keyDown(checkbox, { key: 'Enter' })
+
+    expect(handleChange).not.toHaveBeenCalled()
+  })
+
+  it('exposes the disabled state through aria-disabled and tabIndex', () => {
+    render(
+      <Checkbox
+        checked
+        disabled
+        onChange={vi.fn()}
+      />
+    )
+
+    const checkbox = screen.getByTestId('custom-checkbox')
+    expect(checkbox).toHaveAttribute('aria-disabled', 'true')
+    expect(checkbox).toHaveAttribute('tabindex', '-1')
+  })
+})

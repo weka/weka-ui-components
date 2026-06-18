@@ -8,3 +8,8 @@
     color: var(--gray-850-150);
   }
 }
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
