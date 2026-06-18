@@ -1,17 +1,42 @@
 import type { ActiveFilter } from '../filterUtils'
+import type { ComponentProps } from 'react'
 
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within
+} from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { TableHeader } from './TableHeader'
 
+type MockTable = ComponentProps<typeof TableHeader>['table']
+
+const createTableMock = (
+  columnVisibility: Record<string, boolean>,
+  setColumnVisibility = vi.fn()
+): MockTable =>
+  ({
+    getState: () => ({ columnVisibility }),
+    getFilteredRowModel: () => ({ rows: [] }),
+    setColumnVisibility
+  }) as unknown as MockTable
+
 const COLUMNS = [
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'region', header: 'Region' }
 ]
 const SAMPLE_DATA = [{ name: 'a', region: 'us-east-1' }]
+const SETTINGS_BUTTON_TESTID = 'table-settings-button'
+const NAME_OPTION_TESTID = 'table-settings-column-option-name'
+const REGION_OPTION_TESTID = 'table-settings-column-option-region'
+const CHECKBOX_TESTID = 'custom-checkbox'
+const ARIA_DISABLED = 'aria-disabled'
+const ARIA_DISABLED_FALSE = 'false'
 const ACTIVE_FILTERS: ActiveFilter[] = [
   {
     columnId: 'region',
@@ -66,14 +91,74 @@ describe('TableHeader', () => {
         title='Clusters'
       />
     )
-    fireEvent.click(screen.getByTestId('table-settings-button'))
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
     expect(screen.getByTestId('table-settings-menu')).toBeInTheDocument()
-    expect(
-      screen.getByTestId('table-settings-column-option-name')
-    ).toBeInTheDocument()
-    expect(
-      screen.getByTestId('table-settings-column-option-region')
-    ).toBeInTheDocument()
+    expect(screen.getByTestId(NAME_OPTION_TESTID)).toBeInTheDocument()
+    expect(screen.getByTestId(REGION_OPTION_TESTID)).toBeInTheDocument()
+  })
+
+  it('disables the toggle for the only remaining visible column', () => {
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        table={createTableMock({ region: false })}
+        title='Clusters'
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+
+    const nameOption = screen.getByTestId(NAME_OPTION_TESTID)
+    const regionOption = screen.getByTestId(REGION_OPTION_TESTID)
+    expect(within(nameOption).getByTestId(CHECKBOX_TESTID)).toHaveAttribute(
+      ARIA_DISABLED,
+      'true'
+    )
+    expect(within(regionOption).getByTestId(CHECKBOX_TESTID)).toHaveAttribute(
+      ARIA_DISABLED,
+      ARIA_DISABLED_FALSE
+    )
+  })
+
+  it('does not hide the last visible column when its disabled toggle is clicked', () => {
+    const setColumnVisibility = vi.fn()
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        table={createTableMock({ region: false }, setColumnVisibility)}
+        title='Clusters'
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+
+    const nameOption = screen.getByTestId(NAME_OPTION_TESTID)
+    fireEvent.click(within(nameOption).getByTestId(CHECKBOX_TESTID))
+
+    expect(setColumnVisibility).not.toHaveBeenCalled()
+  })
+
+  it('keeps both toggles enabled while more than one column is visible', () => {
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        table={createTableMock({})}
+        title='Clusters'
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+
+    const nameOption = screen.getByTestId(NAME_OPTION_TESTID)
+    const regionOption = screen.getByTestId(REGION_OPTION_TESTID)
+    expect(within(nameOption).getByTestId(CHECKBOX_TESTID)).toHaveAttribute(
+      ARIA_DISABLED,
+      ARIA_DISABLED_FALSE
+    )
+    expect(within(regionOption).getByTestId(CHECKBOX_TESTID)).toHaveAttribute(
+      ARIA_DISABLED,
+      ARIA_DISABLED_FALSE
+    )
   })
 
   it('renders filter chips for active filters', () => {

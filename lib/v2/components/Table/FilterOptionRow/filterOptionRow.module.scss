@@ -19,6 +19,19 @@
   background-color: var(--bg-item-hover);
 }
 
+.disabled {
+  cursor: not-allowed;
+
+  &:hover,
+  &:active {
+    background-color: transparent;
+  }
+
+  .checkboxLabel {
+    color: var(--gray-600-400);
+  }
+}
+
 .checkboxLabel {
   flex: 1;
   min-width: 0;

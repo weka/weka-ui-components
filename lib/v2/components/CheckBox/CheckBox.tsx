@@ -15,13 +15,15 @@ export interface CheckboxProps {
   onChange: (checked: boolean) => void
   wrapperClass?: string
   partiallyChecked?: boolean
+  disabled?: boolean
 }
 
 export function Checkbox({
   checked,
   onChange,
   partiallyChecked,
-  wrapperClass
+  wrapperClass,
+  disabled = false
 }: Readonly<CheckboxProps>) {
   function getIcon() {
     if (partiallyChecked) {
@@ -38,15 +40,22 @@ export function Checkbox({
   return (
     <div
       aria-checked={partiallyChecked ? 'mixed' : checked}
-      className={clsx(styles.checkbox, wrapperClass)}
+      aria-disabled={disabled}
+      className={clsx(styles.checkbox, disabled && styles.disabled, wrapperClass)}
       data-testid='custom-checkbox'
       role='checkbox'
-      tabIndex={0}
+      tabIndex={disabled ? -1 : 0}
       onClick={(event) => {
         event?.stopPropagation()
+        if (disabled) {
+          return
+        }
         onChange(!checked)
       }}
       onKeyDown={(event) => {
+        if (disabled) {
+          return
+        }
         if (
           event.key === KEYBOARD_KEYS.SPACE ||
           event.key === KEYBOARD_KEYS.ENTER

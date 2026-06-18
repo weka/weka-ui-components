@@ -24,6 +24,7 @@ import styles from './tableHeader.module.scss'
 const SETTINGS_MENU_HEIGHT = 250
 const SETTINGS_MENU_MARGIN = 4
 const VISIBILITY_STATE_SYNC_DELAY = 50
+const MIN_VISIBLE_COLUMNS = 1
 const NAME_COLUMN_IDS = ['name', 'filename', 'clusterName']
 const MIN_SEARCH_LENGTH = 2
 const DOWNLOAD_ICON_SIZE = 28
@@ -486,6 +487,11 @@ export function TableHeader({
         }
       : undefined
 
+    const visibleColumnCount = columns.filter((col) => {
+      const columnId = getColumnId(col)
+      return columnId !== undefined && columnVisibility[columnId] !== false
+    }).length
+
     return (
       <div
         data-testid='table-settings-menu'
@@ -504,12 +510,17 @@ export function TableHeader({
             }
             const header =
               typeof col.header === 'string' ? col.header : columnId
+            const isSelected = columnVisibility[columnId] !== false
+
+            const isLastVisibleColumn =
+              isSelected && visibleColumnCount <= MIN_VISIBLE_COLUMNS
 
             return (
               <FilterOptionRow
                 key={columnId}
                 dataTestId={`table-settings-column-option-${columnId}`}
-                isSelected={columnVisibility[columnId] !== false}
+                disabled={isLastVisibleColumn}
+                isSelected={isSelected}
                 label={header}
                 onChange={() => handleColumnVisibilityToggle(columnId)}
               />
