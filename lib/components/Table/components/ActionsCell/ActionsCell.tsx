@@ -1,8 +1,9 @@
 import type { menuItem } from '../../../MenuPopper/MenuPopper'
 import type { ExtendedRow, RowAction } from '../../types'
 
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { IconButton } from '@mui/material'
+
 import { useToggle } from '#hooks'
 import svgs from '#svgs'
 
@@ -25,21 +26,23 @@ function ActionsCell<Data>({
 }: ActionsCellProps<Data>) {
   const [isPopperOpen, togglePopper] = useToggle(false)
   const anchorRef = useRef<HTMLDivElement | null>(null)
+
   const formatActions = actions
     .filter(({ hideAction }) => {
       if (hideAction instanceof Function) {
-        return !hideAction?.(row.original)
+        return !hideAction?.(row.original, row)
       }
       return !hideAction
     })
     .map(({ action, content, disabled, ...rest }) => ({
       ...rest,
-      content: content instanceof Function ? content(row.original) : content,
+      content:
+        content instanceof Function ? content(row.original, row) : content,
       disabled:
-        disabled instanceof Function ? disabled(row.original) : disabled,
+        disabled instanceof Function ? disabled(row.original, row) : disabled,
       ...(action && {
         onClick: () => {
-          action(row.original)
+          action(row.original, row)
         }
       })
     }))
