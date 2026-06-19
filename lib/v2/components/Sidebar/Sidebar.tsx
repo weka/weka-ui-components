@@ -45,49 +45,57 @@ export function Sidebar({
   )
 
   return (
-    <aside
-      className={clsx(styles.sidebar, isExpanded && styles.expanded, extraClass)}
-      data-testid={dataTestId}
-    >
-      <button
-        aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
-        className={styles.expandButton}
-        onClick={() => setIsExpanded((prev) => !prev)}
-        type='button'
+    <div className={styles.sidebarRail}>
+      <aside
+        data-testid={dataTestId}
+        className={clsx(
+          styles.sidebar,
+          isExpanded && styles.expanded,
+          extraClass
+        )}
       >
-        <span
-          className={clsx(
-            styles.expandIconWrapper,
-            isExpanded && styles.rotated
-          )}
+        <button
+          aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+          className={styles.expandButton}
+          onClick={() => setIsExpanded((prev) => !prev)}
+          type='button'
         >
-          <ChevronLeftIcon
-            color='white'
-            height={EXPAND_CHEVRON_HEIGHT}
-            width={EXPAND_CHEVRON_WIDTH}
-          />
-        </span>
-      </button>
-      <div className={styles.sidebarContent}>
-        {logo || logoCollapsed ? (
-          <div className={styles.headerSection}>
-            <div className={styles.topLogoWrapper}>
-              <div className={styles.logoCompact}>{logoCollapsed ?? logo}</div>
-              <div className={styles.logoFull}>{logo}</div>
+          <span
+            className={clsx(
+              styles.expandIconWrapper,
+              isExpanded && styles.rotated
+            )}
+          >
+            <ChevronLeftIcon
+              color='white'
+              height={EXPAND_CHEVRON_HEIGHT}
+              width={EXPAND_CHEVRON_WIDTH}
+            />
+          </span>
+        </button>
+        <div className={styles.sidebarContent}>
+          {logo || logoCollapsed ? (
+            <div className={styles.headerSection}>
+              <div className={styles.topLogoWrapper}>
+                <div className={styles.logoCompact}>
+                  {logoCollapsed ?? logo}
+                </div>
+                <div className={styles.logoFull}>{logo}</div>
+              </div>
             </div>
-          </div>
-        ) : null}
-        <nav className={styles.nav}>
-          <ul>{items.map(renderItem)}</ul>
-        </nav>
-        {footerItems?.length ? (
-          <div className={styles.bottomSection}>
-            <div className={styles.bottomNav}>
-              <ul>{footerItems.map(renderItem)}</ul>
+          ) : null}
+          <nav className={styles.nav}>
+            <ul>{items.map(renderItem)}</ul>
+          </nav>
+          {footerItems?.length ? (
+            <div className={styles.bottomSection}>
+              <div className={styles.bottomNav}>
+                <ul>{footerItems.map(renderItem)}</ul>
+              </div>
             </div>
-          </div>
-        ) : null}
-      </div>
-    </aside>
+          ) : null}
+        </div>
+      </aside>
+    </div>
   )
 }

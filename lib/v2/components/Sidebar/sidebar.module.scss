@@ -5,19 +5,32 @@
   box-sizing: border-box;
 }
 
-.sidebar {
-  z-index: 20;
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
+/*
+ * The rail keeps a constant 64px footprint in normal flow so expanding the
+ * sidebar never reflows sibling content (e.g. dashboard charts). The panel
+ * itself is taken out of flow and overlays the content when expanded.
+ */
+.sidebarRail {
+  position: relative;
   flex-shrink: 0;
   width: 64px;
-  position: relative;
+  height: 100vh;
+  z-index: 20;
+}
+
+.sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width: 64px;
   overflow: visible;
   font-family: var(--body-font, 'IBM Plex Sans', 'Exo 2', 'Roboto', sans-serif);
   color: $gray-0;
   background: linear-gradient(0deg, #0f051a 13.47%, #4b2370 88.95%);
-  backdrop-filter: blur(10px);
   border-right: 1px solid rgb(255 255 255 / 10%);
   transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: width;
