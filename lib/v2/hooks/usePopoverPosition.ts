@@ -15,6 +15,7 @@ const DEFAULT_SCROLL_THRESHOLD_PX = 50
 interface UsePopoverPositionOptions {
   offset?: number
   scrollCloseThreshold?: number
+  contentRef?: RefObject<HTMLElement>
 }
 
 interface UsePopoverPositionResult {
@@ -33,7 +34,8 @@ export function usePopoverPosition(
 ): UsePopoverPositionResult {
   const {
     offset = DEFAULT_OFFSET_PX,
-    scrollCloseThreshold = DEFAULT_SCROLL_THRESHOLD_PX
+    scrollCloseThreshold = DEFAULT_SCROLL_THRESHOLD_PX,
+    contentRef
   } = options
 
   const initialAnchorTop = useRef<number | null>(null)
@@ -48,13 +50,31 @@ export function usePopoverPosition(
     if (!rect) {
       return { position: 'fixed', visibility: 'hidden' }
     }
+    const right = window.innerWidth - rect.right
+    const contentHeight = contentRef?.current?.offsetHeight ?? 0
+    const spaceBelow = window.innerHeight - rect.bottom
+
+    const openUp =
+      contentHeight > 0 &&
+      contentHeight + offset > spaceBelow &&
+      rect.top > spaceBelow
+
+    if (openUp) {
+      return {
+        position: 'fixed',
+        bottom: window.innerHeight - rect.top + offset,
+        visibility: 'visible',
+        right
+      }
+    }
+
     return {
       position: 'fixed',
       top: rect.bottom + offset,
-      right: window.innerWidth - rect.right,
-      visibility: 'visible'
+      visibility: 'visible',
+      right
     }
-  }, [anchorRef, offset])
+  }, [anchorRef, offset, contentRef])
 
   const [position, setPosition] = useState<CSSProperties>({
     position: 'fixed',

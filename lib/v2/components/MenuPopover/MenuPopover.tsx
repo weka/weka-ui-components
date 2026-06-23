@@ -34,7 +34,9 @@ export function MenuPopover({
     enabled: open
   })
 
-  const { position } = usePopoverPosition(open, anchorRef, onClose)
+  const { position } = usePopoverPosition(open, anchorRef, onClose, {
+    contentRef: popRef as unknown as RefObject<HTMLElement>
+  })
 
   if (!open) {
     return null

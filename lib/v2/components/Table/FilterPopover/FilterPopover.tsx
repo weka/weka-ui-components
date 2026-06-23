@@ -8,7 +8,7 @@ import clsx from 'clsx'
 import { DateTime } from 'luxon'
 
 import { useFilterKeyboardNavigation } from '#v2/hooks'
-import { EMPTY_STRING, FILTER_TYPES } from '#v2/utils/consts'
+import { EMPTY_STRING, FILTER_TYPES, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { ChevronDownSmallIcon, FilterIcon } from '../../../icons'
 import { Button } from '../../Button'
@@ -463,8 +463,27 @@ function FilterPopover({
     })
   }
 
+  const renderTextFilter = () => (
+    <input
+      autoFocus
+      className={styles.textFilterInput}
+      data-testid='text-filter-input'
+      onChange={(e) => setTempValue(e.target.value)}
+      placeholder={config.placeholder || 'Filter...'}
+      type='text'
+      value={(tempValue as string) ?? EMPTY_STRING}
+      onKeyDown={(e) => {
+        if (e.key === KEYBOARD_KEYS.ENTER) {
+          handleApply()
+        }
+      }}
+    />
+  )
+
   const renderFilterContent = () => {
     switch (config.type) {
+      case FILTER_TYPES.TEXT:
+        return renderTextFilter()
       case FILTER_TYPES.DROPDOWN:
         return renderDropdownFilter()
       case FILTER_TYPES.MULTISELECT:

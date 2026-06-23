@@ -37,6 +37,7 @@
 .content {
   flex: 1;
   overflow: auto;
+  scrollbar-gutter: stable;
   color: var(--text-primary);
   font-size: 14px;
   padding-right: 16px;
