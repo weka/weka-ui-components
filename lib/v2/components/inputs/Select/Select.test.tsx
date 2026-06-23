@@ -115,6 +115,11 @@ describe('Select - Rendering', () => {
       'true'
     )
   })
+
+  it('renders selected value when disabled', () => {
+    render(<Select {...createProps({ value: 'option1', disabled: true })} />)
+    expect(screen.getByText(OPTION_1)).toBeInTheDocument()
+  })
 })
 
 describe('Select - Single Select', () => {

@@ -81,6 +81,11 @@
       cursor: not-allowed;
     }
 
+    :global(.MuiSelect-select.Mui-disabled) {
+      -webkit-text-fill-color: var(--gray-950-20) !important;
+      color: var(--gray-950-20) !important;
+    }
+
     :global(.MuiOutlinedInput-notchedOutline) {
       border: 1px solid var(--gray-350-650) !important;
     }

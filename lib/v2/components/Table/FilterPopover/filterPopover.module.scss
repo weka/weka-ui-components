@@ -68,6 +68,28 @@
   font-weight: 700;
 }
 
+.textFilterInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 1px solid var(--gray-350-650);
+  border-radius: 4px;
+  background: var(--gray-100-900);
+  color: var(--gray-950-20);
+  font-size: 13px;
+  font-family: 'IBMPlexSans', sans-serif;
+  outline: none;
+
+  &::placeholder {
+    color: var(--gray-600-400);
+  }
+
+  &:focus {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 1px var(--purple-500);
+  }
+}
+
 .dropdownContainer {
   display: flex;
   flex-direction: column;
