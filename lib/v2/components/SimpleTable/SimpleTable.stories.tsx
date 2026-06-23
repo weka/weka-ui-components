@@ -157,7 +157,7 @@ function SimpleTableDemo({ variant }: Readonly<{ variant: StoryVariant }>) {
 }
 
 const meta: Meta<typeof SimpleTableDemo> = {
-  title: 'V2/SimpleTable',
+  title: 'v2/SimpleTable',
   component: SimpleTableDemo,
   parameters: { layout: 'centered' }
 }

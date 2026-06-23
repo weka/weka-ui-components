@@ -19,11 +19,15 @@
   --gray-100-800: #{$gray-100};
   --gray-150-800: #{$gray-150};
   --gray-150-850: #{$gray-150};
+  --gray-150: #{$gray-150};
   --gray-200-800: #{$gray-200};
   --gray-250-750: #{$gray-250};
   --gray-300-600: #{$gray-300};
   --gray-300-700: #{$gray-300};
   --gray-350-650: #{$gray-350};
+  --gray-opacity-black-10: #{rgba(#000, 0.1)};
+  --gray-opacity-black-60: #{rgba(#000, 0.6)};
+  --gray-blue-opacity-10: #{rgba(#fff, 0.1)};
   --gray-400-600: #{$gray-400};
   --gray-450-550: #{$gray-450};
   --gray-550-450: #{$gray-550};
@@ -35,6 +39,7 @@
   --gray-800-200: #{$gray-800};
   --gray-850-150: #{$gray-850};
   --gray-900-100: #{$gray-900};
+  --gray-900-50: #{$gray-900};
   --gray-920-50: #{$gray-920};
   --gray-950-20: #{$gray-950};
   --gray-1000-0: #{$gray-1000};
@@ -101,12 +106,15 @@
   --green-500: #{$green-500};
   --green-600-400: #{$green-600};
   --green-600: #{$green-600};
-  --yellow-600: #{$yellow-600};
   --green-700-300: #{$green-700};
   --green-800-200: #{$green-800};
   --green-900-100: #{$green-900};
   --green-950-50: #{$green-950};
   --green-950-20: #{$green-950};
+
+  // Yellow Theme Variables
+  --yellow-200: #{$yellow-200};
+  --yellow-600: #{$yellow-600};
 
   // Orange Theme Variables
   --orange-20-950: #{$orange-20};
@@ -124,12 +132,23 @@
   --orange-950-50: #{$orange-950};
   --orange-950-20: #{$orange-950};
 
+  // Fuchsia Theme Variables
+  --fuchsia-400-600: #{$fuchsia-400};
+  --fuchsia-600-400: #{$fuchsia-600};
+
+  // Peach Theme Variables
+  --peach-600-400: #{$peach-600};
+
+  // Aqua Theme Variables
+  --aqua-600-400: #{$aqua-600};
+
   // Semantic Variables
   --bg-primary: #{$gray-0};
   --bg-secondary: #{$gray-50};
   --bg-tertiary: #{$gray-100};
   --text-primary: #{$gray-900};
   --text-secondary: #{$gray-600};
+  --text-tertiary: #{$gray-500};
   --text-disabled: #{$gray-400};
   --border-light: #{$gray-200};
   --border-medium: #{$gray-300};
@@ -209,11 +228,15 @@
   --gray-100-800: #{$gray-800};
   --gray-150-800: #{$gray-800};
   --gray-150-850: #{$gray-850};
+  --gray-150: #{$gray-150};
   --gray-200-800: #{$gray-800};
   --gray-250-750: #{$gray-750};
   --gray-300-600: #{$gray-600};
   --gray-300-700: #{$gray-700};
   --gray-350-650: #{$gray-650};
+  --gray-opacity-black-10: #{rgba(#fff, 0.1)};
+  --gray-opacity-black-60: #{rgba(#fff, 0.6)};
+  --gray-blue-opacity-10: #{rgba(#000, 0.1)};
   --gray-400-600: #{$gray-600};
   --gray-450-550: #{$gray-550};
   --gray-550-450: #{$gray-450};
@@ -225,6 +248,7 @@
   --gray-800-200: #{$gray-200};
   --gray-850-150: #{$gray-150};
   --gray-900-100: #{$gray-100};
+  --gray-900-50: #{$gray-50};
   --gray-920-50: #{$gray-50};
   --gray-950-20: #{$gray-20};
   --gray-1000-0: #{$gray-0};
@@ -291,12 +315,15 @@
   --green-500: #{$green-500};
   --green-600-400: #{$green-400};
   --green-600: #{$green-600};
-  --yellow-600: #{$yellow-600};
   --green-700-300: #{$green-300};
   --green-800-200: #{$green-200};
   --green-900-100: #{$green-100};
   --green-950-50: #{$green-50};
   --green-950-20: #{$green-20};
+
+  // Yellow Theme Variables
+  --yellow-200: #{$yellow-200};
+  --yellow-600: #{$yellow-600};
 
   // Orange Theme Variables
   --orange-20-950: #{$orange-950};
@@ -314,12 +341,23 @@
   --orange-950-50: #{$orange-50};
   --orange-950-20: #{$orange-20};
 
+  // Fuchsia Theme Variables
+  --fuchsia-400-600: #{$fuchsia-600};
+  --fuchsia-600-400: #{$fuchsia-400};
+
+  // Peach Theme Variables
+  --peach-600-400: #{$peach-400};
+
+  // Aqua Theme Variables
+  --aqua-600-400: #{$aqua-400};
+
   // Semantic Variables
   --bg-primary: #{$gray-1000};
   --bg-secondary: #{$gray-920};
   --bg-tertiary: #{$gray-850};
   --text-primary: #{$gray-0};
   --text-secondary: #{$gray-300};
+  --text-tertiary: #{$gray-400};
   --text-disabled: #{$gray-600};
   --border-light: #{$gray-800};
   --border-medium: #{$gray-700};

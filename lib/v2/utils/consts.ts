@@ -8,6 +8,25 @@ export const EMPTY_STRING_ARRAY: readonly string[] = []
 export const EMPTY_REF_ARRAY: readonly RefObject<HTMLElement>[] = []
 export const EMPTY_OBJECT: Record<string, never> = {}
 
+export const PERCENTAGE = { FULL: 100, HALF: 50 } as const
+
+export const ICON_VARIANTS = {
+  CONTAINER: 'container',
+  SVG_ONLY: 'svg-only'
+} as const
+
+export type IconVariant = (typeof ICON_VARIANTS)[keyof typeof ICON_VARIANTS]
+
+export const PARITY_STATUSES = {
+  HEALTHY: 'healthy',
+  WARNING: 'warning',
+  ERROR: 'error',
+  CRITICAL: 'critical'
+} as const
+
+export type ParityStatus =
+  (typeof PARITY_STATUSES)[keyof typeof PARITY_STATUSES]
+
 export const NOOP = () => {}
 export const COMMA_SEPARATOR = ', '
 export const SEARCH_PLACEHOLDER = 'Search...'

@@ -1,0 +1,292 @@
+.statBox {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-width: 270px;
+  height: 120px;
+  padding: 20px 16px;
+  background: var(--ld-container-bg);
+  border: 1px solid var(--gray-300-700);
+  box-shadow: 0 0 16px 4px var(--ld-shadow-v2);
+}
+
+.statTitle {
+  margin-bottom: 8px;
+  color: var(--gray-920-50);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+.statContent {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+
+  &.purple .mainValue {
+    color: var(--purple-600-400);
+  }
+
+  &.fuchsia .mainValue {
+    color: var(--fuchsia-600-400);
+  }
+
+  &.cyan .mainValue {
+    color: var(--cyan-600-400);
+  }
+
+  &.aqua .mainValue {
+    color: var(--aqua-600-400);
+  }
+
+  &.peach .mainValue {
+    color: var(--peach-600-400);
+  }
+}
+
+.mainValueGroup {
+  display: flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.statContent.aqua .mainValueGroup {
+  gap: 0;
+}
+
+.mainValue {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 42px;
+}
+
+.mainUnit {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.subStats {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.subStat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.subStatValueGroup {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.subStatLabel {
+  color: var(--text-tertiary);
+}
+
+.subStatValue {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.subStatUnit {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.statContent.fuchsia,
+.statContent.cyan,
+.statContent.aqua {
+  .subStatLabel {
+    color: var(--gray-920-50);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .subStatValue {
+    color: var(--gray-920-50);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .subStatUnit {
+    color: var(--gray-920-50);
+    font-size: 13px;
+    font-weight: 700;
+  }
+}
+
+.statContent.fuchsia .mainUnit {
+  color: var(--fuchsia-600-400);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.statContent.cyan .mainUnit {
+  color: var(--cyan-600-400);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.statContent.aqua .mainUnit {
+  color: var(--aqua-600-400);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.statContent.purple {
+  .subStat {
+    flex-direction: row-reverse;
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .subStatValue {
+    color: var(--purple-600-400);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .subStatLabel {
+    color: var(--gray-920-50);
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.statContent.peach {
+  .subStat {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .subStatValue {
+    color: var(--peach-600-400);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .subStatLabel {
+    color: var(--gray-920-50);
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+@keyframes stat-box-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.skeletonContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.skeletonMain {
+  width: 60%;
+  height: 38px;
+  border-radius: 4px;
+  background: var(--gray-300-700);
+
+  &.loading {
+    animation: stat-box-skeleton-pulse 1.4s ease-in-out infinite;
+  }
+
+  &.error {
+    background: var(--red-200-800);
+  }
+}
+
+.skeletonSubStats {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
+}
+
+.skeletonSub {
+  width: 60px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--gray-300-700);
+
+  &.loading {
+    animation: stat-box-skeleton-pulse 1.4s ease-in-out infinite;
+  }
+
+  &.error {
+    background: var(--red-200-800);
+  }
+}
+
+@container (width <= 1450px) {
+  .statBox {
+    min-width: 230px;
+    padding: 16px 12px;
+  }
+
+  .statTitle {
+    font-size: 14px;
+  }
+}
+
+@container (width <= 1250px) {
+  .statBox {
+    min-width: 140px;
+    padding: 12px;
+  }
+
+  .statTitle {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+
+  .statContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .subStats {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .statContent.purple .subStats {
+    flex-flow: row wrap;
+    gap: 0 8px;
+  }
+
+  .statContent.purple .subStat {
+    flex: 0 0 calc(50% - 4px);
+  }
+
+  .statContent.fuchsia .subStatLabel {
+    min-width: 32px;
+  }
+}

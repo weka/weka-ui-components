@@ -8,7 +8,7 @@ import { EMPTY_ARRAY, FILTER_TYPES, NOOP } from '#v2/utils/consts'
 import { FilterPopover } from './FilterPopover'
 
 const meta: Meta<typeof FilterPopover> = {
-  title: 'v2/Table/filters/FilterPopover'
+  title: 'v2/Table/Filters/FilterPopover'
 }
 
 export default meta

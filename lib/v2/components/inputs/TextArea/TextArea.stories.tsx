@@ -59,7 +59,7 @@ function TextAreaDemo() {
 }
 
 const meta: Meta<typeof TextAreaDemo> = {
-  title: 'V2/Inputs/TextArea',
+  title: 'v2/Inputs/TextArea',
   component: TextAreaDemo,
   parameters: { layout: 'centered' }
 }

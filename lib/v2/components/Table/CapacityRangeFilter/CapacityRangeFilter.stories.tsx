@@ -10,7 +10,7 @@ import { CapacityRangeFilter } from './CapacityRangeFilter'
 import { CAPACITY_RANGE_MODES } from './capacityRangeFilterTypes'
 
 const meta: Meta<typeof CapacityRangeFilter> = {
-  title: 'v2/Table/filters/CapacityRangeFilter'
+  title: 'v2/Table/Filters/CapacityRangeFilter'
 }
 
 export default meta

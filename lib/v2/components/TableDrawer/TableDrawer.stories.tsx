@@ -128,7 +128,7 @@ function TableDrawerDemo() {
 }
 
 const meta: Meta<typeof TableDrawerDemo> = {
-  title: 'V2/TableDrawer',
+  title: 'v2/TableDrawer',
   component: TableDrawerDemo,
   parameters: { layout: 'centered' }
 }
