@@ -1,5 +1,6 @@
 import type { CustomFilters } from '../FilterPopover'
 import type { ActiveFilter } from '../filterUtils'
+import type { RowAction } from './rowActions'
 import type {
   ColumnDef,
   ColumnFiltersState,
@@ -15,9 +16,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { flexRender, useReactTable } from '@tanstack/react-table'
 import clsx from 'clsx'
 
+import { EMPTY_STRING } from '#consts'
 import { NOOP } from '#v2/utils/consts'
 
 import { Pagination } from '../Pagination'
+import { RowActionsCell } from '../RowActionsCell'
 import { TableFilter } from '../TableFilter'
 import { buildTableColumns, getCanShowFilter } from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
@@ -35,6 +38,8 @@ const DEFAULT_PAGE_SIZE = 25
 const MAX_ROWS_FOR_COMPACT = 10
 const FIRST_PAGE = 1
 const COMPACT_HALF_DIVISOR = 2
+const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
+const ROW_ACTIONS_COLUMN_SIZE = 56
 
 const EMPTY_ACTIVE_FILTERS: ActiveFilter[] = []
 const EMPTY_EXCLUDED_FIELDS: string[] = []
@@ -99,6 +104,7 @@ export interface TableProps<TData = unknown> {
   getCsvData?: () => Promise<readonly TData[]>
   onCsvError?: (message: string) => void
   dataTestId?: string
+  rowActions?: RowAction<TData>[]
 }
 
 const COLUMN_RESIZE_MODE: ColumnResizeMode = 'onChange'
@@ -146,7 +152,8 @@ export function Table<TData = unknown>({
   initialColumnVisibility,
   onColumnVisibilityChange,
   currentPage: currentPageProp,
-  isPaginationPageEnabled
+  isPaginationPageEnabled,
+  rowActions
 }: Readonly<TableProps<TData>>) {
   const { columnVisibility, handleColumnVisibilityChange } =
     useColumnVisibility({
@@ -212,10 +219,24 @@ export function Table<TData = unknown>({
     [data, filteredData, globalSearchTerm]
   )
 
-  const tableColumns = useMemo(
-    () => buildTableColumns(columns, hasResizableColumns),
-    [columns, hasResizableColumns]
-  )
+  const tableColumns = useMemo(() => {
+    const builtColumns = buildTableColumns(columns, hasResizableColumns)
+    if (!rowActions || rowActions.length === 0) {
+      return builtColumns
+    }
+    const rowActionsColumn: ColumnDef<TData> = {
+      id: ROW_ACTIONS_COLUMN_ID,
+      header: EMPTY_STRING,
+      enableSorting: false,
+      enableColumnFilter: false,
+      enableResizing: false,
+      enableHiding: false,
+      size: ROW_ACTIONS_COLUMN_SIZE,
+      meta: { rowActions } as Record<string, unknown>,
+      cell: (ctx) => <RowActionsCell {...ctx} />
+    }
+    return [...builtColumns, rowActionsColumn]
+  }, [columns, hasResizableColumns, rowActions])
 
   const tableOptions = useTableOptions({
     displayData,

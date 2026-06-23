@@ -10,6 +10,7 @@ export interface CapacityProgressBarProps {
   showPercentageText?: boolean
   borderRadius?: number
   extraClass?: string
+  fillColor?: CapacityFillColor
 }
 
 export const CAPACITY_FILL_COLORS = {
@@ -41,9 +42,10 @@ export function CapacityProgressBar({
   height = 24,
   showPercentageText = false,
   borderRadius = 20,
-  extraClass
+  extraClass,
+  fillColor: fillColorProp
 }: Readonly<CapacityProgressBarProps>) {
-  const fillColor = getFillColor(percentage)
+  const fillColor = fillColorProp ?? getFillColor(percentage)
   const clampedPercentage = Math.min(percentage, FULL_PERCENTAGE)
 
   return (

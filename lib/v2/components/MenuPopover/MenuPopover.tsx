@@ -1,11 +1,14 @@
 import { type ReactNode, type RefObject, useRef } from 'react'
+import clsx from 'clsx'
 
 import { useClickOutside, usePopoverPosition } from '#v2/hooks'
 
 import styles from './menuPopover.module.scss'
 
 export const MENU_POPOVER_STYLES = {
-  menuItem: styles.menuItem
+  menuItem: styles.menuItem,
+  menuHeader: styles.menuHeader,
+  menuItemIndent: styles.menuItemIndent
 } as const
 
 export interface MenuPopoverProps {
@@ -13,13 +16,16 @@ export interface MenuPopoverProps {
   onClose: () => void
   anchorRef: RefObject<HTMLElement>
   children: ReactNode
+  /** Extra class applied to the popover container (e.g. to widen it). */
+  extraClass?: string
 }
 
 export function MenuPopover({
   open,
   onClose,
   anchorRef,
-  children
+  children,
+  extraClass
 }: Readonly<MenuPopoverProps>) {
   const popRef = useRef<HTMLDivElement>(null)
 
@@ -37,7 +43,7 @@ export function MenuPopover({
   return (
     <div
       ref={popRef}
-      className={styles.popover}
+      className={clsx(styles.popover, extraClass)}
       style={position}
     >
       {children}
