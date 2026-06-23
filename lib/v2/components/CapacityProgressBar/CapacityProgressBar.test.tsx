@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { CapacityProgressBar } from './CapacityProgressBar'
+import { CAPACITY_FILL_COLORS, CapacityProgressBar } from './CapacityProgressBar'
 
 const getProgressBar = (container: HTMLElement) =>
   container.firstChild as HTMLElement
@@ -118,6 +118,19 @@ describe('CapacityProgressBar', () => {
 
       const fill = getProgressFill(container)
       expect(fill.className).toContain('fillRed')
+    })
+
+    it('uses the fillColor prop instead of the percentage-derived color', () => {
+      const { container } = render(
+        <CapacityProgressBar
+          fillColor={CAPACITY_FILL_COLORS.CYAN}
+          percentage={100}
+        />
+      )
+
+      const fill = getProgressFill(container)
+      expect(fill.className).toContain('fillCyan')
+      expect(fill.className).not.toContain('fillRed')
     })
   })
 

@@ -240,7 +240,7 @@ export {
   REDUCTION_RANGE_MODES,
   ReductionRangeFilter
 } from './Table/ReductionRangeFilter'
-export type { PaginationState, SortDirection, TableProps } from './Table/Table'
+export type { PaginationState, RowAction, SortDirection, TableProps } from './Table/Table'
 export { Table } from './Table/Table'
 export type { TableFilterProps } from './Table/TableFilter'
 export { TableFilter } from './Table/TableFilter'

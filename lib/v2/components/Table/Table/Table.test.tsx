@@ -1,6 +1,7 @@
+import type { RowAction } from './rowActions'
 import type { ColumnDef } from '@tanstack/react-table'
 
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { FILTER_TYPES } from '#v2/utils/consts'
@@ -35,6 +36,7 @@ const FILTERABLE_COLUMNS: ColumnDef<Item>[] = [
 
 const RESIZER_ID_TESTID = 'column-resizer-id'
 const RESIZER_NAME_TESTID = 'column-resizer-name'
+const ROW_ACTIONS_BUTTON_TESTID = 'row-actions-button'
 
 describe('Table', () => {
   describe('baseline functionality', () => {
@@ -193,6 +195,117 @@ describe('Table', () => {
         })
       })
     })
+  })
+})
+
+describe('Table rowActions', () => {
+  const ROW_ACTIONS: RowAction<Item>[] = [
+    {
+      key: 'edit',
+      text: 'Edit',
+      action: vi.fn()
+    },
+    {
+      key: 'delete',
+      text: 'Delete',
+      action: vi.fn()
+    },
+    {
+      key: 'hidden-action',
+      text: 'Hidden',
+      action: vi.fn(),
+      hideAction: () => true
+    },
+    {
+      key: 'disabled-action',
+      text: 'Disabled',
+      action: vi.fn(),
+      disabled: () => true
+    }
+  ]
+
+  it('renders a row actions button for each row', () => {
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={ROW_ACTIONS}
+      />
+    )
+    const buttons = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    expect(buttons).toHaveLength(DATA.length)
+  })
+
+  it('opens the actions menu and shows visible actions', () => {
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={ROW_ACTIONS}
+      />
+    )
+    const [firstButton] = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    fireEvent.click(firstButton)
+    expect(screen.getByTestId('row-action-edit')).toBeInTheDocument()
+    expect(screen.getByTestId('row-action-delete')).toBeInTheDocument()
+  })
+
+  it('does not render hidden actions', () => {
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={ROW_ACTIONS}
+      />
+    )
+    const [firstButton] = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    fireEvent.click(firstButton)
+    expect(screen.queryByTestId('row-action-hidden-action')).not.toBeInTheDocument()
+  })
+
+  it('renders disabled actions as disabled', () => {
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={ROW_ACTIONS}
+      />
+    )
+    const [firstButton] = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    fireEvent.click(firstButton)
+    expect(screen.getByTestId('row-action-disabled-action')).toBeDisabled()
+  })
+
+  it('calls the action callback when a menu item is clicked', () => {
+    const editAction = vi.fn()
+    const actions: RowAction<Item>[] = [
+      { key: 'edit', text: 'Edit', action: editAction }
+    ]
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={actions}
+      />
+    )
+    const [firstButton] = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    fireEvent.click(firstButton)
+    fireEvent.click(screen.getByTestId('row-action-edit'))
+    expect(editAction).toHaveBeenCalledWith(DATA[0])
+  })
+
+  it('renders no kebab button when all actions are hidden for a row', () => {
+    const actions: RowAction<Item>[] = [
+      { key: 'always-hidden', text: 'Hidden', action: vi.fn(), hideAction: () => true }
+    ]
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={actions}
+      />
+    )
+    expect(screen.queryByTestId(ROW_ACTIONS_BUTTON_TESTID)).not.toBeInTheDocument()
   })
 })
 

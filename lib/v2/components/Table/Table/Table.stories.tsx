@@ -1,4 +1,5 @@
 import type { ActiveFilter } from '../filterUtils'
+import type { RowAction } from './rowActions'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { ColumnDef } from '@tanstack/react-table'
 
@@ -81,4 +82,42 @@ function TableDemo() {
 
 export const Interactive: Story = {
   render: () => <TableDemo />
+}
+
+const ROW_ACTIONS: RowAction<Cluster>[] = [
+  {
+    key: 'edit',
+    text: 'Edit',
+    action: (row) => alert(`Edit ${row.name}`)
+  },
+  {
+    key: 'delete',
+    text: 'Delete',
+    action: (row) => alert(`Delete ${row.name}`)
+  },
+  {
+    key: 'offline-only',
+    text: 'Restart',
+    action: (row) => alert(`Restart ${row.name}`),
+    hideAction: (row) => row.status !== 'Offline'
+  },
+  {
+    key: 'degrade-disabled',
+    text: 'Degrade (disabled)',
+    action: () => undefined,
+    disabled: (row) => row.status === 'Degraded'
+  }
+]
+
+export const WithRowActions: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={ROW_ACTIONS}
+        title='Clusters with row actions'
+      />
+    </div>
+  )
 }

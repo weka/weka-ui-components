@@ -37,3 +37,24 @@
     color: var(--gray-600-400);
   }
 }
+
+/* Non-interactive section title within a menu (no hover / not clickable). */
+.menuHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  color: var(--gray-600-400);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  text-align: left;
+  cursor: default;
+  user-select: none;
+}
+
+/* Indented menu item — reads as belonging under a preceding .menuHeader.
+   Declared after .menuItem so its padding-left wins at equal specificity. */
+.menuItemIndent {
+  padding-left: 28px;
+}
