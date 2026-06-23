@@ -1,0 +1,380 @@
+@use '../../../styles/colors' as *;
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: min(48px, 2vw);
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  padding: 0 12px 12px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.chartSection {
+  height: 240px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.chartContainer {
+  position: relative;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progressBar {
+  width: 32px;
+  height: 190px;
+  background-color: var(--gray-300-700);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.progressFill {
+  width: 100%;
+  background: linear-gradient(0deg, $purple-600 0%, $purple-400 100%);
+  border-radius: 0 0 16px 16px;
+  transition: height 0.3s ease;
+}
+
+.percentageLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.percentage {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-color-primary);
+  line-height: 1;
+}
+
+.percentageText {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-color-secondary);
+  line-height: 18px;
+  margin-top: 2px;
+}
+
+.valuesSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 8px;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.valueItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+  min-width: 0;
+  margin-bottom: 8px;
+  gap: 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+}
+
+.label {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+.capacityDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.capacityItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.capacityValue {
+  font-weight: 700;
+  color: var(--text-color-primary);
+
+  .number {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .unit {
+    font-size: 18px;
+    font-weight: 400;
+  }
+}
+
+.capacityLabel {
+  font-size: 18px;
+  color: var(--text-color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 400;
+}
+
+.freeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--gray-300-700);
+  display: inline-block;
+}
+
+.usedDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--purple-600-400);
+  display: inline-block;
+}
+
+// Abbreviate labels on narrow screens
+.labelText {
+  display: inline;
+}
+
+@media (width <= 250px) {
+  .container {
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+    align-items: center;
+  }
+
+  .chartSection {
+    height: 160px;
+  }
+
+  .valuesSection {
+    width: 100%;
+    align-items: center;
+  }
+
+  .capacityDetails {
+    align-items: center;
+    text-align: center;
+  }
+
+  .capacityItem {
+    align-items: center;
+  }
+
+  .progressBar {
+    width: 32px;
+    height: 120px;
+  }
+
+  .capacityLabel {
+    justify-content: center;
+  }
+}
+
+@media (width <= 320px) {
+  .container {
+    gap: 16px;
+    padding: 4px 8px 8px;
+    justify-content: flex-start;
+  }
+
+  .chartSection {
+    height: 200px;
+  }
+
+  .progressBar {
+    width: 24px;
+    height: 160px;
+  }
+
+  .percentage {
+    font-size: 14px;
+  }
+
+  .percentageText {
+    font-size: 11px;
+  }
+
+  .capacityValue {
+    .number {
+      font-size: 18px;
+    }
+
+    .unit {
+      font-size: 14px;
+    }
+  }
+
+  .capacityLabel {
+    font-size: 14px;
+  }
+
+  .freeDot,
+  .usedDot {
+    width: 8px;
+    height: 8px;
+  }
+
+  // Use abbreviated labels
+  .labelText {
+    &::after {
+      content: attr(data-short);
+    }
+  }
+
+  .capacityItem:first-child .labelText::after {
+    content: 'Written';
+  }
+
+  .capacityItem:last-child .labelText::after {
+    content: 'Prov.';
+  }
+
+  .capacityItem .labelText {
+    font-size: 0;
+
+    &::after {
+      font-size: 14px;
+    }
+  }
+}
+
+// Medium screens - more compact layout
+@media (width <= 1600px) {
+  .container {
+    gap: 24px;
+    padding: 4px 8px 8px;
+  }
+
+  .capacityValue {
+    .number {
+      font-size: 20px;
+    }
+
+    .unit {
+      font-size: 16px;
+    }
+  }
+
+  .capacityLabel {
+    font-size: 16px;
+  }
+}
+
+// Specific range where content was getting cut off
+@media (width <= 1573px) and (width > 1440px) {
+  .container {
+    gap: 16px;
+    padding: 4px 4px 8px;
+  }
+
+  .chartSection {
+    flex-shrink: 1;
+    min-width: 50px;
+  }
+
+  .chartContainer {
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+
+  .percentage {
+    font-size: 16px;
+  }
+
+  .percentageText {
+    font-size: 14px;
+  }
+
+  .capacityValue {
+    .number {
+      font-size: 20px;
+    }
+
+    .unit {
+      font-size: 15px;
+    }
+  }
+
+  .capacityLabel {
+    font-size: 14px;
+    gap: 4px;
+  }
+
+  .freeDot,
+  .usedDot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (width <= 1550px) {
+  .container {
+    justify-content: center;
+  }
+
+  .percentageLabel {
+    padding-left: 12px;
+  }
+
+  .capacityValue {
+    .number {
+      font-size: 20px;
+    }
+
+    .unit {
+      font-size: 16px;
+    }
+  }
+
+  .capacityLabel {
+    font-size: 16px;
+  }
+
+  .freeDot,
+  .usedDot {
+    width: 10px;
+    height: 10px;
+  }
+}

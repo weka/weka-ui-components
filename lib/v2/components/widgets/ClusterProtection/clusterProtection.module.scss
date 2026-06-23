@@ -1,0 +1,153 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  container-type: size;
+}
+
+.dataProtectionSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
+  padding: 0 24px;
+}
+
+.dataProtectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dataProtectionTitle {
+  color: var(--gray-900-100);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.iconsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.iconGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 60px;
+}
+
+.parityIconsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.groupSeparator {
+  width: 100%;
+  height: 1px;
+  margin: 2px 0;
+  background-color: var(--gray-920-50);
+}
+
+.serverNumber {
+  margin: 0;
+  color: var(--gray-920-50);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.groupLabel {
+  min-width: 50px;
+  margin-top: 0;
+  color: var(--gray-920-50);
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.plusSignContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  margin: 0 12px;
+  padding-top: 55px;
+
+  .plusSign {
+    color: var(--gray-920-50);
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.plusSign {
+  color: var(--gray-920-50);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.virtualSpares {
+  margin-bottom: 2px;
+  color: var(--gray-900-100);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.uptimeSection {
+  display: block;
+  text-align: center;
+}
+
+.uptimeItem {
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.uptimeLabel {
+  display: inline;
+  margin-right: 5px;
+  color: var(--gray-900-100);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.uptimeValue {
+  display: inline;
+  color: var(--gray-900-100);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+@container (max-height: 235px) {
+  .dataProtectionSection {
+    margin-top: 6px;
+  }
+
+  .dataProtectionHeader,
+  .iconsRow {
+    margin-bottom: 6px;
+  }
+
+  .virtualSpares,
+  .uptimeLabel,
+  .uptimeValue {
+    font-size: 14px;
+  }
+}

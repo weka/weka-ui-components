@@ -1,0 +1,72 @@
+@use '../../styles/colors' as *;
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.ringDot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  outline-offset: 1px;
+  margin-right: 2px;
+}
+
+.standalone {
+  &.active {
+    background-color: var(--gray-opacity-black-10);
+    border: 1px solid var(--gray-opacity-black-10);
+    color: var(--text-primary);
+
+    .dot {
+      background: linear-gradient(0deg, $cyan-500 0%, $cyan-300 100%);
+    }
+  }
+
+  &.closed {
+    background: linear-gradient(180deg, rgba($gray-400, 0.2) 0%, rgba($gray-600, 0.2) 100%);
+    border-color: transparent;
+    color: var(--text-primary);
+
+    .ringDot {
+      background: linear-gradient(180deg, $gray-400 0%, $gray-600 100%);
+      outline: 1px solid var(--gray-350-650);
+    }
+  }
+}
+
+.overlay {
+  background-color: var(--gray-blue-opacity-10);
+  border: 1px solid var(--gray-blue-opacity-10);
+  color: inherit;
+
+  &.active {
+    .dot {
+      background: linear-gradient(0deg, $cyan-500 0%, $cyan-300 100%);
+    }
+  }
+
+  &.closed {
+    .ringDot {
+      background: linear-gradient(180deg, $gray-400 0%, $gray-600 100%);
+      outline: 1px solid rgba($gray-0, 0.3);
+    }
+  }
+}

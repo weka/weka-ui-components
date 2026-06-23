@@ -1,0 +1,87 @@
+@use '../../../styles/colors' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 0 5px;
+  box-sizing: border-box;
+}
+
+.inventoryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  flex: 1;
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.textSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+}
+
+.description {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+}
+
+.warningText {
+  color: $orange-500;
+  font-weight: 700;
+}
+
+.separator {
+  height: 1px;
+  background-color: var(--gray-300-700);
+  margin: 0;
+}

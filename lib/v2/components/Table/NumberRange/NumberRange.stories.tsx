@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { NumberRange, type NumRangeFilterType } from './NumberRange'
 
 const meta: Meta<typeof NumberRange> = {
-  title: 'v2/Table/filters/NumberRange'
+  title: 'v2/Table/Filters/NumberRange'
 }
 
 export default meta

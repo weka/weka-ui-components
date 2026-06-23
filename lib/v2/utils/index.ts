@@ -20,6 +20,7 @@ export type {
   BaseSeverity,
   CloudIconVariant,
   FilterType,
+  ParityStatus,
   Severity,
   SeverityLevel,
   TooltipPlacement
@@ -38,6 +39,7 @@ export {
   FILTER_TYPES,
   KEYBOARD_KEYS,
   NOOP,
+  PARITY_STATUSES,
   SEARCH_PLACEHOLDER,
   SEVERITY_LABELS,
   SEVERITY_ORDER_ASC,
@@ -45,6 +47,32 @@ export {
   SEVERITY_TYPES,
   TOOLTIP_PLACEMENTS
 } from '#v2/utils/consts'
+export type {
+  ClusterStatusData,
+  HealthIconType,
+  HealthSeverity,
+  ProtectionStateItem,
+  ProtectionStatusColor,
+  ProtectionStatusInfo,
+  ProtectionStatusType
+} from '#v2/utils/protectionStatus'
+export {
+  calculateParityStatuses,
+  calculateProtectionBoxes,
+  getHealthIconType,
+  getProtectionBoxStatus,
+  getProtectionStatus,
+  getProtectionTooltip,
+  getRebuildProgress,
+  getStatusColorClass,
+  HEALTH_ICON_TYPES,
+  HEALTH_SEVERITIES,
+  mapLegacyStatus,
+  PROGRESS_STATUS_TYPES,
+  PROTECTION_STATUS_COLORS,
+  PROTECTION_STATUS_MAP,
+  PROTECTION_STATUS_TYPES
+} from '#v2/utils/protectionStatus'
 export { highlightText } from '#v2/utils/textUtils'
 export {
   formatDate,

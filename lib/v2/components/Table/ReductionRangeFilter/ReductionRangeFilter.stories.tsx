@@ -8,7 +8,7 @@ import { ReductionRangeFilter } from './ReductionRangeFilter'
 import { REDUCTION_RANGE_MODES } from './reductionRangeFilterTypes'
 
 const meta: Meta<typeof ReductionRangeFilter> = {
-  title: 'v2/Table/filters/ReductionRangeFilter'
+  title: 'v2/Table/Filters/ReductionRangeFilter'
 }
 
 export default meta

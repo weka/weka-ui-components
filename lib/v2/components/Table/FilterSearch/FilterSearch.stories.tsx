@@ -7,7 +7,7 @@ import { EMPTY_STRING, NOOP } from '#v2/utils/consts'
 import { FilterSearch } from './FilterSearch'
 
 const meta: Meta<typeof FilterSearch> = {
-  title: 'v2/Table/filters/FilterSearch'
+  title: 'v2/Table/Filters/FilterSearch'
 }
 
 export default meta

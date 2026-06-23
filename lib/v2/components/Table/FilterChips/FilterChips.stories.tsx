@@ -8,7 +8,7 @@ import { FILTER_TYPES } from '#v2/utils/consts'
 import { FilterChips } from './FilterChips'
 
 const meta: Meta<typeof FilterChips> = {
-  title: 'v2/Table/filters/FilterChips'
+  title: 'v2/Table/Filters/FilterChips'
 }
 
 export default meta

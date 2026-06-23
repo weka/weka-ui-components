@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import type { ReactNode } from 'react'
 
 import { ARROW_DIRECTIONS, ArrowIcon } from './ArrowIcon'
 import { BugIcon } from './BugIcon'
@@ -15,6 +16,8 @@ import { ConfigureIcon } from './ConfigureIcon'
 import { DarkModeIcon } from './DarkModeIcon'
 import { DateTimeIcon } from './DateTimeIcon'
 import { DownloadIcon } from './DownloadIcon'
+import { DriversIcon } from './DriversIcon'
+import { FileSystemIcon } from './FileSystemIcon'
 import { FilterIcon } from './FilterIcon'
 import { InfoIcon } from './InfoIcon'
 import { InvestigateIcon } from './InvestigateIcon'
@@ -23,17 +26,21 @@ import { LinkIcon } from './LinkIcon'
 import { LogoutIcon } from './LogoutIcon'
 import { ManageIcon } from './ManageIcon'
 import { MonitorIcon } from './MonitorIcon'
+import { MuteIcon } from './MuteIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
 import { NotificationsIcon } from './NotificationsIcon'
 import { PauseIcon } from './PauseIcon'
 import { ResetIcon } from './ResetIcon'
+import { S3BucketsIcon } from './S3BucketsIcon'
 import { SearchIcon } from './SearchIcon'
+import { ServersIcon } from './ServersIcon'
 import { SettingsIcon } from './SettingsIcon'
 import { SortIcon } from './SortIcon'
 import { SortUpDownIcon } from './SortUpDownIcon'
 import { SwapIcon } from './SwapIcon'
 import { ThreeDotsMenuIcon } from './ThreeDotsMenuIcon'
+import { UnmuteIcon } from './UnmuteIcon'
 import { VcheckFillIcon } from './VcheckFillIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
 import { WarningIcon } from './WarningIcon'
@@ -58,201 +65,166 @@ const rowStyle = {
   fontSize: '12px'
 }
 
+const SMALL_ICON_SIZE = 16
+const SEARCH_ICON_SIZE = 20
+const VCHECK_ICON_SIZE = 24
+
+const generalIcons: { name: string; node: ReactNode }[] = [
+  {
+    name: 'ArrowIcon (up)',
+    node: <ArrowIcon direction={ARROW_DIRECTIONS.UP} />
+  },
+  {
+    name: 'ArrowIcon (down)',
+    node: <ArrowIcon direction={ARROW_DIRECTIONS.DOWN} />
+  },
+  {
+    name: 'ArrowIcon (left)',
+    node: <ArrowIcon direction={ARROW_DIRECTIONS.LEFT} />
+  },
+  {
+    name: 'ArrowIcon (right)',
+    node: <ArrowIcon direction={ARROW_DIRECTIONS.RIGHT} />
+  },
+  {
+    name: 'BugIcon',
+    node: (
+      <BugIcon
+        height={SMALL_ICON_SIZE}
+        width={SMALL_ICON_SIZE}
+      />
+    )
+  },
+  { name: 'ChartIcon', node: <ChartIcon /> },
+  { name: 'CheckboxCheckedIcon', node: <CheckboxCheckedIcon /> },
+  { name: 'CheckboxPartialIcon', node: <CheckboxPartialIcon /> },
+  { name: 'CheckboxUncheckedIcon', node: <CheckboxUncheckedIcon /> },
+  { name: 'ChevronDownSmallIcon', node: <ChevronDownSmallIcon /> },
+  { name: 'ChevronLeftIcon', node: <ChevronLeftIcon /> },
+  { name: 'CloseIcon', node: <CloseIcon /> },
+  { name: 'CloseRoundedIcon', node: <CloseRoundedIcon /> },
+  { name: 'CloseWithBgIcon', node: <CloseWithBgIcon /> },
+  { name: 'ConfigureIcon', node: <ConfigureIcon /> },
+  { name: 'DarkModeIcon', node: <DarkModeIcon /> },
+  { name: 'DateTimeIcon', node: <DateTimeIcon /> },
+  { name: 'DownloadIcon', node: <DownloadIcon /> },
+  { name: 'FilterIcon', node: <FilterIcon /> },
+  { name: 'InfoIcon', node: <InfoIcon /> },
+  { name: 'InvestigateIcon', node: <InvestigateIcon /> },
+  { name: 'LightModeIcon', node: <LightModeIcon /> },
+  { name: 'LinkIcon', node: <LinkIcon /> },
+  { name: 'LogoutIcon', node: <LogoutIcon /> },
+  { name: 'ManageIcon', node: <ManageIcon /> },
+  { name: 'MonitorIcon', node: <MonitorIcon /> },
+  { name: 'MuteIcon', node: <MuteIcon /> },
+  { name: 'NavChevronLeftIcon', node: <NavChevronLeftIcon /> },
+  { name: 'NavChevronRightIcon', node: <NavChevronRightIcon /> },
+  { name: 'NotificationsIcon', node: <NotificationsIcon /> },
+  {
+    name: 'PauseIcon',
+    node: (
+      <PauseIcon
+        height={SMALL_ICON_SIZE}
+        width={SMALL_ICON_SIZE}
+      />
+    )
+  },
+  { name: 'ResetIcon', node: <ResetIcon /> },
+  {
+    name: 'SearchIcon',
+    node: (
+      <SearchIcon
+        height={SEARCH_ICON_SIZE}
+        width={SEARCH_ICON_SIZE}
+      />
+    )
+  },
+  {
+    name: 'SettingsIcon (filled)',
+    node: (
+      <SettingsIcon
+        height={SMALL_ICON_SIZE}
+        width={SMALL_ICON_SIZE}
+      />
+    )
+  },
+  {
+    name: 'SettingsIcon (outline)',
+    node: (
+      <SettingsIcon
+        height={SMALL_ICON_SIZE}
+        variant='outline'
+        width={SMALL_ICON_SIZE}
+      />
+    )
+  },
+  { name: 'SortIcon', node: <SortIcon /> },
+  { name: 'SortUpDownIcon', node: <SortUpDownIcon /> },
+  { name: 'SwapIcon', node: <SwapIcon /> },
+  { name: 'ThreeDotsMenuIcon', node: <ThreeDotsMenuIcon /> },
+  { name: 'UnmuteIcon', node: <UnmuteIcon /> },
+  {
+    name: 'VcheckFillIcon',
+    node: (
+      <VcheckFillIcon
+        height={VCHECK_ICON_SIZE}
+        width={VCHECK_ICON_SIZE}
+      />
+    )
+  },
+  { name: 'WarningCircleIcon (outline)', node: <WarningCircleIcon /> },
+  { name: 'WarningCircleIcon (filled)', node: <WarningCircleIcon filled /> },
+  { name: 'WarningIcon (outline)', node: <WarningIcon /> },
+  { name: 'WarningIcon (filled)', node: <WarningIcon filled /> },
+  { name: 'WarningTriangleIcon', node: <WarningTriangleIcon /> }
+]
+
 export const GeneralIcons: Story = {
   render: () => (
     <div style={gridStyle}>
-      <div style={rowStyle}>
-        <ArrowIcon direction={ARROW_DIRECTIONS.UP} />
-        <span>ArrowIcon (up)</span>
-      </div>
-      <div style={rowStyle}>
-        <ArrowIcon direction={ARROW_DIRECTIONS.DOWN} />
-        <span>ArrowIcon (down)</span>
-      </div>
-      <div style={rowStyle}>
-        <ArrowIcon direction={ARROW_DIRECTIONS.LEFT} />
-        <span>ArrowIcon (left)</span>
-      </div>
-      <div style={rowStyle}>
-        <ArrowIcon direction={ARROW_DIRECTIONS.RIGHT} />
-        <span>ArrowIcon (right)</span>
-      </div>
-      <div style={rowStyle}>
-        <BugIcon
-          height={16}
-          width={16}
-        />
-        <span>BugIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ChartIcon />
-        <span>ChartIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <CheckboxCheckedIcon />
-        <span>CheckboxCheckedIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <CheckboxPartialIcon />
-        <span>CheckboxPartialIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <CheckboxUncheckedIcon />
-        <span>CheckboxUncheckedIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ChevronDownSmallIcon />
-        <span>ChevronDownSmallIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ChevronLeftIcon />
-        <span>ChevronLeftIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <CloseIcon />
-        <span>CloseIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <CloseRoundedIcon />
-        <span>CloseRoundedIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <CloseWithBgIcon />
-        <span>CloseWithBgIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ConfigureIcon />
-        <span>ConfigureIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <DarkModeIcon />
-        <span>DarkModeIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <DateTimeIcon />
-        <span>DateTimeIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <DownloadIcon />
-        <span>DownloadIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <FilterIcon />
-        <span>FilterIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <InfoIcon />
-        <span>InfoIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <InvestigateIcon />
-        <span>InvestigateIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <LightModeIcon />
-        <span>LightModeIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <LinkIcon />
-        <span>LinkIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <LogoutIcon />
-        <span>LogoutIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ManageIcon />
-        <span>ManageIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <MonitorIcon />
-        <span>MonitorIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <NavChevronLeftIcon />
-        <span>NavChevronLeftIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <NavChevronRightIcon />
-        <span>NavChevronRightIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <NotificationsIcon />
-        <span>NotificationsIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <PauseIcon
-          height={16}
-          width={16}
-        />
-        <span>PauseIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ResetIcon />
-        <span>ResetIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <SearchIcon
-          height={20}
-          width={20}
-        />
-        <span>SearchIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <SettingsIcon
-          height={16}
-          width={16}
-        />
-        <span>SettingsIcon (filled)</span>
-      </div>
-      <div style={rowStyle}>
-        <SettingsIcon
-          height={16}
-          variant='outline'
-          width={16}
-        />
-        <span>SettingsIcon (outline)</span>
-      </div>
-      <div style={rowStyle}>
-        <SortIcon />
-        <span>SortIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <SortUpDownIcon />
-        <span>SortUpDownIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <SwapIcon />
-        <span>SwapIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <ThreeDotsMenuIcon />
-        <span>ThreeDotsMenuIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <VcheckFillIcon height={24} width={24} />
-        <span>VcheckFillIcon</span>
-      </div>
-      <div style={rowStyle}>
-        <WarningCircleIcon />
-        <span>WarningCircleIcon (outline)</span>
-      </div>
-      <div style={rowStyle}>
-        <WarningCircleIcon filled />
-        <span>WarningCircleIcon (filled)</span>
-      </div>
-      <div style={rowStyle}>
-        <WarningIcon />
-        <span>WarningIcon (outline)</span>
-      </div>
-      <div style={rowStyle}>
-        <WarningIcon filled />
-        <span>WarningIcon (filled)</span>
-      </div>
-      <div style={rowStyle}>
-        <WarningTriangleIcon />
-        <span>WarningTriangleIcon</span>
-      </div>
+      {generalIcons.map(({ name, node }) => (
+        <div
+          key={name}
+          style={rowStyle}
+        >
+          {node}
+          <span>{name}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const INVENTORY_ICON_SIZE = 36
+const iconCellStyle = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  alignItems: 'center',
+  gap: '8px',
+  fontSize: '12px'
+}
+const inventoryIcons = [
+  { name: 'DriversIcon', Icon: DriversIcon },
+  { name: 'FileSystemIcon', Icon: FileSystemIcon },
+  { name: 'S3BucketsIcon', Icon: S3BucketsIcon },
+  { name: 'ServersIcon', Icon: ServersIcon }
+]
+
+export const InventoryIcons: Story = {
+  render: () => (
+    <div style={rowStyle}>
+      {inventoryIcons.map(({ name, Icon }) => (
+        <div
+          key={name}
+          style={iconCellStyle}
+        >
+          <Icon
+            height={INVENTORY_ICON_SIZE}
+            width={INVENTORY_ICON_SIZE}
+          />
+          <span>{name}</span>
+        </div>
+      ))}
     </div>
   )
 }

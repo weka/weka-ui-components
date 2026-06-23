@@ -214,7 +214,7 @@ function SelectDemo() {
 }
 
 const meta: Meta<typeof SelectDemo> = {
-  title: 'V2/Inputs/Select',
+  title: 'v2/Inputs/Select',
   component: SelectDemo,
   parameters: { layout: 'centered' }
 }
