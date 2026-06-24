@@ -177,10 +177,10 @@ export interface TableExtraClasses {
 }
 
 export interface RowAction<Data> {
-  hideAction: boolean | ((rowValues: Data) => boolean)
-  action?: ((rowValues: Data) => void) | (() => void)
-  content?: string | ((rowValues: Data) => HTMLElement)
-  disabled?: boolean | ((rowValues: Data) => boolean)
+  hideAction: boolean | ((rowValues: Data, row: ExtendedRow<Data>) => boolean)
+  action?: (rowValues: Data, row: ExtendedRow<Data>) => void
+  content?: string | ((rowValues: Data, row: ExtendedRow<Data>) => HTMLElement)
+  disabled?: boolean | ((rowValues: Data, row: ExtendedRow<Data>) => boolean)
   text?: string
 }
 
