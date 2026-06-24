@@ -25,6 +25,7 @@ const CUSTOM_CLASS = 'custom-class'
 const MAX_HEIGHT = '500px'
 const COLUMN_WIDTH = '200px'
 const NAME_COLUMN_CLASS = 'name-column'
+const HEADER_CLASS = 'red-header'
 
 const TAB_1_ID = 'tab1'
 const TAB_2_ID = 'tab2'
@@ -310,5 +311,40 @@ describe('SimpleTable - Column Configuration', () => {
     )
 
     expect(container.querySelector(`.${NAME_COLUMN_CLASS}`)).toBeInTheDocument()
+  })
+
+  it('applies headerClassName to header cells when headers are present', () => {
+    const HEADER_LABEL = 'Name'
+    const columns: SimpleTableColumn<TestItem>[] = [
+      { key: 'name', header: HEADER_LABEL, render: (row) => row.name }
+    ]
+
+    const { container } = render(
+      <SimpleTable
+        columns={columns}
+        data={createData()}
+        headerClassName={HEADER_CLASS}
+      />
+    )
+
+    const headerCell = container.querySelector(`.${HEADER_CLASS}`)
+    expect(headerCell).toBeInTheDocument()
+    expect(headerCell).toHaveTextContent(HEADER_LABEL)
+  })
+
+  it('exposes the header label as a tooltip for truncation', () => {
+    const HEADER_LABEL = 'Throughput'
+    const columns: SimpleTableColumn<TestItem>[] = [
+      { key: 'value', header: HEADER_LABEL, render: (row) => row.value }
+    ]
+
+    render(
+      <SimpleTable
+        columns={columns}
+        data={createData()}
+      />
+    )
+
+    expect(screen.getByLabelText(HEADER_LABEL)).toBeInTheDocument()
   })
 })

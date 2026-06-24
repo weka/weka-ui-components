@@ -12,8 +12,8 @@ export const GRADIENT_COLORS = {
     end: '#FFAB40'
   },
   yellow: {
-    start: '#CCB429',
-    end: '#FFE866'
+    start: '#E5C717',
+    end: '#FFEA73'
   },
   gray: {
     start: '#576473',
@@ -52,8 +52,8 @@ export const GRADIENT_COLORS = {
     end: '#FFCD8C'
   },
   yellowLight: {
-    start: '#FFE866',
-    end: '#FFF099'
+    start: '#FFEA73',
+    end: '#FFF2A6'
   },
   grayLight: {
     start: '#8594A6',
@@ -84,7 +84,7 @@ export const GRADIENT_COLORS = {
     end: '#6BB276'
   },
   backupOrange: {
-    start: '#E58B17',
+    start: '#EB8C13',
     end: '#FFBC66'
   },
   backupGray: {
