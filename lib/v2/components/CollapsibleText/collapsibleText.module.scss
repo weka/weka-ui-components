@@ -1,0 +1,32 @@
+.collapsibleContainer {
+  line-height: 1.4;
+  font-size: 16px;
+  color: var(--gray-920-50);
+}
+
+.textWrapper {
+  display: inline;
+  overflow-wrap: break-word;
+}
+
+.textContent {
+  display: inline;
+  overflow-wrap: break-word;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: var(--purple-700-300);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  font-size: inherit;
+  font-weight: 400;
+  display: inline;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -112,7 +112,7 @@ function MultiSelectAutocompleteDemo() {
 }
 
 const meta: Meta<typeof MultiSelectAutocompleteDemo> = {
-  title: 'V2/Inputs/MultiSelectAutocomplete',
+  title: 'v2/Inputs/MultiSelectAutocomplete',
   component: MultiSelectAutocompleteDemo,
   parameters: { layout: 'centered' }
 }

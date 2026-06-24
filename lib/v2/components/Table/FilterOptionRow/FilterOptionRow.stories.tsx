@@ -9,7 +9,7 @@ import { SeverityChip } from '../../SeverityChip'
 import { FilterOptionRow } from './FilterOptionRow'
 
 const meta: Meta<typeof FilterOptionRow> = {
-  title: 'v2/Table/filters/FilterOptionRow'
+  title: 'v2/Table/Filters/FilterOptionRow'
 }
 
 export default meta

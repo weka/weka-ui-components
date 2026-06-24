@@ -1,0 +1,123 @@
+@use '../../styles/colors' as *;
+
+.healthStatus {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 4px 12px;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.text {
+  color: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressContainer {
+  position: relative;
+  flex-grow: 1;
+  min-width: 80px;
+  max-width: 100%;
+  height: 8px;
+  background-color: var(--orange-200-800);
+  border-radius: 4px;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--orange-500);
+  border-radius: 4px;
+  transition: width 0.3s ease-in-out;
+}
+
+.percentage {
+  color: var(--orange-500);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.error {
+  background-color: $red-700;
+  color: $gray-0;
+}
+
+.success {
+  background-color: $green-600;
+  color: $gray-0;
+
+  .progressContainer {
+    background-color: $green-800;
+  }
+
+  .progressBar {
+    background-color: $green-200;
+  }
+
+  .percentage {
+    color: $green-100;
+  }
+}
+
+.warning {
+  background-color: $orange-400;
+  color: $gray-920;
+
+  .progressContainer {
+    background-color: $gray-920;
+  }
+
+  .progressBar {
+    background-color: $yellow-800;
+  }
+
+  .percentage {
+    color: $yellow-900;
+  }
+}
+
+.info {
+  background-color: var(--gray-150-850);
+  color: var(--gray-800-200);
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusText {
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-line;
+}

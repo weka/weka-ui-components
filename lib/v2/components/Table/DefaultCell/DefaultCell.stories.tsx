@@ -8,7 +8,7 @@ import { CellStoryTable } from '../CellStoryTable'
 import { DefaultCell } from './DefaultCell'
 
 const meta: Meta<typeof DefaultCell> = {
-  title: 'v2/Table/cells/DefaultCell'
+  title: 'v2/Table/Cells/DefaultCell'
 }
 
 export default meta

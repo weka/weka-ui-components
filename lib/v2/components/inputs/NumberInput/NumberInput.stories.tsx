@@ -71,7 +71,7 @@ function NumberInputDemo() {
 }
 
 const meta: Meta<typeof NumberInputDemo> = {
-  title: 'V2/Inputs/NumberInput',
+  title: 'v2/Inputs/NumberInput',
   component: NumberInputDemo,
   parameters: { layout: 'centered' }
 }

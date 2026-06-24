@@ -1,16 +1,18 @@
-import type { ProtectionStatusInfo } from './protectionStatus'
+import type { ProtectionStatusInfo } from '#v2/utils/protectionStatus'
 
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
-
-import { getStatusColorClass, mapLegacyStatus } from './protectionStatus'
+import {
+  getStatusColorClass,
+  mapLegacyStatus
+} from '#v2/utils/protectionStatus'
 
 import styles from './systemStatus.module.scss'
 
 export interface SystemStatusProps {
   status: string
-  statusInfo?: ProtectionStatusInfo
+  statusInfo?: Pick<ProtectionStatusInfo, 'label' | 'color'>
   showProgress?: boolean
   progress?: number
   extraClass?: string

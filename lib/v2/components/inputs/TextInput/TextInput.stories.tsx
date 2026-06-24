@@ -69,7 +69,7 @@ function TextInputDemo() {
 }
 
 const meta: Meta<typeof TextInputDemo> = {
-  title: 'V2/Inputs/TextInput',
+  title: 'v2/Inputs/TextInput',
   component: TextInputDemo,
   parameters: { layout: 'centered' }
 }

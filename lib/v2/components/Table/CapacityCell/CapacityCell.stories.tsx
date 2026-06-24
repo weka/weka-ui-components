@@ -5,7 +5,7 @@ import { UNIT_TYPES } from '#v2/utils/capacityUtils'
 import { CapacityCell } from './CapacityCell'
 
 const meta: Meta<typeof CapacityCell> = {
-  title: 'v2/Table/cells/CapacityCell'
+  title: 'v2/Table/Cells/CapacityCell'
 }
 
 export default meta

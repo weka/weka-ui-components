@@ -107,7 +107,7 @@ function DraggableGrid() {
 }
 
 const meta = {
-  title: 'V2/DraggableCard',
+  title: 'v2/DraggableCard',
   component: DraggableCard,
   parameters: { layout: 'centered' }
 } satisfies Meta<typeof DraggableCard>

@@ -1,0 +1,121 @@
+.actionsContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.menuIconBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray-700-300);
+  background: none;
+
+  &:hover {
+    background: var(--icon-bg-hover);
+  }
+
+  &:focus {
+    background: var(--icon-bg-active);
+    outline: none;
+  }
+}
+
+.menuIconBtnActive {
+  background: var(--icon-bg-active);
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: var(--icon-bg-hover);
+  }
+}
+
+.alertsPopoverList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sortTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.alertsMenuItem {
+  box-sizing: border-box;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+
+  &:hover {
+    background: var(--icon-bg-hover);
+  }
+}
+
+.separator {
+  height: 1px;
+  background: var(--gray-200-800);
+  margin: 4px 0;
+}
+
+.mutedOption {
+  box-sizing: border-box;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+
+  &:hover {
+    background: var(--icon-bg-hover);
+  }
+}
+
+.mutedLabel {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.mutedCheckbox {
+  accent-color: var(--gray-900-100);
+  cursor: pointer;
+}
+
+.sortArrow {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.inactiveArrow {
+  opacity: 0;
+}

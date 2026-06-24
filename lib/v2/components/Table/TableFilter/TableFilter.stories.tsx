@@ -8,7 +8,7 @@ import { FILTER_TYPES, NOOP } from '#v2/utils/consts'
 import { TableFilter } from './TableFilter'
 
 const meta: Meta<typeof TableFilter> = {
-  title: 'v2/Table/filters/TableFilter'
+  title: 'v2/Table/Filters/TableFilter'
 }
 
 export default meta
