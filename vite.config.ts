@@ -18,6 +18,7 @@ const v1ExternalPatterns: (string | RegExp)[] = [
   'react/jsx-runtime',
   'react-dom',
   'react-router-dom',
+  'react-toastify',
   '@emotion/react',
   '@emotion/styled',
   /^@mui\/material/,
