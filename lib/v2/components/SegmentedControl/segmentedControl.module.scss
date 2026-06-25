@@ -1,0 +1,37 @@
+@use '../../styles/colors' as *;
+
+.segmentedControl {
+  display: inline-flex;
+  gap: 2px;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.option {
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 24px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--text-primary);
+
+    &:not(.active) {
+      background: var(--bg-tertiary);
+    }
+  }
+}
+
+.active {
+  background: linear-gradient(0deg, $purple-600 0%, $purple-400 100%);
+  color: $gray-50;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+}

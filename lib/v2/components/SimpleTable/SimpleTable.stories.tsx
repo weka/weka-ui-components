@@ -86,10 +86,20 @@ const EXPANDABLE_ROW_STYLES = `
   }
 `
 
+const STYLED_HEADER_CLASS = 'story-red-header'
+
+const STYLED_HEADER_STYLES = `
+  .${STYLED_HEADER_CLASS} {
+    color: var(--red-700-300) !important;
+    font-weight: 700 !important;
+  }
+`
+
 const STORY_VARIANTS = {
   INTERACTIVE: 'interactive',
   EMPTY: 'empty',
-  WITH_EXPANDABLE_TEXT: 'expandable'
+  WITH_EXPANDABLE_TEXT: 'expandable',
+  STYLED_HEADERS: 'styledHeaders'
 } as const
 
 type StoryVariant = (typeof STORY_VARIANTS)[keyof typeof STORY_VARIANTS]
@@ -138,6 +148,19 @@ function SimpleTableDemo({ variant }: Readonly<{ variant: StoryVariant }>) {
     )
   }
 
+  if (variant === STORY_VARIANTS.STYLED_HEADERS) {
+    return (
+      <div style={CONTAINER_STYLE}>
+        <style>{STYLED_HEADER_STYLES}</style>
+        <SimpleTable<Row>
+          columns={COLUMNS}
+          data={SAMPLE_ROWS}
+          headerClassName={STYLED_HEADER_CLASS}
+        />
+      </div>
+    )
+  }
+
   const filtered =
     activeTab === 'prod'
       ? SAMPLE_ROWS.filter((row) => row.name.includes('prod'))
@@ -175,4 +198,8 @@ export const Empty: Story = {
 
 export const WithExpandableText: Story = {
   args: { variant: STORY_VARIANTS.WITH_EXPANDABLE_TEXT }
+}
+
+export const StyledHeaders: Story = {
+  args: { variant: STORY_VARIANTS.STYLED_HEADERS }
 }

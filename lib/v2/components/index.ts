@@ -38,6 +38,8 @@ export {
 } from './CapacityProgressBar'
 export type { DonutChartProps, DonutChartSegment } from './charts/DonutChart'
 export { DonutChart } from './charts/DonutChart'
+export type { MiniChartDataPoint, MiniChartProps } from './charts/MiniChart'
+export { MiniChart } from './charts/MiniChart'
 export type { CheckboxProps } from './CheckBox'
 export { Checkbox } from './CheckBox'
 export type { ChipProps } from './Chip'
@@ -142,6 +144,11 @@ export type {
   SearchOption
 } from './SearchAutocomplete'
 export { SearchAutocomplete } from './SearchAutocomplete'
+export type {
+  SegmentedControlOption,
+  SegmentedControlProps
+} from './SegmentedControl'
+export { SegmentedControl } from './SegmentedControl'
 export type { SeverityChipProps } from './SeverityChip'
 export {
   getFilterSeverityChips,

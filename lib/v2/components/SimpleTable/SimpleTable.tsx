@@ -30,6 +30,7 @@ export interface SimpleTableProps<T> {
   rowKey?: (row: T, index: number) => string | number
   rowClassName?: string
   extraClass?: string
+  headerClassName?: string
   emptyMessage?: string
   maxHeight?: string | number
   tabs?: SimpleTableTab[]
@@ -88,6 +89,7 @@ export function SimpleTable<T>({
   rowKey,
   rowClassName = EMPTY_STRING,
   extraClass = EMPTY_STRING,
+  headerClassName = EMPTY_STRING,
   emptyMessage = DEFAULT_EMPTY_MESSAGE,
   maxHeight,
   tabs,
@@ -124,10 +126,20 @@ export function SimpleTable<T>({
           {columns.map((col, colIndex) => (
             <div
               key={col.key || colIndex}
-              className={styles.headerCell}
+              className={clsx(styles.headerCell, headerClassName)}
               style={flexFromWidth(col.width)}
             >
-              {col.header ?? EMPTY_STRING}
+              {col.header ? (
+                <Tooltip
+                  data={col.header}
+                  ellipsis
+                  ellipsisClass={styles.tooltipCell}
+                >
+                  <span>{col.header}</span>
+                </Tooltip>
+              ) : (
+                EMPTY_STRING
+              )}
             </div>
           ))}
         </div>
