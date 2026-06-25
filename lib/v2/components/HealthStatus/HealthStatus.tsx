@@ -84,7 +84,7 @@ export function HealthStatus({
   extraClass,
   dataTestId
 }: Readonly<HealthStatusProps>) {
-  const hasProgress = typeof progress === 'number' && progress > PROGRESS_MIN
+  const hasProgress = typeof progress === 'number' && progress >= PROGRESS_MIN
   const formattedProgress = hasProgress
     ? `${progress.toFixed(PROGRESS_DECIMALS)}%`
     : EMPTY_STRING
