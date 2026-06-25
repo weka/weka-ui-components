@@ -13,6 +13,10 @@
   border: 1px solid transparent;
 }
 
+td:has(.chip) {
+  overflow: visible;
+}
+
 .dot {
   width: 10px;
   height: 10px;

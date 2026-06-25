@@ -44,6 +44,19 @@ describe('HealthStatus', () => {
     expect(screen.getByText('42.5%')).toBeInTheDocument()
   })
 
+  it('shows the progress bar at 0% when progress is 0', () => {
+    render(
+      <HealthStatus
+        iconType='check'
+        label='Rebuilding'
+        progress={0}
+        severity='warning'
+      />
+    )
+
+    expect(screen.getByText('0.0%')).toBeInTheDocument()
+  })
+
   it('hides progress when not provided', () => {
     render(
       <HealthStatus
