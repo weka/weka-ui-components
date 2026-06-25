@@ -35,6 +35,11 @@ const v2ExternalPatterns: RegExp[] = v2DeclaredDeps.map(
   (name) => new RegExp(`^${escapeRegex(name)}(\\/|$)`)
 )
 
+// Transitive deps the v1 build emits as separate chunks under dist/node_modules
+// (which npm/yarn strip on publish). They aren't direct dependencies, so they
+// must be externalized explicitly; consumers resolve them via their parent dep.
+const v1TransitiveExternals: RegExp[] = [/^@tanstack\/table-core(\/|$)/]
+
 function matchesAny(
   source: string,
   patterns: (string | RegExp)[]
@@ -49,9 +54,17 @@ function isExternalImport(source: string, importer: string | undefined) {
     return false
   }
   const isFromV2 = importer.replace(/\\/g, '/').includes('/lib/v2/')
-  return isFromV2
-    ? matchesAny(source, v2ExternalPatterns)
-    : matchesAny(source, v1ExternalPatterns)
+  if (isFromV2) {
+    return matchesAny(source, v2ExternalPatterns)
+  }
+  // v1: externalize the framework list, every declared dependency, and the
+  // bundled transitives — so nothing lands in dist/node_modules (stripped on
+  // publish) and consumers resolve deps from their own tree.
+  return (
+    matchesAny(source, v1ExternalPatterns) ||
+    matchesAny(source, v2ExternalPatterns) ||
+    matchesAny(source, v1TransitiveExternals)
+  )
 }
 
 /**
