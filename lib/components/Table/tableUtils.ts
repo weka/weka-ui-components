@@ -1,11 +1,11 @@
 import type { ExtendedColumn, ExtendedRow, UrlFilterParser } from './types'
 import type { Severities } from '#consts'
 
-import { EMPTY_STRING, SEVERITIES } from '#consts'
 import { Duration } from 'luxon'
+
+import { EMPTY_STRING, SEVERITIES } from '#consts'
 import utils from '#utils'
 
-import { Utils } from '../../main'
 import {
   COMPARE_OPERATORS,
   type CompareOperator
@@ -299,7 +299,7 @@ export const urlFilterParsers = {
     Array.isArray(rawValue) ? rawValue : null,
   date: (rawValue: Parameters<UrlFilterParser>[0]) => {
     if (
-      !Utils.isObject(rawValue) ||
+      !utils.isObject(rawValue) ||
       (!rawValue?.startTime?.[0] && !rawValue?.endTime?.[0])
     ) {
       return null
@@ -316,7 +316,7 @@ export const urlFilterParsers = {
       : null,
   duration: (rawValue: Parameters<UrlFilterParser>[0]) => {
     if (
-      !Utils.isObject(rawValue) ||
+      !utils.isObject(rawValue) ||
       (!rawValue?.duration?.[0] && !rawValue?.operator?.[0])
     ) {
       return null
@@ -327,7 +327,7 @@ export const urlFilterParsers = {
     }
   },
   text: (rawValue: Parameters<UrlFilterParser>[0]) => {
-    if (Utils.isObject(rawValue) && rawValue?.pattern?.[0]) {
+    if (utils.isObject(rawValue) && rawValue?.pattern?.[0]) {
       const mode = rawValue?.mode?.[0]
       const validModes: TextFilterMode[] = [
         FILTER_MODES.INCLUDE,
@@ -347,7 +347,7 @@ export const urlFilterParsers = {
     return null
   },
   select: (rawValue: Parameters<UrlFilterParser>[0]) => {
-    if (Utils.isObject(rawValue) && rawValue?.value?.[0]) {
+    if (utils.isObject(rawValue) && rawValue?.value?.[0]) {
       const mode = rawValue?.mode?.[0]
       const validModes: SelectFilterMode[] = [
         FILTER_MODES.INCLUDE,
@@ -366,7 +366,7 @@ export const urlFilterParsers = {
     return null
   },
   multiSelect: (rawValue: Parameters<UrlFilterParser>[0]) => {
-    if (Utils.isObject(rawValue) && rawValue?.values) {
+    if (utils.isObject(rawValue) && rawValue?.values) {
       const mode = rawValue?.mode?.[0]
       const validModes: SelectFilterMode[] = [
         FILTER_MODES.INCLUDE,
