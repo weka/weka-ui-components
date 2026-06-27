@@ -2,14 +2,13 @@ import type { ExtendedColumnFilter, UrlFilterParser } from '../types'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+
 import { SAVED_FILTERS } from '#consts'
 import { useStaticProps } from '#hooks'
+import Utils from '#utils'
 
 import localStorageService from '../../../localStorageService'
-import { Utils } from '../../../main'
 import { urlFilterParsers } from '../tableUtils'
-
-const defaultFilterParser = urlFilterParsers.string
 
 function useUrlFilters(props: {
   enabled?: boolean
@@ -49,7 +48,7 @@ function useUrlFilters(props: {
       const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
 
       return filterConfig.flatMap(
-        ({ id, filterParser = defaultFilterParser }) => {
+        ({ id, filterParser = urlFilterParsers.string }) => {
           const filterParserFunc =
             typeof filterParser === 'string'
               ? urlFilterParsers[filterParser]
