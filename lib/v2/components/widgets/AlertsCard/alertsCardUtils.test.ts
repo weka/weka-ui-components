@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { EMPTY_STRING } from '#v2/utils/consts'
+import { EMPTY_STRING, SEVERITY_TYPES } from '#v2/utils/consts'
 
 import {
   ALERT_SORT_FIELDS,
@@ -8,6 +8,7 @@ import {
   type AlertItem,
   buildAlertRows,
   formatRelativeTime,
+  getHighestSeverity,
   getSeverityRank,
   SORT_ORDERS
 } from './alertsCardUtils'
@@ -16,6 +17,7 @@ const MS_PER_MINUTE = 60_000
 const MS_PER_HOUR = 3_600_000
 const MINUTES_AGO = 5
 const HOURS_AGO = 3
+const UNKNOWN_SEVERITY = 'not-a-severity'
 
 const baseAlert = (overrides: Partial<AlertItem>): AlertItem => ({
   id: 1,
@@ -33,8 +35,48 @@ describe('getSeverityRank', () => {
 
   it('is case-insensitive and falls back to info rank for unknown severities', () => {
     expect(getSeverityRank('CRITICAL')).toBe(getSeverityRank('critical'))
-    expect(getSeverityRank('not-a-severity')).toBe(getSeverityRank('info'))
+    expect(getSeverityRank(UNKNOWN_SEVERITY)).toBe(getSeverityRank('info'))
     expect(getSeverityRank()).toBe(getSeverityRank('info'))
+  })
+})
+
+describe('getHighestSeverity', () => {
+  it('returns the most severe severity among the alerts', () => {
+    const alerts = [
+      baseAlert({ id: 1, severity: 'info' }),
+      baseAlert({ id: 2, severity: 'critical' }),
+      baseAlert({ id: 3, severity: 'warning' })
+    ]
+    expect(getHighestSeverity(alerts)).toBe(SEVERITY_TYPES.CRITICAL)
+  })
+
+  it('ignores ordering and returns the worst regardless of position', () => {
+    const alerts = [
+      baseAlert({ id: 1, severity: 'major' }),
+      baseAlert({ id: 2, severity: 'minor' })
+    ]
+    expect(getHighestSeverity(alerts)).toBe(SEVERITY_TYPES.MAJOR)
+  })
+
+  it('treats unknown severities as info', () => {
+    expect(
+      getHighestSeverity([baseAlert({ severity: UNKNOWN_SEVERITY })])
+    ).toBe(SEVERITY_TYPES.INFO)
+  })
+
+  it('is independent of order when an unknown shares info rank', () => {
+    const unknownThenInfo = [
+      baseAlert({ id: 1, severity: UNKNOWN_SEVERITY }),
+      baseAlert({ id: 2, severity: 'info' })
+    ]
+    const infoThenUnknown = [...unknownThenInfo].reverse()
+    expect(getHighestSeverity(unknownThenInfo)).toBe(
+      getHighestSeverity(infoThenUnknown)
+    )
+  })
+
+  it('returns the default severity for an empty list', () => {
+    expect(getHighestSeverity([])).toBe(SEVERITY_TYPES.DEFAULT)
   })
 })
 
