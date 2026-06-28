@@ -1,0 +1,17 @@
+.booleanIconCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booleanIconCellCheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+}
+
+.booleanIconCellDash {
+  color: var(--text-secondary);
+}

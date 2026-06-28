@@ -39,7 +39,9 @@ export {
   FILTER_TYPES,
   KEYBOARD_KEYS,
   NOOP,
+  NOT_APPLICABLE,
   PARITY_STATUSES,
+  PERCENTAGE,
   SEARCH_PLACEHOLDER,
   SEVERITY_LABELS,
   SEVERITY_ORDER_ASC,
@@ -74,8 +76,12 @@ export {
   PROTECTION_STATUS_TYPES
 } from '#v2/utils/protectionStatus'
 export { highlightText } from '#v2/utils/textUtils'
+export type { TimestampInput } from '#v2/utils/timeUtils'
 export {
   formatDate,
   formatISODate,
-  getDaysOfTheMonth
+  formatTimestamp,
+  getDaysOfTheMonth,
+  getUserLocale,
+  toDateTime
 } from '#v2/utils/timeUtils'

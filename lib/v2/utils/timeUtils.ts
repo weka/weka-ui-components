@@ -1,10 +1,119 @@
 import { DateTime } from 'luxon'
 
-import { EMPTY_STRING } from '#v2/utils/consts'
+import { EMPTY_STRING, NOT_APPLICABLE } from '#v2/utils/consts'
 
 const DAYS_IN_WEEK = 7
 const INVALID_MESSAGE = 'Invalid DateTime'
 const NOT_DATETIME_MESSAGE = 'Not Valid DateTime Object'
+const DEFAULT_LOCALE = 'en-US'
+
+/**
+ * Input types accepted by formatTimestamp and toDateTime.
+ */
+export type TimestampInput =
+  | string
+  | Date
+  | DateTime
+  | number
+  | null
+  | undefined
+
+/**
+ * Returns the browser's preferred locale, falling back to en-US in non-browser environments.
+ */
+export function getUserLocale(): string {
+  if (typeof navigator === 'undefined') {
+    return DEFAULT_LOCALE
+  }
+  return navigator.language || navigator.languages?.[0] || DEFAULT_LOCALE
+}
+
+/**
+ * Unified timestamp formatter: MM/DD/YYYY, hh:mmAM/PM (locale-aware).
+ * Returns N/A for null, undefined, or invalid inputs.
+ *
+ * @param input - Date string, Date object, DateTime object, or Unix timestamp (ms)
+ */
+export function formatTimestamp(input: TimestampInput): string {
+  if (input === null || input === undefined) {
+    return NOT_APPLICABLE
+  }
+
+  try {
+    let date: Date
+
+    if (input instanceof Date) {
+      date = input
+    } else if (DateTime.isDateTime(input)) {
+      date = input.toJSDate()
+    } else if (typeof input === 'number') {
+      date = new Date(input)
+    } else if (typeof input === 'string') {
+      date = new Date(input)
+    } else {
+      return NOT_APPLICABLE
+    }
+
+    if (isNaN(date.getTime())) {
+      return NOT_APPLICABLE
+    }
+
+    const locale = getUserLocale()
+
+    const dateStr = date.toLocaleDateString(locale, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    })
+
+    const timeStr = date
+      .toLocaleTimeString(locale, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      })
+      .replace(' ', EMPTY_STRING)
+
+    return `${dateStr}, ${timeStr}`
+  } catch {
+    return NOT_APPLICABLE
+  }
+}
+
+/**
+ * Converts a TimestampInput to a Luxon DateTime, or null for null/undefined/invalid inputs.
+ * Uses new Date(string) to match formatTimestamp's string parsing behaviour.
+ */
+export function toDateTime(input: TimestampInput): DateTime | null {
+  if (input === null || input === undefined) {
+    return null
+  }
+
+  try {
+    let date: Date
+
+    if (input instanceof Date) {
+      date = input
+    } else if (DateTime.isDateTime(input)) {
+      date = input.toJSDate()
+    } else if (typeof input === 'number') {
+      date = new Date(input)
+    } else if (typeof input === 'string') {
+      date = new Date(input)
+    } else {
+      return null
+    }
+
+    if (isNaN(date.getTime())) {
+      return null
+    }
+
+    const dateTime = DateTime.fromJSDate(date)
+    return dateTime.isValid ? dateTime : null
+  } catch {
+    return null
+  }
+}
 
 /**
  * Formats an ISO date string for display, optionally including time components.

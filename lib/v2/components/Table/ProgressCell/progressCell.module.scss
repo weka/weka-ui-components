@@ -1,0 +1,14 @@
+.progressCell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.progressBar {
+  width: 100%;
+}
+
+.progressCellEmpty {
+  font-size: 13px;
+  color: var(--text-secondary);
+}

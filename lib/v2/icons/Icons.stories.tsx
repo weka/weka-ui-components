@@ -42,6 +42,7 @@ import { SwapIcon } from './SwapIcon'
 import { ThreeDotsMenuIcon } from './ThreeDotsMenuIcon'
 import { UnmuteIcon } from './UnmuteIcon'
 import { VcheckFillIcon } from './VcheckFillIcon'
+import { VcheckGradientIcon } from './VcheckGradientIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
 import { WarningIcon } from './WarningIcon'
 import { WarningTriangleIcon } from './WarningTriangleIcon'
@@ -167,6 +168,15 @@ const generalIcons: { name: string; node: ReactNode }[] = [
     name: 'VcheckFillIcon',
     node: (
       <VcheckFillIcon
+        height={VCHECK_ICON_SIZE}
+        width={VCHECK_ICON_SIZE}
+      />
+    )
+  },
+  {
+    name: 'VcheckGradientIcon',
+    node: (
+      <VcheckGradientIcon
         height={VCHECK_ICON_SIZE}
         width={VCHECK_ICON_SIZE}
       />
