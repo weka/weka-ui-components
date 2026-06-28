@@ -3,6 +3,8 @@ import type { RefObject } from 'react'
 // eslint-disable-next-line @weka/weka/no-empty-strings
 export const EMPTY_STRING = ''
 
+export const NOT_APPLICABLE = 'N/A'
+
 export const EMPTY_ARRAY: readonly never[] = []
 export const EMPTY_STRING_ARRAY: readonly string[] = []
 export const EMPTY_REF_ARRAY: readonly RefObject<HTMLElement>[] = []

@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 
-import styles from './capacityProgressBar.module.scss'
+import { PERCENTAGE } from '#v2/utils/consts'
 
-const FULL_PERCENTAGE = 100
+import styles from './capacityProgressBar.module.scss'
 
 export interface CapacityProgressBarProps {
   percentage: number
@@ -46,7 +46,7 @@ export function CapacityProgressBar({
   fillColor: fillColorProp
 }: Readonly<CapacityProgressBarProps>) {
   const fillColor = fillColorProp ?? getFillColor(percentage)
-  const clampedPercentage = Math.min(percentage, FULL_PERCENTAGE)
+  const clampedPercentage = Math.min(percentage, PERCENTAGE.FULL)
 
   return (
     <div
@@ -67,7 +67,7 @@ export function CapacityProgressBar({
       />
       {showPercentageText ? (
         <div className={styles.percentageText}>
-          {percentage === FULL_PERCENTAGE
+          {percentage === PERCENTAGE.FULL
             ? '100%'
             : `${percentage.toFixed(1)}%`}
         </div>

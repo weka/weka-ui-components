@@ -182,6 +182,11 @@ export type { SwitchProps } from './Switch'
 export { Switch } from './Switch'
 export type { SystemStatusProps } from './SystemStatus'
 export { SystemStatus } from './SystemStatus'
+export type {
+  BooleanIconCellOptions,
+  BooleanIconCellValue
+} from './Table/BooleanIconCell'
+export { BooleanIconCell } from './Table/BooleanIconCell'
 export type { CapacityCellProps } from './Table/CapacityCell'
 export { CapacityCell } from './Table/CapacityCell'
 export type {
@@ -204,6 +209,8 @@ export {
   isValidCapacityRange,
   isWithinRange
 } from './Table/CapacityRangeFilter'
+export type { DateCellOptions, DateCellValue } from './Table/DateCell'
+export { DateCell } from './Table/DateCell'
 export type { DefaultCellOptions, DefaultCellValue } from './Table/DefaultCell'
 export { DefaultCell } from './Table/DefaultCell'
 export type { FilterChipsProps } from './Table/FilterChips'
@@ -253,6 +260,11 @@ export { NumberRange } from './Table/NumberRange'
 export type { PaginationProps } from './Table/Pagination'
 export { Pagination } from './Table/Pagination'
 export type {
+  ProgressCellOptions,
+  ProgressCellValue
+} from './Table/ProgressCell'
+export { ProgressCell } from './Table/ProgressCell'
+export type {
   ReductionRangeFilterProps,
   ReductionRangeFilterType,
   ReductionRangeMode
@@ -263,7 +275,25 @@ export {
   REDUCTION_RANGE_MODES,
   ReductionRangeFilter
 } from './Table/ReductionRangeFilter'
-export type { PaginationState, RowAction, SortDirection, TableProps } from './Table/Table'
+export type {
+  StatusCellOptions,
+  StatusCellValue,
+  StatusVariant
+} from './Table/StatusCell'
+export {
+  DEGRADED_STATUSES,
+  getStatusVariant,
+  STATUS_VARIANTS,
+  StatusCell,
+  UP_STATUSES,
+  WORKING_STATUSES
+} from './Table/StatusCell'
+export type {
+  PaginationState,
+  RowAction,
+  SortDirection,
+  TableProps
+} from './Table/Table'
 export { Table } from './Table/Table'
 export type { TableFilterProps } from './Table/TableFilter'
 export { TableFilter } from './Table/TableFilter'

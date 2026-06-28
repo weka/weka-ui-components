@@ -1,0 +1,49 @@
+.statusCell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusDot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusDotUp {
+  background-color: var(--green-500);
+}
+
+.statusDotWorking {
+  background-color: var(--orange-500);
+}
+
+.statusDotDegraded {
+  background-color: var(--yellow-600);
+}
+
+.statusDotDown {
+  background-color: var(--red-500);
+}
+
+.statusCheckIcon {
+  color: var(--green-500);
+  flex-shrink: 0;
+}
+
+.statusSpinner {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--gray-300-700);
+  border-top-color: var(--orange-500);
+  border-radius: 50%;
+  animation: status-spin 0.8s linear infinite;
+}
+
+@keyframes status-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,11 +1,11 @@
 import { formatCapacitySmart, UNIT_TYPES } from '#v2/utils/capacityUtils'
+import { PERCENTAGE } from '#v2/utils/consts'
 
 import { CapacityProgressBar } from '../../CapacityProgressBar'
 
 import styles from './capacityCell.module.scss'
 
 const UNLIMITED_LABEL = 'Unlimited'
-const FULL_PERCENTAGE = 100
 
 export interface CapacityCellProps {
   used: number
@@ -21,7 +21,7 @@ export function CapacityCell({
   unitType = UNIT_TYPES.BASE10
 }: Readonly<CapacityCellProps>) {
   const isUnlimited = unlimitedWhenZero && total === 0
-  const percentage = total > 0 ? (used / total) * FULL_PERCENTAGE : 0
+  const percentage = total > 0 ? (used / total) * PERCENTAGE.FULL : 0
   const usedFormatted = formatCapacitySmart({ bytes: used, unitType })
   const totalFormatted = formatCapacitySmart({ bytes: total, unitType })
 
