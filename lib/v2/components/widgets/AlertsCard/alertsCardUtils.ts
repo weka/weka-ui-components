@@ -1,5 +1,6 @@
 import {
   EMPTY_STRING,
+  type Severity,
   SEVERITY_ORDER_DESC,
   SEVERITY_TYPES
 } from '#v2/utils/consts'
@@ -43,13 +44,36 @@ const CUSTOM_ALERT_TYPE = 'custom'
 const SINGLE_OCCURRENCE = 1
 const INFO_SEVERITY_RANK = SEVERITY_ORDER_DESC.indexOf(SEVERITY_TYPES.INFO)
 
-/** Ranks a severity for sorting (higher = more severe); unknown → Info rank. */
+/**
+ * Ranks a severity by its position in SEVERITY_ORDER_DESC, where the most
+ * severe (Critical) is index 0 — so a *lower* rank means *more* severe. Unknown
+ * severities fall back to the Info rank.
+ */
 export function getSeverityRank(severity?: string): number {
   const normalized = severity?.toLowerCase?.() || SEVERITY_TYPES.INFO
   const rank = SEVERITY_ORDER_DESC.indexOf(
     normalized as (typeof SEVERITY_ORDER_DESC)[number]
   )
   return rank === -1 ? INFO_SEVERITY_RANK : rank
+}
+
+/**
+ * Returns the highest (most severe) severity among the given alerts as a
+ * canonical `Severity`; empty input yields the `default` severity. Unknown or
+ * missing severities are treated as Info (matching {@link getSeverityRank}), so
+ * the result is independent of the alerts' order. Use this to drive the color of
+ * a summary badge (e.g. DashboardCard's `severity` prop) so it reflects the
+ * worst active alert instead of a fixed color.
+ */
+export function getHighestSeverity(alerts: AlertItem[]): Severity {
+  if (alerts.length === 0) {
+    return SEVERITY_TYPES.DEFAULT
+  }
+  const highestRank = alerts.reduce(
+    (rank, alert) => Math.min(rank, getSeverityRank(alert.severity)),
+    INFO_SEVERITY_RANK
+  )
+  return SEVERITY_ORDER_DESC[highestRank]
 }
 
 function filterAlerts(
@@ -74,7 +98,9 @@ function aggregateAlerts(alerts: AlertItem[]): AlertItem[] {
     if (existing) {
       existing.count = (existing.count ?? SINGLE_OCCURRENCE) + 1
       existing.groupedAlerts.push(alert)
-      if (getSeverityRank(alert.severity) < getSeverityRank(existing.severity)) {
+      if (
+        getSeverityRank(alert.severity) < getSeverityRank(existing.severity)
+      ) {
         existing.severity = alert.severity
       }
       if (

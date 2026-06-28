@@ -327,6 +327,7 @@ export {
   type AlertTabType,
   buildAlertRows,
   formatRelativeTime,
+  getHighestSeverity,
   getSeverityRank,
   SORT_ORDERS,
   type SortOrder
