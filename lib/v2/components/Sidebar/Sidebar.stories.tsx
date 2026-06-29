@@ -35,7 +35,11 @@ const items: SidebarItem[] = [
     label: 'Monitor',
     icon: <MonitorIcon />,
     subItems: [
-      { key: 'dashboard', label: 'System Dashboard', href: '/monitor/dashboard' },
+      {
+        key: 'dashboard',
+        label: 'System Dashboard',
+        href: '/monitor/dashboard'
+      },
       { key: 'tasks', label: 'Background Tasks', href: '/monitor/tasks' }
     ]
   },
@@ -65,7 +69,12 @@ const items: SidebarItem[] = [
 const clusterNames = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot']
 
 const hybridItems: SidebarItem[] = [
-  { key: 'dashboard', label: 'Dashboard', icon: <MonitorIcon />, href: '/dashboard' },
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: <MonitorIcon />,
+    href: '/dashboard'
+  },
   {
     key: 'clusters',
     label: 'Clusters (6)',
@@ -91,7 +100,11 @@ const hybridItems: SidebarItem[] = [
     dividerBefore: true,
     subItems: [
       { key: 'general', label: 'General', href: '/settings/general' },
-      { key: 'notification', label: 'Notification', href: '/settings/notification' }
+      {
+        key: 'notification',
+        label: 'Notification',
+        href: '/settings/notification'
+      }
     ]
   }
 ]

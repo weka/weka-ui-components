@@ -14,9 +14,12 @@ import styles from './navItem.module.scss'
 interface NavItemProps {
   item: SidebarItem
   isSidebarExpanded: boolean
+  isOpen: boolean
   currentPath: string
   onNavigate: (href: string) => void
   onExpand: () => void
+  onToggleSubmenu: () => void
+  onOpenSubmenu: () => void
 }
 
 function runLeafAction(item: SidebarItem, onNavigate: (href: string) => void) {
@@ -29,24 +32,21 @@ function runLeafAction(item: SidebarItem, onNavigate: (href: string) => void) {
   }
 }
 
-function toggle(active: boolean) {
-  return (prev: boolean | null) => !(prev ?? active)
-}
-
 export function NavItem({
   item,
   isSidebarExpanded,
+  isOpen,
   currentPath,
   onNavigate,
-  onExpand
+  onExpand,
+  onToggleSubmenu,
+  onOpenSubmenu
 }: Readonly<NavItemProps>) {
   const hasSub = hasSubItems(item)
   const hasHref = Boolean(item.href)
   const isHybrid = hasSub && hasHref
   const active = isItemActive(currentPath, item)
-  const [manualOpen, setManualOpen] = useState<boolean | null>(null)
   const [isHovered, setIsHovered] = useState(false)
-  const isOpen = manualOpen ?? active
   const submenuVisible = isSidebarExpanded ? isOpen : isHovered
   const showTooltip = !isSidebarExpanded && !hasSub
 
@@ -57,13 +57,13 @@ export function NavItem({
     }
     if (!isSidebarExpanded) {
       onExpand()
-      setManualOpen(true)
+      onOpenSubmenu()
       return
     }
-    setManualOpen(toggle(active))
+    onToggleSubmenu()
   }
 
-  const handleToggle = () => setManualOpen(toggle(active))
+  const handleToggle = () => onToggleSubmenu()
 
   const linkContent = (
     <NavLink

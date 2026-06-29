@@ -25,7 +25,6 @@
 
   &.expanded {
     width: 256px;
-    box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
 
     .logoCompact {
       opacity: 0;
@@ -129,7 +128,6 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 20%));
     transition: opacity 300ms ease;
   }
 
@@ -144,7 +142,6 @@
     pointer-events: none;
     cursor: pointer;
     transform: translateX(-50%);
-    filter: drop-shadow(0 2px 4px rgb(0 0 0 / 20%));
     transition: opacity 300ms ease;
   }
 }
@@ -169,8 +166,7 @@
    */
   .sidebar.expanded & {
     min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
   }
 }
 

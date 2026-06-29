@@ -160,8 +160,6 @@ export function Tabs({
 
   const isEditable = variant === TAB_VARIANTS.EDITABLE
 
-  console.log('tabbbb')
-
   const {
     tabsContainerRef,
     tabRefs,

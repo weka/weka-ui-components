@@ -7,6 +7,9 @@ import { Sidebar } from './Sidebar'
 
 const MONITOR_LABEL = 'Monitor'
 const TASKS_LABEL = 'Background Tasks'
+const INVESTIGATE_LABEL = 'Investigate'
+const EVENTS_LABEL = 'Events'
+const TASKS_PATH = '/monitor/tasks'
 const CLUSTERS_PATH = '/clusters'
 const CLUSTER_ONE = 'Cluster One'
 
@@ -16,16 +19,20 @@ const items: SidebarItem[] = [
     label: MONITOR_LABEL,
     icon: <svg data-testid='monitor-icon' />,
     subItems: [
-      { key: 'dashboard', label: 'System Dashboard', href: '/monitor/dashboard' },
-      { key: 'tasks', label: TASKS_LABEL, href: '/monitor/tasks' }
+      {
+        key: 'dashboard',
+        label: 'System Dashboard',
+        href: '/monitor/dashboard'
+      },
+      { key: 'tasks', label: TASKS_LABEL, href: TASKS_PATH }
     ]
   },
   { key: 'clusters', label: 'Clusters', icon: <svg />, href: '/clusters' },
   {
     key: 'investigate',
-    label: 'Investigate',
+    label: INVESTIGATE_LABEL,
     icon: <svg />,
-    subItems: [{ key: 'events', label: 'Events' }]
+    subItems: [{ key: 'events', label: EVENTS_LABEL }]
   }
 ]
 
@@ -92,6 +99,23 @@ describe('Sidebar', () => {
     expect(screen.getByText('System Dashboard')).toBeInTheDocument()
   })
 
+  it('keeps only one submenu open at a time (accordion)', () => {
+    render(
+      <Sidebar
+        currentPath='/'
+        defaultExpanded
+        items={items}
+        onNavigate={vi.fn()}
+      />
+    )
+    fireEvent.click(screen.getByText(MONITOR_LABEL))
+    expect(screen.getByText(TASKS_LABEL)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText(INVESTIGATE_LABEL))
+    expect(screen.getByText(EVENTS_LABEL)).toBeInTheDocument()
+    expect(screen.queryByText(TASKS_LABEL)).not.toBeInTheDocument()
+  })
+
   it('navigates on a sub-item click', () => {
     const onNavigate = vi.fn()
     render(
@@ -103,7 +127,7 @@ describe('Sidebar', () => {
     )
     fireEvent.click(screen.getByText(MONITOR_LABEL))
     fireEvent.click(screen.getByText(TASKS_LABEL))
-    expect(onNavigate).toHaveBeenCalledWith('/monitor/tasks')
+    expect(onNavigate).toHaveBeenCalledWith(TASKS_PATH)
   })
 
   it('disables sub-items without an href', () => {
@@ -114,8 +138,8 @@ describe('Sidebar', () => {
         onNavigate={vi.fn()}
       />
     )
-    fireEvent.click(screen.getByText('Investigate'))
-    expect(screen.getByText('Events').closest('button')).toBeDisabled()
+    fireEvent.click(screen.getByText(INVESTIGATE_LABEL))
+    expect(screen.getByText(EVENTS_LABEL).closest('button')).toBeDisabled()
   })
 
   it('toggles expanded state via the toggle button', () => {
@@ -175,13 +199,20 @@ describe('Sidebar', () => {
 
   it('renders a divider before an item flagged dividerBefore', () => {
     const dividerItems: SidebarItem[] = [
-      { key: 'dashboard', label: 'Dashboard', icon: <svg />, href: '/dashboard' },
+      {
+        key: 'dashboard',
+        label: 'Dashboard',
+        icon: <svg />,
+        href: '/dashboard'
+      },
       {
         key: 'settings',
         label: 'Settings',
         icon: <svg />,
         dividerBefore: true,
-        subItems: [{ key: 'general', label: 'General', href: '/settings/general' }]
+        subItems: [
+          { key: 'general', label: 'General', href: '/settings/general' }
+        ]
       }
     ]
     const { container } = render(
@@ -193,5 +224,49 @@ describe('Sidebar', () => {
       />
     )
     expect(container.querySelector('li[aria-hidden]')).toBeInTheDocument()
+  })
+})
+
+describe('Sidebar - route-driven submenu', () => {
+  const sections: SidebarItem[] = [
+    {
+      key: 'monitor',
+      label: MONITOR_LABEL,
+      icon: <svg />,
+      subItems: [{ key: 'tasks', label: TASKS_LABEL, href: TASKS_PATH }]
+    },
+    {
+      key: 'investigate',
+      label: INVESTIGATE_LABEL,
+      icon: <svg />,
+      subItems: [
+        { key: 'events', label: EVENTS_LABEL, href: '/investigate/events' }
+      ]
+    }
+  ]
+
+  it('re-opens the active route submenu after a manual collapse when the route changes', () => {
+    const { rerender } = render(
+      <Sidebar
+        currentPath={TASKS_PATH}
+        defaultExpanded
+        items={sections}
+        onNavigate={vi.fn()}
+      />
+    )
+    expect(screen.getByText(TASKS_LABEL)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText(MONITOR_LABEL))
+    expect(screen.queryByText(TASKS_LABEL)).not.toBeInTheDocument()
+
+    rerender(
+      <Sidebar
+        currentPath='/investigate/events'
+        defaultExpanded
+        items={sections}
+        onNavigate={vi.fn()}
+      />
+    )
+    expect(screen.getByText(EVENTS_LABEL)).toBeInTheDocument()
   })
 })

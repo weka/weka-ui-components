@@ -2,7 +2,12 @@ import type { SidebarItem } from './types'
 
 import { describe, expect, it } from 'vitest'
 
-import { hasSubItems, isItemActive, isPathActive } from './sidebarUtils'
+import {
+  findActiveSubmenuKey,
+  hasSubItems,
+  isItemActive,
+  isPathActive
+} from './sidebarUtils'
 
 const MONITOR_PATH = '/monitor'
 const DASHBOARD_PATH = '/monitor/dashboard'
@@ -85,6 +90,35 @@ describe('sidebarUtils', () => {
         subItems: [{ key: 'fs', label: 'Filesystems', href: '/manage/fs' }]
       }
       expect(isItemActive(MONITOR_PATH, item)).toBe(false)
+    })
+  })
+
+  describe('findActiveSubmenuKey', () => {
+    const monitor: SidebarItem = {
+      key: 'monitor',
+      label: 'Monitor',
+      icon: null,
+      subItems: [{ key: 'dashboard', label: 'Dashboard', href: DASHBOARD_PATH }]
+    }
+    const clusters: SidebarItem = {
+      key: 'clusters',
+      label: 'Clusters',
+      icon: null,
+      href: '/clusters'
+    }
+
+    it('returns the key of the item whose submenu matches the path', () => {
+      expect(findActiveSubmenuKey([monitor, clusters], DASHBOARD_PATH)).toBe(
+        'monitor'
+      )
+    })
+
+    it('ignores active leaf items without a submenu', () => {
+      expect(findActiveSubmenuKey([monitor, clusters], '/clusters')).toBeNull()
+    })
+
+    it('returns null when no submenu is active', () => {
+      expect(findActiveSubmenuKey([monitor, clusters], '/other')).toBeNull()
     })
   })
 })
