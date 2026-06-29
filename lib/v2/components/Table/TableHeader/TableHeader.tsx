@@ -549,8 +549,12 @@ export function TableHeader({
     )
     return (
       <div className={styles.rightSection}>
-        {actions}
-        {tableActions}
+        {Boolean(actions || tableActions) && (
+          <div className={styles.headerActionsSlot}>
+            {actions}
+            {tableActions}
+          </div>
+        )}
         <div className={styles.tableActions}>
           <button
             ref={settingsButtonRef}

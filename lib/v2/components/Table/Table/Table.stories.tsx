@@ -7,6 +7,7 @@ import { useState } from 'react'
 
 import { FILTER_TYPES } from '#v2/utils/consts'
 
+import { Button } from '../../Button'
 import { Table } from './Table'
 import { TableWithDrawerDemo } from './TableWithDrawerDemo'
 
@@ -117,6 +118,8 @@ export const WithRowActions: Story = {
         columns={COLUMNS}
         data={DATA}
         rowActions={ROW_ACTIONS}
+        showSearch
+        tableActions={<Button variant='primary'>Create Cluster</Button>}
         title='Clusters with row actions'
       />
     </div>

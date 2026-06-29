@@ -123,6 +123,8 @@ export const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
 
 const COLUMN_RESIZE_MODE: ColumnResizeMode = 'onChange'
 
+const SCROLLBAR_GUTTER_VAR = '--scrollbar-gutter'
+
 export function Table<TData = unknown>({
   data,
   columns,
@@ -248,7 +250,10 @@ export function Table<TData = unknown>({
 
     const syncScrollbarGutter = () => {
       const scrollbarWidth = bodyEl.offsetWidth - bodyEl.clientWidth
-      headerEl.style.paddingRight = `${scrollbarWidth}px`
+      headerEl.style.setProperty(
+        SCROLLBAR_GUTTER_VAR,
+        `${scrollbarWidth}px`
+      )
     }
 
     syncScrollbarGutter()
