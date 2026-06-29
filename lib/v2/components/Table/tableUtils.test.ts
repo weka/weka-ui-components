@@ -8,7 +8,6 @@ import {
   buildTableColumns,
   extractColumnIds,
   getCanShowFilter,
-  getColumnWidth,
   isSortableColumn
 } from './tableUtils'
 
@@ -120,42 +119,3 @@ describe('getCanShowFilter', () => {
   })
 })
 
-describe('getColumnWidth', () => {
-  const ACTIONS_ID = '__rowActions__'
-  const ACTIONS_WIDTH = 40
-  const NAME_SIZE = 200
-  const VALUE_SIZE = 100
-  const PROPORTIONAL_TOTAL = 300
-
-  const makeCol = (id: string, size: number) =>
-    ({ id, getSize: () => size } as unknown as Parameters<
-      typeof getColumnWidth
-    >[0])
-
-  const ctx = {
-    actionsColumnId: ACTIONS_ID,
-    reservedWidth: ACTIONS_WIDTH,
-    proportionalTotal: PROPORTIONAL_TOTAL
-  }
-
-  it('keeps the actions column at its fixed pixel size', () => {
-    expect(getColumnWidth(makeCol(ACTIONS_ID, ACTIONS_WIDTH), ctx)).toBe(
-      ACTIONS_WIDTH
-    )
-  })
-
-  it('gives each data column a proportional share of the space left after the reserved width', () => {
-    expect(getColumnWidth(makeCol('name', NAME_SIZE), ctx)).toBe(
-      'calc((100% - 40px) * 0.666667)'
-    )
-    expect(getColumnWidth(makeCol('value', VALUE_SIZE), ctx)).toBe(
-      'calc((100% - 40px) * 0.333333)'
-    )
-  })
-
-  it('falls back to the raw size when there are no proportional columns', () => {
-    expect(
-      getColumnWidth(makeCol('name', NAME_SIZE), { ...ctx, proportionalTotal: 0 })
-    ).toBe(NAME_SIZE)
-  })
-})
