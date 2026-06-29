@@ -77,9 +77,9 @@ export const ProgressBarColors: Story = {
             key={key}
             iconType={getHealthIconType(info)}
             label={info.label}
+            progress={SAMPLE_PROGRESS}
             severity={info.severity}
             tooltipTitle={getProtectionTooltip(info)}
-            progress={SAMPLE_PROGRESS}
           />
         )
       })}
