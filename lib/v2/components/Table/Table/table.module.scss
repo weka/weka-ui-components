@@ -104,6 +104,7 @@
   flex-shrink: 0;
   background-color: var(--gray-100-900);
   box-sizing: border-box;
+  padding-right: var(--scrollbar-gutter, 0);
 
   &::-webkit-scrollbar {
     display: none;
@@ -321,6 +322,17 @@ thead.tableHeader {
 
   thead & {
     background-color: var(--gray-100-900);
+    overflow: visible;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 100%;
+      width: var(--scrollbar-gutter, 0);
+      background-color: var(--gray-100-900);
+    }
   }
 
   tbody tr.evenRow & {

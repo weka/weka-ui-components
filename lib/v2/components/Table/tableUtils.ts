@@ -1,9 +1,49 @@
 import type { ColumnWithHeader } from './filterUtils'
-import type { ColumnDef, Header } from '@tanstack/react-table'
+import type { Column, ColumnDef, Header } from '@tanstack/react-table'
 
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { getColumnId as getGenericColumnId } from './filterUtils'
+
+/**
+ * True when a column opts into flex sizing via `meta.flex`. A flex column omits
+ * its width so it becomes auto-width and absorbs the table's leftover space,
+ * keeping fixed columns (e.g. the row-actions column) at their exact size.
+ */
+export function getColumnIsFlex<TData>(
+  column: Column<TData, unknown>
+): boolean {
+  return Boolean(
+    (column.columnDef.meta as { flex?: boolean } | undefined)?.flex
+  )
+}
+
+/**
+ * Picks the column that should absorb the table's leftover width when no column
+ * explicitly opts into `meta.flex`: the last data column, but only when row
+ * actions are present (so the row-actions column stays at its exact size).
+ * Returns `undefined` to leave sizing untouched.
+ */
+export function getAutoFlexColumnId<TData>(
+  dataColumns: Column<TData, unknown>[],
+  rowActions: unknown[] | null | undefined
+): string | undefined {
+  if (!rowActions || rowActions.length === 0) {
+    return undefined
+  }
+  if (dataColumns.some(getColumnIsFlex)) {
+    return undefined
+  }
+  return dataColumns[dataColumns.length - 1]?.id
+}
+
+/** True when a column flexes — either explicitly, or as the auto-flex column. */
+export function isColumnFlexOrAuto<TData>(
+  column: Column<TData, unknown>,
+  autoFlexColumnId: string | undefined
+): boolean {
+  return getColumnIsFlex(column) || column.id === autoFlexColumnId
+}
 
 /**
  * Resolves a column's id from a TanStack `ColumnDef` (id → accessorKey →

@@ -61,3 +61,28 @@ export const AllStatuses: Story = {
     </div>
   )
 }
+
+const PROGRESS_BAR_STATUSES: ProtectionStatusType[] = [
+  PROTECTION_STATUS_TYPES.REDISTRIBUTING,
+  PROTECTION_STATUS_TYPES.REBUILDING
+]
+
+export const ProgressBarColors: Story = {
+  render: () => (
+    <div style={columnStyle}>
+      {PROGRESS_BAR_STATUSES.map((key) => {
+        const info = PROTECTION_STATUS_MAP[key]
+        return (
+          <HealthStatus
+            key={key}
+            iconType={getHealthIconType(info)}
+            label={info.label}
+            progress={SAMPLE_PROGRESS}
+            severity={info.severity}
+            tooltipTitle={getProtectionTooltip(info)}
+          />
+        )
+      })}
+    </div>
+  )
+}

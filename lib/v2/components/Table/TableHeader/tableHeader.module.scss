@@ -52,6 +52,13 @@
   position: relative;
 }
 
+.headerActionsSlot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 36px;
+}
+
 .iconButton {
   display: flex;
   align-items: center;
