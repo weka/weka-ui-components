@@ -1,0 +1,57 @@
+export const EDIT_ICON_VARIANTS = {
+  FILLED: 'filled',
+  STROKE: 'stroke'
+} as const
+
+export type EditIconVariant =
+  (typeof EDIT_ICON_VARIANTS)[keyof typeof EDIT_ICON_VARIANTS]
+
+export interface EditIconProps {
+  width?: number
+  height?: number
+  color?: string
+  variant?: EditIconVariant
+}
+
+const DEFAULT_SIZE = 12
+
+export function EditIcon({
+  width = DEFAULT_SIZE,
+  height = DEFAULT_SIZE,
+  color = 'currentColor',
+  variant = EDIT_ICON_VARIANTS.FILLED
+}: Readonly<EditIconProps>) {
+  if (variant === EDIT_ICON_VARIANTS.STROKE) {
+    return (
+      <svg
+        fill='none'
+        height={height}
+        viewBox='0 0 24 24'
+        width={width}
+        xmlns='http://www.w3.org/2000/svg'
+      >
+        <path
+          d='M21.0275 2.9748C19.7277 1.67523 17.624 1.67507 16.3241 2.9748L4.0292 15.2682C3.94725 15.3501 3.87943 15.4567 3.84049 15.5736L2.04127 20.9706C1.83814 21.5799 2.41936 22.1621 3.02947 21.9588L8.42721 20.1597C8.54135 20.1217 8.6485 20.0551 8.73264 19.971L21.0275 7.67761C22.3242 6.38105 22.3242 4.27136 21.0275 2.9748ZM4.01772 19.9825L4.92307 17.2667L6.73385 19.0773L4.01772 19.9825ZM8.18022 18.3139L5.68658 15.8205L16.1269 5.38148L18.6205 7.87484L8.18022 18.3139ZM19.9226 6.57289L19.7253 6.77011L17.2317 4.27675L17.4289 4.07956C18.1165 3.39218 19.2351 3.39218 19.9226 4.07956C20.6101 4.76695 20.6101 5.88546 19.9226 6.57289Z'
+          fill={color}
+        />
+      </svg>
+    )
+  }
+
+  return (
+    <svg
+      fill='none'
+      height={height}
+      viewBox='0 0 12 12'
+      width={width}
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        clipRule='evenodd'
+        d='M4.99203 2.34506L0.208822 7.12857C0.075217 7.26278 0.000144878 7.4444 1.31987e-07 7.63377V10.9515C-5.69851e-05 11.0456 0.0184244 11.1387 0.0543874 11.2256C0.0903504 11.3125 0.14309 11.3914 0.209589 11.4579C0.276088 11.5244 0.355042 11.5771 0.441937 11.6131C0.528832 11.6491 0.621962 11.6675 0.716001 11.6675H4.03339C4.22274 11.6673 4.40434 11.5923 4.53856 11.4587L9.32179 6.67514L4.99203 2.34506ZM6.00434 1.33267L10.3341 5.66269L11.1774 4.81932C11.4907 4.50595 11.6667 4.08098 11.6667 3.63786C11.6667 3.19475 11.4907 2.76978 11.1774 2.4564C10.6046 1.88364 9.78323 1.06213 9.21039 0.489301C8.89706 0.176005 8.47211 0 8.02902 0C7.58593 0 7.16098 0.176005 6.84765 0.489301L6.00434 1.33267Z'
+        fill={color}
+        fillRule='evenodd'
+      />
+    </svg>
+  )
+}
