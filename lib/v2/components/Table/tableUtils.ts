@@ -5,44 +5,39 @@ import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { getColumnId as getGenericColumnId } from './filterUtils'
 
-/**
- * True when a column opts into flex sizing via `meta.flex`. A flex column omits
- * its width so it becomes auto-width and absorbs the table's leftover space,
- * keeping fixed columns (e.g. the row-actions column) at their exact size.
- */
-export function getColumnIsFlex<TData>(
-  column: Column<TData, unknown>
-): boolean {
-  return Boolean(
-    (column.columnDef.meta as { flex?: boolean } | undefined)?.flex
-  )
+/** Decimal places kept when serializing a column's proportional share. */
+const PROPORTION_PRECISION = 6
+
+export interface ColumnWidthContext {
+  /** Id of the row-actions column, which stays at its fixed pixel size. */
+  actionsColumnId: string
+  /** Total pixel width of the fixed (non-proportional) columns. */
+  reservedWidth: number
+  /** Sum of the sizes of the proportional (data) columns. */
+  proportionalTotal: number
 }
 
 /**
- * Picks the column that should absorb the table's leftover width when no column
- * explicitly opts into `meta.flex`: the last data column, but only when row
- * actions are present (so the row-actions column stays at its exact size).
- * Returns `undefined` to leave sizing untouched.
+ * Width for a column so the table fills its container *without* stretching the
+ * row-actions column: the actions column keeps its fixed pixel size, and every
+ * other (data) column gets a share of the remaining width proportional to its
+ * own size.
+ *
+ * `100%` resolves against the table width, which is floored at the columns'
+ * combined size (via the table's `min-width`), so the calc result is never
+ * smaller than the column's own size — on a narrow viewport columns keep their
+ * size and the table scrolls horizontally instead of collapsing.
  */
-export function getAutoFlexColumnId<TData>(
-  dataColumns: Column<TData, unknown>[],
-  rowActions: unknown[] | null | undefined
-): string | undefined {
-  if (!rowActions || rowActions.length === 0) {
-    return undefined
-  }
-  if (dataColumns.some(getColumnIsFlex)) {
-    return undefined
-  }
-  return dataColumns[dataColumns.length - 1]?.id
-}
-
-/** True when a column flexes — either explicitly, or as the auto-flex column. */
-export function isColumnFlexOrAuto<TData>(
+export function getColumnWidth<TData>(
   column: Column<TData, unknown>,
-  autoFlexColumnId: string | undefined
-): boolean {
-  return getColumnIsFlex(column) || column.id === autoFlexColumnId
+  { actionsColumnId, reservedWidth, proportionalTotal }: ColumnWidthContext
+): string | number {
+  const size = column.getSize()
+  if (column.id === actionsColumnId || proportionalTotal <= 0) {
+    return size
+  }
+  const proportion = (size / proportionalTotal).toFixed(PROPORTION_PRECISION)
+  return `calc((100% - ${reservedWidth}px) * ${proportion})`
 }
 
 /**

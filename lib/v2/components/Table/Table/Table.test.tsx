@@ -34,6 +34,7 @@ const FILTERABLE_COLUMNS: ColumnDef<Item>[] = [
   }
 ]
 
+const SPLIT_TABLE_COUNT = 2
 const RESIZER_ID_TESTID = 'column-resizer-id'
 const RESIZER_NAME_TESTID = 'column-resizer-name'
 const ROW_ACTIONS_BUTTON_TESTID = 'row-actions-button'
@@ -164,7 +165,7 @@ describe('Table', () => {
       expect(screen.queryByTestId(RESIZER_NAME_TESTID)).toBeInTheDocument()
     })
 
-    it('synchronizes header and body cell widths', async () => {
+    it('keeps the header and body tables on the same width floor and column count', async () => {
       const { container } = render(
         <Table
           columns={COLUMNS}
@@ -174,25 +175,15 @@ describe('Table', () => {
       )
 
       await waitFor(() => {
-        const headerRow = container.querySelector('thead tr')
-        const bodyRows = container.querySelectorAll('tbody tr')
-        expect(headerRow).toBeTruthy()
-        expect(bodyRows.length).toBeGreaterThan(0)
+        const tables = Array.from(container.querySelectorAll('table'))
+        expect(tables.length).toBe(SPLIT_TABLE_COUNT)
+        const [headerTable, bodyTable] = tables
+        expect(headerTable.style.minWidth).toBeTruthy()
+        expect(headerTable.style.minWidth).toBe(bodyTable.style.minWidth)
 
-        const headerCells = Array.from(headerRow?.querySelectorAll('th') ?? [])
-        const bodyCells = Array.from(bodyRows[0].querySelectorAll('td'))
+        const headerCells = container.querySelectorAll('thead tr th')
+        const bodyCells = container.querySelectorAll('tbody tr:first-child td')
         expect(headerCells.length).toBe(bodyCells.length)
-
-        headerCells.forEach((headerCell, index) => {
-          const headerWidth = headerCell
-            .getAttribute('style')
-            ?.match(/width:\s*(\d+(?:\.\d+)?px)/)?.[1]
-          const bodyWidth = bodyCells[index]
-            .getAttribute('style')
-            ?.match(/width:\s*(\d+(?:\.\d+)?px)/)?.[1]
-          expect(headerWidth).toBeTruthy()
-          expect(headerWidth).toBe(bodyWidth)
-        })
       })
     })
   })

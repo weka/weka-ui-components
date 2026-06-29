@@ -7,10 +7,8 @@ import { FILTER_TYPES } from '#v2/utils/consts'
 import {
   buildTableColumns,
   extractColumnIds,
-  getAutoFlexColumnId,
   getCanShowFilter,
-  getColumnIsFlex,
-  isColumnFlexOrAuto,
+  getColumnWidth,
   isSortableColumn
 } from './tableUtils'
 
@@ -122,63 +120,42 @@ describe('getCanShowFilter', () => {
   })
 })
 
-describe('getColumnIsFlex', () => {
-  const makeColumn = (meta: unknown) =>
-    ({ columnDef: { meta } }) as unknown as Parameters<
-      typeof getColumnIsFlex
-    >[0]
+describe('getColumnWidth', () => {
+  const ACTIONS_ID = '__rowActions__'
+  const ACTIONS_WIDTH = 40
+  const NAME_SIZE = 200
+  const VALUE_SIZE = 100
+  const PROPORTIONAL_TOTAL = 300
 
-  it('returns true when meta.flex is true', () => {
-    expect(getColumnIsFlex(makeColumn({ flex: true }))).toBe(true)
-  })
+  const makeCol = (id: string, size: number) =>
+    ({ id, getSize: () => size } as unknown as Parameters<
+      typeof getColumnWidth
+    >[0])
 
-  it('returns false when meta.flex is false, missing, or meta is undefined', () => {
-    expect(getColumnIsFlex(makeColumn({ flex: false }))).toBe(false)
-    expect(getColumnIsFlex(makeColumn({}))).toBe(false)
-    expect(getColumnIsFlex(makeColumn(undefined))).toBe(false)
-  })
-})
+  const ctx = {
+    actionsColumnId: ACTIONS_ID,
+    reservedWidth: ACTIONS_WIDTH,
+    proportionalTotal: PROPORTIONAL_TOTAL
+  }
 
-describe('getAutoFlexColumnId', () => {
-  const makeCol = (id: string, meta?: unknown) =>
-    ({ id, columnDef: { meta } }) as unknown as Parameters<
-      typeof getAutoFlexColumnId
-    >[0][number]
-
-  const dataColumns = [makeCol('name'), makeCol('value')]
-
-  it('returns the last data column id when row actions exist and nothing opts in', () => {
-    expect(getAutoFlexColumnId(dataColumns, [{ key: 'edit' }])).toBe('value')
-  })
-
-  it('returns undefined when there are no row actions', () => {
-    expect(getAutoFlexColumnId(dataColumns, [])).toBeUndefined()
-    expect(getAutoFlexColumnId(dataColumns, undefined)).toBeUndefined()
-  })
-
-  it('returns undefined when a column already opts into flex', () => {
-    const withExplicitFlex = [makeCol('name', { flex: true }), makeCol('value')]
-    expect(getAutoFlexColumnId(withExplicitFlex, [{ key: 'edit' }])).toBeUndefined()
-  })
-})
-
-describe('isColumnFlexOrAuto', () => {
-  const makeCol = (id: string, meta?: unknown) =>
-    ({ id, columnDef: { meta } }) as unknown as Parameters<
-      typeof isColumnFlexOrAuto
-    >[0]
-
-  it('is true for an explicitly flexed column', () => {
-    expect(isColumnFlexOrAuto(makeCol('name', { flex: true }), undefined)).toBe(
-      true
+  it('keeps the actions column at its fixed pixel size', () => {
+    expect(getColumnWidth(makeCol(ACTIONS_ID, ACTIONS_WIDTH), ctx)).toBe(
+      ACTIONS_WIDTH
     )
   })
 
-  it('is true when the column is the auto-flex column', () => {
-    expect(isColumnFlexOrAuto(makeCol('value'), 'value')).toBe(true)
+  it('gives each data column a proportional share of the space left after the reserved width', () => {
+    expect(getColumnWidth(makeCol('name', NAME_SIZE), ctx)).toBe(
+      'calc((100% - 40px) * 0.666667)'
+    )
+    expect(getColumnWidth(makeCol('value', VALUE_SIZE), ctx)).toBe(
+      'calc((100% - 40px) * 0.333333)'
+    )
   })
 
-  it('is false otherwise', () => {
-    expect(isColumnFlexOrAuto(makeCol('value'), 'name')).toBe(false)
+  it('falls back to the raw size when there are no proportional columns', () => {
+    expect(
+      getColumnWidth(makeCol('name', NAME_SIZE), { ...ctx, proportionalTotal: 0 })
+    ).toBe(NAME_SIZE)
   })
 })
