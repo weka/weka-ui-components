@@ -25,9 +25,8 @@ import { RowActionsCell } from '../RowActionsCell'
 import { TableFilter } from '../TableFilter'
 import {
   buildTableColumns,
-  getAutoFlexColumnId,
   getCanShowFilter,
-  isColumnFlexOrAuto
+  getColumnWidth
 } from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
@@ -250,10 +249,7 @@ export function Table<TData = unknown>({
 
     const syncScrollbarGutter = () => {
       const scrollbarWidth = bodyEl.offsetWidth - bodyEl.clientWidth
-      headerEl.style.setProperty(
-        SCROLLBAR_GUTTER_VAR,
-        `${scrollbarWidth}px`
-      )
+      headerEl.style.setProperty(SCROLLBAR_GUTTER_VAR, `${scrollbarWidth}px`)
     }
 
     syncScrollbarGutter()
@@ -406,17 +402,21 @@ export function Table<TData = unknown>({
         .find((col) => col.id !== ROW_ACTIONS_COLUMN_ID)?.id
     : undefined
 
-  const dataColumns = table
-    .getVisibleLeafColumns()
-    .filter((col) => col.id !== ROW_ACTIONS_COLUMN_ID)
-  const autoFlexColumnId = getAutoFlexColumnId(dataColumns, rowActions)
-
-  const isColumnFlex = (column: Column<TData, unknown>) =>
-    isColumnFlexOrAuto(column, autoFlexColumnId)
-
-  const totalColumnsWidth = table
-    .getVisibleLeafColumns()
+  const visibleLeafColumns = table.getVisibleLeafColumns()
+  const reservedWidth = visibleLeafColumns
+    .filter((col) => col.id === ROW_ACTIONS_COLUMN_ID)
     .reduce((sum, col) => sum + col.getSize(), 0)
+  const proportionalTotal = visibleLeafColumns
+    .filter((col) => col.id !== ROW_ACTIONS_COLUMN_ID)
+    .reduce((sum, col) => sum + col.getSize(), 0)
+  const totalColumnsWidth = reservedWidth + proportionalTotal
+
+  const columnWidth = (column: Column<TData, unknown>) =>
+    getColumnWidth(column, {
+      actionsColumnId: ROW_ACTIONS_COLUMN_ID,
+      reservedWidth,
+      proportionalTotal
+    })
 
   const wrapperStyle = maxHeight
     ? {
@@ -526,20 +526,15 @@ export function Table<TData = unknown>({
                             header.column.id === ROW_ACTIONS_COLUMN_ID
                           const isFirstColumn =
                             header.column.id === firstDataColumnId
-                          const isFlexColumn = isColumnFlex(header.column)
                           return (
                             <th
                               key={header.id}
                               data-testid={`column-header-${columnId}`}
+                              style={{ width: columnWidth(header.column) }}
                               className={clsx(styles.headerCell, {
                                 [styles.stickyActions]: isActionsColumn,
                                 [styles.stickyFirst]: isFirstColumn
                               })}
-                              style={{
-                                width: isFlexColumn
-                                  ? undefined
-                                  : header.getSize()
-                              }}
                             >
                               <div className={styles.headerContent}>
                                 <div className={styles.headerMain}>
@@ -616,9 +611,7 @@ export function Table<TData = unknown>({
                       const isActionsCell =
                         cell.column.id === ROW_ACTIONS_COLUMN_ID
                       const isFirstCell = cell.column.id === firstDataColumnId
-                      const cellWidth = isColumnFlex(cell.column)
-                        ? undefined
-                        : cell.column.getSize()
+                      const cellWidth = columnWidth(cell.column)
 
                       return (
                         <td

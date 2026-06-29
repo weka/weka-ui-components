@@ -4,8 +4,6 @@ import type { ReactNode } from 'react'
 import { flexRender } from '@tanstack/react-table'
 import clsx from 'clsx'
 
-import { getColumnIsFlex } from '../../tableUtils'
-
 import styles from '../table.module.scss'
 
 const EMPTY_STATE_COLSPAN = 100
@@ -48,13 +46,11 @@ export function TableContent<TData>({
         return renderCell(cell)
       }
 
-      const isFlexColumn = getColumnIsFlex(cell.column)
-
       return (
         <td
           key={cell.id}
           className={styles.tableCell}
-          style={{ width: isFlexColumn ? undefined : cell.column.getSize() }}
+          style={{ width: cell.column.getSize() }}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </td>
