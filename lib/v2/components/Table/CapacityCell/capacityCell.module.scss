@@ -1,3 +1,5 @@
+@use '../../../styles/colors' as *;
+
 .capacityCell {
   display: grid;
   grid-template-columns: 60% 1fr;
@@ -44,4 +46,17 @@
 
 .unit {
   font-size: 12px;
+}
+
+.badge {
+  flex-shrink: 0;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  color: $gray-0;
+  background: linear-gradient(0deg, $cyan-500, $cyan-300);
+  cursor: default;
 }

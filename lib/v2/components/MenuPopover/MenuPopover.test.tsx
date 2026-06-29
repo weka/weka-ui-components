@@ -113,7 +113,7 @@ describe('MenuPopover', () => {
   describe('Positioning', () => {
     it('applies fixed position style', () => {
       const anchorRef = createMockAnchorRef()
-      const { container } = render(
+      render(
         <MenuPopover
           anchorRef={anchorRef as unknown as RefObject<HTMLElement>}
           onClose={vi.fn()}
@@ -123,7 +123,7 @@ describe('MenuPopover', () => {
         </MenuPopover>
       )
 
-      const popover = container.querySelector('[class*="popover"]')
+      const popover = document.body.querySelector('[class*="popover"]')
       expect(popover).toHaveStyle({ position: 'fixed' })
     })
   })

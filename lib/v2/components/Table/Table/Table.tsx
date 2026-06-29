@@ -38,8 +38,8 @@ const DEFAULT_PAGE_SIZE = 25
 const MAX_ROWS_FOR_COMPACT = 10
 const FIRST_PAGE = 1
 const COMPACT_HALF_DIVISOR = 2
-const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
 const ROW_ACTIONS_COLUMN_SIZE = 56
+const DRAWER_GAP = 24
 
 const EMPTY_ACTIVE_FILTERS: ActiveFilter[] = []
 const EMPTY_EXCLUDED_FIELDS: string[] = []
@@ -105,9 +105,63 @@ export interface TableProps<TData = unknown> {
   onCsvError?: (message: string) => void
   dataTestId?: string
   rowActions?: RowAction<TData>[]
+  pinFirstColumn?: boolean
+  drawer?: ReactNode
+  drawerOpen?: boolean
+  drawerWidth?: number
+  rowActionsWidth?: number
 }
 
+export const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
+
 const COLUMN_RESIZE_MODE: ColumnResizeMode = 'onChange'
+
+interface RenderTableBodyArgs {
+  readonly drawer: ReactNode
+  readonly drawerOpen: boolean
+  readonly drawerWidth: number
+  readonly tableContainerContent: ReactNode
+  readonly footer: ReactNode
+}
+
+function renderTableBody({
+  drawer,
+  drawerOpen,
+  drawerWidth,
+  tableContainerContent,
+  footer
+}: RenderTableBodyArgs) {
+  const tableContainer = (
+    <div className={styles.tableContainer}>{tableContainerContent}</div>
+  )
+
+  if (!drawer) {
+    return (
+      <>
+        {tableContainer}
+        {footer}
+      </>
+    )
+  }
+
+  const bodyMainStyle = {
+    marginRight: drawerOpen ? `${drawerWidth + DRAWER_GAP}px` : '0px',
+    transition: 'margin-right 0.15s ease'
+  }
+
+  return (
+    <div className={styles.tableBodyArea}>
+      <div
+        className={styles.tableBodyMain}
+        style={bodyMainStyle}
+      >
+        {tableContainer}
+        {footer}
+      </div>
+      {drawer}
+    </div>
+  )
+}
 
 export function Table<TData = unknown>({
   data,
@@ -153,7 +207,12 @@ export function Table<TData = unknown>({
   onColumnVisibilityChange,
   currentPage: currentPageProp,
   isPaginationPageEnabled,
-  rowActions
+  rowActions,
+  pinFirstColumn = false,
+  drawer,
+  drawerOpen = false,
+  drawerWidth = 0,
+  rowActionsWidth = ROW_ACTIONS_COLUMN_SIZE
 }: Readonly<TableProps<TData>>) {
   const { columnVisibility, handleColumnVisibilityChange } =
     useColumnVisibility({
@@ -219,6 +278,26 @@ export function Table<TData = unknown>({
     [data, filteredData, globalSearchTerm]
   )
 
+  useEffect(() => {
+    const bodyEl = bodyRef.current
+    const headerEl = headerRef.current
+    if (!bodyEl || !headerEl) {
+      return
+    }
+
+    const syncScrollbarGutter = () => {
+      const scrollbarWidth = bodyEl.offsetWidth - bodyEl.clientWidth
+      headerEl.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    syncScrollbarGutter()
+
+    const observer = new ResizeObserver(syncScrollbarGutter)
+    observer.observe(bodyEl)
+
+    return () => observer.disconnect()
+  }, [loading, displayData, columnVisibility, drawerOpen, drawerWidth])
+
   const tableColumns = useMemo(() => {
     const builtColumns = buildTableColumns(columns, hasResizableColumns)
     if (!rowActions || rowActions.length === 0) {
@@ -231,12 +310,12 @@ export function Table<TData = unknown>({
       enableColumnFilter: false,
       enableResizing: false,
       enableHiding: false,
-      size: ROW_ACTIONS_COLUMN_SIZE,
+      size: rowActionsWidth,
       meta: { rowActions } as Record<string, unknown>,
       cell: (ctx) => <RowActionsCell {...ctx} />
     }
     return [...builtColumns, rowActionsColumn]
-  }, [columns, hasResizableColumns, rowActions])
+  }, [columns, hasResizableColumns, rowActions, rowActionsWidth])
 
   const tableOptions = useTableOptions({
     displayData,
@@ -354,6 +433,12 @@ export function Table<TData = unknown>({
     setCurrentPage(FIRST_PAGE)
   }, [activeFilters, globalSearchTerm, setCurrentPage])
 
+  const firstDataColumnId = pinFirstColumn
+    ? table
+        .getVisibleLeafColumns()
+        .find((col) => col.id !== ROW_ACTIONS_COLUMN_ID)?.id
+    : undefined
+
   const wrapperStyle = maxHeight
     ? {
         maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight
@@ -424,128 +509,148 @@ export function Table<TData = unknown>({
         title={title}
         useTableHeader={useTableHeader}
       />
-      <div className={styles.tableContainer}>
-        <div className={styles.tableScrollContainer}>
-          <div
-            ref={headerRef}
-            className={styles.tableHeaderWrapper}
-          >
-            <table className={styles.table}>
-              <thead className={styles.tableHeader}>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers
-                      .filter((header) => header.column.getIsVisible())
-                      .map((header) => {
-                        const columnId = header.column.id || header.id
-                        return (
-                          <th
-                            key={header.id}
-                            className={styles.headerCell}
-                            data-testid={`column-header-${columnId}`}
-                            style={{ width: header.getSize() }}
-                          >
-                            <div className={styles.headerContent}>
-                              <div className={styles.headerMain}>
-                                <div
-                                  onClick={header.column.getToggleSortingHandler()}
-                                  className={
-                                    header.column.getCanSort()
-                                      ? styles.sortableHeader
-                                      : styles.headerText
-                                  }
-                                >
-                                  {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                  )}
-                                </div>
-                                <div className={styles.headerIcons}>
-                                  {(getCanShowFilter(header) ||
-                                    header.column.getCanSort()) && (
-                                    <TableFilter
-                                      activeFilters={activeFilters}
-                                      canFilter={getCanShowFilter(header)}
-                                      canSort={header.column.getCanSort()}
-                                      columnId={header.column.id}
-                                      columns={columns}
-                                      customFilters={customFilters}
-                                      onFilterChange={setActiveFilters}
-                                      onSortClick={header.column.getToggleSortingHandler()}
-                                      sortDirection={header.column.getIsSorted()}
-                                    />
-                                  )}
+      {renderTableBody({
+        drawer,
+        drawerOpen,
+        drawerWidth,
+        footer: (
+          <div className={styles.tableFooter}>
+            {showPagination ? (
+              <Pagination
+                currentPage={currentPage}
+                isPageEnabled={isPaginationPageEnabled}
+                onPageChange={handlePageChange}
+                totalPages={Math.max(totalPages, FIRST_PAGE)}
+              />
+            ) : null}
+          </div>
+        ),
+        tableContainerContent: (
+          <div className={styles.tableScrollContainer}>
+            <div
+              ref={headerRef}
+              className={styles.tableHeaderWrapper}
+            >
+              <table className={styles.table}>
+                <thead className={styles.tableHeader}>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers
+                        .filter((header) => header.column.getIsVisible())
+                        .map((header) => {
+                          const columnId = header.column.id || header.id
+                          const isActionsColumn =
+                            header.column.id === ROW_ACTIONS_COLUMN_ID
+                          const isFirstColumn =
+                            header.column.id === firstDataColumnId
+                          return (
+                            <th
+                              key={header.id}
+                              data-testid={`column-header-${columnId}`}
+                              style={{ width: header.getSize() }}
+                              className={clsx(styles.headerCell, {
+                                [styles.stickyActions]: isActionsColumn,
+                                [styles.stickyFirst]: isFirstColumn
+                              })}
+                            >
+                              <div className={styles.headerContent}>
+                                <div className={styles.headerMain}>
+                                  <div
+                                    onClick={header.column.getToggleSortingHandler()}
+                                    className={
+                                      header.column.getCanSort()
+                                        ? styles.sortableHeader
+                                        : styles.headerText
+                                    }
+                                  >
+                                    {flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                                  </div>
+                                  <div className={styles.headerIcons}>
+                                    {(getCanShowFilter(header) ||
+                                      header.column.getCanSort()) && (
+                                      <TableFilter
+                                        activeFilters={activeFilters}
+                                        canFilter={getCanShowFilter(header)}
+                                        canSort={header.column.getCanSort()}
+                                        columnId={header.column.id}
+                                        columns={columns}
+                                        customFilters={customFilters}
+                                        onFilterChange={setActiveFilters}
+                                        onSortClick={header.column.getToggleSortingHandler()}
+                                        sortDirection={header.column.getIsSorted()}
+                                      />
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            {hasResizableColumns &&
-                            header.column.getCanResize() ? (
-                              <div
-                                className={styles.resizer}
-                                data-testid={`column-resizer-${columnId}`}
-                                onMouseDown={header.getResizeHandler()}
-                                onTouchStart={header.getResizeHandler()}
-                              />
-                            ) : null}
-                          </th>
-                        )
-                      })}
-                  </tr>
-                ))}
-              </thead>
-            </table>
-          </div>
-          <div
-            ref={bodyRef}
-            className={styles.tableWrapper}
-            onScroll={handleBodyScroll}
-          >
-            <table
-              className={styles.table}
-              data-testid={dataTestId}
+                              {hasResizableColumns &&
+                              header.column.getCanResize() ? (
+                                <div
+                                  className={styles.resizer}
+                                  data-testid={`column-resizer-${columnId}`}
+                                  onMouseDown={header.getResizeHandler()}
+                                  onTouchStart={header.getResizeHandler()}
+                                />
+                              ) : null}
+                            </th>
+                          )
+                        })}
+                    </tr>
+                  ))}
+                </thead>
+              </table>
+            </div>
+            <div
+              ref={bodyRef}
+              className={styles.tableWrapper}
+              onScroll={handleBodyScroll}
             >
-              <tbody className={styles.tableBody}>
-                <TableContent
-                  activeRowId={activeRowId}
-                  emptyMessage={emptyMessage}
-                  getRowId={getRowId}
-                  onRowClick={onRowClick}
-                  rows={table.getRowModel().rows}
-                  renderCell={(cell) => {
-                    const cellMeta = cell.column.columnDef.meta as
-                      | { cellStyle?: CSSProperties }
-                      | undefined
-                    const cellStyle = cellMeta?.cellStyle || {}
+              <table
+                className={styles.table}
+                data-testid={dataTestId}
+              >
+                <tbody className={styles.tableBody}>
+                  <TableContent
+                    activeRowId={activeRowId}
+                    emptyMessage={emptyMessage}
+                    getRowId={getRowId}
+                    onRowClick={onRowClick}
+                    rows={table.getRowModel().rows}
+                    renderCell={(cell) => {
+                      const cellMeta = cell.column.columnDef.meta as
+                        | { cellStyle?: CSSProperties }
+                        | undefined
+                      const cellStyle = cellMeta?.cellStyle || {}
+                      const isActionsCell =
+                        cell.column.id === ROW_ACTIONS_COLUMN_ID
+                      const isFirstCell = cell.column.id === firstDataColumnId
 
-                    return (
-                      <td
-                        key={cell.id}
-                        className={styles.tableCell}
-                        style={{ width: cell.column.getSize(), ...cellStyle }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    )
-                  }}
-                />
-              </tbody>
-            </table>
+                      return (
+                        <td
+                          key={cell.id}
+                          style={{ width: cell.column.getSize(), ...cellStyle }}
+                          className={clsx(styles.tableCell, {
+                            [styles.stickyActions]: isActionsCell,
+                            [styles.stickyFirst]: isFirstCell
+                          })}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      )
+                    }}
+                  />
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className={styles.tableFooter}>
-        {showPagination ? (
-          <Pagination
-            currentPage={currentPage}
-            isPageEnabled={isPaginationPageEnabled}
-            onPageChange={handlePageChange}
-            totalPages={Math.max(totalPages, FIRST_PAGE)}
-          />
-        ) : null}
-      </div>
+        )
+      })}
     </div>
   )
 }

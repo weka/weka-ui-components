@@ -118,7 +118,7 @@ export function Tooltip({
         title={data}
         classes={{
           tooltip: classes,
-          popper: extraPopperClass
+          popper: clsx(styles.popper, extraPopperClass)
         }}
         {...(popperProps && { PopperProps: popperProps })}
         {...(typeof data === 'string' && { 'aria-label': data })}

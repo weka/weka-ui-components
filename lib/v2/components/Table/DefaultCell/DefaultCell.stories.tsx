@@ -21,25 +21,33 @@ interface Row {
   description: DefaultCellValue
   internalLink: DefaultCellValue
   externalLink: DefaultCellValue
+  boldName: DefaultCellValue
 }
+
+const CLUSTER_PROD_1 = 'cluster-prod-1'
+const CLUSTER_PROD_2 = 'cluster-prod-2'
+const LINK_VIEW_DETAILS = 'View details'
+const LINK_OPEN_DOCS = 'Open docs'
 
 const SAMPLE_ROWS: Row[] = [
   {
-    id: 'cluster-prod-1',
-    name: 'cluster-prod-1',
+    id: CLUSTER_PROD_1,
+    name: CLUSTER_PROD_1,
     protocols: ['NFS', 'SMB', 'S3'],
     description:
       'Production cluster running in us-east-1, handling primary workloads and serving as the source of truth for replication.',
-    internalLink: 'View details',
-    externalLink: 'Open docs'
+    internalLink: LINK_VIEW_DETAILS,
+    externalLink: LINK_OPEN_DOCS,
+    boldName: CLUSTER_PROD_1
   },
   {
-    id: 'cluster-prod-2',
-    name: 'cluster-prod-2',
+    id: CLUSTER_PROD_2,
+    name: CLUSTER_PROD_2,
     protocols: ['NFS'],
     description: 'Secondary production cluster.',
-    internalLink: 'View details',
-    externalLink: 'Open docs'
+    internalLink: LINK_VIEW_DETAILS,
+    externalLink: LINK_OPEN_DOCS,
+    boldName: CLUSTER_PROD_2
   },
   {
     id: 'cluster-empty',
@@ -47,7 +55,8 @@ const SAMPLE_ROWS: Row[] = [
     protocols: [],
     description: undefined,
     internalLink: null,
-    externalLink: null
+    externalLink: null,
+    boldName: null
   }
 ]
 
@@ -91,6 +100,17 @@ const columns: ColumnDef<Row, DefaultCellValue>[] = [
         getUrl: () => 'https://docs.weka.io',
         openInNewTab: true,
         tooltipText: 'Opens in a new tab'
+      } satisfies DefaultCellOptions<Row>
+    } as ColumnDef<Row, DefaultCellValue>['meta']
+  },
+  {
+    accessorKey: 'boldName',
+    header: 'Bold name',
+    cell: DefaultCell,
+    size: 160,
+    meta: {
+      cellOptions: {
+        bold: true
       } satisfies DefaultCellOptions<Row>
     } as ColumnDef<Row, DefaultCellValue>['meta']
   }

@@ -44,4 +44,25 @@ describe('CapacityCell', () => {
     )
     expect(screen.getByText('Unlimited')).toBeInTheDocument()
   })
+
+  it('renders the optional badge label when a badge is provided', () => {
+    render(
+      <CapacityCell
+        badge={{ label: 'TP', tooltip: 'Thinly Provisioned' }}
+        total={TOTAL_BYTES}
+        used={USED_BYTES}
+      />
+    )
+    expect(screen.getByText('TP')).toBeInTheDocument()
+  })
+
+  it('renders no badge by default', () => {
+    render(
+      <CapacityCell
+        total={TOTAL_BYTES}
+        used={USED_BYTES}
+      />
+    )
+    expect(screen.queryByText('TP')).not.toBeInTheDocument()
+  })
 })

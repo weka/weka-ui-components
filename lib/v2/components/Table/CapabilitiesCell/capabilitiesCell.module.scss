@@ -1,0 +1,35 @@
+@use '../../../styles/colors' as *;
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+   flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #{$gray-0};
+}
+
+.badgeThin {
+  background: linear-gradient(0deg, $fuchsia-500 0%, $fuchsia-300 100%);
+}
+
+.badgeTier {
+  background: linear-gradient(0deg, $purple-500 0%, $purple-300 100%);
+}
+
+.badgeEncrypted {
+  background: linear-gradient(0deg, $peach-600 0%, $peach-400 100%);
+}

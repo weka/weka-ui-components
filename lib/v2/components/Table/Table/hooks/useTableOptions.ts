@@ -15,6 +15,8 @@ import {
   getSortedRowModel
 } from '@tanstack/react-table'
 
+import { DefaultCell } from '../../DefaultCell'
+
 const DEFAULT_COLUMN_SIZE = 150
 const MIN_COLUMN_SIZE = 50
 const MAX_COLUMN_SIZE = 500
@@ -78,7 +80,8 @@ export function useTableOptions<TData>({
       defaultColumn: {
         size: DEFAULT_COLUMN_SIZE,
         minSize: MIN_COLUMN_SIZE,
-        maxSize: MAX_COLUMN_SIZE
+        maxSize: MAX_COLUMN_SIZE,
+        cell: DefaultCell as ColumnDef<TData>['cell']
       },
       getCoreRowModel: getCoreRowModel(),
       ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),

@@ -1,4 +1,5 @@
 import { type ReactNode, type RefObject, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 
 import { useClickOutside, usePopoverPosition } from '#v2/hooks'
@@ -42,13 +43,14 @@ export function MenuPopover({
     return null
   }
 
-  return (
+  return createPortal(
     <div
       ref={popRef}
       className={clsx(styles.popover, extraClass)}
       style={position}
     >
       {children}
-    </div>
+    </div>,
+    document.body
   )
 }
