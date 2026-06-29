@@ -1,44 +1,9 @@
 import type { ColumnWithHeader } from './filterUtils'
-import type { Column, ColumnDef, Header } from '@tanstack/react-table'
+import type { ColumnDef, Header } from '@tanstack/react-table'
 
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { getColumnId as getGenericColumnId } from './filterUtils'
-
-/** Decimal places kept when serializing a column's proportional share. */
-const PROPORTION_PRECISION = 6
-
-export interface ColumnWidthContext {
-  /** Id of the row-actions column, which stays at its fixed pixel size. */
-  actionsColumnId: string
-  /** Total pixel width of the fixed (non-proportional) columns. */
-  reservedWidth: number
-  /** Sum of the sizes of the proportional (data) columns. */
-  proportionalTotal: number
-}
-
-/**
- * Width for a column so the table fills its container *without* stretching the
- * row-actions column: the actions column keeps its fixed pixel size, and every
- * other (data) column gets a share of the remaining width proportional to its
- * own size.
- *
- * `100%` resolves against the table width, which is floored at the columns'
- * combined size (via the table's `min-width`), so the calc result is never
- * smaller than the column's own size — on a narrow viewport columns keep their
- * size and the table scrolls horizontally instead of collapsing.
- */
-export function getColumnWidth<TData>(
-  column: Column<TData, unknown>,
-  { actionsColumnId, reservedWidth, proportionalTotal }: ColumnWidthContext
-): string | number {
-  const size = column.getSize()
-  if (column.id === actionsColumnId || proportionalTotal <= 0) {
-    return size
-  }
-  const proportion = (size / proportionalTotal).toFixed(PROPORTION_PRECISION)
-  return `calc((100% - ${reservedWidth}px) * ${proportion})`
-}
 
 /**
  * Resolves a column's id from a TanStack `ColumnDef` (id → accessorKey →

@@ -2,7 +2,6 @@ import type { CustomFilters } from '../FilterPopover'
 import type { ActiveFilter } from '../filterUtils'
 import type { RowAction } from './rowActions'
 import type {
-  Column,
   ColumnDef,
   ColumnFiltersState,
   ColumnResizeMode,
@@ -23,11 +22,7 @@ import { NOOP } from '#v2/utils/consts'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
 import { TableFilter } from '../TableFilter'
-import {
-  buildTableColumns,
-  getCanShowFilter,
-  getColumnWidth
-} from '../tableUtils'
+import { buildTableColumns, getCanShowFilter } from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
 import { useInitialSorting } from './hooks/useInitialSorting'
@@ -402,22 +397,6 @@ export function Table<TData = unknown>({
         .find((col) => col.id !== ROW_ACTIONS_COLUMN_ID)?.id
     : undefined
 
-  const visibleLeafColumns = table.getVisibleLeafColumns()
-  const reservedWidth = visibleLeafColumns
-    .filter((col) => col.id === ROW_ACTIONS_COLUMN_ID)
-    .reduce((sum, col) => sum + col.getSize(), 0)
-  const proportionalTotal = visibleLeafColumns
-    .filter((col) => col.id !== ROW_ACTIONS_COLUMN_ID)
-    .reduce((sum, col) => sum + col.getSize(), 0)
-  const totalColumnsWidth = reservedWidth + proportionalTotal
-
-  const columnWidth = (column: Column<TData, unknown>) =>
-    getColumnWidth(column, {
-      actionsColumnId: ROW_ACTIONS_COLUMN_ID,
-      reservedWidth,
-      proportionalTotal
-    })
-
   const wrapperStyle = maxHeight
     ? {
         maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight
@@ -511,10 +490,7 @@ export function Table<TData = unknown>({
               ref={headerRef}
               className={styles.tableHeaderWrapper}
             >
-              <table
-                className={styles.table}
-                style={{ minWidth: totalColumnsWidth }}
-              >
+              <table className={styles.table}>
                 <thead className={styles.tableHeader}>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
@@ -530,7 +506,7 @@ export function Table<TData = unknown>({
                             <th
                               key={header.id}
                               data-testid={`column-header-${columnId}`}
-                              style={{ width: columnWidth(header.column) }}
+                              style={{ width: header.getSize() }}
                               className={clsx(styles.headerCell, {
                                 [styles.stickyActions]: isActionsColumn,
                                 [styles.stickyFirst]: isFirstColumn
@@ -594,7 +570,6 @@ export function Table<TData = unknown>({
               <table
                 className={styles.table}
                 data-testid={dataTestId}
-                style={{ minWidth: totalColumnsWidth }}
               >
                 <tbody className={styles.tableBody}>
                   <TableContent
@@ -611,7 +586,7 @@ export function Table<TData = unknown>({
                       const isActionsCell =
                         cell.column.id === ROW_ACTIONS_COLUMN_ID
                       const isFirstCell = cell.column.id === firstDataColumnId
-                      const cellWidth = columnWidth(cell.column)
+                      const cellWidth = cell.column.getSize()
 
                       return (
                         <td
