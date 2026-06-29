@@ -59,8 +59,11 @@
   --purple-100-400: #{$purple-100};
   --purple-200-800: #{$purple-200};
   --cyan-500: #{$cyan-500};
+  --cyan-500-800: #{$cyan-500};
   --cyan-600-400: #{$cyan-600};
   --cyan-50-900: #{$cyan-50};
+  --cyan-300-600: #{$cyan-300};
+  --cyan-100-400: #{$cyan-100};
   --purple-300-700: #{$purple-300};
   --purple-400-600: #{$purple-400};
   --purple-500: #{$purple-500};
@@ -83,6 +86,8 @@
   --red-300: #{$red-300};
   --red-400-600: #{$red-400};
   --red-400: #{$red-400};
+  --red-300-600: #{$red-300};
+  --red-100-400: #{$red-100};
   --red-500: #{$red-500};
   --red-600: #{$red-600};
   --red-600-400: #{$red-600};
@@ -124,6 +129,8 @@
   --orange-200: #{$orange-200};
   --orange-300-700: #{$orange-300};
   --orange-400-600: #{$orange-400};
+  --orange-300-600: #{$orange-300};
+  --orange-100-400: #{$orange-100};
   --orange-500: #{$orange-500};
   --orange-600-400: #{$orange-600};
   --orange-700-300: #{$orange-700};
@@ -205,6 +212,9 @@
   --border-color: #{$gray-800};
   --shadow-color: #{rgba($gray-1000, 0.4)};
 
+  // Sticky table-column edge: dark shadow on light bg.
+  --sticky-col-shadow: #{rgba($gray-1000, 0.4)};
+
   // Legacy Aliases
   --text-color-primary: var(--text-primary);
   --text-color-secondary: var(--text-secondary);
@@ -269,8 +279,11 @@
   --purple-100-800: #{$purple-800};
   --purple-100-400: #{$purple-400};
   --cyan-500: #{$cyan-500};
+  --cyan-500-800: #{$cyan-800};
   --cyan-600-400: #{$cyan-400};
   --cyan-50-900: #{$cyan-900};
+  --cyan-300-600: #{$cyan-600};
+  --cyan-100-400: #{$cyan-400};
   --purple-200-800: #{$purple-800};
   --purple-300-700: #{$purple-700};
   --purple-400-600: #{$purple-600};
@@ -294,6 +307,8 @@
   --red-300: #{$red-300};
   --red-400-600: #{$red-600};
   --red-400: #{$red-400};
+  --red-300-600: #{$red-600};
+  --red-100-400: #{$red-400};
   --red-500: #{$red-500};
   --red-600: #{$red-600};
   --red-600-400: #{$red-400};
@@ -335,6 +350,8 @@
   --orange-200: #{$orange-200};
   --orange-300-700: #{$orange-700};
   --orange-400-600: #{$orange-600};
+  --orange-300-600: #{$orange-600};
+  --orange-100-400: #{$orange-400};
   --orange-500: #{$orange-500};
   --orange-600-400: #{$orange-400};
   --orange-700-300: #{$orange-300};
@@ -415,6 +432,7 @@
   --background-tertiary: #{$gray-850};
   --border-color: #{$gray-800};
   --shadow-color: #{rgba($gray-1000, 0.4)};
+  --sticky-col-shadow: #{rgba($gray-0, 0.25)};
 
   // Legacy Aliases
   --text-color-primary: var(--text-primary);

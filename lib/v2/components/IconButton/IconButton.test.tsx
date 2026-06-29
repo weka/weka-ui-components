@@ -54,6 +54,28 @@ describe('IconButton', () => {
     expect(screen.getByText('98+')).toBeInTheDocument()
   })
 
+  it('applies the small variant class only when small is set', () => {
+    const { rerender } = render(
+      <IconButton ariaLabel={NOTIFICATIONS_LABEL}>
+        <svg />
+      </IconButton>
+    )
+    expect(screen.getByLabelText(NOTIFICATIONS_LABEL).className).not.toContain(
+      'small'
+    )
+    rerender(
+      <IconButton
+        ariaLabel={NOTIFICATIONS_LABEL}
+        small
+      >
+        <svg />
+      </IconButton>
+    )
+    expect(screen.getByLabelText(NOTIFICATIONS_LABEL).className).toContain(
+      'small'
+    )
+  })
+
   it('ignores clicks when disabled', () => {
     const onClick = vi.fn()
     render(
