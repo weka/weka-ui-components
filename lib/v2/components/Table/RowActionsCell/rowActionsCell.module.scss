@@ -10,3 +10,11 @@
   min-width: 180px;
   max-width: 360px;
 }
+
+.kebabActive {
+  background: var(--icon-bg-active);
+
+  &:hover {
+    background: var(--icon-bg-active);
+  }
+}

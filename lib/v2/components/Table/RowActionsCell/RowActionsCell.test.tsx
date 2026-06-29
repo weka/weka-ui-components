@@ -1,7 +1,13 @@
 import type { RowAction } from '../Table'
 import type { CellContext } from '@tanstack/react-table'
 
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RowActionsCell } from './RowActionsCell'
@@ -198,5 +204,68 @@ describe('RowActionsCell', () => {
     fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
     fireEvent.click(screen.getByTestId(EDIT_ACTION_TESTID))
     expect(onParentClick).not.toHaveBeenCalled()
+  })
+})
+
+const SYNC_ACTION_TESTID = 'row-action-sync'
+
+describe('RowActionsCell - disabledTooltip', () => {
+  it('shows the disabled-reason tooltip on hover when disabled', async () => {
+    renderCell([
+      {
+        key: 'sync',
+        text: 'Sync',
+        action: vi.fn(),
+        disabled: () => true,
+        disabledTooltip: 'No local Object Store bucket attached'
+      }
+    ])
+    fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
+    const item = screen.getByTestId(SYNC_ACTION_TESTID)
+    expect(item).toBeDisabled()
+
+    fireEvent.mouseOver(item)
+    await waitFor(() => {
+      expect(screen.getByRole('tooltip')).toBeInTheDocument()
+      expect(
+        screen.getByText('No local Object Store bucket attached')
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('resolves a function-form disabledTooltip with the row', async () => {
+    const disabledTooltip = vi.fn(() => 'reason for r1')
+    renderCell([
+      {
+        key: 'sync',
+        text: 'Sync',
+        action: vi.fn(),
+        disabled: () => true,
+        disabledTooltip
+      }
+    ])
+    fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
+    fireEvent.mouseOver(screen.getByTestId(SYNC_ACTION_TESTID))
+    await waitFor(() => {
+      expect(screen.getByText('reason for r1')).toBeInTheDocument()
+    })
+    expect(disabledTooltip).toHaveBeenCalledWith(SAMPLE_ROW)
+  })
+
+  it('does not wrap an enabled action in a tooltip even if disabledTooltip is set', () => {
+    renderCell([
+      {
+        key: 'sync',
+        text: 'Sync',
+        action: vi.fn(),
+        disabled: () => false,
+        disabledTooltip: 'should not show'
+      }
+    ])
+    fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
+    const item = screen.getByTestId(SYNC_ACTION_TESTID)
+    expect(item).not.toBeDisabled()
+    fireEvent.mouseOver(item)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 })

@@ -48,3 +48,22 @@ export const HeaderButtons: Story = {
     </div>
   )
 }
+
+export const Small: Story = {
+  render: () => (
+    <div style={rowStyle}>
+      <IconButton
+        ariaLabel='Row actions'
+        small
+      >
+        <ThreeDotsMenuIcon size={14} />
+      </IconButton>
+      <IconButton
+        ariaLabel='Toggle theme'
+        small
+      >
+        <DarkModeIcon />
+      </IconButton>
+    </div>
+  )
+}

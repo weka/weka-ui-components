@@ -311,6 +311,7 @@ export function Table<TData = unknown>({
       enableResizing: false,
       enableHiding: false,
       size: rowActionsWidth,
+      minSize: rowActionsWidth,
       meta: { rowActions } as Record<string, unknown>,
       cell: (ctx) => <RowActionsCell {...ctx} />
     }

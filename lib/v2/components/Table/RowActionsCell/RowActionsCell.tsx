@@ -8,11 +8,19 @@ import clsx from 'clsx'
 import { ThreeDotsMenuIcon } from '../../../icons'
 import { IconButton } from '../../IconButton'
 import { MENU_POPOVER_STYLES, MenuPopover } from '../../MenuPopover'
+import { Tooltip } from '../../Tooltip'
 
 import styles from './rowActionsCell.module.scss'
 
 interface RowActionsCellMeta<TData> {
   rowActions: RowAction<TData>[]
+}
+
+function resolveDisabledTooltip<TData>(
+  tooltip: string | ((row: TData) => string),
+  row: TData
+): string {
+  return typeof tooltip === 'function' ? tooltip(row) : tooltip
 }
 
 export function RowActionsCell<TData>({
@@ -59,9 +67,11 @@ export function RowActionsCell<TData>({
       <IconButton
         ariaLabel='Row actions'
         dataTestId='row-actions-button'
+        extraClass={open ? styles.kebabActive : undefined}
         onClick={handleToggle}
+        small
       >
-        <ThreeDotsMenuIcon />
+        <ThreeDotsMenuIcon size={14} />
       </IconButton>
       <MenuPopover
         anchorRef={anchorRef as RefObject<HTMLElement>}
@@ -95,7 +105,12 @@ export function RowActionsCell<TData>({
           }
 
           const isDisabled = action.disabled?.(row.original) ?? false
-          return (
+          const disabledTooltip =
+            isDisabled && action.disabledTooltip
+              ? resolveDisabledTooltip(action.disabledTooltip, row.original)
+              : undefined
+
+          const button = (
             <button
               key={action.key}
               data-testid={`row-action-${action.key}`}
@@ -114,6 +129,17 @@ export function RowActionsCell<TData>({
             >
               {body}
             </button>
+          )
+
+          return disabledTooltip ? (
+            <Tooltip
+              key={action.key}
+              data={disabledTooltip}
+            >
+              {button}
+            </Tooltip>
+          ) : (
+            button
           )
         })}
       </MenuPopover>

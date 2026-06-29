@@ -8,6 +8,7 @@ export interface RowAction<TData> {
   action?: (row: TData) => void
   hideAction?: (row: TData) => boolean
   disabled?: (row: TData) => boolean
+  disabledTooltip?: string | ((row: TData) => string)
   extraClass?: string
   header?: boolean
   indent?: boolean

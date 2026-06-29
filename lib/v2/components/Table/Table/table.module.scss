@@ -309,8 +309,7 @@ thead.tableHeader {
 }
 
 .tableCell.stickyActions {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0;
 }
 
 .stickyActions {
@@ -318,8 +317,7 @@ thead.tableHeader {
   right: 0;
   z-index: 3;
 
-  border-left: 1px solid var(--gray-300-700);
-  box-shadow: -2px 0 4px -1px var(--gray-300-700);
+  box-shadow: -2px 0 4px -2px var(--sticky-col-shadow);
 
   thead & {
     background-color: var(--gray-100-900);
@@ -346,7 +344,6 @@ thead.tableHeader {
   position: sticky;
   left: 0;
   z-index: 3;
-
   border-right: 1px solid var(--gray-300-700);
   box-shadow: 2px 0 4px -1px var(--gray-300-700);
 
@@ -417,10 +414,8 @@ thead.tableHeader {
   flex: 1;
   display: flex;
   min-height: 0;
-
   margin-top: 16px;
   border-radius: 4px;
-
   background-color: var(--gray-50-950);
 }
 

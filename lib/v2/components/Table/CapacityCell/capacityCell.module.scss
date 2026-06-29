@@ -57,6 +57,6 @@
   font-weight: 700;
   line-height: 16px;
   color: $gray-0;
-  background: linear-gradient(0deg, $cyan-500, $cyan-300);
+  background: linear-gradient(0deg, var(--cyan-500-800), var(--cyan-300-600));
   cursor: default;
 }

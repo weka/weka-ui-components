@@ -7,16 +7,13 @@ import styles from './iconButton.module.scss'
 const DEFAULT_MAX_BADGE_COUNT = 98
 
 export interface IconButtonProps {
-  /** The icon to render (24–28px glyph centered in the 40px button). */
   children: ReactNode
-  /** Accessible name — the button renders no visible text. */
   ariaLabel: string
   onClick?: MouseEventHandler<HTMLButtonElement>
-  /** Renders a count badge in the top-right corner when greater than 0. */
   badgeCount?: number
-  /** Counts above this render as "N+" (default 98 → "98+"). */
   maxBadgeCount?: number
   disabled?: boolean
+  small?: boolean
   extraClass?: string
   dataTestId?: string
 }
@@ -32,13 +29,14 @@ export function IconButton({
   badgeCount = 0,
   maxBadgeCount = DEFAULT_MAX_BADGE_COUNT,
   disabled = false,
+  small = false,
   extraClass,
   dataTestId
 }: Readonly<IconButtonProps>) {
   return (
     <button
       aria-label={ariaLabel}
-      className={clsx(styles.iconButton, extraClass)}
+      className={clsx(styles.iconButton, small && styles.small, extraClass)}
       data-testid={dataTestId}
       disabled={disabled}
       onClick={onClick}

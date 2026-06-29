@@ -44,7 +44,8 @@ const ROW_ACTIONS: RowAction<Row>[] = [
     key: 'delete',
     text: 'Delete',
     action: (row) => window.alert(`Delete ${row.name}`),
-    disabled: (row) => row.locked
+    disabled: (row) => row.locked,
+    disabledTooltip: 'Unlock the filesystem before deleting it'
   },
   {
     key: 'unlock',
