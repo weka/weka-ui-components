@@ -2,6 +2,7 @@ import type { CustomFilters } from '../FilterPopover'
 import type { ActiveFilter } from '../filterUtils'
 import type { RowAction } from './rowActions'
 import type {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   ColumnResizeMode,
@@ -24,8 +25,9 @@ import { RowActionsCell } from '../RowActionsCell'
 import { TableFilter } from '../TableFilter'
 import {
   buildTableColumns,
+  getAutoFlexColumnId,
   getCanShowFilter,
-  getColumnIsFlex
+  isColumnFlexOrAuto
 } from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
@@ -399,6 +401,18 @@ export function Table<TData = unknown>({
         .find((col) => col.id !== ROW_ACTIONS_COLUMN_ID)?.id
     : undefined
 
+  const dataColumns = table
+    .getVisibleLeafColumns()
+    .filter((col) => col.id !== ROW_ACTIONS_COLUMN_ID)
+  const autoFlexColumnId = getAutoFlexColumnId(dataColumns, rowActions)
+
+  const isColumnFlex = (column: Column<TData, unknown>) =>
+    isColumnFlexOrAuto(column, autoFlexColumnId)
+
+  const totalColumnsWidth = table
+    .getVisibleLeafColumns()
+    .reduce((sum, col) => sum + col.getSize(), 0)
+
   const wrapperStyle = maxHeight
     ? {
         maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight
@@ -492,7 +506,10 @@ export function Table<TData = unknown>({
               ref={headerRef}
               className={styles.tableHeaderWrapper}
             >
-              <table className={styles.table}>
+              <table
+                className={styles.table}
+                style={{ minWidth: totalColumnsWidth }}
+              >
                 <thead className={styles.tableHeader}>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
@@ -504,7 +521,7 @@ export function Table<TData = unknown>({
                             header.column.id === ROW_ACTIONS_COLUMN_ID
                           const isFirstColumn =
                             header.column.id === firstDataColumnId
-                          const isFlexColumn = getColumnIsFlex(header.column)
+                          const isFlexColumn = isColumnFlex(header.column)
                           return (
                             <th
                               key={header.id}
@@ -577,6 +594,7 @@ export function Table<TData = unknown>({
               <table
                 className={styles.table}
                 data-testid={dataTestId}
+                style={{ minWidth: totalColumnsWidth }}
               >
                 <tbody className={styles.tableBody}>
                   <TableContent
@@ -593,7 +611,7 @@ export function Table<TData = unknown>({
                       const isActionsCell =
                         cell.column.id === ROW_ACTIONS_COLUMN_ID
                       const isFirstCell = cell.column.id === firstDataColumnId
-                      const cellWidth = getColumnIsFlex(cell.column)
+                      const cellWidth = isColumnFlex(cell.column)
                         ? undefined
                         : cell.column.getSize()
 

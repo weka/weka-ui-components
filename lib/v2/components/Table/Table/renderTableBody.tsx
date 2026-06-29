@@ -40,7 +40,7 @@ export function renderTableBody({
   }
 
   const bodyMainStyle = {
-    marginRight: drawerOpen ? `${drawerWidth + DRAWER_GAP}px` : '0px',
+    marginRight: drawer && drawerOpen ? `${drawerWidth + DRAWER_GAP}px` : '0px',
     transition: 'margin-right 0.15s ease'
   }
 

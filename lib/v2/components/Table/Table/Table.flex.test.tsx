@@ -51,4 +51,34 @@ describe('Table — flex column', () => {
     expect(bodyCells[0]?.style.width).toBe(EMPTY_STRING)
     expect(bodyCells[1]?.style.width).not.toBe(EMPTY_STRING)
   })
+
+  it('auto-flexes the last data column when row actions exist and no column opts into flex', () => {
+    const plainColumns: ColumnDef<Row>[] = [
+      { id: 'name', accessorKey: 'name', header: 'Name', size: 200 },
+      { id: 'value', accessorKey: 'value', header: 'Value', size: 150 }
+    ]
+
+    const { container } = render(
+      <Table
+        columns={plainColumns}
+        data={DATA}
+        dataTestId='fs-body-table'
+        rowActions={ROW_ACTIONS}
+      />
+    )
+
+    const nameHeader = container.querySelector<HTMLElement>(
+      '[data-testid="column-header-name"]'
+    )
+    const valueHeader = container.querySelector<HTMLElement>(
+      '[data-testid="column-header-value"]'
+    )
+    expect(nameHeader?.style.width).not.toBe(EMPTY_STRING)
+    expect(valueHeader?.style.width).toBe(EMPTY_STRING)
+
+    const bodyTable = container.querySelector<HTMLElement>(
+      '[data-testid="fs-body-table"]'
+    )
+    expect(bodyTable?.style.minWidth).not.toBe(EMPTY_STRING)
+  })
 })

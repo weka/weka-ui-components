@@ -7,8 +7,10 @@ import { FILTER_TYPES } from '#v2/utils/consts'
 import {
   buildTableColumns,
   extractColumnIds,
+  getAutoFlexColumnId,
   getCanShowFilter,
   getColumnIsFlex,
+  isColumnFlexOrAuto,
   isSortableColumn
 } from './tableUtils'
 
@@ -134,5 +136,49 @@ describe('getColumnIsFlex', () => {
     expect(getColumnIsFlex(makeColumn({ flex: false }))).toBe(false)
     expect(getColumnIsFlex(makeColumn({}))).toBe(false)
     expect(getColumnIsFlex(makeColumn(undefined))).toBe(false)
+  })
+})
+
+describe('getAutoFlexColumnId', () => {
+  const makeCol = (id: string, meta?: unknown) =>
+    ({ id, columnDef: { meta } }) as unknown as Parameters<
+      typeof getAutoFlexColumnId
+    >[0][number]
+
+  const dataColumns = [makeCol('name'), makeCol('value')]
+
+  it('returns the last data column id when row actions exist and nothing opts in', () => {
+    expect(getAutoFlexColumnId(dataColumns, [{ key: 'edit' }])).toBe('value')
+  })
+
+  it('returns undefined when there are no row actions', () => {
+    expect(getAutoFlexColumnId(dataColumns, [])).toBeUndefined()
+    expect(getAutoFlexColumnId(dataColumns, undefined)).toBeUndefined()
+  })
+
+  it('returns undefined when a column already opts into flex', () => {
+    const withExplicitFlex = [makeCol('name', { flex: true }), makeCol('value')]
+    expect(getAutoFlexColumnId(withExplicitFlex, [{ key: 'edit' }])).toBeUndefined()
+  })
+})
+
+describe('isColumnFlexOrAuto', () => {
+  const makeCol = (id: string, meta?: unknown) =>
+    ({ id, columnDef: { meta } }) as unknown as Parameters<
+      typeof isColumnFlexOrAuto
+    >[0]
+
+  it('is true for an explicitly flexed column', () => {
+    expect(isColumnFlexOrAuto(makeCol('name', { flex: true }), undefined)).toBe(
+      true
+    )
+  })
+
+  it('is true when the column is the auto-flex column', () => {
+    expect(isColumnFlexOrAuto(makeCol('value'), 'value')).toBe(true)
+  })
+
+  it('is false otherwise', () => {
+    expect(isColumnFlexOrAuto(makeCol('value'), 'name')).toBe(false)
   })
 })

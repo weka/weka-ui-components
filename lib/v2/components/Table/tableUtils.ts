@@ -19,6 +19,33 @@ export function getColumnIsFlex<TData>(
 }
 
 /**
+ * Picks the column that should absorb the table's leftover width when no column
+ * explicitly opts into `meta.flex`: the last data column, but only when row
+ * actions are present (so the row-actions column stays at its exact size).
+ * Returns `undefined` to leave sizing untouched.
+ */
+export function getAutoFlexColumnId<TData>(
+  dataColumns: Column<TData, unknown>[],
+  rowActions: unknown[] | null | undefined
+): string | undefined {
+  if (!rowActions || rowActions.length === 0) {
+    return undefined
+  }
+  if (dataColumns.some(getColumnIsFlex)) {
+    return undefined
+  }
+  return dataColumns[dataColumns.length - 1]?.id
+}
+
+/** True when a column flexes — either explicitly, or as the auto-flex column. */
+export function isColumnFlexOrAuto<TData>(
+  column: Column<TData, unknown>,
+  autoFlexColumnId: string | undefined
+): boolean {
+  return getColumnIsFlex(column) || column.id === autoFlexColumnId
+}
+
+/**
  * Resolves a column's id from a TanStack `ColumnDef` (id → accessorKey →
  * accessorFn.name). Thin `ColumnDef`-typed wrapper over the generic
  * `filterUtils.getColumnId` so table code keeps its `ColumnDef<TData>` typing.
