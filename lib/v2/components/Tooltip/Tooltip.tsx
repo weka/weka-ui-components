@@ -145,7 +145,7 @@ export function Tooltip({
       title={tooltipContent}
       classes={{
         tooltip: classes,
-        popper: extraPopperClass
+        popper: clsx(styles.popper, extraPopperClass)
       }}
       {...(popperProps && { PopperProps: popperProps })}
       {...(typeof tooltipContent === 'string' && {
