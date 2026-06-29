@@ -22,13 +22,18 @@ import { NOOP } from '#v2/utils/consts'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
 import { TableFilter } from '../TableFilter'
-import { buildTableColumns, getCanShowFilter } from '../tableUtils'
+import {
+  buildTableColumns,
+  getCanShowFilter,
+  getColumnIsFlex
+} from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
 import { useInitialSorting } from './hooks/useInitialSorting'
 import { usePaginationState } from './hooks/usePaginationState'
 import { useScrollToRow } from './hooks/useScrollToRow'
 import { useTableOptions } from './hooks/useTableOptions'
+import { renderTableBody } from './renderTableBody'
 import { TableContent } from './TableContent'
 import { TableHeaderSection } from './TableHeaderSection'
 
@@ -39,7 +44,6 @@ const MAX_ROWS_FOR_COMPACT = 10
 const FIRST_PAGE = 1
 const COMPACT_HALF_DIVISOR = 2
 const ROW_ACTIONS_COLUMN_SIZE = 56
-const DRAWER_GAP = 24
 
 const EMPTY_ACTIVE_FILTERS: ActiveFilter[] = []
 const EMPTY_EXCLUDED_FIELDS: string[] = []
@@ -109,59 +113,14 @@ export interface TableProps<TData = unknown> {
   drawer?: ReactNode
   drawerOpen?: boolean
   drawerWidth?: number
+  /** Frame the body in `.tableBodyArea` (top gap + bg) without a drawer. */
+  framed?: boolean
   rowActionsWidth?: number
 }
 
 export const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
 
 const COLUMN_RESIZE_MODE: ColumnResizeMode = 'onChange'
-
-interface RenderTableBodyArgs {
-  readonly drawer: ReactNode
-  readonly drawerOpen: boolean
-  readonly drawerWidth: number
-  readonly tableContainerContent: ReactNode
-  readonly footer: ReactNode
-}
-
-function renderTableBody({
-  drawer,
-  drawerOpen,
-  drawerWidth,
-  tableContainerContent,
-  footer
-}: RenderTableBodyArgs) {
-  const tableContainer = (
-    <div className={styles.tableContainer}>{tableContainerContent}</div>
-  )
-
-  if (!drawer) {
-    return (
-      <>
-        {tableContainer}
-        {footer}
-      </>
-    )
-  }
-
-  const bodyMainStyle = {
-    marginRight: drawerOpen ? `${drawerWidth + DRAWER_GAP}px` : '0px',
-    transition: 'margin-right 0.15s ease'
-  }
-
-  return (
-    <div className={styles.tableBodyArea}>
-      <div
-        className={styles.tableBodyMain}
-        style={bodyMainStyle}
-      >
-        {tableContainer}
-        {footer}
-      </div>
-      {drawer}
-    </div>
-  )
-}
 
 export function Table<TData = unknown>({
   data,
@@ -212,6 +171,7 @@ export function Table<TData = unknown>({
   drawer,
   drawerOpen = false,
   drawerWidth = 0,
+  framed = false,
   rowActionsWidth = ROW_ACTIONS_COLUMN_SIZE
 }: Readonly<TableProps<TData>>) {
   const { columnVisibility, handleColumnVisibilityChange } =
@@ -514,6 +474,7 @@ export function Table<TData = unknown>({
         drawer,
         drawerOpen,
         drawerWidth,
+        framed,
         footer: (
           <div className={styles.tableFooter}>
             {showPagination ? (
@@ -544,15 +505,20 @@ export function Table<TData = unknown>({
                             header.column.id === ROW_ACTIONS_COLUMN_ID
                           const isFirstColumn =
                             header.column.id === firstDataColumnId
+                          const isFlexColumn = getColumnIsFlex(header.column)
                           return (
                             <th
                               key={header.id}
                               data-testid={`column-header-${columnId}`}
-                              style={{ width: header.getSize() }}
                               className={clsx(styles.headerCell, {
                                 [styles.stickyActions]: isActionsColumn,
                                 [styles.stickyFirst]: isFirstColumn
                               })}
+                              style={{
+                                width: isFlexColumn
+                                  ? undefined
+                                  : header.getSize()
+                              }}
                             >
                               <div className={styles.headerContent}>
                                 <div className={styles.headerMain}>

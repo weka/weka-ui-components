@@ -8,6 +8,7 @@ import {
   buildTableColumns,
   extractColumnIds,
   getCanShowFilter,
+  getColumnIsFlex,
   isSortableColumn
 } from './tableUtils'
 
@@ -116,5 +117,22 @@ describe('getCanShowFilter', () => {
     expect(
       getCanShowFilter(makeHeader(true, { filter: { type: 'text' } }))
     ).toBe(true)
+  })
+})
+
+describe('getColumnIsFlex', () => {
+  const makeColumn = (meta: unknown) =>
+    ({ columnDef: { meta } }) as unknown as Parameters<
+      typeof getColumnIsFlex
+    >[0]
+
+  it('returns true when meta.flex is true', () => {
+    expect(getColumnIsFlex(makeColumn({ flex: true }))).toBe(true)
+  })
+
+  it('returns false when meta.flex is false, missing, or meta is undefined', () => {
+    expect(getColumnIsFlex(makeColumn({ flex: false }))).toBe(false)
+    expect(getColumnIsFlex(makeColumn({}))).toBe(false)
+    expect(getColumnIsFlex(makeColumn(undefined))).toBe(false)
   })
 })

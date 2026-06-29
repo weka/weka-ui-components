@@ -223,3 +223,31 @@ export const WithPinFirstColumn: Story = {
 export const WithDrawerSlot: Story = {
   render: () => <TableWithDrawerDemo />
 }
+
+const FLEX_COLUMNS: ColumnDef<WideCluster>[] = [
+  // `meta.flex` makes Name absorb the leftover width so the actions column
+  // (and the others) keep their exact size even with few columns.
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    size: 180,
+    meta: { flex: true } as ColumnDef<WideCluster>['meta']
+  },
+  { accessorKey: 'region', header: 'Region', size: 160 },
+  { accessorKey: 'status', header: 'Status', size: 140 }
+]
+
+export const FramedWithFlexColumn: Story = {
+  render: () => (
+    <div style={WIDE_CONTAINER_STYLE}>
+      <Table
+        columns={FLEX_COLUMNS}
+        data={WIDE_DATA}
+        framed
+        rowActions={WIDE_ROW_ACTIONS}
+        rowActionsWidth={40}
+        title='Framed table — Name flexes, actions column stays 40px'
+      />
+    </div>
+  )
+}

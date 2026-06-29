@@ -1,9 +1,22 @@
 import type { ColumnWithHeader } from './filterUtils'
-import type { ColumnDef, Header } from '@tanstack/react-table'
+import type { Column, ColumnDef, Header } from '@tanstack/react-table'
 
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { getColumnId as getGenericColumnId } from './filterUtils'
+
+/**
+ * True when a column opts into flex sizing via `meta.flex`. A flex column omits
+ * its width so it becomes auto-width and absorbs the table's leftover space,
+ * keeping fixed columns (e.g. the row-actions column) at their exact size.
+ */
+export function getColumnIsFlex<TData>(
+  column: Column<TData, unknown>
+): boolean {
+  return Boolean(
+    (column.columnDef.meta as { flex?: boolean } | undefined)?.flex
+  )
+}
 
 /**
  * Resolves a column's id from a TanStack `ColumnDef` (id → accessorKey →
