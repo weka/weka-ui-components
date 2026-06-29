@@ -62,3 +62,8 @@ body.light-mode {
 body.dark-mode {
   @include theme.v2-dark-theme;
 }
+
+.v2-theme-switching,
+.v2-theme-switching * {
+  transition: none !important;
+}

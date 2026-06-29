@@ -1,13 +1,15 @@
 import type { PropsWithChildren } from 'react'
 
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react'
+
 import { LOCAL_STORAGE_UPDATE_EVENT } from '#consts'
 
 type Theme = {
@@ -20,6 +22,8 @@ const themeClasses = {
   dark: 'dark-mode'
 } as const
 
+const THEME_SWITCHING_CLASS = 'v2-theme-switching'
+
 const STORAGE_KEY = 'isDarkMode'
 const PREFERS_DARK = '(prefers-color-scheme: dark)'
 
@@ -31,7 +35,7 @@ const DarkModeContext = createContext<{
   setTheme: (theme: { isDarkMode: boolean } | { isSystem: true }) => void
 } | null>(null)
 
-function DarkModeProvider(props: PropsWithChildren) {
+function DarkModeProvider(props: Readonly<PropsWithChildren>) {
   const [themeState, setThemeState] = useState<Theme>(() => {
     const savedDarkMode = localStorage.getItem(STORAGE_KEY) as
       | 'true'
@@ -57,17 +61,21 @@ function DarkModeProvider(props: PropsWithChildren) {
         isDarkMode: true,
         isSystem: true
       }
-    }
-
-    document.body.classList.add(themeClasses.light)
-    return {
-      isDarkMode: false,
-      isSystem: true
+    } else {
+      document.body.classList.add(themeClasses.light)
+      return {
+        isDarkMode: false,
+        isSystem: true
+      }
     }
   })
 
+  const themeSwitchRafRef = useRef(0)
+
   const applyTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme)
+    const root = document.documentElement
+    root.classList.add(THEME_SWITCHING_CLASS)
     if (newTheme.isDarkMode) {
       document.body.classList.add(themeClasses.dark)
       document.body.classList.remove(themeClasses.light)
@@ -75,6 +83,12 @@ function DarkModeProvider(props: PropsWithChildren) {
       document.body.classList.remove(themeClasses.dark)
       document.body.classList.add(themeClasses.light)
     }
+    window.cancelAnimationFrame(themeSwitchRafRef.current)
+    themeSwitchRafRef.current = window.requestAnimationFrame(() => {
+      themeSwitchRafRef.current = window.requestAnimationFrame(() => {
+        root.classList.remove(THEME_SWITCHING_CLASS)
+      })
+    })
   }, [])
 
   const setTheme = useCallback(
