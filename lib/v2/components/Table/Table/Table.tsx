@@ -113,7 +113,6 @@ export interface TableProps<TData = unknown> {
   drawer?: ReactNode
   drawerOpen?: boolean
   drawerWidth?: number
-  /** Frame the body in `.tableBodyArea` (top gap + bg) without a drawer. */
   framed?: boolean
   rowActionsWidth?: number
 }
@@ -594,11 +593,14 @@ export function Table<TData = unknown>({
                       const isActionsCell =
                         cell.column.id === ROW_ACTIONS_COLUMN_ID
                       const isFirstCell = cell.column.id === firstDataColumnId
+                      const cellWidth = getColumnIsFlex(cell.column)
+                        ? undefined
+                        : cell.column.getSize()
 
                       return (
                         <td
                           key={cell.id}
-                          style={{ width: cell.column.getSize(), ...cellStyle }}
+                          style={{ width: cellWidth, ...cellStyle }}
                           className={clsx(styles.tableCell, {
                             [styles.stickyActions]: isActionsCell,
                             [styles.stickyFirst]: isFirstCell

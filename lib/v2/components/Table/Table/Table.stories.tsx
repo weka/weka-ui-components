@@ -225,8 +225,6 @@ export const WithDrawerSlot: Story = {
 }
 
 const FLEX_COLUMNS: ColumnDef<WideCluster>[] = [
-  // `meta.flex` makes Name absorb the leftover width so the actions column
-  // (and the others) keep their exact size even with few columns.
   {
     accessorKey: 'name',
     header: 'Name',
