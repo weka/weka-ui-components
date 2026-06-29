@@ -260,7 +260,9 @@ describe('Table rowActions', () => {
     )
     const [firstButton] = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
     fireEvent.click(firstButton)
-    expect(screen.queryByTestId('row-action-hidden-action')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('row-action-hidden-action')
+    ).not.toBeInTheDocument()
   })
 
   it('renders disabled actions as disabled', () => {
@@ -296,7 +298,12 @@ describe('Table rowActions', () => {
 
   it('renders no kebab button when all actions are hidden for a row', () => {
     const actions: RowAction<Item>[] = [
-      { key: 'always-hidden', text: 'Hidden', action: vi.fn(), hideAction: () => true }
+      {
+        key: 'always-hidden',
+        text: 'Hidden',
+        action: vi.fn(),
+        hideAction: () => true
+      }
     ]
     render(
       <Table
@@ -305,7 +312,217 @@ describe('Table rowActions', () => {
         rowActions={actions}
       />
     )
-    expect(screen.queryByTestId(ROW_ACTIONS_BUTTON_TESTID)).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    ).not.toBeInTheDocument()
+  })
+
+  it('applies stickyActions class to the actions header cell and body cells', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        rowActions={ROW_ACTIONS}
+      />
+    )
+
+    // The last <th> in the header row should have the stickyActions class
+    const headerRow = container.querySelector('thead tr')
+    const headerCells = Array.from(headerRow?.querySelectorAll('th') ?? [])
+    const lastHeaderCell = headerCells.at(-1)
+    expect(lastHeaderCell).toHaveClass('stickyActions')
+
+    // Every last <td> in each body row should have the stickyActions class
+    const bodyRows = container.querySelectorAll('tbody tr')
+    bodyRows.forEach((row) => {
+      const cells = Array.from(row.querySelectorAll('td'))
+      const lastCell = cells.at(-1)
+      expect(lastCell).toHaveClass('stickyActions')
+    })
+  })
+
+  it('does not apply stickyActions class when rowActions are not provided', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+      />
+    )
+
+    // No cell should have the stickyActions class
+    const stickyCells = container.querySelectorAll('.stickyActions')
+    expect(stickyCells).toHaveLength(0)
+  })
+})
+
+describe('Table pinFirstColumn', () => {
+  it('applies stickyFirst class to first header cell and first body cells when pinFirstColumn is true', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        pinFirstColumn
+      />
+    )
+
+    // The first <th> in the header row should have the stickyFirst class
+    const headerRow = container.querySelector('thead tr')
+    const headerCells = Array.from(headerRow?.querySelectorAll('th') ?? [])
+    const firstHeaderCell = headerCells.at(0)
+    expect(firstHeaderCell).toHaveClass('stickyFirst')
+
+    // The second <th> should NOT have stickyFirst
+    const secondHeaderCell = headerCells.at(1)
+    expect(secondHeaderCell).not.toHaveClass('stickyFirst')
+
+    // Every first <td> in each body row should have the stickyFirst class
+    const bodyRows = container.querySelectorAll('tbody tr')
+    bodyRows.forEach((row) => {
+      const cells = Array.from(row.querySelectorAll('td'))
+      const firstCell = cells.at(0)
+      expect(firstCell).toHaveClass('stickyFirst')
+      // Last cell should NOT have stickyFirst
+      const lastCell = cells.at(-1)
+      expect(lastCell).not.toHaveClass('stickyFirst')
+    })
+  })
+
+  it('does not apply stickyFirst class when pinFirstColumn is false', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+      />
+    )
+
+    const stickyCells = container.querySelectorAll('.stickyFirst')
+    expect(stickyCells).toHaveLength(0)
+  })
+
+  it('applies both stickyFirst and stickyActions when pinFirstColumn is true and rowActions are provided', () => {
+    const ROW_ACTIONS: RowAction<Item>[] = [
+      { key: 'edit', text: 'Edit', action: vi.fn() }
+    ]
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        pinFirstColumn
+        rowActions={ROW_ACTIONS}
+      />
+    )
+
+    const headerRow = container.querySelector('thead tr')
+    const headerCells = Array.from(headerRow?.querySelectorAll('th') ?? [])
+
+    // First header cell gets stickyFirst
+    expect(headerCells.at(0)).toHaveClass('stickyFirst')
+    // Last header cell (actions) gets stickyActions
+    expect(headerCells.at(-1)).toHaveClass('stickyActions')
+
+    // Verify body rows have both classes
+    const bodyRows = container.querySelectorAll('tbody tr')
+    bodyRows.forEach((row) => {
+      const cells = Array.from(row.querySelectorAll('td'))
+      expect(cells.at(0)).toHaveClass('stickyFirst')
+      expect(cells.at(-1)).toHaveClass('stickyActions')
+    })
+  })
+})
+
+describe('Table drawer slot', () => {
+  const DRAWER_TESTID = 'my-drawer'
+  const TABLE_BODY_AREA_SELECTOR = '.tableBodyArea'
+  const TABLE_BODY_MAIN_SELECTOR = '.tableBodyMain'
+  const TABLE_FOOTER_SELECTOR = '.tableFooter'
+
+  it('renders the drawer node when drawer prop is provided', () => {
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        drawer={<div data-testid={DRAWER_TESTID}>Drawer content</div>}
+      />
+    )
+    expect(screen.getByTestId(DRAWER_TESTID)).toBeInTheDocument()
+  })
+
+  it('does not render a tableBodyArea wrapper when drawer is absent', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+      />
+    )
+    expect(
+      container.querySelector(TABLE_BODY_AREA_SELECTOR)
+    ).not.toBeInTheDocument()
+  })
+
+  it('applies margin-right to tableBodyMain when drawerOpen is true', () => {
+    const DRAWER_WIDTH = 320
+    const EXPECTED_GAP = 24
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        drawer={<div data-testid={DRAWER_TESTID}>Drawer</div>}
+        drawerOpen
+        drawerWidth={DRAWER_WIDTH}
+      />
+    )
+    const tableBodyArea = container.querySelector(TABLE_BODY_AREA_SELECTOR)
+    expect(tableBodyArea).toBeInTheDocument()
+    const tableBodyMain = tableBodyArea?.querySelector(TABLE_BODY_MAIN_SELECTOR)
+    expect(tableBodyMain).toHaveStyle({
+      marginRight: `${DRAWER_WIDTH + EXPECTED_GAP}px`
+    })
+  })
+
+  it('applies no margin-right when drawerOpen is false', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        drawer={<div data-testid={DRAWER_TESTID}>Drawer</div>}
+        drawerOpen={false}
+        drawerWidth={320}
+      />
+    )
+    const tableBodyArea = container.querySelector(TABLE_BODY_AREA_SELECTOR)
+    const tableBodyMain = tableBodyArea?.querySelector(TABLE_BODY_MAIN_SELECTOR)
+    expect(tableBodyMain).toHaveStyle({ marginRight: '0px' })
+  })
+
+  it('renders the footer inside tableBodyMain when drawer is present', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        drawer={<div data-testid={DRAWER_TESTID}>Drawer</div>}
+        drawerOpen
+        drawerWidth={320}
+      />
+    )
+    const tableBodyMain = container.querySelector(TABLE_BODY_MAIN_SELECTOR)
+    expect(
+      tableBodyMain?.querySelector(TABLE_FOOTER_SELECTOR)
+    ).toBeInTheDocument()
+  })
+
+  it('still renders table rows when drawer is present', () => {
+    render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        drawer={<div data-testid={DRAWER_TESTID}>Drawer</div>}
+        drawerOpen
+        drawerWidth={320}
+      />
+    )
+    expect(screen.getByText('Item 1')).toBeInTheDocument()
+    expect(screen.getByText('Item 2')).toBeInTheDocument()
+    expect(screen.getByText('Item 3')).toBeInTheDocument()
   })
 })
 

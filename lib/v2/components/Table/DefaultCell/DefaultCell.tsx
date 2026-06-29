@@ -1,6 +1,7 @@
 import type { CellContext } from '@tanstack/react-table'
 
 import { Link } from 'react-router-dom'
+import clsx from 'clsx'
 
 import { COMMA_SEPARATOR, EMPTY_STRING } from '#v2/utils/consts'
 
@@ -14,6 +15,7 @@ export interface DefaultCellOptions<TData> {
   tooltipText?:
     | string
     | ((cell: CellContext<TData, DefaultCellValue>) => string)
+  bold?: boolean
 }
 
 export type DefaultCellValue = string | number | string[] | null | undefined
@@ -43,7 +45,8 @@ export function DefaultCell<TData>(
   const {
     getUrl,
     openInNewTab,
-    tooltipText: customTooltipText
+    tooltipText: customTooltipText,
+    bold
   } = cellOptions ?? {}
 
   const customTooltip =
@@ -51,7 +54,11 @@ export function DefaultCell<TData>(
       ? customTooltipText(props)
       : customTooltipText
 
-  const cellContent = <div className={styles.defaultCell}>{formattedValue}</div>
+  const cellContent = (
+    <div className={clsx(styles.defaultCell, bold && styles.bold)}>
+      {formattedValue}
+    </div>
+  )
 
   if (customTooltip) {
     return (
@@ -82,7 +89,7 @@ export function DefaultCell<TData>(
     <Tooltip
       data={formattedValue}
       ellipsis
-      ellipsisClass={styles.defaultCell}
+      ellipsisClass={clsx(styles.defaultCell, bold && styles.bold)}
       extraClass={styles.cellTooltip}
     >
       {getUrl ? (

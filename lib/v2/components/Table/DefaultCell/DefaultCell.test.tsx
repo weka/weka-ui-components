@@ -131,6 +131,34 @@ describe('DefaultCell - link rendering', () => {
   })
 })
 
+const BOLD_SELECTOR = '[class*="bold"]'
+
+describe('DefaultCell - bold option', () => {
+  it('applies the bold class when bold option is true', () => {
+    const ctx = buildCellContext({
+      value: 'bold text',
+      cellOptions: { bold: true }
+    })
+    const { container } = renderCell(ctx)
+    expect(container.querySelector(BOLD_SELECTOR)).toBeInTheDocument()
+  })
+
+  it('does not apply the bold class when bold option is false', () => {
+    const ctx = buildCellContext({
+      value: 'normal text',
+      cellOptions: { bold: false }
+    })
+    const { container } = renderCell(ctx)
+    expect(container.querySelector(BOLD_SELECTOR)).not.toBeInTheDocument()
+  })
+
+  it('does not apply the bold class when bold option is not set', () => {
+    const ctx = buildCellContext({ value: 'normal text' })
+    const { container } = renderCell(ctx)
+    expect(container.querySelector(BOLD_SELECTOR)).not.toBeInTheDocument()
+  })
+})
+
 describe('DefaultCell - custom tooltip', () => {
   it('exposes string tooltipText via aria-label on the wrapper', () => {
     const TOOLTIP_BODY = 'custom tooltip body'

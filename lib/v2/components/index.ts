@@ -187,6 +187,8 @@ export type {
   BooleanIconCellValue
 } from './Table/BooleanIconCell'
 export { BooleanIconCell } from './Table/BooleanIconCell'
+export type { CapabilitiesCellProps } from './Table/CapabilitiesCell'
+export { CapabilitiesCell } from './Table/CapabilitiesCell'
 export type { CapacityCellProps } from './Table/CapacityCell'
 export { CapacityCell } from './Table/CapacityCell'
 export type {

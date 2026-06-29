@@ -63,6 +63,11 @@
   }
 }
 
+.contentNoScrollbar {
+  padding-right: 0;
+  scrollbar-gutter: auto;
+}
+
 .actions {
   padding-top: 24px;
   display: flex;

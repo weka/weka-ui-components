@@ -17,10 +17,19 @@ interface FilesystemRow {
   total: number
   unitType?: string
   unlimitedWhenZero?: boolean
+  badge?: { label: string; tooltip?: string }
 }
 
 const ROWS: FilesystemRow[] = [
-  { name: 'fs-prod', used: 2_600_000_000, total: 4_000_000_000 },
+  {
+    name: 'fs-prod',
+    used: 2_600_000_000,
+    total: 4_000_000_000,
+    badge: {
+      label: 'TP',
+      tooltip: 'Thinly Provisioned Filesystem\nMax SSD: 4 GB\nMin SSD: 1 GB'
+    }
+  },
   { name: 'fs-archive', used: 980_000_000, total: 50_000_000_000 },
   { name: 'fs-scratch', used: 3_900_000_000, total: 4_000_000_000 },
   {
@@ -81,6 +90,7 @@ function CapacityCellDemo() {
               <td style={CELL_STYLE}>{row.name}</td>
               <td style={CELL_STYLE}>
                 <CapacityCell
+                  badge={row.badge}
                   total={row.total}
                   unitType={row.unitType}
                   unlimitedWhenZero={row.unlimitedWhenZero}

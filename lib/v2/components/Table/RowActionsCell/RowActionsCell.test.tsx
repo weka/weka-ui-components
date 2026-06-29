@@ -80,7 +80,9 @@ describe('RowActionsCell', () => {
     const hidden: RowAction<TestRow>[] = [
       { key: 'edit', text: EDIT_TEXT, action: vi.fn(), hideAction: () => true }
     ]
-    const { rerender } = render(<RowActionsCell {...buildCellContext(visible)} />)
+    const { rerender } = render(
+      <RowActionsCell {...buildCellContext(visible)} />
+    )
 
     fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
     expect(screen.getByTestId(EDIT_ACTION_TESTID)).toBeInTheDocument()
@@ -98,7 +100,12 @@ describe('RowActionsCell', () => {
   it('does not render actions whose hideAction returns true', () => {
     renderCell([
       { key: 'edit', text: EDIT_TEXT, action: vi.fn() },
-      { key: 'archive', text: 'Archive', action: vi.fn(), hideAction: () => true }
+      {
+        key: 'archive',
+        text: 'Archive',
+        action: vi.fn(),
+        hideAction: () => true
+      }
     ])
     fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
     expect(screen.getByTestId(EDIT_ACTION_TESTID)).toBeInTheDocument()
@@ -124,7 +131,9 @@ describe('RowActionsCell', () => {
   it('passes the row to hideAction and disabled predicates', () => {
     const hideAction = vi.fn(() => false)
     const disabled = vi.fn(() => false)
-    renderCell([{ key: 'edit', text: EDIT_TEXT, action: vi.fn(), hideAction, disabled }])
+    renderCell([
+      { key: 'edit', text: EDIT_TEXT, action: vi.fn(), hideAction, disabled }
+    ])
     fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
     expect(hideAction).toHaveBeenCalledWith(SAMPLE_ROW)
     expect(disabled).toHaveBeenCalledWith(SAMPLE_ROW)
@@ -148,7 +157,9 @@ describe('RowActionsCell', () => {
     render(
       <div onClick={onParentClick}>
         <RowActionsCell
-          {...buildCellContext([{ key: 'edit', text: EDIT_TEXT, action: vi.fn() }])}
+          {...buildCellContext([
+            { key: 'edit', text: EDIT_TEXT, action: vi.fn() }
+          ])}
         />
       </div>
     )
@@ -178,7 +189,9 @@ describe('RowActionsCell', () => {
     render(
       <div onClick={onParentClick}>
         <RowActionsCell
-          {...buildCellContext([{ key: 'edit', text: EDIT_TEXT, action: vi.fn() }])}
+          {...buildCellContext([
+            { key: 'edit', text: EDIT_TEXT, action: vi.fn() }
+          ])}
         />
       </div>
     )

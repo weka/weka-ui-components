@@ -90,8 +90,12 @@ export function Popup({
           </button>
         </div>
         <div
-          className={styles.content}
           style={{ overflow: contentOverflow }}
+          className={clsx(
+            styles.content,
+            contentOverflow === CONTENT_OVERFLOWS.HIDDEN &&
+              styles.contentNoScrollbar
+          )}
         >
           {children}
         </div>
