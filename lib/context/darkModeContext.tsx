@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react'
 
@@ -69,6 +70,8 @@ function DarkModeProvider(props: Readonly<PropsWithChildren>) {
     }
   })
 
+  const themeSwitchRafRef = useRef(0)
+
   const applyTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme)
     const root = document.documentElement
@@ -80,8 +83,9 @@ function DarkModeProvider(props: Readonly<PropsWithChildren>) {
       document.body.classList.remove(themeClasses.dark)
       document.body.classList.add(themeClasses.light)
     }
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
+    window.cancelAnimationFrame(themeSwitchRafRef.current)
+    themeSwitchRafRef.current = window.requestAnimationFrame(() => {
+      themeSwitchRafRef.current = window.requestAnimationFrame(() => {
         root.classList.remove(THEME_SWITCHING_CLASS)
       })
     })
