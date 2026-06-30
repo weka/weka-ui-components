@@ -100,18 +100,11 @@
 }
 
 .tableHeaderWrapper {
-  overflow: auto hidden;
+  overflow: hidden;
   flex-shrink: 0;
   background-color: var(--gray-100-900);
   box-sizing: border-box;
   padding-right: var(--scrollbar-gutter, 0);
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 
   .table {
     border-bottom: 1px solid var(--gray-200-800);
@@ -317,7 +310,6 @@ thead.tableHeader {
   position: sticky;
   right: 0;
   z-index: 3;
-
   box-shadow: -2px 0 4px -2px var(--sticky-col-shadow);
 
   thead & {

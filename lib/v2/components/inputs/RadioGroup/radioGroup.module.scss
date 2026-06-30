@@ -1,0 +1,72 @@
+@use '../../../styles/colors' as *;
+
+.group {
+  display: flex;
+}
+
+.row {
+  flex-direction: row;
+  gap: 48px;
+}
+
+.column {
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+
+  &:checked + .circle::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: $purple-400;
+  }
+
+  &:focus-visible + .circle {
+    outline: 2px solid $purple-400;
+    outline-offset: 2px;
+  }
+}
+
+.circle {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 1px solid var(--gray-650-350);
+  border-radius: 50%;
+
+  // Filled interior (gray-blue-100-900) — the visible "padding" between the
+  // ring and the dot, per the design-system radio.
+  background-color: var(--gray-100-900);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-700-300);
+}

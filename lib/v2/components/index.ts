@@ -115,6 +115,13 @@ export type { MultiSelectAutocompleteProps } from './inputs/MultiSelectAutocompl
 export { MultiSelectAutocomplete } from './inputs/MultiSelectAutocomplete'
 export type { NumberInputProps } from './inputs/NumberInput'
 export { NumberInput } from './inputs/NumberInput'
+export type {
+  RadioGroupDirection,
+  RadioGroupProps,
+  RadioOption,
+  RadioValue
+} from './inputs/RadioGroup'
+export { RADIO_GROUP_DIRECTIONS, RadioGroup } from './inputs/RadioGroup'
 export type { SelectOption, SelectProps } from './inputs/Select'
 export { Select } from './inputs/Select'
 export type { TextAreaProps } from './inputs/TextArea'
@@ -310,7 +317,7 @@ export {
 export type { TableDrawerProps } from './TableDrawer'
 export { TableDrawer } from './TableDrawer'
 export type { ScrollDirection, Tab, TabsProps, TabVariant } from './Tabs'
-export { SCROLL_DIRECTIONS, Tabs, TAB_VARIANTS } from './Tabs'
+export { SCROLL_DIRECTIONS, TAB_VARIANTS,Tabs } from './Tabs'
 export type { TooltipProps } from './Tooltip'
 export { Tooltip } from './Tooltip'
 export {
