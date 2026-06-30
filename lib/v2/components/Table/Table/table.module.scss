@@ -100,8 +100,6 @@
 }
 
 .tableHeaderWrapper {
-  // hidden, not auto: the header only mirrors the body scroll (via scrollLeft);
-  // auto would let it scroll independently and misalign the column titles.
   overflow: hidden;
   flex-shrink: 0;
   background-color: var(--gray-100-900);
