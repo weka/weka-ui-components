@@ -7,6 +7,7 @@ import { ChartIcon } from './ChartIcon'
 import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
 import { CheckboxUncheckedIcon } from './CheckboxUncheckedIcon'
+import { CheckIcon } from './CheckIcon'
 import { ChevronDownSmallIcon } from './ChevronDownSmallIcon'
 import { ChevronLeftIcon } from './ChevronLeftIcon'
 import { CloseIcon } from './CloseIcon'
@@ -17,6 +18,7 @@ import { DarkModeIcon } from './DarkModeIcon'
 import { DateTimeIcon } from './DateTimeIcon'
 import { DownloadIcon } from './DownloadIcon'
 import { DriversIcon } from './DriversIcon'
+import { EditIcon } from './EditIcon'
 import { FileSystemIcon } from './FileSystemIcon'
 import { FilterIcon } from './FilterIcon'
 import { InfoIcon } from './InfoIcon'
@@ -31,7 +33,9 @@ import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
 import { NotificationsIcon } from './NotificationsIcon'
 import { PauseIcon } from './PauseIcon'
+import { PlusIcon } from './PlusIcon'
 import { ResetIcon } from './ResetIcon'
+import { RestoreIcon } from './RestoreIcon'
 import { S3BucketsIcon } from './S3BucketsIcon'
 import { SearchIcon } from './SearchIcon'
 import { ServersIcon } from './ServersIcon'
@@ -97,6 +101,7 @@ const generalIcons: { name: string; node: ReactNode }[] = [
     )
   },
   { name: 'ChartIcon', node: <ChartIcon /> },
+  { name: 'CheckIcon', node: <CheckIcon /> },
   { name: 'CheckboxCheckedIcon', node: <CheckboxCheckedIcon /> },
   { name: 'CheckboxPartialIcon', node: <CheckboxPartialIcon /> },
   { name: 'CheckboxUncheckedIcon', node: <CheckboxUncheckedIcon /> },
@@ -109,6 +114,8 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'DarkModeIcon', node: <DarkModeIcon /> },
   { name: 'DateTimeIcon', node: <DateTimeIcon /> },
   { name: 'DownloadIcon', node: <DownloadIcon /> },
+  { name: 'EditIcon (filled)', node: <EditIcon /> },
+  { name: 'EditIcon (stroke)', node: <EditIcon variant='stroke' /> },
   { name: 'FilterIcon', node: <FilterIcon /> },
   { name: 'InfoIcon', node: <InfoIcon /> },
   { name: 'InvestigateIcon', node: <InvestigateIcon /> },
@@ -130,7 +137,9 @@ const generalIcons: { name: string; node: ReactNode }[] = [
       />
     )
   },
+  { name: 'PlusIcon', node: <PlusIcon /> },
   { name: 'ResetIcon', node: <ResetIcon /> },
+  { name: 'RestoreIcon', node: <RestoreIcon /> },
   {
     name: 'SearchIcon',
     node: (

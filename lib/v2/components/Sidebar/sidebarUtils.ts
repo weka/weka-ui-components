@@ -15,6 +15,23 @@ export function hasSubItems(item: SidebarItem): boolean {
 export function isItemActive(currentPath: string, item: SidebarItem): boolean {
   return (
     isPathActive(currentPath, item.href) ||
-    (item.subItems ?? []).some((subItem) => isPathActive(currentPath, subItem.href))
+    (item.subItems ?? []).some((subItem) =>
+      isPathActive(currentPath, subItem.href)
+    )
   )
+}
+
+/**
+ * The key of the first item whose submenu is active for the current path, or
+ * `null` when none. Used as the default-open submenu in the accordion so the
+ * section matching the route opens until the user manually toggles another.
+ */
+export function findActiveSubmenuKey(
+  items: SidebarItem[],
+  currentPath: string
+): string | null {
+  const activeItem = items.find(
+    (item) => hasSubItems(item) && isItemActive(currentPath, item)
+  )
+  return activeItem?.key ?? null
 }

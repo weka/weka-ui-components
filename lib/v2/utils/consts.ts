@@ -12,6 +12,14 @@ export const EMPTY_OBJECT: Record<string, never> = {}
 
 export const PERCENTAGE = { FULL: 100, HALF: 50 } as const
 
+export const ICON_SIZES = {
+  XS: 12,
+  SM: 14,
+  MD: 16,
+  LG: 20,
+  XL: 24
+} as const
+
 export const ICON_VARIANTS = {
   CONTAINER: 'container',
   SVG_ONLY: 'svg-only'

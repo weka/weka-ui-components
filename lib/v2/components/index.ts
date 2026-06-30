@@ -309,6 +309,8 @@ export {
 } from './Table/tableUtils'
 export type { TableDrawerProps } from './TableDrawer'
 export { TableDrawer } from './TableDrawer'
+export type { ScrollDirection, Tab, TabsProps, TabVariant } from './Tabs'
+export { SCROLL_DIRECTIONS, Tabs, TAB_VARIANTS } from './Tabs'
 export type { TooltipProps } from './Tooltip'
 export { Tooltip } from './Tooltip'
 export {

@@ -72,9 +72,7 @@ export function NavLink({
     >
       {item.icon}
       <span className={styles.navLinkText}>{item.label}</span>
-      {hasSub ? (
-        <span className={chevronClass}>{chevron}</span>
-      ) : null}
+      {hasSub ? <span className={chevronClass}>{chevron}</span> : null}
     </button>
   )
 }

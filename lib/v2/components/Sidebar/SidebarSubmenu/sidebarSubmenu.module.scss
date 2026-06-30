@@ -124,6 +124,10 @@
   height: 100%;
   max-height: 216px;
 
+  &:hover :global(.simplebar-scrollbar) {
+    opacity: 1 !important;
+  }
+
   :global {
     .simplebar-wrapper {
       max-height: 216px;
@@ -174,7 +178,8 @@
       border: none !important;
       border-radius: 0;
       background: $fuchsia-500 !important;
-      opacity: 1 !important;
+      opacity: 0 !important;
+      transition: opacity 200ms ease;
 
       &::before {
         content: '';
