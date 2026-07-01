@@ -28,6 +28,12 @@ import { highlightText } from '#v2/utils/textUtils'
 
 import { ChevronDownSmallIcon, CloseIcon, SearchIcon } from '../../../icons'
 import { Chip } from '../../Chip'
+import {
+  applyAnyValueRules,
+  getNextEnabledIndex,
+  normalizeSelectValue,
+  type SelectOptionValue
+} from './selectUtils'
 import { SplitMenuList } from './SplitMenuList'
 
 import styles from './select.module.scss'
@@ -45,53 +51,30 @@ const DEFAULT_PLACEHOLDER = 'Select...'
 const DEFAULT_CHIP_TEXT_COLOR = 'var(--gray-900-100)'
 const DEFAULT_CHIP_BACKGROUND_COLOR = 'var(--purple-100-900)'
 
-function applyAnyValueRules(
-  nextValues: string[],
-  prevValues: string[],
-  anyValue: string | undefined
-): string[] {
-  if (!anyValue) {
-    return nextValues
-  }
-
-  if (nextValues.length === 0) {
-    return [anyValue]
-  }
-
-  const prevHadAny = prevValues.includes(anyValue)
-  const nextHasAny = nextValues.includes(anyValue)
-
-  if (nextHasAny && !prevHadAny) {
-    return [anyValue]
-  }
-
-  if (nextHasAny && nextValues.length > 1) {
-    return nextValues.filter((entry) => entry !== anyValue)
-  }
-
-  return nextValues
-}
+export type { SelectOptionValue } from './selectUtils'
 
 export interface SelectOption {
-  value: string
+  value: SelectOptionValue
   label: string
   icon?: ReactNode
   chipBackgroundColor?: string
   chipTextColor?: string
+  subLabel?: string
+  disabled?: boolean
 }
 
 export interface SelectProps {
   label?: string
   placeholder?: string
   options: SelectOption[]
-  value: string | string[]
-  onChange: (value: string | string[]) => void
+  value?: SelectOptionValue | SelectOptionValue[]
+  onChange(value: SelectOptionValue | SelectOptionValue[]): void
   disabled?: boolean
   multiple?: boolean
   required?: boolean
   renderChip?: (option: SelectOption, onRemove: () => void) => ReactNode
   renderOption?: (option: SelectOption) => ReactNode
-  anyValue?: string
+  anyValue?: SelectOptionValue
   maxVisibleChips?: number
   isLoading?: boolean
   onSearch?: (query: string) => void | Promise<void>
@@ -105,7 +88,7 @@ export function Select({
   label,
   placeholder = DEFAULT_PLACEHOLDER,
   options,
-  value,
+  value: valueProp,
   onChange,
   disabled = false,
   multiple = false,
@@ -121,6 +104,7 @@ export function Select({
   searchThreshold = DEFAULT_SEARCH_THRESHOLD,
   dataTestId
 }: Readonly<SelectProps>) {
+  const value = normalizeSelectValue(valueProp, multiple)
   const [searchQuery, setSearchQuery] = useState(EMPTY_STRING)
   const [isOpen, setIsOpen] = useState(false)
   const [openUpward, setOpenUpward] = useState(false)
@@ -136,21 +120,31 @@ export function Select({
   const showSearch = options.length > searchThreshold || !!searchQuery
 
   const optionsWithSelected = useMemo(() => {
-    const selectedValues = multiple ? (value as string[]) : [value as string]
+    const selectedValues = multiple
+      ? (value as SelectOptionValue[])
+      : [value as SelectOptionValue]
     const result = [...options]
 
-    selectedValues.filter(Boolean).forEach((val) => {
-      if (!result.some((opt) => opt.value === val)) {
-        result.unshift({ value: val, label: val })
-      }
-    })
+    selectedValues
+      .filter((v) => v !== undefined && v !== null && v !== EMPTY_STRING)
+      .forEach((val) => {
+        if (!result.some((opt) => opt.value === val)) {
+          result.unshift({ value: val, label: String(val) })
+        }
+      })
 
     return result
   }, [options, value, multiple])
 
   const filteredOptions = useMemo(() => {
-    const selectedValues = multiple ? (value as string[]) : [value as string]
-    const selectedSet = new Set(selectedValues.filter(Boolean))
+    const selectedValues = multiple
+      ? (value as SelectOptionValue[])
+      : [value as SelectOptionValue]
+    const selectedSet = new Set(
+      selectedValues.filter(
+        (v) => v !== undefined && v !== null && v !== EMPTY_STRING
+      )
+    )
 
     let baseOptions = optionsWithSelected
 
@@ -168,7 +162,7 @@ export function Select({
         if (fullOption) {
           missingSelectedOptions.push(fullOption)
         } else {
-          missingSelectedOptions.push({ value: val, label: val })
+          missingSelectedOptions.push({ value: val, label: String(val) })
         }
       }
     })
@@ -222,30 +216,40 @@ export function Select({
     [onSearch, searchDebounceMs, minSearchLength]
   )
 
-  const handleChange = (e: SelectChangeEvent<string | string[]>) => {
+  const handleChange = (
+    e: SelectChangeEvent<SelectOptionValue | SelectOptionValue[]>
+  ) => {
     const incoming = e.target.value
     if (!multiple) {
       onChange(incoming)
       return
     }
     onChange(
-      applyAnyValueRules(incoming as string[], value as string[], anyValue)
+      applyAnyValueRules(
+        incoming as SelectOptionValue[],
+        value as SelectOptionValue[],
+        anyValue
+      )
     )
   }
 
-  const handleRemoveChip = (valueToRemove: string) => {
+  const handleRemoveChip = (valueToRemove: SelectOptionValue) => {
     if (!multiple || !Array.isArray(value)) {
       return
     }
-    const remaining = value.filter((entry) => entry !== valueToRemove)
-    onChange(applyAnyValueRules(remaining, value, anyValue))
+    const remaining = (value as SelectOptionValue[]).filter(
+      (entry) => entry !== valueToRemove
+    )
+    onChange(
+      applyAnyValueRules(remaining, value as SelectOptionValue[], anyValue)
+    )
   }
 
   const getSelectedOptions = () => {
     if (!multiple || !Array.isArray(value)) {
       return []
     }
-    return value
+    return (value as SelectOptionValue[])
       .map((selectedValue) =>
         optionsWithSelected.find((option) => option.value === selectedValue)
       )
@@ -254,9 +258,9 @@ export function Select({
 
   const getDisplayValue = () => {
     if (multiple) {
-      return value as string[]
+      return value as SelectOptionValue[]
     }
-    return value as string
+    return value as SelectOptionValue
   }
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -300,6 +304,39 @@ export function Select({
     }
   }
 
+  const commitHighlightedOption = () => {
+    if (highlightedIndex < 0 || highlightedIndex >= filteredOptions.length) {
+      return
+    }
+    const selectedOption = filteredOptions[highlightedIndex]
+    if (selectedOption.disabled) {
+      return
+    }
+    if (multiple) {
+      const currentValue = value as SelectOptionValue[]
+      const isAlreadySelected = currentValue.includes(selectedOption.value)
+      const toggled = isAlreadySelected
+        ? currentValue.filter((entry) => entry !== selectedOption.value)
+        : [...currentValue, selectedOption.value]
+      onChange(applyAnyValueRules(toggled, currentValue, anyValue))
+    } else {
+      onChange(selectedOption.value)
+      setIsOpen(false)
+    }
+  }
+
+  const moveHighlight = (step: number) => {
+    setHighlightedIndex((prev) => {
+      const nextIndex = getNextEnabledIndex(filteredOptions, prev, step)
+      if (step < 0 && nextIndex === prev && showSearch) {
+        searchInputRef.current?.focus()
+        return NO_HIGHLIGHT
+      }
+      scrollToHighlightedItem(nextIndex)
+      return nextIndex
+    })
+  }
+
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (filteredOptions.length === 0) {
       return
@@ -309,24 +346,12 @@ export function Select({
       case KEYBOARD_KEYS.ARROW_DOWN:
         e.preventDefault()
         e.stopPropagation()
-        setHighlightedIndex((prev) => {
-          const nextIndex = prev < filteredOptions.length - 1 ? prev + 1 : prev
-          scrollToHighlightedItem(nextIndex)
-          return nextIndex
-        })
+        moveHighlight(1)
         break
       case KEYBOARD_KEYS.ARROW_UP:
         e.preventDefault()
         e.stopPropagation()
-        setHighlightedIndex((prev) => {
-          const nextIndex = prev > 0 ? prev - 1 : NO_HIGHLIGHT
-          if (nextIndex === NO_HIGHLIGHT && showSearch) {
-            searchInputRef.current?.focus()
-          } else {
-            scrollToHighlightedItem(nextIndex)
-          }
-          return nextIndex
-        })
+        moveHighlight(-1)
         break
       case KEYBOARD_KEYS.ENTER:
         if (
@@ -335,33 +360,24 @@ export function Select({
         ) {
           e.preventDefault()
           e.stopPropagation()
-          const selectedOption = filteredOptions[highlightedIndex]
-          if (multiple) {
-            const currentValue = value as string[]
-            const isAlreadySelected = currentValue.includes(
-              selectedOption.value
-            )
-            const toggled = isAlreadySelected
-              ? currentValue.filter((entry) => entry !== selectedOption.value)
-              : [...currentValue, selectedOption.value]
-            onChange(applyAnyValueRules(toggled, currentValue, anyValue))
-          } else {
-            onChange(selectedOption.value)
-            setIsOpen(false)
-          }
+          commitHighlightedOption()
         }
         break
     }
   }
 
-  const renderSingleValue = (selectedValue: string): ReactNode => {
-    if (!selectedValue) {
+  const renderSingleValue = (selectedValue: SelectOptionValue): ReactNode => {
+    if (
+      selectedValue === undefined ||
+      selectedValue === null ||
+      selectedValue === EMPTY_STRING
+    ) {
       return <span className={styles.placeholder}>{placeholder}</span>
     }
     const selectedOption = optionsWithSelected.find(
       (opt) => opt.value === selectedValue
     )
-    const displayText = selectedOption?.label || selectedValue
+    const displayText = selectedOption?.label || String(selectedValue)
     return (
       <span
         className={styles.selectedValue}
@@ -372,7 +388,9 @@ export function Select({
     )
   }
 
-  const renderMultipleValue = (selectedArray: string[]): ReactNode => {
+  const renderMultipleValue = (
+    selectedArray: SelectOptionValue[]
+  ): ReactNode => {
     if (selectedArray.length === 0) {
       return <span className={styles.placeholder}>{placeholder}</span>
     }
@@ -463,6 +481,7 @@ export function Select({
           }
         }}
         data-testid={`select-option-${option.value}`}
+        disabled={option.disabled}
         value={option.value}
         className={clsx(styles.menuItem, {
           [styles.highlighted]: index === highlightedIndex
@@ -475,13 +494,18 @@ export function Select({
             {option.icon ? (
               <span className={styles.menuItemIcon}>{option.icon}</span>
             ) : null}
-            <span>
+            <span className={styles.menuItemText}>
               {highlightText(
                 option.label,
                 searchQuery,
                 'mark',
                 styles.highlight
               )}
+              {option.subLabel ? (
+                <span className={styles.menuItemSubLabel}>
+                  {option.subLabel}
+                </span>
+              ) : null}
             </span>
           </div>
         )}
@@ -546,8 +570,8 @@ export function Select({
         }}
         renderValue={(selected) =>
           multiple
-            ? renderMultipleValue(selected as string[])
-            : renderSingleValue(selected as string)
+            ? renderMultipleValue(selected as SelectOptionValue[])
+            : renderSingleValue(selected as SelectOptionValue)
         }
       >
         {showSearch ? (

@@ -1,4 +1,4 @@
-import type { SelectOption } from './Select'
+import type { SelectOption, SelectOptionValue } from './Select'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { CSSProperties } from 'react'
 
@@ -77,19 +77,26 @@ const ASYNC_INITIAL_OPTIONS = MANY_OPTIONS.slice(0, ASYNC_RESULT_LIMIT)
 const NOOP = NOP
 
 function SelectDemo() {
-  const [region, setRegion] = useState<string | string[]>(EMPTY_STRING)
-  const [severities, setSeverities] = useState<string | string[]>([
-    'critical',
-    'major'
-  ])
-  const [anyAllowed, setAnyAllowed] = useState<string | string[]>([ANY_VALUE])
-  const [bucket, setBucket] = useState<string | string[]>(EMPTY_STRING)
+  const [region, setRegion] = useState<SelectOptionValue | SelectOptionValue[]>(
+    EMPTY_STRING
+  )
+  const [severities, setSeverities] = useState<
+    SelectOptionValue | SelectOptionValue[]
+  >(['critical', 'major'])
+  const [anyAllowed, setAnyAllowed] = useState<
+    SelectOptionValue | SelectOptionValue[]
+  >([ANY_VALUE])
+  const [bucket, setBucket] = useState<SelectOptionValue | SelectOptionValue[]>(
+    EMPTY_STRING
+  )
 
   const [asyncResults, setAsyncResults] = useState<SelectOption[]>(
     ASYNC_INITIAL_OPTIONS
   )
   const [asyncLoading, setAsyncLoading] = useState(false)
-  const [asyncPick, setAsyncPick] = useState<string | string[]>(EMPTY_STRING)
+  const [asyncPick, setAsyncPick] = useState<
+    SelectOptionValue | SelectOptionValue[]
+  >(EMPTY_STRING)
 
   const renderSeverityOption = useCallback(
     (option: SelectOption) => {
