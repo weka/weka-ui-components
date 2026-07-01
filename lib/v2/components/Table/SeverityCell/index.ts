@@ -1,0 +1,1 @@
+export { SeverityCell } from './SeverityCell'

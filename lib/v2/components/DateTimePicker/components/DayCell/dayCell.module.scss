@@ -12,7 +12,15 @@
 .cellDayDisabled {
   composes: cellDay;
   cursor: not-allowed;
-  color: var(--gray-400-600);
+  color: inherit;
+  opacity: 0.35;
+}
+
+.cellDayOutsideMonth {
+  composes: cellDay;
+  cursor: default;
+  color: inherit;
+  opacity: 0.55;
 }
 
 .cellDayActive {

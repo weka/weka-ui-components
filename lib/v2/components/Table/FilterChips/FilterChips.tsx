@@ -223,8 +223,20 @@ function FilterChips({
         )
       case FILTER_TYPES.NUM_RANGE:
         return { compact: false, display: getNumRangeChip(filter) }
-      default:
+      default: {
+        const column = columns
+          ? findColumn([...columns], filter.columnId)
+          : undefined
+        const filterMeta = (
+          column as
+            | { meta?: { filter?: { uppercaseValue?: boolean } } }
+            | undefined
+        )?.meta?.filter
+        if (filterMeta?.uppercaseValue) {
+          return { compact: false, display: String(filter.value).toUpperCase() }
+        }
         return { compact: false, display: filter.value as string }
+      }
     }
   }
 

@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { Button } from '../../Button'
+import { EndlessScrollDemo } from './EndlessScrollDemo'
 import { Table } from './Table'
 import { TableWithDrawerDemo } from './TableWithDrawerDemo'
 
@@ -246,4 +247,8 @@ export const Framed: Story = {
       />
     </div>
   )
+}
+
+export const EndlessScroll: Story = {
+  render: () => <EndlessScrollDemo />
 }

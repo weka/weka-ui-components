@@ -12,6 +12,7 @@ const ROW_PARITY_DIVISOR = 2
 export interface TableContentProps<TData> {
   rows: Row<TData>[]
   emptyMessage: string
+  loading?: boolean
   onRowClick?: (row: TData) => void
   activeRowId?: string | number
   getRowId?: (row: TData) => string | number | null | undefined
@@ -21,11 +22,16 @@ export interface TableContentProps<TData> {
 export function TableContent<TData>({
   rows,
   emptyMessage,
+  loading = false,
   onRowClick,
   activeRowId,
   getRowId,
   renderCell
 }: Readonly<TableContentProps<TData>>) {
+  if (loading) {
+    return null
+  }
+
   if (rows.length === 0) {
     return (
       <tr>

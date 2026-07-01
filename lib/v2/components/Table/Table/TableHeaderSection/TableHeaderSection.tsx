@@ -33,6 +33,26 @@ export interface TableHeaderSectionProps<TData> {
   onGlobalSearch: (searchTerm: string) => void
   onRemoveFilter: (columnId: string) => void
   onResetColumnSizing: () => void
+  endless?: boolean
+}
+
+function renderTitleSection(
+  title: string | undefined,
+  customTitle: ReactNode,
+  actualFilteredCount: number,
+  endless: boolean
+): ReactNode {
+  if (customTitle) {
+    return <div className={styles.customTitle}>{customTitle}</div>
+  }
+  return (
+    <>
+      <h3 className={styles.tableTitle}>{title}</h3>
+      {!endless && actualFilteredCount > 0 ? (
+        <span className={styles.tableCount}>({actualFilteredCount})</span>
+      ) : null}
+    </>
+  )
 }
 
 export function TableHeaderSection<TData>({
@@ -56,7 +76,8 @@ export function TableHeaderSection<TData>({
   onFilterChange,
   onGlobalSearch,
   onRemoveFilter,
-  onResetColumnSizing
+  onResetColumnSizing,
+  endless = false
 }: Readonly<TableHeaderSectionProps<TData>>) {
   const hasTitle = Boolean(title || customTitle)
   const hasActiveFilters = activeFilters.length > 0
@@ -72,6 +93,7 @@ export function TableHeaderSection<TData>({
         customFilters={customFilters}
         customTitle={customTitle}
         data={data}
+        endless={endless}
         getCsvData={getCsvData}
         onClearAllFilters={onClearAllFilters}
         onCsvError={onCsvError}
@@ -96,18 +118,7 @@ export function TableHeaderSection<TData>({
     <div className={styles.tableHeader}>
       <div className={styles.titleRow}>
         <div className={styles.titleSection}>
-          {customTitle ? (
-            <div className={styles.customTitle}>{customTitle}</div>
-          ) : (
-            <>
-              <h3 className={styles.tableTitle}>{title}</h3>
-              {actualFilteredCount > 0 && (
-                <span className={styles.tableCount}>
-                  ({actualFilteredCount})
-                </span>
-              )}
-            </>
-          )}
+          {renderTitleSection(title, customTitle, actualFilteredCount, endless)}
         </div>
         {showFilterChips && hasActiveFilters ? (
           <FilterChips

@@ -58,6 +58,7 @@ export interface TableHeaderProps<TData = unknown> {
   title: string
   customTitle?: ReactNode
   count?: number
+  endless?: boolean
   activeFilters?: readonly ActiveFilter[]
   onRemoveFilter?: (columnId: string) => void
   onClearAllFilters?: () => void
@@ -169,6 +170,7 @@ export function TableHeader({
   customTitle,
   csvFileTitle,
   count,
+  endless = false,
   activeFilters = EMPTY_ARRAY,
   onRemoveFilter,
   onClearAllFilters,
@@ -431,7 +433,7 @@ export function TableHeader({
         >
           {title}
         </h2>
-        {renderCount()}
+        {endless ? null : renderCount()}
       </>
     )
   }

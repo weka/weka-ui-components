@@ -1,11 +1,17 @@
 import { DateTime } from 'luxon'
 import { describe, expect, it } from 'vitest'
 
-import { clampDateTime, isDayDisabled } from './dateTimeUtils'
+import {
+  clampDateTime,
+  isDayDisabled,
+  isDayOutOfBounds,
+  isDayOutsideMonth
+} from './dateTimeUtils'
 
 const MARCH_START = '2024-03-01T00:00:00'
 const MARCH_END = '2024-03-31T23:59:59'
 const MID_MARCH = '2024-03-15'
+const MID_APRIL = '2024-04-15'
 
 describe('clampDateTime', () => {
   const baseDate = DateTime.fromISO('2024-03-15T12:00:00')
@@ -67,7 +73,7 @@ describe('clampDateTime', () => {
 
 describe('isDayDisabled', () => {
   const marchDate = DateTime.fromISO(MID_MARCH)
-  const aprilDate = DateTime.fromISO('2024-04-15')
+  const aprilDate = DateTime.fromISO(MID_APRIL)
   const marchMonth = 3
 
   it('returns false for date in current month within bounds', () => {
@@ -106,5 +112,44 @@ describe('isDayDisabled', () => {
     const minDate = DateTime.fromISO('2024-03-01')
     const maxDate = DateTime.fromISO('2024-04-30')
     expect(isDayDisabled(aprilDate, marchMonth, minDate, maxDate)).toBe(true)
+  })
+})
+
+describe('isDayOutOfBounds', () => {
+  const marchDate = DateTime.fromISO(MID_MARCH)
+
+  it('returns false when no bounds are provided', () => {
+    expect(isDayOutOfBounds(marchDate)).toBe(false)
+  })
+
+  it('returns true when date is after maxDate', () => {
+    const maxDate = DateTime.fromISO('2024-03-10')
+    expect(isDayOutOfBounds(marchDate, null, maxDate)).toBe(true)
+  })
+
+  it('returns true when date is before minDate', () => {
+    const minDate = DateTime.fromISO('2024-03-20')
+    expect(isDayOutOfBounds(marchDate, minDate)).toBe(true)
+  })
+
+  it('ignores the displayed month', () => {
+    const aprilDate = DateTime.fromISO(MID_APRIL)
+    expect(isDayOutOfBounds(aprilDate)).toBe(false)
+  })
+})
+
+describe('isDayOutsideMonth', () => {
+  const marchMonth = 3
+
+  it('returns false for a day in the displayed month', () => {
+    expect(isDayOutsideMonth(DateTime.fromISO(MID_MARCH), marchMonth)).toBe(
+      false
+    )
+  })
+
+  it('returns true for a day in another month', () => {
+    expect(isDayOutsideMonth(DateTime.fromISO(MID_APRIL), marchMonth)).toBe(
+      true
+    )
   })
 })

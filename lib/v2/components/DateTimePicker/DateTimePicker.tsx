@@ -1,3 +1,4 @@
+import type { PopperProps } from '@mui/material'
 import type { DateTime } from 'luxon'
 
 import { useCallback, useState } from 'react'
@@ -23,6 +24,7 @@ export interface DateTimePickerProps {
   showNow?: boolean
   enableCustomFormat?: boolean
   customFormat?: string
+  popperProps?: Partial<PopperProps>
 }
 
 export function DateTimePicker({
@@ -37,7 +39,8 @@ export function DateTimePicker({
   canClear = true,
   showNow,
   enableCustomFormat,
-  customFormat
+  customFormat,
+  popperProps
 }: Readonly<DateTimePickerProps>) {
   const [isOpen, setIsOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null)
@@ -71,7 +74,9 @@ export function DateTimePicker({
         disablePortal={disablePortal}
         open={isOpen}
         placement='top'
+        popperOptions={{ strategy: 'fixed' }}
         transition
+        {...popperProps}
       >
         {({ TransitionProps }) => (
           <Grow

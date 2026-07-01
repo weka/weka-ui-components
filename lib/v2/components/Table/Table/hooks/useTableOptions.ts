@@ -37,6 +37,7 @@ interface UseTableOptionsParams<TData> {
   currentPage: number
   effectivePageSize: number
   manualPagination: boolean | undefined
+  manualFiltering?: boolean
   manualSorting?: boolean
 }
 
@@ -58,6 +59,7 @@ export function useTableOptions<TData>({
   currentPage,
   effectivePageSize,
   manualPagination,
+  manualFiltering,
   manualSorting
 }: UseTableOptionsParams<TData>) {
   return useMemo(() => {
@@ -87,6 +89,7 @@ export function useTableOptions<TData>({
       ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
       getFilteredRowModel: getFilteredRowModel(),
       columnResizeMode,
+      manualFiltering,
       manualSorting
     }
 
@@ -116,6 +119,7 @@ export function useTableOptions<TData>({
     currentPage,
     effectivePageSize,
     manualPagination,
+    manualFiltering,
     manualSorting
   ])
 }
