@@ -147,39 +147,20 @@ interface MenuPositionResult {
   fixedPosition: { top: number; right: number } | null
 }
 
-function hasContainerOverflowHidden(container: Element): boolean {
-  const styles = window.getComputedStyle(container)
-  return styles.overflow === 'hidden' || styles.overflowY === 'hidden'
-}
-
-function calculateMenuPosition(
-  buttonRect: DOMRect,
-  container: Element | null
-): MenuPositionResult {
-  const containerRect = container?.getBoundingClientRect()
-  const hasOverflow = container && hasContainerOverflowHidden(container)
-
-  if (hasOverflow && containerRect) {
-    const spaceBelow = containerRect.bottom - buttonRect.bottom
-    const spaceAbove = buttonRect.top - containerRect.top
-    const shouldShowAbove =
-      spaceBelow < SETTINGS_MENU_HEIGHT && spaceAbove > spaceBelow
-
-    const rightOffset = window.innerWidth - buttonRect.right
-    const topPosition = shouldShowAbove
-      ? buttonRect.top - SETTINGS_MENU_HEIGHT - SETTINGS_MENU_MARGIN
-      : buttonRect.bottom + SETTINGS_MENU_MARGIN
-
-    return {
-      shouldShowAbove,
-      fixedPosition: { top: topPosition, right: rightOffset }
-    }
-  }
-
+function calculateMenuPosition(buttonRect: DOMRect): MenuPositionResult {
   const spaceBelow = window.innerHeight - buttonRect.bottom
+  const spaceAbove = buttonRect.top
+  const shouldShowAbove =
+    spaceBelow < SETTINGS_MENU_HEIGHT && spaceAbove > spaceBelow
+
+  const rightOffset = window.innerWidth - buttonRect.right
+  const topPosition = shouldShowAbove
+    ? buttonRect.top - SETTINGS_MENU_HEIGHT - SETTINGS_MENU_MARGIN
+    : buttonRect.bottom + SETTINGS_MENU_MARGIN
+
   return {
-    shouldShowAbove: spaceBelow < SETTINGS_MENU_HEIGHT,
-    fixedPosition: null
+    shouldShowAbove,
+    fixedPosition: { top: topPosition, right: rightOffset }
   }
 }
 
@@ -213,6 +194,7 @@ export function TableHeader({
     right: number
   } | null>(null)
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
+  const settingsMenuRef = useRef<HTMLDivElement>(null)
   const [immediateState, setImmediateState] = useState<Record<string, boolean>>(
     {}
   )
@@ -225,6 +207,20 @@ export function TableHeader({
     const timeoutId = setTimeout(forceUpdate, VISIBILITY_STATE_SYNC_DELAY)
     return () => clearTimeout(timeoutId)
   }, [activeFilters])
+
+  useEffect(() => {
+    if (!showSettingsMenu) {
+      return undefined
+    }
+    const closeOnScroll = (event: Event) => {
+      if (settingsMenuRef.current?.contains(event.target as Node)) {
+        return
+      }
+      setShowSettingsMenu(false)
+    }
+    window.addEventListener('scroll', closeOnScroll, true)
+    return () => window.removeEventListener('scroll', closeOnScroll, true)
+  }, [showSettingsMenu])
 
   const getDisplayCount = useCallback(() => {
     let displayCount = count
@@ -381,13 +377,8 @@ export function TableHeader({
   const toggleSettingsMenu = () => {
     if (!showSettingsMenu && settingsButtonRef.current) {
       const buttonRect = settingsButtonRef.current.getBoundingClientRect()
-      const container = settingsButtonRef.current.closest(
-        '[class*="subTabContent"], [class*="tableContent"], [class*="tableWrapper"], [class*="container"]'
-      )
-      const { shouldShowAbove, fixedPosition } = calculateMenuPosition(
-        buttonRect,
-        container
-      )
+      const { shouldShowAbove, fixedPosition } =
+        calculateMenuPosition(buttonRect)
       setMenuPositionAbove(shouldShowAbove)
       setMenuPosition(fixedPosition)
     }
@@ -494,6 +485,7 @@ export function TableHeader({
 
     return (
       <div
+        ref={settingsMenuRef}
         data-testid='table-settings-menu'
         style={menuStyle}
         className={clsx(

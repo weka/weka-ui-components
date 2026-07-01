@@ -111,6 +111,10 @@ export type { HealthStatusProps } from './HealthStatus'
 export { HealthStatus } from './HealthStatus'
 export type { IconButtonProps } from './IconButton'
 export { IconButton } from './IconButton'
+export type { IpInputProps } from './inputs/IpInput'
+export { IpInput } from './inputs/IpInput'
+export type { IpRangeInputProps } from './inputs/IpRangeInput'
+export { IpRangeInput } from './inputs/IpRangeInput'
 export type { MultiSelectAutocompleteProps } from './inputs/MultiSelectAutocomplete'
 export { MultiSelectAutocomplete } from './inputs/MultiSelectAutocomplete'
 export type { NumberInputProps } from './inputs/NumberInput'
@@ -122,7 +126,11 @@ export type {
   RadioValue
 } from './inputs/RadioGroup'
 export { RADIO_GROUP_DIRECTIONS, RadioGroup } from './inputs/RadioGroup'
-export type { SelectOption, SelectProps } from './inputs/Select'
+export type {
+  SelectOption,
+  SelectOptionValue,
+  SelectProps
+} from './inputs/Select'
 export { Select } from './inputs/Select'
 export type { TextAreaProps } from './inputs/TextArea'
 export { TextArea } from './inputs/TextArea'
@@ -317,7 +325,7 @@ export {
 export type { TableDrawerProps } from './TableDrawer'
 export { TableDrawer } from './TableDrawer'
 export type { ScrollDirection, Tab, TabsProps, TabVariant } from './Tabs'
-export { SCROLL_DIRECTIONS, TAB_VARIANTS,Tabs } from './Tabs'
+export { SCROLL_DIRECTIONS, TAB_VARIANTS, Tabs } from './Tabs'
 export type { TooltipProps } from './Tooltip'
 export { Tooltip } from './Tooltip'
 export {

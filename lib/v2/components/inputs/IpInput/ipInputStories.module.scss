@@ -1,0 +1,11 @@
+@use '../../../styles/colors' as *;
+
+.container {
+  width: 240px;
+}
+
+.valueDisplay {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--gray-700-300);
+}

@@ -1,0 +1,96 @@
+@use '../../../styles/colors' as *;
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 12px;
+  border: 1px solid var(--gray-350-650);
+  border-radius: 4px;
+  height: 36px;
+  background: var(--gray-50-920);
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 1px var(--purple-500);
+  }
+
+  &.error {
+    border-color: var(--red-500);
+
+    &:focus-within {
+      border-color: var(--red-500);
+      box-shadow: 0 0 0 1px var(--red-500);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-600-400);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.requiredStar {
+  color: var(--red-500);
+}
+
+.valueRow {
+  display: flex;
+  align-items: center;
+}
+
+.octetWrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.octetInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-950-20);
+  padding: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.separator {
+  font-size: 14px;
+  color: var(--gray-600-400);
+  user-select: none;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.errorText {
+  position: absolute;
+  bottom: -18px;
+  left: 4px;
+  font-size: 11px;
+  color: var(--red-500);
+  white-space: nowrap;
+}

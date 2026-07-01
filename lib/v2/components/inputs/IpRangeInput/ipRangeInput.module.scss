@@ -1,0 +1,46 @@
+@use '../../../styles/colors' as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-600-400);
+  margin-bottom: 6px;
+  padding-left: 4px;
+}
+
+.requiredStar {
+  color: var(--red-500);
+}
+
+.rangeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.ipBox {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.rangeSeparator {
+  font-size: 16px;
+  color: var(--gray-600-400);
+  flex-shrink: 0;
+  user-select: none;
+  margin: 0 8px;
+}
+
+.errorText {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--red-500);
+  padding-left: 4px;
+}
