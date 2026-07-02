@@ -184,6 +184,7 @@ export {
   SimpleTable,
   useExpandableTextContext
 } from './SimpleTable'
+export { Spinner } from './Spinner'
 export {
   STAT_BOX_STATUS,
   STAT_COLOR_VARIANT,
@@ -292,6 +293,7 @@ export {
   REDUCTION_RANGE_MODES,
   ReductionRangeFilter
 } from './Table/ReductionRangeFilter'
+export { SeverityCell } from './Table/SeverityCell'
 export type {
   StatusCellOptions,
   StatusCellValue,

@@ -1,6 +1,9 @@
 import type { DateTime } from 'luxon'
 
-import { isDayDisabled } from '../../utils/dateTimeUtils'
+import {
+  isDayOutOfBounds,
+  isDayOutsideMonth
+} from '../../utils/dateTimeUtils'
 
 import styles from './dayCell.module.scss'
 
@@ -21,11 +24,16 @@ export function DayCell({
   minDate = null,
   maxDate = null
 }: Readonly<DayCellProps>) {
-  const isDisabled = isDayDisabled(date, month, minDate, maxDate)
+  const outOfBounds = isDayOutOfBounds(date, minDate, maxDate)
+  const outsideMonth = isDayOutsideMonth(date, month)
+  const isDisabled = outOfBounds || outsideMonth
 
   const getClassName = () => {
-    if (isDisabled) {
+    if (outOfBounds) {
       return styles.cellDayDisabled
+    }
+    if (outsideMonth) {
+      return styles.cellDayOutsideMonth
     }
     if (selected) {
       return styles.cellDaySelected

@@ -35,6 +35,7 @@ export interface FilterConfig {
   startWithSearch?: boolean
   title?: string
   modeLabels?: { used?: string; total?: string }
+  uppercaseValue?: boolean
 }
 
 /** An applied filter for a column */
@@ -54,6 +55,7 @@ export interface FilterMeta {
   selectChips?: Record<string, ReactNode> | ReactNode[]
   startWithSearch?: boolean
   modeLabels?: { used?: string; total?: string }
+  uppercaseValue?: boolean
 }
 
 /** Column definition with optional filter metadata */
@@ -214,7 +216,8 @@ export function createDropdownFilter(
       ? `Select ${filterMeta.title}...`
       : `Select ${columnId}...`,
     title: filterMeta.title,
-    selectChips: filterMeta.selectChips
+    selectChips: filterMeta.selectChips,
+    uppercaseValue: filterMeta.uppercaseValue
   }
 }
 

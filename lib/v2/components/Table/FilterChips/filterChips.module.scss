@@ -1,3 +1,5 @@
+@use '../../../styles/scrollbar' as *;
+
 .chipsContainer {
   display: flex;
   align-items: center;
@@ -165,28 +167,7 @@
   z-index: 100000;
   overflow: hidden auto;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: var(--gray-100-900);
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--gray-400-600);
-    border-radius: 4px;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background: var(--gray-500);
-    }
-  }
-
-  scrollbar-width: thin;
-  scrollbar-color: var(--gray-400-600) var(--gray-100-900);
+  @include thin-scrollbar;
 }
 
 .overlayContent {

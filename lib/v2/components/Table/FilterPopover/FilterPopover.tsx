@@ -191,6 +191,17 @@ function FilterPopover({
     const selectChips = config.selectChips as Record<string, ReactNode>
     const hasCustomChips = selectChips && Object.keys(selectChips).length > 0
 
+    const renderSelectedContent = (): ReactNode => {
+      if (tempValue && selectChips?.[tempValue as string]) {
+        return selectChips[tempValue as string]
+      }
+      return (
+        <span className={styles.placeholder}>
+          {config.placeholder || SELECT_OPTION_PLACEHOLDER}
+        </span>
+      )
+    }
+
     if (hasCustomChips) {
       return (
         <div className={styles.customDropdownContainer}>
@@ -221,13 +232,7 @@ function FilterPopover({
             }}
           >
             <div className={styles.selectedOption}>
-              {tempValue && selectChips?.[tempValue as string] ? (
-                selectChips[tempValue as string]
-              ) : (
-                <span className={styles.placeholder}>
-                  {config.placeholder || SELECT_OPTION_PLACEHOLDER}
-                </span>
-              )}
+              {renderSelectedContent()}
             </div>
             <div className={styles.dropdownArrow}>
               <ChevronDownSmallIcon />
@@ -278,7 +283,8 @@ function FilterPopover({
         config.options?.length >= MIN_SEARCH_THRESHOLD) ||
       config.startWithSearch
 
-    const showOptionsImmediately = showOptionsList || !shouldShowSearch
+    const showOptionsImmediately =
+      config.startWithSearch || showOptionsList || !shouldShowSearch
 
     const getChipElement = (optionValue: string): ReactNode | null => {
       if (!config.selectChips || typeof config.selectChips !== 'object') {
@@ -419,6 +425,7 @@ function FilterPopover({
           <DateTimePicker
             enableCustomFormat
             maxDate={parseDateTime(dateValue.to) || DateTime.now()}
+            popperProps={{ placement: 'bottom-start' }}
             showSeconds={false}
             value={parseDateTime(dateValue.from)}
             onChange={(date?: DateTime) => {
@@ -435,6 +442,7 @@ function FilterPopover({
             enableCustomFormat
             maxDate={DateTime.now()}
             minDate={parseDateTime(dateValue.from)?.startOf('day')}
+            popperProps={{ placement: 'bottom-start' }}
             showSeconds={false}
             value={parseDateTime(dateValue.to)}
             onChange={(date?: DateTime) => {

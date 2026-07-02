@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 
 import clsx from 'clsx'
 
+import { Spinner } from '../Spinner'
+
 import styles from './loadingState.module.scss'
 
 const STATE_TYPES = {
@@ -43,14 +45,7 @@ export function LoadingState({
       data-testid={TEST_IDS[type]}
     >
       <div className={styles.content}>
-        {type === STATE_TYPES.LOADING && (
-          <div className={styles.spinner}>
-            <div className={styles.spinnerDot} />
-            <div className={styles.spinnerDot} />
-            <div className={styles.spinnerDot} />
-            <div className={styles.spinnerDot} />
-          </div>
-        )}
+        {type === STATE_TYPES.LOADING && <Spinner />}
         <div className={styles.message}>{displayMessage}</div>
         {children}
       </div>

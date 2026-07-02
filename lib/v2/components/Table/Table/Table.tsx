@@ -19,16 +19,19 @@ import clsx from 'clsx'
 import { EMPTY_STRING } from '#consts'
 import { NOOP } from '#v2/utils/consts'
 
+import { Spinner } from '../../Spinner'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
 import { TableFilter } from '../TableFilter'
 import { buildTableColumns, getCanShowFilter } from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
+import { useEndlessScroll } from './hooks/useEndlessScroll'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
 import { useInitialSorting } from './hooks/useInitialSorting'
 import { usePaginationState } from './hooks/usePaginationState'
 import { useScrollToRow } from './hooks/useScrollToRow'
 import { useTableOptions } from './hooks/useTableOptions'
+import { EndlessScrollExtras } from './EndlessScrollExtras'
 import { renderTableBody } from './renderTableBody'
 import { TableContent } from './TableContent'
 import { TableHeaderSection } from './TableHeaderSection'
@@ -77,6 +80,7 @@ export interface TableProps<TData = unknown> {
   showSearch?: boolean
 
   manualPagination?: boolean
+  manualFiltering?: boolean
   itemsAmount?: number
   fixedPageSize?: number
   pageSize?: number
@@ -111,6 +115,10 @@ export interface TableProps<TData = unknown> {
   drawerWidth?: number
   framed?: boolean
   rowActionsWidth?: number
+  endless?: boolean
+  hasMore?: boolean
+  isLoadingMore?: boolean
+  onLoadMore?: () => void
 }
 
 export const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
@@ -129,6 +137,7 @@ export function Table<TData = unknown>({
   emptyMessage = 'No data',
   maxHeight,
   manualPagination,
+  manualFiltering,
   itemsAmount,
   fixedPageSize,
   onPaginationChange,
@@ -169,7 +178,11 @@ export function Table<TData = unknown>({
   drawerOpen = false,
   drawerWidth = 0,
   framed = false,
-  rowActionsWidth = ROW_ACTIONS_COLUMN_SIZE
+  rowActionsWidth = ROW_ACTIONS_COLUMN_SIZE,
+  endless = false,
+  hasMore,
+  isLoadingMore,
+  onLoadMore
 }: Readonly<TableProps<TData>>) {
   const { columnVisibility, handleColumnVisibilityChange } =
     useColumnVisibility({
@@ -215,6 +228,7 @@ export function Table<TData = unknown>({
 
   const headerRef = useRef<HTMLDivElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   const handleBodyScroll = () => {
     if (headerRef.current && bodyRef.current) {
@@ -289,6 +303,7 @@ export function Table<TData = unknown>({
     currentPage,
     effectivePageSize,
     manualPagination,
+    manualFiltering,
     manualSorting
   })
 
@@ -345,7 +360,8 @@ export function Table<TData = unknown>({
     filteredRowCount
   ])
 
-  const visibleRowCount = table.getRowModel().rows.length
+  const paginatedRows = table.getRowModel().rows
+  const visibleRowCount = paginatedRows.length
 
   const isCompactTable = useMemo(() => {
     if (loading || maxHeight || visibleRowCount === 0) {
@@ -370,6 +386,21 @@ export function Table<TData = unknown>({
     effectivePageSize,
     showPagination
   ])
+
+  const { displayRows, effectiveIsCompact, effectiveShowPagination } =
+    useEndlessScroll({
+      endless,
+      hasMore,
+      isLoadingMore,
+      loading,
+      onLoadMore,
+      paginatedRows,
+      sentinelRef,
+      showPagination,
+      scrollContainerRef: bodyRef,
+      isCompact: isCompactTable,
+      prePaginationRows: table.getPrePaginationRowModel().rows
+    })
 
   useEffect(() => {
     if (!onFilteredDataChange) {
@@ -403,17 +434,6 @@ export function Table<TData = unknown>({
       }
     : undefined
 
-  if (loading) {
-    return (
-      <div
-        className={styles.customTableWrapper}
-        style={wrapperStyle}
-      >
-        <div className={styles.loadingState}>Loading...</div>
-      </div>
-    )
-  }
-
   const handleResetColumnSizing = () => {
     table.getAllColumns().forEach((column) => column.resetSize())
     onResetColumnSizing?.()
@@ -440,7 +460,7 @@ export function Table<TData = unknown>({
       style={wrapperStyle}
       className={clsx(
         styles.customTableWrapper,
-        isCompactTable && styles.compactTable,
+        effectiveIsCompact && styles.compactTable,
         isFetching && styles.fetching
       )}
     >
@@ -452,6 +472,7 @@ export function Table<TData = unknown>({
         customFilters={customFilters}
         customTitle={customTitle}
         data={data}
+        endless={endless}
         getCsvData={getCsvData}
         onClearAllFilters={handleClearAllFilters}
         onCsvError={onCsvError}
@@ -474,7 +495,7 @@ export function Table<TData = unknown>({
         framed,
         footer: (
           <div className={styles.tableFooter}>
-            {showPagination ? (
+            {effectiveShowPagination ? (
               <Pagination
                 currentPage={currentPage}
                 isPageEnabled={isPaginationPageEnabled}
@@ -576,8 +597,9 @@ export function Table<TData = unknown>({
                     activeRowId={activeRowId}
                     emptyMessage={emptyMessage}
                     getRowId={getRowId}
+                    loading={loading}
                     onRowClick={onRowClick}
-                    rows={table.getRowModel().rows}
+                    rows={displayRows}
                     renderCell={(cell) => {
                       const cellMeta = cell.column.columnDef.meta as
                         | { cellStyle?: CSSProperties }
@@ -607,6 +629,17 @@ export function Table<TData = unknown>({
                   />
                 </tbody>
               </table>
+              {loading ? (
+                <div className={styles.bodyLoaderInner}>
+                  <Spinner />
+                </div>
+              ) : null}
+              <EndlessScrollExtras
+                endless={endless}
+                isLoadingMore={isLoadingMore}
+                loading={loading}
+                sentinelRef={sentinelRef}
+              />
             </div>
           </div>
         )

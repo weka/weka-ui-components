@@ -37,6 +37,7 @@ const FILTERABLE_COLUMNS: ColumnDef<Item>[] = [
 const RESIZER_ID_TESTID = 'column-resizer-id'
 const RESIZER_NAME_TESTID = 'column-resizer-name'
 const ROW_ACTIONS_BUTTON_TESTID = 'row-actions-button'
+const EMPTY_MESSAGE = 'No items found'
 
 describe('Table', () => {
   describe('baseline functionality', () => {
@@ -59,13 +60,26 @@ describe('Table', () => {
         <Table
           columns={COLUMNS}
           data={[]}
-          emptyMessage='No items found'
+          emptyMessage={EMPTY_MESSAGE}
         />
       )
-      expect(screen.getByText('No items found')).toBeInTheDocument()
+      expect(screen.getByText(EMPTY_MESSAGE)).toBeInTheDocument()
     })
 
-    it('renders the loading state', () => {
+    it('renders the loading state with spinner and suppresses row data', () => {
+      const { container } = render(
+        <Table
+          columns={COLUMNS}
+          data={DATA}
+          loading
+        />
+      )
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
+      expect(screen.queryByText('Item 1')).not.toBeInTheDocument()
+      expect(container.querySelector('[class*="spinner"]')).toBeInTheDocument()
+    })
+
+    it('shows column headers when loading', () => {
       render(
         <Table
           columns={COLUMNS}
@@ -73,7 +87,31 @@ describe('Table', () => {
           loading
         />
       )
-      expect(screen.getByText('Loading...')).toBeInTheDocument()
+      expect(screen.getByText('ID')).toBeInTheDocument()
+      expect(screen.getByText('Name')).toBeInTheDocument()
+    })
+
+    it('suppresses empty state while loading even with empty data', () => {
+      render(
+        <Table
+          columns={COLUMNS}
+          data={[]}
+          emptyMessage={EMPTY_MESSAGE}
+          loading
+        />
+      )
+      expect(screen.queryByText(EMPTY_MESSAGE)).not.toBeInTheDocument()
+    })
+
+    it('shows empty state when not loading and data is empty', () => {
+      render(
+        <Table
+          columns={COLUMNS}
+          data={[]}
+          emptyMessage={EMPTY_MESSAGE}
+        />
+      )
+      expect(screen.getByText(EMPTY_MESSAGE)).toBeInTheDocument()
     })
   })
 

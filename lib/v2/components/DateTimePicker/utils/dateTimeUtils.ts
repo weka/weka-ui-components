@@ -18,7 +18,27 @@ export function clampDateTime(
 }
 
 /**
- * Determines if a day cell should be disabled based on month and date bounds.
+ * Determines if a day falls outside the allowed min/max bounds.
+ */
+export function isDayOutOfBounds(
+  date: DateTime,
+  minDate?: DateTime | null,
+  maxDate?: DateTime | null
+): boolean {
+  return (
+    (maxDate ? date > maxDate : false) || (minDate ? date < minDate : false)
+  )
+}
+
+/**
+ * Determines if a day belongs to a month other than the one being displayed.
+ */
+export function isDayOutsideMonth(date: DateTime, currentMonth: number): boolean {
+  return currentMonth !== date.month
+}
+
+/**
+ * Determines if a day cell should be non-selectable based on month and date bounds.
  */
 export function isDayDisabled(
   date: DateTime,
@@ -27,8 +47,7 @@ export function isDayDisabled(
   maxDate?: DateTime | null
 ): boolean {
   return (
-    currentMonth !== date.month ||
-    (maxDate ? date > maxDate : false) ||
-    (minDate ? date < minDate : false)
+    isDayOutsideMonth(date, currentMonth) ||
+    isDayOutOfBounds(date, minDate, maxDate)
   )
 }
