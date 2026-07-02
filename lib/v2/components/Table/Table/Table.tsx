@@ -364,7 +364,7 @@ export function Table<TData = unknown>({
   const visibleRowCount = paginatedRows.length
 
   const isCompactTable = useMemo(() => {
-    if (loading || maxHeight || visibleRowCount === 0) {
+    if (loading || maxHeight || visibleRowCount === 0 || drawerOpen) {
       return false
     }
 
@@ -377,12 +377,13 @@ export function Table<TData = unknown>({
       )
     }
 
-    return visibleRowCount <= MAX_ROWS_FOR_COMPACT
+    return visibleRowCount < effectivePageSize
   }, [
     visibleRowCount,
     maxHeight,
     manualPagination,
     loading,
+    drawerOpen,
     effectivePageSize,
     showPagination
   ])
