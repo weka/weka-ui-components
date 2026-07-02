@@ -119,6 +119,8 @@ export type { MultiSelectAutocompleteProps } from './inputs/MultiSelectAutocompl
 export { MultiSelectAutocomplete } from './inputs/MultiSelectAutocomplete'
 export type { NumberInputProps } from './inputs/NumberInput'
 export { NumberInput } from './inputs/NumberInput'
+export type { PasswordInputProps } from './inputs/PasswordInput'
+export { PasswordInput } from './inputs/PasswordInput'
 export type {
   RadioGroupDirection,
   RadioGroupProps,

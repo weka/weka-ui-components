@@ -19,6 +19,8 @@ import { DateTimeIcon } from './DateTimeIcon'
 import { DownloadIcon } from './DownloadIcon'
 import { DriversIcon } from './DriversIcon'
 import { EditIcon } from './EditIcon'
+import { EyeIcon } from './EyeIcon'
+import { EyeOffIcon } from './EyeOffIcon'
 import { FileSystemIcon } from './FileSystemIcon'
 import { FilterIcon } from './FilterIcon'
 import { InfoIcon } from './InfoIcon'
@@ -116,6 +118,8 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'DownloadIcon', node: <DownloadIcon /> },
   { name: 'EditIcon (filled)', node: <EditIcon /> },
   { name: 'EditIcon (stroke)', node: <EditIcon variant='stroke' /> },
+  { name: 'EyeIcon', node: <EyeIcon /> },
+  { name: 'EyeOffIcon', node: <EyeOffIcon /> },
   { name: 'FilterIcon', node: <FilterIcon /> },
   { name: 'InfoIcon', node: <InfoIcon /> },
   { name: 'InvestigateIcon', node: <InvestigateIcon /> },

@@ -10,14 +10,17 @@
 .default,
 .info {
   height: 22px !important;
-  padding: 2px 8px !important;
-  font-size: 14px !important;
+  padding: 2px 4px !important;
+  gap: 4px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
+  line-height: 16.2px !important;
+  letter-spacing: 0.15px !important;
   border-radius: 2px !important;
 
   svg {
-    width: 16px !important;
-    height: 16px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 
   button svg {
@@ -29,4 +32,3 @@
     }
   }
 }
-
