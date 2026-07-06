@@ -461,7 +461,7 @@ export function Table<TData = unknown>({
       style={wrapperStyle}
       className={clsx(styles.customTableWrapper, {
         [styles.compactTable]: effectiveIsCompact,
-        [styles.cappedTable]: Boolean(maxHeight),
+        [styles.cappedTable]: Boolean(maxHeight) && !endless,
         [styles.fetching]: isFetching
       })}
     >
