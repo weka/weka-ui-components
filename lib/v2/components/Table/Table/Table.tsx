@@ -512,7 +512,10 @@ export function Table<TData = unknown>({
               ref={headerRef}
               className={styles.tableHeaderWrapper}
             >
-              <table className={styles.table}>
+              <table
+                className={styles.table}
+                style={{ minWidth: table.getTotalSize() }}
+              >
                 <thead className={styles.tableHeader}>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
@@ -592,6 +595,7 @@ export function Table<TData = unknown>({
               <table
                 className={styles.table}
                 data-testid={dataTestId}
+                style={{ minWidth: table.getTotalSize() }}
               >
                 <tbody className={styles.tableBody}>
                   <TableContent
