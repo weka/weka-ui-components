@@ -113,6 +113,7 @@ describe('Table', () => {
       )
       expect(screen.getByText(EMPTY_MESSAGE)).toBeInTheDocument()
     })
+
   })
 
   describe('row click handler', () => {
@@ -233,6 +234,36 @@ describe('Table', () => {
         })
       })
     })
+  })
+})
+
+describe('Table maxHeight', () => {
+  it('caps the wrapper instead of filling the parent when maxHeight is set', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        maxHeight={300}
+      />
+    )
+    const wrapper = container.querySelector<HTMLElement>(
+      '[class*="customTableWrapper"]'
+    )
+    expect(wrapper?.className).toContain('cappedTable')
+    expect(wrapper?.style.maxHeight).toBe('300px')
+  })
+
+  it('does not cap the wrapper when maxHeight is not set', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+      />
+    )
+    const wrapper = container.querySelector<HTMLElement>(
+      '[class*="customTableWrapper"]'
+    )
+    expect(wrapper?.className).not.toContain('cappedTable')
   })
 })
 

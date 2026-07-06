@@ -459,11 +459,11 @@ export function Table<TData = unknown>({
   return (
     <div
       style={wrapperStyle}
-      className={clsx(
-        styles.customTableWrapper,
-        effectiveIsCompact && styles.compactTable,
-        isFetching && styles.fetching
-      )}
+      className={clsx(styles.customTableWrapper, {
+        [styles.compactTable]: effectiveIsCompact,
+        [styles.cappedTable]: Boolean(maxHeight),
+        [styles.fetching]: isFetching
+      })}
     >
       <TableHeaderSection
         activeFilters={activeFilters}
