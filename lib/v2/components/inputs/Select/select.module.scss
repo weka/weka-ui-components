@@ -358,6 +358,12 @@
   min-width: 0;
 }
 
+.menuItemLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .menuItemSubLabel {
   overflow: hidden;
   font-size: 11px;

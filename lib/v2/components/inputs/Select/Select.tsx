@@ -495,12 +495,14 @@ export function Select({
               <span className={styles.menuItemIcon}>{option.icon}</span>
             ) : null}
             <span className={styles.menuItemText}>
-              {highlightText(
-                option.label,
-                searchQuery,
-                'mark',
-                styles.highlight
-              )}
+              <span className={styles.menuItemLabel}>
+                {highlightText(
+                  option.label,
+                  searchQuery,
+                  'mark',
+                  styles.highlight
+                )}
+              </span>
               {option.subLabel ? (
                 <span className={styles.menuItemSubLabel}>
                   {option.subLabel}

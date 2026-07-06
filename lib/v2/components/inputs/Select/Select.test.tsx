@@ -441,6 +441,31 @@ describe('Select - Search functionality', () => {
     })
   })
 
+  it('keeps highlighted label parts in a single element separate from subLabel', async () => {
+    const optionsWithSubLabel = fruitOptions.map((option) => ({
+      ...option,
+      subLabel: `${option.label} subLabel`
+    }))
+
+    render(<Select {...createProps({ options: optionsWithSubLabel })} />)
+    openSelect()
+
+    await waitFor(() => {
+      expect(
+        screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
+      ).toBeInTheDocument()
+    })
+
+    fireEvent.change(screen.getByPlaceholderText(SEARCH_PLACEHOLDER), {
+      target: { value: 'app' }
+    })
+
+    const option = await screen.findByTestId(`${SELECT_OPTION_PREFIX}apple`)
+    const mark = option.querySelector('mark')
+    expect(mark).toHaveTextContent('App')
+    expect(mark?.parentElement).toHaveTextContent(/^Apple$/)
+  })
+
   it('shows "No results found" when search has no matches', async () => {
     render(<Select {...createProps({ options: fruitOptions })} />)
     openSelect()
