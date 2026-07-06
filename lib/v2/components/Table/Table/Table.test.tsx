@@ -113,6 +113,7 @@ describe('Table', () => {
       )
       expect(screen.getByText(EMPTY_MESSAGE)).toBeInTheDocument()
     })
+
   })
 
   describe('row click handler', () => {

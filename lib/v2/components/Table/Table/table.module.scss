@@ -18,6 +18,13 @@
     transition: opacity 0.15s ease;
   }
 
+  // Grow with content up to the consumer's maxHeight instead of always
+  // filling the parent. Children keep their flex sizing so the body still
+  // scrolls internally once content exceeds the cap.
+  &.cappedTable {
+    height: auto;
+  }
+
   &.compactTable {
     height: auto;
 
