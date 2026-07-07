@@ -6,13 +6,13 @@ import { Spinner } from '../Spinner'
 
 import styles from './loadingState.module.scss'
 
-const STATE_TYPES = {
+export const STATE_TYPES = {
   LOADING: 'loading',
   ERROR: 'error',
   NO_DATA: 'noData'
 } as const
 
-type StateType = (typeof STATE_TYPES)[keyof typeof STATE_TYPES]
+export type StateType = (typeof STATE_TYPES)[keyof typeof STATE_TYPES]
 
 const TEST_IDS: Record<StateType, string> = {
   [STATE_TYPES.LOADING]: 'loading-state',
