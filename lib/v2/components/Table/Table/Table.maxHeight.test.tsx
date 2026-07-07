@@ -22,12 +22,16 @@ const DATA: Item[] = [
 ]
 
 const WRAPPER_SELECTOR = '[class*="customTableWrapper"]'
+const CAP_BOX_SELECTOR = '[class*="tableCapBox"]'
 const CAPPED_CLASS = 'cappedTable'
 const MAX_HEIGHT = 300
 const MAX_HEIGHT_STYLE = `${MAX_HEIGHT}px`
 
 const getWrapper = (container: HTMLElement) =>
   container.querySelector<HTMLElement>(WRAPPER_SELECTOR)
+
+const getCapBox = (container: HTMLElement) =>
+  container.querySelector<HTMLElement>(CAP_BOX_SELECTOR)
 
 describe('Table maxHeight', () => {
   it('caps the wrapper instead of filling the parent when maxHeight is set', () => {
@@ -43,6 +47,19 @@ describe('Table maxHeight', () => {
     expect(wrapper?.style.maxHeight).toBe(MAX_HEIGHT_STYLE)
   })
 
+  it('bounds a capped table by its parent via the cap box', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        maxHeight={MAX_HEIGHT}
+      />
+    )
+    const capBox = getCapBox(container)
+    expect(capBox).toBeInTheDocument()
+    expect(capBox?.contains(getWrapper(container))).toBe(true)
+  })
+
   it('does not cap the wrapper when maxHeight is not set', () => {
     const { container } = render(
       <Table
@@ -51,6 +68,7 @@ describe('Table maxHeight', () => {
       />
     )
     expect(getWrapper(container)?.className).not.toContain(CAPPED_CLASS)
+    expect(getCapBox(container)).not.toBeInTheDocument()
   })
 
   it('keeps the full-height scroll viewport in endless mode even with maxHeight', () => {
@@ -66,5 +84,6 @@ describe('Table maxHeight', () => {
     const wrapper = getWrapper(container)
     expect(wrapper?.className).not.toContain(CAPPED_CLASS)
     expect(wrapper?.style.maxHeight).toBe(MAX_HEIGHT_STYLE)
+    expect(getCapBox(container)).not.toBeInTheDocument()
   })
 })

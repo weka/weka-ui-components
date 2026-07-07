@@ -456,12 +456,14 @@ export function Table<TData = unknown>({
     setActiveFilters([])
   }
 
-  return (
+  const isCapped = Boolean(maxHeight) && !endless
+
+  const tableElement = (
     <div
       style={wrapperStyle}
       className={clsx(styles.customTableWrapper, {
         [styles.compactTable]: effectiveIsCompact,
-        [styles.cappedTable]: Boolean(maxHeight) && !endless,
+        [styles.cappedTable]: isCapped,
         [styles.fetching]: isFetching
       })}
     >
@@ -651,4 +653,10 @@ export function Table<TData = unknown>({
       })}
     </div>
   )
+
+  if (!isCapped) {
+    return tableElement
+  }
+
+  return <div className={styles.tableCapBox}>{tableElement}</div>
 }
