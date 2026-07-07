@@ -169,6 +169,7 @@
   // Interactive States
   --bg-default: rgb(255 255 255 / 0%);
   --bg-hover: rgb(0 0 0 / 20%);
+  --bg-hover-light: #{rgba($gray-900, 0.05)};
   --bg-item-hover: #{rgba($gray-800, 0.1)};
   --bg-item-active: #{rgba($gray-800, 0.18)};
   --bg-focus: rgb(0 0 0 / 28%);
@@ -394,6 +395,7 @@
   // Interactive States
   --bg-default: rgb(0 0 0 / 0%);
   --bg-hover: rgb(255 255 255 / 20%);
+  --bg-hover-light: #{rgba($gray-0, 0.05)};
   --bg-item-hover: #{rgba($gray-200, 0.15)};
   --bg-item-active: #{rgba($gray-200, 0.25)};
   --bg-focus: rgb(255 255 255 / 28%);

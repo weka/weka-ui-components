@@ -2,6 +2,15 @@
 
 Shared React/TypeScript component library for Weka products. Published as `@weka/weka-ui-components` on GitHub Packages.
 
+## Before you say "done" (every task — no exceptions)
+
+Run as a loop; repeat until a full pass finds nothing:
+
+1. **Lint the changed files** (`yarn lintcheck` / `yarn stylelint <file>`) and fix every error.
+2. **Comment audit** — each comment you added is JSDoc or explains _why_; delete any that only restates _what_ the code does.
+3. **Run the tests** covering the change (`yarn test:run <path>`); they pass.
+4. **Re-read your own diff** against the rules in this file; fix, then repeat from step 1.
+
 ## Quick Commands
 
 ```bash
@@ -71,6 +80,7 @@ type ButtonVariant = 'primary' | 'secondary'
 ```
 
 **Naming conventions:**
+
 - Const object: UPPER_SNAKE_CASE, plural (e.g., `BUTTON_VARIANTS`, `FLEX_DIRECTIONS`, `PROTOCOL_TAG_SIZES`)
 - Derived type: PascalCase, singular (e.g., `ButtonVariant`, `FlexDirection`, `ProtocolTagSize`)
 - Export both the const object and the derived type from the component and barrel index
@@ -78,6 +88,7 @@ type ButtonVariant = 'primary' | 'secondary'
 ### No Repeated String Literals
 
 When using a string literal, always:
+
 1. **Check if a constant already exists** in `lib/v2/utils/consts.ts` or in the relevant component's const objects
 2. **Create a new constant** if the string is used more than once and no constant exists yet
 
@@ -155,12 +166,14 @@ Components use CSS Modules with a CSS variable-based theme system:
 - **Theme switching:** Via `data-theme="light"` / `data-theme="dark"` attributes
 
 When migrating a component that uses CSS variables not yet defined:
+
 1. Add the SCSS variable to `_colors.scss` if it's a new color
 2. Add the CSS variable to both `v2-light-theme` and `v2-dark-theme` mixins in `_theme.scss`
 
 ## Build and Publish
 
 After adding new v2 components:
+
 1. Export from `lib/v2/components/index.ts` (both component and const objects)
 2. Run `yarn build` to regenerate `dist/` including `.d.ts` type declarations
 3. Consumer projects resolve types from `dist/v2/index.d.ts`, not from `lib/` source

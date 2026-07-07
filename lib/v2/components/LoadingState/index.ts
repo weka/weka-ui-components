@@ -1,2 +1,2 @@
-export type { LoadingStateProps } from './LoadingState'
-export { LoadingState } from './LoadingState'
+export type { LoadingStateProps, StateType } from './LoadingState'
+export { LoadingState, STATE_TYPES } from './LoadingState'
