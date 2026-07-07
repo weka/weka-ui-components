@@ -39,9 +39,7 @@ import { TableHeaderSection } from './TableHeaderSection'
 import styles from './table.module.scss'
 
 const DEFAULT_PAGE_SIZE = 25
-const MAX_ROWS_FOR_COMPACT = 10
 const FIRST_PAGE = 1
-const COMPACT_HALF_DIVISOR = 2
 const ROW_ACTIONS_COLUMN_SIZE = 56
 
 const EMPTY_ACTIVE_FILTERS: ActiveFilter[] = []
@@ -368,25 +366,8 @@ export function Table<TData = unknown>({
       return false
     }
 
-    if (manualPagination) {
-      const halfPageSizeThreshold = effectivePageSize / COMPACT_HALF_DIVISOR
-      return (
-        visibleRowCount <
-          Math.min(MAX_ROWS_FOR_COMPACT, halfPageSizeThreshold) &&
-        !showPagination
-      )
-    }
-
     return visibleRowCount < effectivePageSize
-  }, [
-    visibleRowCount,
-    maxHeight,
-    manualPagination,
-    loading,
-    drawerOpen,
-    effectivePageSize,
-    showPagination
-  ])
+  }, [visibleRowCount, maxHeight, loading, drawerOpen, effectivePageSize])
 
   const { displayRows, effectiveIsCompact, effectiveShowPagination } =
     useEndlessScroll({
