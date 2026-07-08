@@ -1,0 +1,121 @@
+.text-editor-chunk-search-box {
+  background-color: var(--neutral-t4);
+  color: var(--ironhide-s3);
+  border: 1px solid var(--main-color);
+  overflow: hidden;
+  margin: 0;
+  padding: 4px 4px 0;
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  white-space: normal;
+  font-size: 16px;
+
+  &.right {
+    border-radius: 4px;
+    right: 32px;
+    top: 16px;
+  }
+
+  .search-form {
+    margin: 0 0 8px;
+    overflow: hidden;
+    line-height: 1.9;
+  }
+
+  .search-field {
+    border-radius: 4px 0 0 4px;
+    color: var(--text-color);
+    border: 2px solid var(--main-color);
+    background-color: var(--input-background);
+    border-right: 0 none;
+    outline: 0;
+    padding: 0 6px;
+    font-size: inherit;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    line-height: inherit;
+    min-width: 17em;
+    vertical-align: top;
+    min-height: 1.8em;
+    box-sizing: content-box;
+  }
+
+  .search-btn {
+    background-color: var(--input-background);
+    border-top: 2px solid var(--main-color);
+    border-bottom: 2px solid var(--main-color);
+    border-left: 1px solid var(--main-color);
+    border-right: 0 none;
+    line-height: inherit;
+    display: inline-block;
+    padding: 0 0.7em;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+    color: var(--ironhide-s3);
+
+    &::after {
+      content: '';
+      border: solid 2px var(--main-color);
+      width: 0.5em;
+      height: 0.5em;
+      border-width: 2px 0 0 2px;
+      display: inline-block;
+      transform: rotate(-45deg);
+    }
+
+    &.next {
+      border-radius: 0 4px 4px 0;
+      border-right: 2px solid var(--main-color);
+
+      &::after {
+        border-width: 0 2px 2px 0;
+      }
+    }
+
+    &:hover {
+      background-color: var(--ironhide-t1);
+    }
+  }
+
+  .search-options {
+    margin-bottom: 4px;
+    text-align: right;
+    user-select: none;
+    clear: both;
+  }
+
+  .search-counter {
+    float: left;
+    font-family: Arial, sans-serif;
+    padding: 0 8px;
+  }
+
+  .option-btn {
+    margin-left: 2px;
+    cursor: pointer;
+    user-select: none;
+    overflow: hidden;
+    opacity: 1;
+    border: 1px solid var(--main-color);
+    padding: 1px;
+    box-sizing: border-box;
+    color: var(--main-color);
+    background-color: var(--neutral-t4);
+    border-radius: 2px;
+    display: inline;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, 'Source Code Pro', source-code-pro,
+      monospace;
+
+    &:hover,
+    &:active {
+      background-color: var(--ironhide-t1);
+    }
+
+    &.checked {
+      color: white;
+      background-color: var(--main-color);
+    }
+  }
+}

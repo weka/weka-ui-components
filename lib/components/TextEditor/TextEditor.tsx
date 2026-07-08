@@ -4,11 +4,13 @@ import type {
   SearchDirection,
   TextEditorHandle
 } from './components'
+import type { IAceEditor } from 'react-ace/lib/types'
 
 import React, { forwardRef, useEffect } from 'react'
 
 import { useHideContent } from './components/TextEditorFull/hooks'
 import {
+  ChunkSearchBox,
   FoldAllButton,
   FontSizeControls,
   HideContentInput,
@@ -24,6 +26,11 @@ import { useLinesCount, useTags } from './hooks'
 
 interface TextEditorProps {
   onChange?: () => void
+  /**
+   * Called once the underlying Ace editor instance has mounted; useful for
+   * consumers that need to attach listeners as soon as the editor exists
+   */
+  onLoad?: (editor: IAceEditor) => void
   readOnly?: boolean
   value?: string
   onValidate?: () => void
@@ -61,6 +68,12 @@ interface TextEditorProps {
    */
   externalSearchWholeWord?: boolean
   /**
+   * Signals that the whole document (e.g. all chunks of a large file) has
+   * more matches than can be highlighted at once, so only the current match
+   * is selected instead of highlighting all matches in this editor
+   */
+  externalSearchExceeded?: boolean
+  /**
    * Action to perform in Ace's native search (next/prev/first/last)
    */
   externalSearchAction?: ExternalSearchAction
@@ -69,9 +82,14 @@ interface TextEditorProps {
    */
   onSearchBoundary?: (direction: SearchDirection) => void
   /**
-   * Called with the current local match position and chunk total after each find action
+   * Called with the current local match position and chunk total after each
+   * find action; `exceeded` is true when the total is capped (999+)
    */
-  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
+  onSearchCounterUpdate?: (
+    current: number,
+    chunkTotal: number,
+    exceeded?: boolean
+  ) => void
   /**
    * When true, disables tag-based line filtering and custom gutter renderer
    * so the consumer can manage line numbering independently (e.g. chunked files)
@@ -127,6 +145,7 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
 const TextEditorWithStatics = TextEditor as typeof TextEditor & {
   Provider: typeof TextEditorProvider
   TagsInput: typeof TagsInput
+  ChunkSearchBox: typeof ChunkSearchBox
   FoldAllButton: typeof FoldAllButton
   FontSizeControls: typeof FontSizeControls
   LinesCount: typeof LinesCount
@@ -136,6 +155,7 @@ const TextEditorWithStatics = TextEditor as typeof TextEditor & {
 
 TextEditorWithStatics.Provider = TextEditorProvider
 TextEditorWithStatics.TagsInput = TagsInput
+TextEditorWithStatics.ChunkSearchBox = ChunkSearchBox
 TextEditorWithStatics.FoldAllButton = FoldAllButton
 TextEditorWithStatics.FontSizeControls = FontSizeControls
 TextEditorWithStatics.LinesCount = LinesCount

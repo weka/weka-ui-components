@@ -1,3 +1,4 @@
+export * from './ChunkSearchBox'
 export * from './FoldAllButton'
 export * from './FontSizeControls'
 export * from './HideContentInput'

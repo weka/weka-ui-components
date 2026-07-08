@@ -21,3 +21,23 @@ export const Default: Story = {
     </div>
   )
 }
+
+const WITH_SEARCH_LINES = 50
+const WITH_SEARCH_VALUE_VARIANTS = 5
+
+export const WithSearch: Story = {
+  args: {
+    allowSearch: true,
+    value: JSON.stringify(
+      Object.fromEntries(
+        Array.from({ length: WITH_SEARCH_LINES }, (_, i) => [
+          `key_${i}`,
+          `value ${i % WITH_SEARCH_VALUE_VARIANTS}`
+        ])
+      ),
+      null,
+      2
+    )
+  },
+  render: Default.render
+}

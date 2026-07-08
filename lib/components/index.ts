@@ -40,8 +40,17 @@ export { default as Switch } from './Switch'
 export { default as Tab } from './Tab'
 export { default as Table } from './Table'
 export * from './Table'
-export type { ExternalSearchAction, SearchDirection, TextEditorHandle } from './TextEditor'
-export { SEARCH_DIRECTIONS, default as TextEditor } from './TextEditor'
+export type {
+  ChunkSearchBoxProps,
+  ExternalSearchAction,
+  SearchDirection,
+  TextEditorHandle
+} from './TextEditor'
+export {
+  ChunkSearchBox,
+  SEARCH_DIRECTIONS,
+  default as TextEditor
+} from './TextEditor'
 export { default as Toast } from './Toast'
 export { default as ToasterContainer } from './Toast/ToasterContainer'
 export { default as ToasterDialog } from './ToasterDialog'
