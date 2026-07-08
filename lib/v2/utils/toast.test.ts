@@ -27,7 +27,14 @@ describe('toast helpers', () => {
 
   it('toastSuccess delegates to toast.success', () => {
     toastSuccess('Saved')
-    expect(toastMock.success).toHaveBeenCalledWith('Saved')
+    expect(toastMock.success).toHaveBeenCalledWith('Saved', { id: undefined })
+  })
+
+  it('toastSuccess forwards the toastId as the sonner id', () => {
+    toastSuccess('Saved', undefined, 'save-toast')
+    expect(toastMock.success).toHaveBeenCalledWith('Saved', {
+      id: 'save-toast'
+    })
   })
 
   it('toastInfo delegates to toast.info', () => {

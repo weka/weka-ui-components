@@ -2,8 +2,17 @@ import { toast } from 'sonner'
 
 const DEFAULT_ERROR_MESSAGE = 'An error occurred'
 
-export const toastSuccess = (message: string) => {
-  toast.success(message)
+/**
+ * Signature mirrors the legacy `Utils.toastSuccess` (hence the unused `_type`)
+ * so existing call sites migrate unchanged; `toastId` keeps its dedupe role as
+ * the sonner toast id.
+ */
+export const toastSuccess = (
+  message: string,
+  _type?: unknown,
+  toastId?: string
+) => {
+  toast.success(message, { id: toastId })
 }
 
 const getDataPayloadMessage = (data: unknown): string | null => {
