@@ -2,7 +2,20 @@ import type { ReactElement } from 'react'
 
 import { Fragment } from 'react'
 
+import { ELLIPSIS } from '#v2/utils/consts'
+
 const REGEX_ESCAPE_PATTERN = /[.*+?^${}()|[\]\\]/g
+
+/**
+ * Truncates `text` to `maxLength` characters, replacing the tail with `...`.
+ * The ellipsis counts toward the max length; shorter text is returned unchanged.
+ */
+export function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) {
+    return text
+  }
+  return text.slice(0, maxLength - ELLIPSIS.length) + ELLIPSIS
+}
 
 /**
  * Wraps occurrences of `query` in `text` with a given element to highlight matches.

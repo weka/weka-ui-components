@@ -31,9 +31,11 @@ export {
   COMMA_SEPARATOR,
   CSS_VARS,
   DOM_EVENTS,
+  ELLIPSIS,
   EMPTY_ARRAY,
   EMPTY_OBJECT,
   EMPTY_REF_ARRAY,
+  EMPTY_SET,
   EMPTY_STRING,
   EMPTY_STRING_ARRAY,
   FILTER_TYPES,
@@ -76,7 +78,7 @@ export {
   PROTECTION_STATUS_MAP,
   PROTECTION_STATUS_TYPES
 } from '#v2/utils/protectionStatus'
-export { highlightText } from '#v2/utils/textUtils'
+export { highlightText, truncateText } from '#v2/utils/textUtils'
 export type { TimestampInput } from '#v2/utils/timeUtils'
 export {
   formatDate,

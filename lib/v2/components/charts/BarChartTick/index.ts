@@ -1,0 +1,1 @@
+export { BarChartTick } from './BarChartTick'

@@ -11,6 +11,7 @@
   --gray-0-920: #{$gray-0};
   --gray-0-1000: #{$gray-0};
   --gray-20-950: #{$gray-20};
+  --gray-50-850: #{$gray-50};
   --gray-50-900: #{$gray-50};
   --gray-50-920: #{$gray-50};
   --gray-50-950: #{$gray-50};
@@ -59,6 +60,7 @@
   --purple-100-400: #{$purple-100};
   --purple-200-800: #{$purple-200};
   --cyan-500: #{$cyan-500};
+  --cyan-600: #{$cyan-600};
   --cyan-500-800: #{$cyan-500};
   --cyan-600-400: #{$cyan-600};
   --cyan-50-900: #{$cyan-50};
@@ -119,6 +121,7 @@
 
   // Yellow Theme Variables
   --yellow-200: #{$yellow-200};
+  --yellow-500: #{$yellow-500};
   --yellow-600: #{$yellow-600};
 
   // Orange Theme Variables
@@ -140,20 +143,60 @@
   --orange-950-20: #{$orange-950};
 
   // Fuchsia Theme Variables
+  --fuchsia-100-300: #{$fuchsia-100};
+  --fuchsia-300-100: #{$fuchsia-300};
   --fuchsia-400-600: #{$fuchsia-400};
+  --fuchsia-500: #{$fuchsia-500};
   --fuchsia-600-400: #{$fuchsia-600};
 
   // Peach Theme Variables
+  --peach-100-300: #{$peach-100};
+  --peach-300-100: #{$peach-300};
+  --peach-500: #{$peach-500};
   --peach-600-400: #{$peach-600};
   --peach-800-200: #{$peach-800};
 
   // Blue Theme Variables
+  --blue-100-300: #{$blue-100};
+  --blue-300-100: #{$blue-300};
   --blue-300-700: #{$blue-300};
+  --blue-500: #{$blue-500};
 
   // Aqua Theme Variables
+  --aqua-100-300: #{$aqua-100};
+  --aqua-300-100: #{$aqua-300};
   --aqua-300-700: #{$aqua-300};
   --aqua-500: #{$aqua-500};
   --aqua-600-400: #{$aqua-600};
+
+  // Chart Bar Gradient Stops (same values in both themes)
+  --blue-bar-top: #{$blue-400};
+  --blue-bar-bottom: #{$blue-600};
+  --aqua-bar-top: #{$aqua-400};
+  --aqua-bar-bottom: #{$aqua-600};
+  --fuchsia-bar-top: #{$fuchsia-400};
+  --fuchsia-bar-bottom: #{$fuchsia-600};
+  --peach-bar-top: #{$peach-400};
+  --peach-bar-bottom: #{$peach-600};
+  --purple-bar-top: #{$purple-400};
+  --purple-bar-bottom: #{$purple-600};
+  --yellow-bar-top: #{$yellow-400};
+  --yellow-bar-bottom: #{$yellow-600};
+  --green-bar-top: #{$green-400};
+  --green-bar-bottom: #{$green-600};
+  --red-bar-top: #{$red-400};
+  --red-bar-bottom: #{$red-600};
+  --cyan-bar-top: #{$cyan-400};
+  --cyan-bar-bottom: #{$cyan-600};
+  --orange-bar-top: #{$orange-400};
+  --orange-bar-bottom: #{$orange-600};
+
+  // Graph series colors (design "Others" group — single value across themes)
+  --teal-500: #40dacb;
+  --violet-500: #7061f2;
+  --brown-500: #945921;
+  --acid-green-500: #9ddf4c;
+  --red-rose-500: #e52e2e;
 
   // Semantic Variables
   --bg-primary: #{$gray-0};
@@ -201,6 +244,7 @@
 
   // Container
   --ld-container-bg: #{$gray-0};
+  --ld-shadow-v1: #{$gray-150};
   --ld-shadow-v2: #{$gray-150};
 
   // Tabs
@@ -237,6 +281,7 @@
   --gray-0-920: #{$gray-920};
   --gray-0-1000: #{$gray-1000};
   --gray-20-950: #{$gray-950};
+  --gray-50-850: #{$gray-850};
   --gray-50-900: #{$gray-900};
   --gray-50-920: #{$gray-920};
   --gray-50-950: #{$gray-950};
@@ -284,6 +329,7 @@
   --purple-100-800: #{$purple-800};
   --purple-100-400: #{$purple-400};
   --cyan-500: #{$cyan-500};
+  --cyan-600: #{$cyan-600};
   --cyan-500-800: #{$cyan-800};
   --cyan-600-400: #{$cyan-400};
   --cyan-50-900: #{$cyan-900};
@@ -345,6 +391,7 @@
 
   // Yellow Theme Variables
   --yellow-200: #{$yellow-200};
+  --yellow-500: #{$yellow-500};
   --yellow-600: #{$yellow-600};
 
   // Orange Theme Variables
@@ -366,20 +413,60 @@
   --orange-950-20: #{$orange-20};
 
   // Fuchsia Theme Variables
+  --fuchsia-100-300: #{$fuchsia-300};
+  --fuchsia-300-100: #{$fuchsia-100};
   --fuchsia-400-600: #{$fuchsia-600};
+  --fuchsia-500: #{$fuchsia-500};
   --fuchsia-600-400: #{$fuchsia-400};
 
   // Peach Theme Variables
+  --peach-100-300: #{$peach-300};
+  --peach-300-100: #{$peach-100};
+  --peach-500: #{$peach-500};
   --peach-600-400: #{$peach-400};
   --peach-800-200: #{$peach-200};
 
   // Blue Theme Variables
+  --blue-100-300: #{$blue-300};
+  --blue-300-100: #{$blue-100};
   --blue-300-700: #{$blue-700};
+  --blue-500: #{$blue-500};
 
   // Aqua Theme Variables
+  --aqua-100-300: #{$aqua-300};
+  --aqua-300-100: #{$aqua-100};
   --aqua-300-700: #{$aqua-700};
   --aqua-500: #{$aqua-500};
   --aqua-600-400: #{$aqua-400};
+
+  // Chart Bar Gradient Stops (same values in both themes)
+  --blue-bar-top: #{$blue-400};
+  --blue-bar-bottom: #{$blue-600};
+  --aqua-bar-top: #{$aqua-400};
+  --aqua-bar-bottom: #{$aqua-600};
+  --fuchsia-bar-top: #{$fuchsia-400};
+  --fuchsia-bar-bottom: #{$fuchsia-600};
+  --peach-bar-top: #{$peach-400};
+  --peach-bar-bottom: #{$peach-600};
+  --purple-bar-top: #{$purple-400};
+  --purple-bar-bottom: #{$purple-600};
+  --yellow-bar-top: #{$yellow-400};
+  --yellow-bar-bottom: #{$yellow-600};
+  --green-bar-top: #{$green-400};
+  --green-bar-bottom: #{$green-600};
+  --red-bar-top: #{$red-400};
+  --red-bar-bottom: #{$red-600};
+  --cyan-bar-top: #{$cyan-400};
+  --cyan-bar-bottom: #{$cyan-600};
+  --orange-bar-top: #{$orange-400};
+  --orange-bar-bottom: #{$orange-600};
+
+  // Graph series colors (design "Others" group — single value across themes)
+  --teal-500: #40dacb;
+  --violet-500: #7061f2;
+  --brown-500: #945921;
+  --acid-green-500: #9ddf4c;
+  --red-rose-500: #e52e2e;
 
   // Semantic Variables
   --bg-primary: #{$gray-1000};
@@ -427,6 +514,7 @@
 
   // Container
   --ld-container-bg: #{$gray-900};
+  --ld-shadow-v1: #{$gray-920};
   --ld-shadow-v2: #{$gray-1000};
 
   // Tabs

@@ -1,0 +1,117 @@
+.tooltip {
+  background: var(--bg-primary);
+  border: 1px solid var(--gray-600-400);
+  padding: 12px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  min-width: 160px;
+}
+
+.tooltipTitle {
+  margin-bottom: 4px;
+  font-weight: 400;
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 12.2px;
+  letter-spacing: 0;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltipHeader {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltipItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+  min-width: 0;
+
+  &.leftAlignedItem {
+    grid-template-columns: auto 1fr;
+    align-items: flex-start;
+  }
+
+  &:last-child {
+    margin-top: 6px;
+  }
+
+  &.totalItem {
+    border-top: 1px solid var(--gray-400-600);
+    padding-top: 8px;
+    margin-top: 8px;
+
+    .tooltipLabel {
+      font-weight: 700;
+    }
+  }
+}
+
+.tooltipMetadataItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+  margin-top: 0;
+  min-width: 0;
+
+  .tooltipLabel {
+    padding-left: 14px;
+  }
+}
+
+.tooltipItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tooltipDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.tooltipLabel {
+  color: var(--text-primary);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.tooltipValue {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
+
+  &.leftAligned {
+    text-align: left;
+    white-space: pre-line;
+  }
+}
+
+.tooltipDate {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.tooltipIcon {
+  color: var(--gray-700-300);
+}
