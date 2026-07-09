@@ -1,0 +1,530 @@
+.legendDrawer {
+  position: relative;
+  background: var(--gray-0-900);
+  border-left: 1px solid var(--gray-300-700);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+
+  &.open {
+    box-shadow: -2px 0 8px var(--ld-shadow-v1);
+  }
+
+  &:not(.open) {
+    border: none;
+    pointer-events: none;
+  }
+
+  &.dragging {
+    user-select: none;
+  }
+}
+
+.resizeHandle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 10;
+
+  &:hover {
+    background: var(--cyan-500);
+  }
+
+  &:active {
+    background: var(--cyan-600);
+  }
+}
+
+.dragHandle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  background: var(--gray-50-850);
+  border-bottom: 1px solid var(--gray-300-700);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  min-height: 60px;
+
+  &:hover {
+    background: var(--gray-100-800);
+  }
+}
+
+.dragIndicator {
+  width: 24px;
+  height: 4px;
+  background: var(--gray-400-600);
+  border-radius: 2px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: var(--gray-400-600);
+    left: 0;
+  }
+
+  &::before {
+    top: -2px;
+  }
+
+  &::after {
+    bottom: -2px;
+  }
+}
+
+.drawerTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  margin: 8px 0;
+}
+
+.toggleIcon {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text-secondary);
+  width: 24px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  max-width: 320px;
+  padding-left: 6px;
+  padding-right: 2px;
+
+  @container chart-card (max-width: 450px) {
+    padding-left: 4px;
+    padding-right: 0;
+  }
+}
+
+.legendHeader {
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.legendContainer {
+  flex: 1;
+  padding: 0;
+  overflow: hidden auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-400-600) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-400-600);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+  }
+}
+
+.selectAllItem {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 4px 8px;
+
+  &.withValue {
+    gap: 10px;
+  }
+
+  @container chart-card (max-width: 450px) {
+    gap: 4px;
+    padding: 2px;
+
+    &.withValue {
+      gap: 4px;
+    }
+  }
+}
+
+.selectAllLeft {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+  flex: var(--name-column-ratio, 1.8);
+  overflow: hidden;
+
+  @container chart-card (max-width: 450px) {
+    gap: 4px;
+  }
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+
+  &:not(.withValue) {
+    justify-content: flex-start;
+  }
+
+  @container chart-card (max-width: 450px) {
+    padding: 2px;
+    gap: 8px;
+  }
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: var(--name-column-ratio, 1.8);
+  overflow: hidden;
+
+  .headerRow.withoutCheckbox & {
+    padding-left: 4px;
+  }
+
+  @container chart-card (max-width: 450px) {
+    gap: 4px;
+
+    .headerRow.withoutCheckbox & {
+      padding-left: 0;
+    }
+  }
+}
+
+.nameHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 0;
+  min-width: 0;
+  overflow: hidden;
+
+  &.notSortable {
+    cursor: default;
+  }
+
+  &:not(.notSortable):hover {
+    opacity: 0.8;
+  }
+}
+
+.nameLabel {
+  color: var(--purple-700-300);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.legendGrid {
+  display: grid;
+  align-items: start;
+
+  &.columns1 {
+    grid-template-columns: 1fr;
+  }
+
+  &.columns2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &.columns3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  opacity: 1;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  min-width: 0;
+  overflow: hidden;
+
+  > span {
+    min-width: 0;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--gray-100-800);
+    }
+  }
+
+  &.hidden {
+    opacity: 0.4;
+  }
+
+  &.totalItem {
+    position: relative;
+    padding-top: 12px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gray-400-600);
+    }
+
+    .legendLabel {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+
+  &:not(.withValue) {
+    justify-content: flex-start;
+  }
+
+  @container chart-card (max-width: 450px) {
+    padding: 2px;
+    gap: 8px;
+  }
+}
+
+.legendItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: var(--name-column-ratio, 1.8);
+  overflow: hidden;
+
+  > span {
+    min-width: 0;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  @container chart-card (max-width: 450px) {
+    gap: 4px;
+  }
+}
+
+.legendLabelWrapper {
+  overflow: hidden;
+  min-width: 0;
+  width: 100%;
+}
+
+.legendValueWrapper {
+  overflow: hidden;
+  min-width: 0;
+  width: 100%;
+}
+
+.legendValue {
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: 12px;
+  white-space: nowrap;
+  text-align: left;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+
+  &:is(a) {
+    color: var(--text-secondary) !important;
+    cursor: pointer;
+
+    &:visited,
+    &:active,
+    &:link {
+      color: var(--text-secondary) !important;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.valueHeader {
+  color: var(--purple-700-300);
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  text-align: left;
+
+  &.notSortable {
+    cursor: default;
+  }
+
+  &:not(.notSortable):hover {
+    opacity: 0.8;
+  }
+}
+
+.legendDot {
+  width: 10px;
+  height: 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+
+  &.line {
+    background: transparent;
+    border: 2px solid;
+    border-radius: 4px;
+    height: 4px;
+  }
+}
+
+.legendLabel {
+  color: var(--text-primary);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  display: block;
+
+  &:is(a) {
+    color: var(--text-primary);
+    cursor: pointer;
+
+    &:link,
+    &:visited,
+    &:active {
+      color: var(--text-primary);
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.sortIcon {
+  color: var(--gray-900-100);
+  width: 14px;
+  height: 14px;
+}
+
+.sortAsc {
+  transform: rotate(180deg);
+}
+
+.sortInactive {
+  display: none;
+}
+
+.sortUpDown {
+  display: none;
+}
+
+.legendTooltip {
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+}
+
+.nameHeader:not(.notSortable):hover .sortInactive,
+.valueHeader:not(.notSortable):hover .sortInactive {
+  display: none;
+}
+
+.nameHeader:not(.notSortable):hover .sortUpDown,
+.valueHeader:not(.notSortable):hover .sortUpDown {
+  display: inline-block;
+}
+
+.legendGrid.columns2,
+.legendGrid.columns3 {
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-400-600);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+  }
+}
+
+.legendGrid.columns2 {
+  grid-template-columns: minmax(200px, 1fr) minmax(200px, 1fr);
+}
+
+.legendGrid.columns3 {
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr);
+}
+
+@media (width <= 768px) {
+  .legendGrid {
+    &.columns2,
+    &.columns3 {
+      grid-template-columns: 1fr;
+    }
+  }
+}

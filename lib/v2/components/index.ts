@@ -36,10 +36,84 @@ export {
   CAPACITY_FILL_COLORS,
   CapacityProgressBar
 } from './CapacityProgressBar'
+export { BarChartTick } from './charts/BarChartTick'
+export { BarWithGap } from './charts/BarWithGap'
+export type { BaseBarChartProps } from './charts/BaseBarChart'
+export { BaseBarChart } from './charts/BaseBarChart'
+export type { BaseComposedChartProps } from './charts/BaseComposedChart'
+export { BaseComposedChart } from './charts/BaseComposedChart'
+export type { BaseLineChartProps } from './charts/BaseLineChart'
+export { BaseLineChart } from './charts/BaseLineChart'
+export type {
+  BasePieChartProps,
+  GradientDefinition,
+  PieChartDataItem,
+  PieChartPayloadItem,
+  PieTooltipProps
+} from './charts/BasePieChart'
+export {
+  BasePieChart,
+  createPieChartLabelRenderer,
+  createPieChartTooltip,
+  defaultPieChartLabelRenderer
+} from './charts/BasePieChart'
+export type { ChartColorScheme } from './charts/chartConstants'
+export {
+  CHART_COLOR_SCHEME,
+  CHART_COLOR_VARS,
+  CHART_COLORS
+} from './charts/chartConstants'
+export {
+  chartGradientsFade,
+  chartGradientsVertical,
+  getChartGradientsFade,
+  getChartGradientsVertical
+} from './charts/chartGradients'
+export type {
+  ChartAxisConfig,
+  ChartDataPoint,
+  ChartMargin,
+  ChartSyncMethod,
+  DomainValue,
+  SeriesConfig,
+  SeriesType,
+  TickValue,
+  TooltipPayloadItem,
+  XAxisExtendedConfig,
+  YAxisExtendedConfig
+} from './charts/chartTypes'
+export { SERIES_TYPES } from './charts/chartTypes'
+export type { CustomLegendProps } from './charts/CustomLegend'
+export { CustomLegend } from './charts/CustomLegend'
+export { CustomTick } from './charts/CustomTick'
+export type { CustomTooltipProps } from './charts/CustomTooltip'
+export { CustomTooltip } from './charts/CustomTooltip'
 export type { DonutChartProps, DonutChartSegment } from './charts/DonutChart'
 export { DonutChart } from './charts/DonutChart'
+export type { LegendDrawerProps } from './charts/LegendDrawer'
+export {
+  DEFAULT_CONTAINER_WIDTH,
+  getDrawerDefaultWidth,
+  getScaledDrawerWidth,
+  LegendDrawer
+} from './charts/LegendDrawer'
 export type { MiniChartDataPoint, MiniChartProps } from './charts/MiniChart'
 export { MiniChart } from './charts/MiniChart'
+export { StableChartContainer } from './charts/StableChartContainer'
+export {
+  buildXAxisConfig,
+  buildYAxisConfig
+} from './charts/utils/axisConfigBuilders'
+export { calculateChartDomain } from './charts/utils/chartDomainUtils'
+export { syncByNearestTimestamp } from './charts/utils/chartSyncUtils'
+export {
+  DEFAULT_CHART_MARGIN,
+  formatXAxisTimestamp,
+  getBottomMargin,
+  getChartMargin,
+  getRangeDomain,
+  isLongRange
+} from './charts/utils/xAxisFormatters'
 export type { CheckboxProps } from './CheckBox'
 export { Checkbox } from './CheckBox'
 export type { ChipProps } from './Chip'

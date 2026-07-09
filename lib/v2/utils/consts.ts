@@ -1,6 +1,5 @@
 import type { RefObject } from 'react'
 
-// eslint-disable-next-line @weka/weka/no-empty-strings
 export const EMPTY_STRING = ''
 
 export const NOT_APPLICABLE = 'N/A'
@@ -9,6 +8,7 @@ export const EMPTY_ARRAY: readonly never[] = []
 export const EMPTY_STRING_ARRAY: readonly string[] = []
 export const EMPTY_REF_ARRAY: readonly RefObject<HTMLElement>[] = []
 export const EMPTY_OBJECT: Record<string, never> = {}
+export const EMPTY_SET = new Set<never>()
 
 export const PERCENTAGE = { FULL: 100, HALF: 50 } as const
 
@@ -39,6 +39,7 @@ export type ParityStatus =
 
 export const NOOP = () => {}
 export const COMMA_SEPARATOR = ', '
+export const ELLIPSIS = '...'
 export const SEARCH_PLACEHOLDER = 'Search...'
 export const ANY_LABEL = 'Any'
 

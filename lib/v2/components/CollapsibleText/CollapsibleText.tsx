@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { ELLIPSIS } from '#v2/utils/consts'
+
 import styles from './collapsibleText.module.scss'
 
 export interface CollapsibleTextProps {
@@ -15,7 +17,6 @@ interface TruncationResult {
   truncatedText: string
 }
 
-const ELLIPSIS = '...'
 const SPACE_BUFFER = 80
 const DEFAULT_MAX_LINES = 2
 const DEFAULT_SHOW_MORE_LABEL = 'Show more'

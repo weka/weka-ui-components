@@ -1,11 +1,12 @@
 import { Fragment } from 'react'
 import clsx from 'clsx'
 
+import { ELLIPSIS } from '#v2/utils/consts'
+
 import { ARROW_DIRECTIONS, ArrowIcon } from '../../../icons'
 
 import styles from './pagination.module.scss'
 
-const ELLIPSIS = '...'
 const MAX_PAGES_WITHOUT_ELLIPSIS = 5
 const SIDE_WINDOW = 2
 const ALWAYS_ENABLED = () => true
