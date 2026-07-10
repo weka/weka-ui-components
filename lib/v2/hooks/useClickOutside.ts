@@ -13,6 +13,7 @@ interface UseClickOutsideOptions {
   additionalSelectors?: string[]
   additionalDataAttributes?: string[]
   enabled?: boolean
+  capture?: boolean
 }
 
 /**
@@ -95,7 +96,8 @@ export const useClickOutside = (
     additionalRefs = EMPTY_REF_ARRAY,
     additionalSelectors = EMPTY_STRING_ARRAY,
     additionalDataAttributes = EMPTY_STRING_ARRAY,
-    enabled = true
+    enabled = true,
+    capture = false
   } = options
 
   useEffect(() => {
@@ -129,10 +131,14 @@ export const useClickOutside = (
       handler()
     }
 
-    document.addEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside)
+    document.addEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside, capture)
 
     return () => {
-      document.removeEventListener(DOM_EVENTS.MOUSEDOWN, handleClickOutside)
+      document.removeEventListener(
+        DOM_EVENTS.MOUSEDOWN,
+        handleClickOutside,
+        capture
+      )
     }
   }, [
     ref,
@@ -140,6 +146,7 @@ export const useClickOutside = (
     additionalRefs,
     additionalSelectors,
     additionalDataAttributes,
-    enabled
+    enabled,
+    capture
   ])
 }

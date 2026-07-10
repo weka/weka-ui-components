@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
-import { formatTimestamp } from '#v2/utils/timeUtils'
 
 import { DateTimeIcon } from '../../../icons'
 import { type SeriesConfig, type TooltipPayloadItem } from '../chartTypes'
+import { formatTooltipTimestamp } from '../utils/xAxisFormatters'
 
 import styles from './customTooltip.module.scss'
 
@@ -48,12 +48,12 @@ export function CustomTooltip({
       }
 
       if (payload[0]?.payload?.timestamp) {
-        return formatTimestamp(payload[0].payload.timestamp)
+        return formatTooltipTimestamp(payload[0].payload.timestamp)
       }
 
       const numLabel = Number(timeLabel)
       if (!Number.isNaN(numLabel) && numLabel > MIN_TIMESTAMP_MS) {
-        return formatTimestamp(numLabel)
+        return formatTooltipTimestamp(numLabel)
       }
 
       return timeLabel

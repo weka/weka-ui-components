@@ -11,6 +11,7 @@ export function StatBox({
   colorVariant,
   mainValue,
   mainUnit,
+  mainValueAdornment,
   subStats,
   status = STAT_BOX_STATUS.READY,
   dataTestId
@@ -20,10 +21,17 @@ export function StatBox({
 
   const content = (
     <>
-      {mainUnit ? (
+      {mainUnit || mainValueAdornment ? (
         <div className={styles.mainValueGroup}>
           <span className={styles.mainValue}>{mainValue}</span>
-          <span className={styles.mainUnit}>{mainUnit}</span>
+          {mainUnit ? (
+            <span className={styles.mainUnit}>{mainUnit}</span>
+          ) : null}
+          {mainValueAdornment ? (
+            <span className={styles.mainValueAdornment}>
+              {mainValueAdornment}
+            </span>
+          ) : null}
         </div>
       ) : (
         <span className={styles.mainValue}>{mainValue}</span>

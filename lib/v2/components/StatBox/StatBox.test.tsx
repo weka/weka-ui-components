@@ -43,6 +43,20 @@ describe('StatBox', () => {
       expect(screen.getByText('132.0')).toBeInTheDocument()
     })
 
+    it('renders the main value adornment next to the main value', () => {
+      render(
+        <StatBox
+          colorVariant='purple'
+          mainValue={11}
+          mainValueAdornment={<button type='button'>7 Stale</button>}
+          title='Clusters'
+        />
+      )
+      expect(
+        screen.getByRole('button', { name: '7 Stale' })
+      ).toBeInTheDocument()
+    })
+
     it('renders no sub-stats when the list is empty', () => {
       render(
         <StatBox
@@ -66,7 +80,9 @@ describe('StatBox', () => {
           title='Throughput'
         />
       )
-      expect(screen.getByTestId('stat-box-skeleton-loading')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('stat-box-skeleton-loading')
+      ).toBeInTheDocument()
       expect(screen.queryByText('146.8')).not.toBeInTheDocument()
     })
 

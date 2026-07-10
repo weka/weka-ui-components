@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 export const STAT_COLOR_VARIANT = {
   PURPLE: 'purple',
   FUCHSIA: 'fuchsia',
@@ -29,6 +31,7 @@ export interface StatBoxProps {
   colorVariant: StatColorVariant
   mainValue: string | number
   mainUnit?: string
+  mainValueAdornment?: ReactNode
   subStats?: StatBoxSubStat[]
   status?: StatBoxStatus
   dataTestId?: string

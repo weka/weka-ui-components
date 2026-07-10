@@ -108,6 +108,7 @@ export { calculateChartDomain } from './charts/utils/chartDomainUtils'
 export { syncByNearestTimestamp } from './charts/utils/chartSyncUtils'
 export {
   DEFAULT_CHART_MARGIN,
+  formatTooltipTimestamp,
   formatXAxisTimestamp,
   getBottomMargin,
   getChartMargin,
