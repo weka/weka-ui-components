@@ -32,7 +32,8 @@ export function MenuPopover({
 
   useClickOutside(popRef as unknown as RefObject<HTMLElement>, onClose, {
     additionalRefs: [anchorRef],
-    enabled: open
+    enabled: open,
+    capture: true
   })
 
   const { position } = usePopoverPosition(open, anchorRef, onClose, {

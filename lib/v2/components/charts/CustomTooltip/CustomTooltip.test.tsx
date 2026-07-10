@@ -58,7 +58,7 @@ describe('CustomTooltip', () => {
     expect(container).toBeEmptyDOMElement()
   })
 
-  it('renders a formatted timestamp header when the payload carries a timestamp', () => {
+  it('renders a timestamp header with date and 24-hour time matching the axis format', () => {
     render(
       <CustomTooltip
         active
@@ -71,9 +71,11 @@ describe('CustomTooltip', () => {
       />
     )
 
-    expect(screen.getByTestId(TOOLTIP_TEST_ID).textContent).toMatch(
-      /\d{2}\/\d{2}\/\d{4}/
-    )
+    const tooltipText = screen.getByTestId(TOOLTIP_TEST_ID).textContent
+    expect(tooltipText).toMatch(/(\d{2}\s\w{3}|\w{3}\s\d{2})/)
+    expect(tooltipText).toMatch(/\d{2}:\d{2}/)
+    expect(tooltipText).not.toMatch(/am|pm/i)
+    expect(tooltipText).not.toMatch(/\d{2}\/\d{2}\/\d{4}/)
   })
 
   it('renders series names, dot colors and values', () => {

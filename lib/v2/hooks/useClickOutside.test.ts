@@ -28,7 +28,8 @@ describe('useClickOutside', () => {
 
     expect(document.addEventListener).toHaveBeenCalledWith(
       'mousedown',
-      expect.any(Function)
+      expect.any(Function),
+      false
     )
   })
 
@@ -40,7 +41,19 @@ describe('useClickOutside', () => {
 
     expect(document.removeEventListener).toHaveBeenCalledWith(
       'mousedown',
-      expect.any(Function)
+      expect.any(Function),
+      false
+    )
+  })
+
+  it('listens in the capture phase when capture is true', () => {
+    const handler = vi.fn()
+    renderHook(() => useClickOutside(ref, handler, { capture: true }))
+
+    expect(document.addEventListener).toHaveBeenCalledWith(
+      'mousedown',
+      expect.any(Function),
+      true
     )
   })
 

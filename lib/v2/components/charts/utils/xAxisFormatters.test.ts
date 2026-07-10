@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   DEFAULT_CHART_MARGIN,
+  formatTooltipTimestamp,
   formatXAxisTimestamp,
   getBottomMargin,
   getChartMargin,
@@ -10,6 +11,7 @@ import {
 } from './xAxisFormatters'
 
 const CUSTOM_ISO_RANGE = '2025-12-09T23:30:00+02:00:2025-12-10T07:15:00+02:00'
+const SAMPLE_DATE_ISO = '2024-03-15T14:30:00Z'
 
 const LONG_RANGE_BOTTOM_MARGIN = 20
 const DEFAULT_BOTTOM_MARGIN = 5
@@ -46,7 +48,7 @@ describe('xAxisFormatters', () => {
   })
 
   describe('getRangeDomain', () => {
-    const NOW = new Date('2024-03-15T14:30:00Z').getTime()
+    const NOW = new Date(SAMPLE_DATE_ISO).getTime()
     const MS_PER_HOUR = 3_600_000
     const HOURS_PER_DAY = 24
     const MS_PER_DAY = HOURS_PER_DAY * MS_PER_HOUR
@@ -86,7 +88,7 @@ describe('xAxisFormatters', () => {
   })
 
   describe('formatXAxisTimestamp', () => {
-    const timestamp = new Date('2024-03-15T14:30:00Z').getTime()
+    const timestamp = new Date(SAMPLE_DATE_ISO).getTime()
 
     it('returns time only for short range (1d)', () => {
       const result = formatXAxisTimestamp(timestamp, '1d')
@@ -118,6 +120,29 @@ describe('xAxisFormatters', () => {
       const result = formatXAxisTimestamp(timestamp, CUSTOM_ISO_RANGE)
 
       expect(result).toContain('\n')
+    })
+  })
+
+  describe('formatTooltipTimestamp', () => {
+    const timestamp = new Date(SAMPLE_DATE_ISO).getTime()
+
+    it('formats a millisecond timestamp as date and 24-hour time', () => {
+      const result = formatTooltipTimestamp(timestamp)
+
+      expect(result).toMatch(/(\d{2}\s\w{3}|\w{3}\s\d{2})/)
+      expect(result).toContain('2024')
+      expect(result).toMatch(/\d{2}:\d{2}$/)
+      expect(result).not.toMatch(/am|pm/i)
+    })
+
+    it('accepts a numeric string timestamp', () => {
+      expect(formatTooltipTimestamp(String(timestamp))).toBe(
+        formatTooltipTimestamp(timestamp)
+      )
+    })
+
+    it('returns the input unchanged when it cannot be parsed', () => {
+      expect(formatTooltipTimestamp('not-a-date')).toBe('not-a-date')
     })
   })
 

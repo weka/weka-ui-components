@@ -1,7 +1,8 @@
+import { EMPTY_STRING } from '#v2/utils/consts'
 import { getUserLocale } from '#v2/utils/timeUtils'
 
 /**
- * Utility functions for consistent X-axis formatting across all charts
+ * Utility functions for consistent time formatting across all charts
  */
 
 const SECONDS_IN_MINUTE = 60
@@ -85,6 +86,39 @@ export function formatXAxisTimestamp(timestamp: number, range: string): string {
     minute: '2-digit',
     hour12: false
   })
+}
+
+/**
+ * Formats a timestamp for the chart tooltip header, e.g. "08 Jul 2026, 22:36".
+ * Uses the same locale-aware date style and 24-hour clock as the X-axis ticks;
+ * the date is always included because short-range axes show time only.
+ *
+ * @param timestamp - Unix timestamp in milliseconds, or a parseable date string
+ */
+export function formatTooltipTimestamp(timestamp: number | string): string {
+  const numericTimestamp =
+    typeof timestamp === 'string' && timestamp.trim() !== EMPTY_STRING
+      ? Number(timestamp)
+      : timestamp
+  const date = new Date(
+    Number.isNaN(numericTimestamp) ? timestamp : numericTimestamp
+  )
+  if (Number.isNaN(date.getTime())) {
+    return String(timestamp)
+  }
+
+  const locale = getUserLocale()
+  const dateStr = date.toLocaleDateString(locale, {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  })
+  const timeStr = date.toLocaleTimeString(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  })
+  return `${dateStr}, ${timeStr}`
 }
 
 /** Bottom margin for charts with two-line dates */
