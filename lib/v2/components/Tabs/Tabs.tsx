@@ -42,6 +42,7 @@ export interface TabsProps {
   onTabChange: (tabId: string, subTab?: string) => void
   variant?: TabVariant
   extraClass?: string
+  noLabelEllipsis?: boolean
   onAddTab?: () => void
   onDeleteTab?: (tabId: string) => void
   onRenameTab?: (tabId: string, newName: string) => void
@@ -134,6 +135,7 @@ export function Tabs({
   onTabChange,
   variant = TAB_VARIANTS.PRIMARY,
   extraClass = EMPTY_STRING,
+  noLabelEllipsis = false,
   onAddTab,
   onDeleteTab,
   onRenameTab,
@@ -543,7 +545,11 @@ export function Tabs({
           isActive={isActive}
           tab={tab}
         />
-        <span className={styles.tabLabel}>{tab.label}</span>
+        <span
+          className={clsx(styles.tabLabel, noLabelEllipsis && styles.noEllipsis)}
+        >
+          {tab.label}
+        </span>
         {tab.count !== undefined && (
           <span className={styles.tabCount}>{countDisplay}</span>
         )}

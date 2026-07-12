@@ -21,6 +21,7 @@ export interface TableDrawerProps {
   onClose: () => void
   onResizeStart: (e: MouseEvent) => void
   children: ReactNode
+  hideScrollbar?: boolean
 }
 
 export function TableDrawer({
@@ -30,7 +31,8 @@ export function TableDrawer({
   title,
   onClose,
   onResizeStart,
-  children
+  children,
+  hideScrollbar = false
 }: Readonly<TableDrawerProps>) {
   const drawerRef = useRef<HTMLDivElement | null>(null)
   const widthRef = useRef(width)
@@ -113,7 +115,11 @@ export function TableDrawer({
           &times;
         </button>
       </div>
-      <div className={styles.drawerContent}>{children}</div>
+      <div
+        className={clsx(styles.drawerContent, hideScrollbar && styles.hideScrollbar)}
+      >
+        {children}
+      </div>
     </div>
   )
 }

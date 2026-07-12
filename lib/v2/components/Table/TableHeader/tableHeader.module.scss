@@ -112,7 +112,7 @@
   overflow: hidden;
   padding: 16px 12px;
 
-  &.menuAbove {
+  &.menuAbove:not(.menuFixed) {
     top: auto;
     bottom: 100%;
     margin-top: 0;
@@ -171,6 +171,7 @@
   align-items: flex-end;
   gap: 16px;
   flex: 1;
+  min-width: 0;
 }
 
 .customTitleContainer {
@@ -179,6 +180,12 @@
   flex: 0 1 auto;
   min-width: 0;
   max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .customTitleFilters {
