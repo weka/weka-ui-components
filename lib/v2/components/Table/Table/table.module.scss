@@ -309,7 +309,7 @@ thead.tableHeader {
   box-shadow: -2px 0 4px -2px var(--sticky-col-shadow);
 
   thead & {
-    background-color: var(--gray-100-900);
+    background-color: var(--table-sticky-bg, var(--gray-100-900));
     overflow: visible;
 
     &::after {
@@ -319,16 +319,16 @@ thead.tableHeader {
       bottom: 0;
       left: 100%;
       width: var(--scrollbar-gutter, 0);
-      background-color: var(--gray-100-900);
+      background-color: var(--table-sticky-bg, var(--gray-100-900));
     }
   }
 
   tbody tr.evenRow & {
-    background-color: var(--gray-0-1000);
+    background-color: var(--table-sticky-bg, var(--gray-0-1000));
   }
 
   tbody tr.oddRow & {
-    background-color: var(--gray-50-920);
+    background-color: var(--table-sticky-bg, var(--gray-50-920));
   }
 
   tbody tr.activeRow & {
@@ -348,15 +348,15 @@ thead.tableHeader {
   box-shadow: 2px 0 4px -1px var(--gray-300-700);
 
   thead & {
-    background-color: var(--gray-100-900);
+    background-color: var(--table-sticky-bg, var(--gray-100-900));
   }
 
   tbody tr.evenRow & {
-    background-color: var(--gray-0-1000);
+    background-color: var(--table-sticky-bg, var(--gray-0-1000));
   }
 
   tbody tr.oddRow & {
-    background-color: var(--gray-50-920);
+    background-color: var(--table-sticky-bg, var(--gray-50-920));
   }
 
   tbody tr.activeRow & {
