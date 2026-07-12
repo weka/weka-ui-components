@@ -123,6 +123,12 @@
   transition: none;
 }
 
+.noEllipsis {
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
+}
+
 .tabCount {
   margin-left: 4px;
   padding: 2px 6px;
@@ -261,6 +267,13 @@
 
   .tab:hover .tabLabel {
     max-width: 150px !important;
+  }
+
+  .tabLabel.noEllipsis,
+  .tab:hover .tabLabel.noEllipsis {
+    max-width: none !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
   }
 
   .tabSeparator {

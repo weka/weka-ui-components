@@ -4,6 +4,7 @@ import type { Table } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 
 import {
@@ -451,12 +452,15 @@ export function TableHeader({
     ) : null
 
   const renderMenuOverlay = () =>
-    showSettingsMenu ? (
-      <div
-        className={styles.menuOverlay}
-        onClick={() => setShowSettingsMenu(false)}
-      />
-    ) : null
+    showSettingsMenu
+      ? createPortal(
+          <div
+            className={styles.menuOverlay}
+            onClick={() => setShowSettingsMenu(false)}
+          />,
+          document.body
+        )
+      : null
 
   const renderCustomTitleFilters = () =>
     showCustomTitleFilters ? (
@@ -485,7 +489,7 @@ export function TableHeader({
       return columnId !== undefined && columnVisibility[columnId] !== false
     }).length
 
-    return (
+    return createPortal(
       <div
         ref={settingsMenuRef}
         data-testid='table-settings-menu'
@@ -529,7 +533,8 @@ export function TableHeader({
           <ResetIcon />
           Reset Column Resizing
         </div>
-      </div>
+      </div>,
+      document.body
     )
   }
 

@@ -74,6 +74,7 @@ export interface SelectProps {
   required?: boolean
   renderChip?: (option: SelectOption, onRemove: () => void) => ReactNode
   renderOption?: (option: SelectOption) => ReactNode
+  renderValue?: (option: SelectOption) => ReactNode
   anyValue?: SelectOptionValue
   maxVisibleChips?: number
   isLoading?: boolean
@@ -95,6 +96,7 @@ export function Select({
   required = false,
   renderChip,
   renderOption,
+  renderValue,
   anyValue,
   maxVisibleChips,
   isLoading = false,
@@ -377,6 +379,9 @@ export function Select({
     const selectedOption = optionsWithSelected.find(
       (opt) => opt.value === selectedValue
     )
+    if (renderValue && selectedOption) {
+      return renderValue(selectedOption)
+    }
     const displayText = selectedOption?.label || String(selectedValue)
     return (
       <span
