@@ -112,7 +112,7 @@
   overflow: hidden;
   padding: 16px 12px;
 
-  &.menuAbove {
+  &.menuAbove:not(.menuFixed) {
     top: auto;
     bottom: 100%;
     margin-top: 0;
