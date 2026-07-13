@@ -15,18 +15,21 @@ import React, {
 } from 'react'
 import { CircularProgress } from '@mui/material'
 import clsx from 'clsx'
-import { EMPTY_STRING } from '#consts'
+
+import { EMPTY_STRING, NOP } from '#consts'
 import { useToggle } from '#hooks'
 
 import Copy from '../../../Copy'
 import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
+import { ChunkSearchBox } from '../ChunkSearchBox'
 import {
   useDisableSyntaxCheck,
   useEditor,
   useFoldAll,
   useForcedLineNumbers,
+  useInternalSearch,
   useIsScrollbarVisible,
   useLinePosition,
   useOnlyMatching,
@@ -63,8 +66,28 @@ export interface TextEditorHandle {
   getEditor: () => IAceEditor | undefined
 }
 
+const CUSTOM_SEARCH_COMMANDS = {
+  openSearch: {
+    name: 'openCustomSearch',
+    bindKey: { win: 'Ctrl-F', mac: 'Command-F' },
+    readOnly: true
+  },
+  findNext: {
+    name: 'customSearchNext',
+    bindKey: { win: 'Ctrl-K', mac: 'Command-G' },
+    readOnly: true
+  },
+  findPrevious: {
+    name: 'customSearchPrevious',
+    bindKey: { win: 'Ctrl-Shift-K', mac: 'Command-Shift-G' },
+    readOnly: true
+  }
+}
+
 export interface TextEditorFullProps {
   onChange?: () => void
+  /** called once the underlying Ace editor instance has mounted */
+  onLoad?: (editor: IAceEditor) => void
   readOnly?: boolean
   value?: string
   onValidate?: () => void
@@ -89,9 +112,14 @@ export interface TextEditorFullProps {
   externalSearchIsRegex?: boolean
   externalSearchCaseSensitive?: boolean
   externalSearchWholeWord?: boolean
+  externalSearchExceeded?: boolean
   externalSearchAction?: ExternalSearchAction
   onSearchBoundary?: (direction: SearchDirection) => void
-  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
+  onSearchCounterUpdate?: (
+    current: number,
+    chunkTotal: number,
+    exceeded?: boolean
+  ) => void
 }
 const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
   function TextEditorFull(
@@ -99,6 +127,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       readOnly,
       value = EMPTY_STRING,
       onChange,
+      onLoad,
       onValidate,
       allowSearch = false,
       allowCopy = false,
@@ -118,6 +147,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       externalSearchIsRegex = false,
       externalSearchCaseSensitive = false,
       externalSearchWholeWord = false,
+      externalSearchExceeded = false,
       externalSearchAction,
       onSearchBoundary,
       onSearchCounterUpdate,
@@ -139,6 +169,9 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     const [onlyMatching, toggleOnlyMatching] = useToggle(false)
     const [editorReady, setEditorReady] = useState(false)
+    const [aceEditor, setAceEditor] = useState<IAceEditor | undefined>(
+      undefined
+    )
 
     useImperativeHandle(
       ref,
@@ -148,8 +181,10 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       [editorReady]
     )
 
-    const handleLoad = () => {
+    const handleLoad = (loadedEditor: IAceEditor) => {
+      setAceEditor(loadedEditor)
       setEditorReady(true)
+      onLoad?.(loadedEditor)
     }
 
     const options = useMemo(
@@ -171,19 +206,111 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       ]
     )
 
-    const searchValue = useSearch({
-      editor,
-      allowSearch: options.allowSearch,
+    const hasExternalSearch = Boolean(
+      externalSearchTerm ||
+        externalSearchAction ||
+        onSearchBoundary ||
+        onSearchCounterUpdate
+    )
+
+    const internalSearch = useInternalSearch()
+    const { setDismissed, setSearchTerm } = internalSearch
+    const searchInputRef = useRef<HTMLInputElement>(null)
+
+    const showSearchBox =
+      options.allowSearch && !hasExternalSearch && !internalSearch.dismissed
+
+    const latestOpenSearchRef = useRef(NOP)
+    const latestFindDirectionRef = useRef<(backwards: boolean) => void>(NOP)
+
+    useEffect(() => {
+      latestOpenSearchRef.current = () => {
+        if (hasExternalSearch || !options.allowSearch) {
+          return
+        }
+        setDismissed(false)
+        const selectedText = aceEditor?.getSelectedText() ?? EMPTY_STRING
+        if (selectedText && !selectedText.includes('\n')) {
+          setSearchTerm(selectedText)
+        }
+        requestAnimationFrame(() => {
+          searchInputRef.current?.focus()
+          searchInputRef.current?.select()
+        })
+      }
+      latestFindDirectionRef.current = (backwards: boolean) => {
+        if (!showSearchBox || !internalSearch.searchTerm) {
+          return
+        }
+        if (backwards) {
+          internalSearch.handlePrev()
+        } else {
+          internalSearch.handleNext()
+        }
+      }
+    })
+
+    const prevAllowSearchRef = useRef(options.allowSearch)
+    useEffect(() => {
+      const searchJustEnabled =
+        options.allowSearch && !prevAllowSearchRef.current
+      prevAllowSearchRef.current = options.allowSearch
+      if (!options.allowSearch) {
+        return
+      }
+      setDismissed(false)
+      if (searchJustEnabled) {
+        latestOpenSearchRef.current()
+      }
+    }, [options.allowSearch, setDismissed])
+
+    useEffect(() => {
+      if (!aceEditor) {
+        return
+      }
+      aceEditor.commands.addCommand({
+        ...CUSTOM_SEARCH_COMMANDS.openSearch,
+        exec: () => latestOpenSearchRef.current()
+      })
+      aceEditor.commands.addCommand({
+        ...CUSTOM_SEARCH_COMMANDS.findNext,
+        exec: () => latestFindDirectionRef.current(false)
+      })
+      aceEditor.commands.addCommand({
+        ...CUSTOM_SEARCH_COMMANDS.findPrevious,
+        exec: () => latestFindDirectionRef.current(true)
+      })
+    }, [aceEditor])
+
+    useSearch({
+      editor: aceEditor,
       editorReady,
       value: options.value,
-      externalSearchTerm,
-      externalSearchIsRegex,
-      externalSearchCaseSensitive,
-      externalSearchWholeWord,
-      externalSearchAction,
-      onSearchBoundary,
-      onSearchCounterUpdate
+      externalSearchTerm: hasExternalSearch
+        ? externalSearchTerm
+        : (showSearchBox && internalSearch.searchTerm) || undefined,
+      externalSearchIsRegex: hasExternalSearch
+        ? externalSearchIsRegex
+        : internalSearch.isRegex,
+      externalSearchCaseSensitive: hasExternalSearch
+        ? externalSearchCaseSensitive
+        : internalSearch.isCaseSensitive,
+      externalSearchWholeWord: hasExternalSearch
+        ? externalSearchWholeWord
+        : internalSearch.isWholeWord,
+      externalSearchExceeded: hasExternalSearch && externalSearchExceeded,
+      externalSearchAction: hasExternalSearch
+        ? externalSearchAction
+        : internalSearch.action,
+      onSearchBoundary: hasExternalSearch
+        ? onSearchBoundary
+        : internalSearch.wrapSearchAtBoundary,
+      onSearchCounterUpdate: hasExternalSearch
+        ? onSearchCounterUpdate
+        : internalSearch.handleCounterUpdate
     })
+
+    const searchValue = showSearchBox ? internalSearch.searchTerm : EMPTY_STRING
 
     const jsonValue = useOnlyMatching({
       allowSearch: options.allowSearch,
@@ -226,7 +353,6 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
     const classes = clsx({
       'text-editor-wrapper': true,
       'read-only': readOnly,
-      'hide-search': !options.allowSearch,
       'text-editor-wrapper-with-copy': allowCopy,
       'text-editor-wrapper-only-matching-lines': onlyMatching,
       'disable-folding': !!(lines && lines.length > 0),
@@ -261,6 +387,25 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
               />
             )}
           </div>
+        ) : null}
+        {showSearchBox ? (
+          <ChunkSearchBox
+            currentMatch={internalSearch.counter.current}
+            exceeded={internalSearch.exceeded}
+            isCaseSensitive={internalSearch.isCaseSensitive}
+            isRegex={internalSearch.isRegex}
+            isWholeWord={internalSearch.isWholeWord}
+            onCaseSensitiveChange={internalSearch.setIsCaseSensitive}
+            onClose={() => setDismissed(true)}
+            onNext={internalSearch.handleNext}
+            onPrev={internalSearch.handlePrev}
+            onRegexChange={internalSearch.setIsRegex}
+            onSearchTermChange={setSearchTerm}
+            onWholeWordChange={internalSearch.setIsWholeWord}
+            searchInputRef={searchInputRef}
+            searchTerm={internalSearch.searchTerm}
+            totalMatches={internalSearch.counter.total}
+          />
         ) : null}
         <Suspense fallback={<Loader />}>
           <AceEditor

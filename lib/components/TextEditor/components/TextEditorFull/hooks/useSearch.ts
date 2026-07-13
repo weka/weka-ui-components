@@ -1,7 +1,11 @@
+import type { CountMatchesOptions } from '../workers/countMatches'
 import type { IAceEditor } from 'react-ace/lib/types'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
+
 import { EMPTY_STRING } from '#consts'
+
+import useSearchWorker from './useSearchWorker'
 
 export const SEARCH_DIRECTIONS = {
   NEXT: 'next',
@@ -43,8 +47,59 @@ function readCounter(
   }
 }
 
+function clearHiddenSearchBox(editor: IAceEditor) {
+  const searchBox = getSearchBox(editor)
+  if (searchBox) {
+    searchBox.searchInput.value = EMPTY_STRING
+    searchBox.$syncOptions()
+  }
+}
+
+/**
+ * Used when there are too many matches for Ace's highlight-all rendering:
+ * clears the engine searchbox and only selects the nearest match
+ */
+function selectSingleMatch(
+  editor: IAceEditor,
+  term: string,
+  options: CountMatchesOptions
+) {
+  clearHiddenSearchBox(editor)
+  editor.find(term, {
+    regExp: options.isRegex,
+    caseSensitive: options.caseSensitive,
+    wholeWord: options.wholeWord,
+    skipCurrent: false,
+    backwards: false,
+    wrap: true
+  })
+}
+
+function syncHiddenSearchBox(
+  editor: IAceEditor,
+  term: string,
+  options: CountMatchesOptions,
+  onCounter: ((current: number, total: number) => void) | undefined
+) {
+  if (!getSearchBox(editor)) {
+    editor.execCommand('find')
+    getSearchBox(editor)?.searchInput?.blur()
+  }
+  const searchBox = getSearchBox(editor)
+  if (searchBox) {
+    searchBox.searchInput.value = term
+    searchBox.regExpOption.checked = options.isRegex
+    if (searchBox.caseSensitiveOption) {
+      searchBox.caseSensitiveOption.checked = options.caseSensitive
+    }
+    if (searchBox.wholeWordOption) {
+      searchBox.wholeWordOption.checked = options.wholeWord
+    }
+    readCounter(searchBox, onCounter)
+  }
+}
+
 function useSearch({
-  allowSearch,
   editorReady,
   editor,
   value,
@@ -52,11 +107,11 @@ function useSearch({
   externalSearchIsRegex = false,
   externalSearchCaseSensitive = false,
   externalSearchWholeWord = false,
+  externalSearchExceeded = false,
   externalSearchAction,
   onSearchBoundary,
   onSearchCounterUpdate
 }: {
-  allowSearch: boolean
   editorReady: boolean
   editor?: IAceEditor
   value: string
@@ -64,98 +119,115 @@ function useSearch({
   externalSearchIsRegex?: boolean
   externalSearchCaseSensitive?: boolean
   externalSearchWholeWord?: boolean
+  externalSearchExceeded?: boolean
   externalSearchAction?: ExternalSearchAction
   onSearchBoundary?: (direction: SearchDirection) => void
-  onSearchCounterUpdate?: (current: number, chunkTotal: number) => void
+  onSearchCounterUpdate?: (
+    current: number,
+    chunkTotal: number,
+    exceeded?: boolean
+  ) => void
 }) {
-  const [searchValue, setSearchValueState] = useState(EMPTY_STRING)
-
-  const searchValueRef = useRef(searchValue)
-  searchValueRef.current = searchValue
-
   const lastActionKeyRef = useRef(-1)
   const onSearchBoundaryRef = useRef(onSearchBoundary)
   onSearchBoundaryRef.current = onSearchBoundary
   const onSearchCounterUpdateRef = useRef(onSearchCounterUpdate)
   onSearchCounterUpdateRef.current = onSearchCounterUpdate
 
-  useEffect(() => {
-    if (!editor) {
-      return
-    }
+  const { setContent, countMatchesAsync } = useSearchWorker()
 
-    if (allowSearch) {
-      editor.execCommand('find')
-      const searchBox = getSearchBox(editor)
-
-      if (searchBox?.searchInput) {
-        searchBox.searchInput.value = searchValueRef.current
-      }
-
-      editor.execCommand('find')
-    }
-  }, [allowSearch, editor, value])
+  const singleMatchModeRef = useRef(false)
+  const localCountCappedRef = useRef(false)
+  const localTotalRef = useRef(0)
 
   useEffect(() => {
-    if (allowSearch && editorReady && editor) {
-      const onSearchChange = (e: Event) => {
-        const target = e.target as HTMLInputElement
-        setSearchValueState(target.value)
-      }
+    setContent(value)
+  }, [setContent, value])
 
-      const searchBox = getSearchBox(editor)
-      searchBox?.searchInput?.addEventListener('input', onSearchChange)
-
-      return () => {
-        searchBox?.searchInput?.removeEventListener('input', onSearchChange)
-      }
-    }
-  }, [allowSearch, editor, editorReady])
+  const reportExceededPosition = useCallback(
+    async (
+      activeEditor: IAceEditor,
+      term: string,
+      options: CountMatchesOptions
+    ) => {
+      const index = activeEditor.session
+        .getDocument()
+        .positionToIndex(activeEditor.getSelectionRange().start, 0)
+      const { count } = await countMatchesAsync(term, options, index)
+      const total = localTotalRef.current
+      onSearchCounterUpdateRef.current?.(
+        Math.min(count + 1, total),
+        total,
+        localCountCappedRef.current
+      )
+    },
+    [countMatchesAsync]
+  )
 
   useEffect(() => {
     if (externalSearchTerm && editor && editorReady) {
+      let cancelled = false
+
+      const applyTerm = async () => {
+        const options = {
+          isRegex: externalSearchIsRegex,
+          caseSensitive: externalSearchCaseSensitive,
+          wholeWord: externalSearchWholeWord
+        }
+        const { count, exceeded } = await countMatchesAsync(
+          externalSearchTerm,
+          options
+        )
+        if (cancelled) {
+          return
+        }
+        const tooManyMatches = exceeded || externalSearchExceeded
+        singleMatchModeRef.current = tooManyMatches
+        localCountCappedRef.current = exceeded
+        localTotalRef.current = count
+
+        if (tooManyMatches) {
+          selectSingleMatch(editor, externalSearchTerm, options)
+          await reportExceededPosition(editor, externalSearchTerm, options)
+          return
+        }
+
+        syncHiddenSearchBox(
+          editor,
+          externalSearchTerm,
+          options,
+          onSearchCounterUpdateRef.current
+        )
+      }
+
       // Ace needs time to process the search and update its counter after $syncOptions
       const timerId = setTimeout(() => {
-        if (!getSearchBox(editor)) {
-          editor.execCommand('find')
-          getSearchBox(editor)?.searchInput?.blur()
-        }
-        const searchBox = getSearchBox(editor)
-        if (searchBox) {
-          searchBox.searchInput.value = externalSearchTerm
-          searchBox.regExpOption.checked = externalSearchIsRegex
-          if (
-            searchBox.caseSensitiveOption &&
-            externalSearchCaseSensitive !== undefined
-          ) {
-            searchBox.caseSensitiveOption.checked = externalSearchCaseSensitive
-          }
-          if (
-            searchBox.wholeWordOption &&
-            externalSearchWholeWord !== undefined
-          ) {
-            searchBox.wholeWordOption.checked = externalSearchWholeWord
-          }
-          readCounter(searchBox, onSearchCounterUpdateRef.current)
-        }
+        void applyTerm()
       }, 50)
-      return () => clearTimeout(timerId)
-    } else if (!externalSearchTerm && editor) {
-      const searchBox = getSearchBox(editor)
-      if (searchBox) {
-        searchBox.searchInput.value = EMPTY_STRING
-        searchBox.$syncOptions()
+      return () => {
+        cancelled = true
+        clearTimeout(timerId)
       }
+    } else if (!externalSearchTerm && editor) {
+      singleMatchModeRef.current = false
+      localCountCappedRef.current = false
+      localTotalRef.current = 0
+      clearHiddenSearchBox(editor)
       onSearchCounterUpdateRef.current?.(0, 0)
+    } else {
+      // waiting for the editor to mount
     }
   }, [
     externalSearchTerm,
     externalSearchIsRegex,
     externalSearchCaseSensitive,
     externalSearchWholeWord,
+    externalSearchExceeded,
     editor,
     editorReady,
-    value
+    value,
+    countMatchesAsync,
+    reportExceededPosition
   ])
 
   useEffect(() => {
@@ -181,6 +253,14 @@ function useSearch({
       }
 
       const reportCounter = () => {
+        if (singleMatchModeRef.current) {
+          void reportExceededPosition(editor, externalSearchTerm, {
+            isRegex: externalSearchIsRegex,
+            caseSensitive: externalSearchCaseSensitive,
+            wholeWord: externalSearchWholeWord
+          })
+          return
+        }
         const searchBox = getSearchBox(editor)
         if (searchBox) {
           readCounter(searchBox, onSearchCounterUpdateRef.current)
@@ -238,10 +318,9 @@ function useSearch({
     externalSearchWholeWord,
     editor,
     editorReady,
-    value
+    value,
+    reportExceededPosition
   ])
-
-  return searchValue
 }
 
 export default useSearch
