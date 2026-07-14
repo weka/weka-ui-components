@@ -1,6 +1,8 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { EMPTY_STRING } from '#v2/utils/consts'
+
 import { FileUpload } from './FileUpload'
 
 const DEFAULT_BUTTON_TEXT = 'Choose File'
@@ -59,6 +61,24 @@ describe('FileUpload - User Interactions', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1)
     expect(onChange).toHaveBeenCalledWith(file)
+  })
+
+  it('fires onChange again when the same file is re-selected', () => {
+    const onChange = vi.fn()
+    render(
+      <FileUpload {...createProps({ onChange, dataTestId: DATA_TEST_ID })} />
+    )
+
+    const file = new File(['content'], 'test.pem', { type: 'text/plain' })
+    const input = screen.getByTestId<HTMLInputElement>(DATA_TEST_ID)
+
+    fireEvent.change(input, { target: { files: [file] } })
+    expect(input.value).toBe(EMPTY_STRING)
+
+    fireEvent.change(input, { target: { files: [file] } })
+
+    expect(onChange).toHaveBeenCalledTimes(2)
+    expect(onChange).toHaveBeenNthCalledWith(2, file)
   })
 
   it('calls onChange with null when no file is selected', () => {

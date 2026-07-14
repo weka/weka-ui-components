@@ -45,16 +45,16 @@
     background: var(--gray-150-800);
   }
 
-  &:focus-within:not([data-disabled='true']) {
-    border-color: var(--purple-500);
-    box-shadow: 0 0 0 2px rgb(from var(--purple-500) r g b / 20%);
-    outline: none;
-  }
-
   &[data-disabled='true'] {
     opacity: 0.6;
     cursor: not-allowed;
   }
+}
+
+.hiddenInput:focus-visible + .button:not([data-disabled='true']) {
+  border-color: var(--purple-500);
+  box-shadow: 0 0 0 2px rgb(from var(--purple-500) r g b / 20%);
+  outline: none;
 }
 
 .fileName {

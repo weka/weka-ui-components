@@ -30,6 +30,7 @@ export function FileUpload({
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null
     onChange(file)
+    e.target.value = EMPTY_STRING
   }
 
   return (
