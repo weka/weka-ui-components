@@ -10,6 +10,7 @@ vi.mock('../../hooks', () => ({
 }))
 
 const MENU_CONTENT = 'Menu Content'
+const POPOVER_CLASS_SELECTOR = '[class*="popover"]'
 
 function createMockAnchorRef() {
   const mockElement = document.createElement('button')
@@ -123,7 +124,7 @@ describe('MenuPopover', () => {
         </MenuPopover>
       )
 
-      const popover = document.body.querySelector('[class*="popover"]')
+      const popover = document.body.querySelector(POPOVER_CLASS_SELECTOR)
       expect(popover).toHaveStyle({ position: 'fixed' })
     })
   })
@@ -152,6 +153,39 @@ describe('MenuPopover', () => {
       expect(
         screen.getByRole('button', { name: 'Option 3' })
       ).toBeInTheDocument()
+    })
+  })
+
+  describe('Compact variant', () => {
+    it('applies the compact modifier class when compact is true', () => {
+      const anchorRef = createMockAnchorRef()
+      render(
+        <MenuPopover
+          anchorRef={anchorRef as unknown as RefObject<HTMLElement>}
+          compact
+          onClose={vi.fn()}
+          open
+        >
+          <div>{MENU_CONTENT}</div>
+        </MenuPopover>
+      )
+      const popover = document.body.querySelector(POPOVER_CLASS_SELECTOR)
+      expect(popover?.className).toMatch(/compact/)
+    })
+
+    it('does not apply the compact modifier class by default', () => {
+      const anchorRef = createMockAnchorRef()
+      render(
+        <MenuPopover
+          anchorRef={anchorRef as unknown as RefObject<HTMLElement>}
+          onClose={vi.fn()}
+          open
+        >
+          <div>{MENU_CONTENT}</div>
+        </MenuPopover>
+      )
+      const popover = document.body.querySelector(POPOVER_CLASS_SELECTOR)
+      expect(popover?.className).not.toMatch(/compact/)
     })
   })
 

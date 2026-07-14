@@ -24,7 +24,7 @@ const createTableMock = (
     getState: () => ({ columnVisibility }),
     getFilteredRowModel: () => ({ rows: [] }),
     setColumnVisibility
-  }) as unknown as MockTable
+  } as unknown as MockTable)
 
 const COLUMNS = [
   { accessorKey: 'name', header: 'Name' },
@@ -32,6 +32,8 @@ const COLUMNS = [
 ]
 const SAMPLE_DATA = [{ name: 'a', region: 'us-east-1' }]
 const SETTINGS_BUTTON_TESTID = 'table-settings-button'
+const DOWNLOAD_BUTTON_TESTID = 'table-download-button'
+const TABLE_TITLE = 'Clusters'
 const NAME_OPTION_TESTID = 'table-settings-column-option-name'
 const REGION_OPTION_TESTID = 'table-settings-column-option-region'
 const CHECKBOX_TESTID = 'custom-checkbox'
@@ -55,11 +57,11 @@ describe('TableHeader', () => {
     render(
       <TableHeader
         count={7}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
     expect(screen.getByTestId('table-header-title')).toHaveTextContent(
-      'Clusters'
+      TABLE_TITLE
     )
     expect(screen.getByText('(7)')).toBeInTheDocument()
   })
@@ -69,18 +71,30 @@ describe('TableHeader', () => {
       <TableHeader
         columns={COLUMNS}
         data={[]}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
-    expect(screen.getByTestId('table-download-button')).toBeDisabled()
+    expect(screen.getByTestId(DOWNLOAD_BUTTON_TESTID)).toBeDisabled()
     rerender(
       <TableHeader
         columns={COLUMNS}
         data={SAMPLE_DATA}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
-    expect(screen.getByTestId('table-download-button')).not.toBeDisabled()
+    expect(screen.getByTestId(DOWNLOAD_BUTTON_TESTID)).not.toBeDisabled()
+  })
+
+  it('hides the csv download button when showCsvDownload is false', () => {
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        showCsvDownload={false}
+        title='Volumes'
+      />
+    )
+    expect(screen.queryByTestId(DOWNLOAD_BUTTON_TESTID)).not.toBeInTheDocument()
   })
 
   it('opens the settings menu with a row per column', () => {
@@ -88,7 +102,7 @@ describe('TableHeader', () => {
       <TableHeader
         columns={COLUMNS}
         data={SAMPLE_DATA}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
     fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
@@ -103,7 +117,7 @@ describe('TableHeader', () => {
         columns={COLUMNS}
         data={SAMPLE_DATA}
         table={createTableMock({ region: false })}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
     fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
@@ -127,7 +141,7 @@ describe('TableHeader', () => {
         columns={COLUMNS}
         data={SAMPLE_DATA}
         table={createTableMock({ region: false }, setColumnVisibility)}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
     fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
@@ -144,7 +158,7 @@ describe('TableHeader', () => {
         columns={COLUMNS}
         data={SAMPLE_DATA}
         table={createTableMock({})}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
     fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
@@ -167,7 +181,7 @@ describe('TableHeader', () => {
         activeFilters={ACTIVE_FILTERS}
         onClearAllFilters={vi.fn()}
         onRemoveFilter={vi.fn()}
-        title='Clusters'
+        title={TABLE_TITLE}
       />
     )
     expect(screen.getByTestId('filter-chip-region')).toBeInTheDocument()

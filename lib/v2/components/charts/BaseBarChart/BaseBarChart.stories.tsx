@@ -3,8 +3,11 @@ import type { CSSProperties } from 'react'
 
 import { Bar, Cell } from 'recharts'
 
+import { EMPTY_STRING } from '#consts'
+
+import { BarChartTick } from '../BarChartTick'
 import { chartGradientsVertical } from '../chartGradients'
-import { type ChartDataPoint } from '../chartTypes'
+import { BAR_CHART_ORIENTATIONS, type ChartDataPoint } from '../chartTypes'
 import { BaseBarChart } from './BaseBarChart'
 
 const meta: Meta<typeof BaseBarChart> = {
@@ -36,6 +39,46 @@ export const Default: Story = {
       <BaseBarChart
         data={DATA}
         dataKey='alerts'
+      />
+    </div>
+  )
+}
+
+/**
+ * Horizontal orientation: the category axis moves to Y and the value axis to X.
+ */
+export const Horizontal: Story = {
+  render: () => (
+    <div style={wrapperStyle}>
+      <BaseBarChart
+        data={DATA}
+        dataKey='alerts'
+        orientation={BAR_CHART_ORIENTATIONS.HORIZONTAL}
+      />
+    </div>
+  )
+}
+
+/**
+ * Rotated (-45°) x-axis tick labels via `BarChartTick`, with `angledTicks`
+ * reserving the extra bottom margin so long labels aren't clipped.
+ */
+export const AngledTicks: Story = {
+  render: () => (
+    <div style={wrapperStyle}>
+      <BaseBarChart
+        angledTicks
+        data={DATA}
+        dataKey='alerts'
+        xAxis={{
+          tick: (
+            <BarChartTick
+              payload={{ value: EMPTY_STRING }}
+              x={0}
+              y={0}
+            />
+          )
+        }}
       />
     </div>
   )

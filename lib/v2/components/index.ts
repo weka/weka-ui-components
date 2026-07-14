@@ -40,7 +40,11 @@ export { BarChartTick } from './charts/BarChartTick'
 export { BarWithGap } from './charts/BarWithGap'
 export type { BaseBarChartProps } from './charts/BaseBarChart'
 export { BaseBarChart } from './charts/BaseBarChart'
-export type { BaseComposedChartProps } from './charts/BaseComposedChart'
+export type {
+  BaseComposedChartProps,
+  ChartMouseState,
+  ChartSelectionRange
+} from './charts/BaseComposedChart'
 export { BaseComposedChart } from './charts/BaseComposedChart'
 export type { BaseLineChartProps } from './charts/BaseLineChart'
 export { BaseLineChart } from './charts/BaseLineChart'
@@ -70,6 +74,7 @@ export {
   getChartGradientsVertical
 } from './charts/chartGradients'
 export type {
+  BarChartOrientation,
   ChartAxisConfig,
   ChartDataPoint,
   ChartMargin,
@@ -82,7 +87,7 @@ export type {
   XAxisExtendedConfig,
   YAxisExtendedConfig
 } from './charts/chartTypes'
-export { SERIES_TYPES } from './charts/chartTypes'
+export { BAR_CHART_ORIENTATIONS, SERIES_TYPES } from './charts/chartTypes'
 export type { CustomLegendProps } from './charts/CustomLegend'
 export { CustomLegend } from './charts/CustomLegend'
 export { CustomTick } from './charts/CustomTick'

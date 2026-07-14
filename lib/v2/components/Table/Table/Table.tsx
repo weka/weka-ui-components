@@ -105,6 +105,7 @@ export interface TableProps<TData = unknown> {
   csvFileTitle?: string
   getCsvData?: () => Promise<readonly TData[]>
   onCsvError?: (message: string) => void
+  showCsvDownload?: boolean
   dataTestId?: string
   rowActions?: RowAction<TData>[]
   pinFirstColumn?: boolean
@@ -162,6 +163,7 @@ export function Table<TData = unknown>({
   csvFileTitle,
   getCsvData,
   onCsvError,
+  showCsvDownload = true,
   dataTestId,
   activeFilters = EMPTY_ACTIVE_FILTERS,
   onFiltersChange,
@@ -464,6 +466,7 @@ export function Table<TData = unknown>({
         onGlobalSearch={handleGlobalSearchWithEffects}
         onRemoveFilter={handleRemoveFilter}
         onResetColumnSizing={handleResetColumnSizing}
+        showCsvDownload={showCsvDownload}
         showFilterChips={showFilterChips}
         showSearch={showSearch}
         table={table}

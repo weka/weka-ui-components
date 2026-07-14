@@ -58,6 +58,33 @@ describe('CustomLegend', () => {
     )
   })
 
+  it('fills an area series swatch with its solid color', () => {
+    render(<CustomLegend series={SERIES} />)
+
+    const swatch = screen
+      .getByRole('button', { name: 'Write' })
+      .querySelector('div') as HTMLElement
+    expect(swatch.style.backgroundColor).toBe('var(--aqua-500)')
+  })
+
+  it('resolves a gradient-fill series color to a solid swatch color', () => {
+    const gradientSeries: SeriesConfig[] = [
+      {
+        key: 'total',
+        name: 'Total',
+        color: 'url(#gradient-blue-fade-500)',
+        type: SERIES_TYPES.AREA
+      }
+    ]
+
+    render(<CustomLegend series={gradientSeries} />)
+
+    const swatch = screen
+      .getByRole('button', { name: 'Total' })
+      .querySelector('div') as HTMLElement
+    expect(swatch.style.backgroundColor).toBe('var(--blue-500)')
+  })
+
   it('does not render the action buttons by default', () => {
     render(<CustomLegend series={SERIES} />)
 

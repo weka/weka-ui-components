@@ -31,6 +31,12 @@ describe('axisConfigBuilders', () => {
 
       expect(config).toEqual({ tick, tickFormatter, height: 30 })
     })
+
+    it('passes through explicit ticks', () => {
+      const ticks = [10, 100, 1000]
+
+      expect(buildXAxisConfig({ ticks })).toEqual({ ticks })
+    })
   })
 
   describe('buildXAxisConfig hide passthrough', () => {

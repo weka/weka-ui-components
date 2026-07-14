@@ -5,9 +5,11 @@ import type { ActiveShape } from 'recharts/types/util/types'
 import {
   Area,
   Bar,
+  Brush,
   CartesianGrid,
   ComposedChart,
   Line,
+  ReferenceArea,
   Tooltip,
   XAxis,
   YAxis
@@ -17,11 +19,7 @@ import { EMPTY_SET } from '#v2/utils/consts'
 
 import { EmptyChartState } from '../../EmptyChartState'
 import { LoadingState, STATE_TYPES } from '../../LoadingState'
-import {
-  CHART_COLOR_SCHEME,
-  CHART_COLOR_VARS,
-  CHART_COLORS
-} from '../chartConstants'
+import { CHART_COLOR_SCHEME, CHART_COLORS } from '../chartConstants'
 import { getChartGradientsFade } from '../chartGradients'
 import {
   type ChartDataPoint,
@@ -40,6 +38,7 @@ import {
   buildYAxisStyleProps
 } from '../utils/axisConfigBuilders'
 import { calculateChartDomain } from '../utils/chartDomainUtils'
+import { resolveSeriesColor } from '../utils/seriesColor'
 
 const DEFAULT_MARGIN = { top: 20, right: 30, left: -20, bottom: 0 }
 const MIN_TICK_GAP = 40
@@ -47,9 +46,36 @@ const ANIMATION_DURATION = 200
 const X_AXIS_PADDING = { left: 20, right: 20 }
 const AREA_FILL_OPACITY = 0.33
 const DEFAULT_STROKE_WIDTH = 3
-const GRADIENT_REGEX = /gradient-(\w+)-fade/
+/** Height in pixels of the optional `<Brush>` range selector. */
+const BRUSH_HEIGHT = 40
+/**
+ * Width in pixels of the `<Brush>` traveller handles. Matches the grabbable
+ * width used for other drag affordances in the design system (e.g.
+ * `TableDrawer`'s resize handle) — recharts' 5px default is too thin to grab.
+ */
+const BRUSH_TRAVELLER_WIDTH = 8
+/** Stroke dash pattern applied to `<Line>` series configured with `dashed: true`. */
+const DASHED_LINE_STROKE_DASHARRAY = '6 4'
+/** Fill opacity of the drag-to-select highlight overlay (`referenceArea`). */
+const SELECTION_FILL_OPACITY = 0.2
 
 type TooltipCursor = boolean | ReactElement | SVGProps<SVGElement>
+
+/** Inclusive x-axis span of the drag-to-select zoom highlight overlay. */
+export interface ChartSelectionRange {
+  x1: number | string
+  x2: number | string
+}
+
+/**
+ * The subset of recharts' internal chart state that drag-to-select consumers
+ * read from the chart mouse handlers. `activeLabel` is the x-axis value under
+ * the cursor; `activeTooltipIndex` is that point's index in `data`.
+ */
+export interface ChartMouseState {
+  activeLabel?: string | number
+  activeTooltipIndex?: number
+}
 
 export interface BaseComposedChartProps {
   data: ChartDataPoint[]
@@ -60,6 +86,11 @@ export interface BaseComposedChartProps {
   margin?: ChartMargin
   xAxis?: XAxisExtendedConfig
   yAxis?: YAxisExtendedConfig
+  /**
+   * Config for a secondary right-oriented `<YAxis>`, rendered when any
+   * series in `series` sets `yAxisId`.
+   */
+  rightYAxis?: YAxisExtendedConfig
   tooltip?: ReactElement
   children?: ReactNode
   hiddenMetrics?: Set<string>
@@ -73,18 +104,18 @@ export interface BaseComposedChartProps {
   extraClass?: string
   syncId?: string
   syncMethod?: ChartSyncMethod
-}
-
-function extractStrokeColor(color: string): string {
-  if (!color.startsWith('url(#gradient-')) {
-    return color
-  }
-  const match = GRADIENT_REGEX.exec(color)
-  if (match?.[1]) {
-    const colorName = match[1] as keyof typeof CHART_COLOR_VARS
-    return CHART_COLOR_VARS[colorName] ?? color
-  }
-  return color
+  /** Renders a recharts `<Brush>` range selector bound to the x-axis dataKey. Defaults to `false`. */
+  showBrush?: boolean
+  /**
+   * Highlight overlay spanning `x1`–`x2` on the x-axis, drawn while the user
+   * drags to select a zoom range. Pair with the `onMouseDown`/`onMouseMove`/
+   * `onMouseUp` handlers (which receive recharts' chart state, including the
+   * hovered `activeLabel`) to implement drag-to-select zoom without a `<Brush>`.
+   */
+  referenceArea?: ChartSelectionRange | null
+  onMouseDown?: (state: ChartMouseState) => void
+  onMouseMove?: (state: ChartMouseState) => void
+  onMouseUp?: (state: ChartMouseState) => void
 }
 
 export function BaseComposedChart({
@@ -96,6 +127,7 @@ export function BaseComposedChart({
   margin = DEFAULT_MARGIN,
   xAxis,
   yAxis,
+  rightYAxis,
   tooltip,
   children,
   hiddenMetrics = EMPTY_SET,
@@ -108,7 +140,12 @@ export function BaseComposedChart({
   areaStackId,
   extraClass,
   syncId,
-  syncMethod
+  syncMethod,
+  showBrush = false,
+  referenceArea,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp
 }: Readonly<BaseComposedChartProps>) {
   if (isLoading) {
     return <LoadingState type={STATE_TYPES.LOADING} />
@@ -125,6 +162,9 @@ export function BaseComposedChart({
   const defaultGradients =
     gradients ?? getChartGradientsFade([...CHART_COLOR_SCHEME])
   const { domain: paddedDomain } = calculateChartDomain(data, xAxis)
+  const secondaryAxisSeries = series.find(
+    (seriesItem) => seriesItem.yAxisId !== undefined
+  )
 
   const renderSeries = series.map((seriesItem, index) => {
     const color = getColorForSeries
@@ -146,9 +186,10 @@ export function BaseComposedChart({
           hide={isHidden}
           name={seriesItem.name}
           stackId={areaStackId}
-          stroke={extractStrokeColor(color)}
+          stroke={resolveSeriesColor(color)}
           strokeWidth={strokeWidth}
           type='monotone'
+          yAxisId={seriesItem.yAxisId}
         />
       )
     }
@@ -164,6 +205,7 @@ export function BaseComposedChart({
           name={seriesItem.name}
           shape={customBarShape}
           stackId={barStackId}
+          yAxisId={seriesItem.yAxisId}
         />
       )
     }
@@ -179,6 +221,10 @@ export function BaseComposedChart({
         stroke={color}
         strokeWidth={strokeWidth}
         type='monotone'
+        yAxisId={seriesItem.yAxisId}
+        strokeDasharray={
+          seriesItem.dashed ? DASHED_LINE_STROKE_DASHARRAY : undefined
+        }
       />
     )
   })
@@ -188,6 +234,9 @@ export function BaseComposedChart({
       <ComposedChart
         data={data}
         margin={margin}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
         syncId={syncId}
         syncMethod={syncMethod}
       >
@@ -218,6 +267,16 @@ export function BaseComposedChart({
           {...buildYAxisStyleProps(yAxis)}
           {...buildYAxisConfig(yAxis)}
         />
+        {secondaryAxisSeries ? (
+          <YAxis
+            domain={rightYAxis?.domain}
+            orientation='right'
+            tickLine={false}
+            yAxisId={secondaryAxisSeries.yAxisId}
+            {...buildYAxisStyleProps(rightYAxis)}
+            {...buildYAxisConfig(rightYAxis)}
+          />
+        ) : null}
         {tooltip ? (
           <Tooltip
             allowEscapeViewBox={{ x: false, y: false }}
@@ -228,6 +287,26 @@ export function BaseComposedChart({
           />
         ) : null}
         {renderSeries}
+        {referenceArea ? (
+          <ReferenceArea
+            fill={CHART_COLORS.AXIS_STROKE}
+            fillOpacity={SELECTION_FILL_OPACITY}
+            stroke={CHART_COLORS.AXIS_STROKE}
+            strokeOpacity={0.3}
+            x1={referenceArea.x1}
+            x2={referenceArea.x2}
+          />
+        ) : null}
+        {showBrush ? (
+          <Brush
+            dataKey={xAxis?.dataKey}
+            fill={CHART_COLORS.GRID_STROKE}
+            height={BRUSH_HEIGHT}
+            stroke={CHART_COLORS.AXIS_STROKE}
+            tickFormatter={xAxis?.tickFormatter}
+            travellerWidth={BRUSH_TRAVELLER_WIDTH}
+          />
+        ) : null}
         {children}
       </ComposedChart>
     </StableChartContainer>

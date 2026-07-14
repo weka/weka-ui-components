@@ -10,6 +10,17 @@
   padding: 12px;
 }
 
+.compact {
+  width: max-content;
+  min-width: 74px;
+  padding: 4px;
+}
+
+.compact .menuItem {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
 .menuItem {
   display: flex;
   align-items: center;

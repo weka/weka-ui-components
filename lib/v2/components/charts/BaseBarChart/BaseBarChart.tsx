@@ -7,6 +7,8 @@ import { LoadingState, STATE_TYPES } from '../../LoadingState'
 import { CHART_COLOR_SCHEME, CHART_COLORS } from '../chartConstants'
 import { getChartGradientsVertical } from '../chartGradients'
 import {
+  BAR_CHART_ORIENTATIONS,
+  type BarChartOrientation,
   type ChartDataPoint,
   type ChartMargin,
   type XAxisExtendedConfig,
@@ -21,6 +23,12 @@ import {
 } from '../utils/axisConfigBuilders'
 
 const DEFAULT_MARGIN = { top: 10, right: 30, left: -20, bottom: 0 }
+/**
+ * Bottom margin that fits BarChartTick's rotated (-45°) labels at their
+ * 13-character truncation limit and 11px font size without clipping, with no
+ * dead space below them.
+ */
+const ANGLED_TICK_BOTTOM_MARGIN = 40
 const MIN_TICK_GAP = 40
 const BAR_ANIMATION_DURATION = 200
 const DEFAULT_Y_DOMAIN_PADDING = 0.1
@@ -33,9 +41,26 @@ export interface BaseBarChartProps {
   isError?: boolean
   noData?: boolean
   margin?: ChartMargin
+  /**
+   * Reserves extra bottom margin for a rotated x-axis tick label (e.g.
+   * `BarChartTick`, which renders at -45°) so it isn't clipped by the chart's
+   * fixed-height container. Ignored if an explicit `margin` prop is passed.
+   */
+  angledTicks?: boolean
+  /**
+   * Renders the bars horizontally (category axis on Y, value axis on X)
+   * instead of the default vertical layout. Defaults to `vertical`.
+   */
+  orientation?: BarChartOrientation
   xAxis?: XAxisExtendedConfig
   yAxis?: YAxisExtendedConfig
   barSize?: number
+  /**
+   * Minimum rendered length (value dimension) for each bar, in pixels. Keeps
+   * near-zero-value bars large enough to hover/click when the chart is
+   * interactive (`onBarClick`), mirroring recharts' `minPointSize`.
+   */
+  minPointSize?: number
   fill?: string
   tooltip?: ReactNode
   customShape?: ReactNode
@@ -80,8 +105,21 @@ function buildBarConfig(
   }
   if (onBarClick) {
     config.onClick = onBarClick
+    config.cursor = 'pointer'
   }
   return config
+}
+
+function resolveBarChartMargin(
+  margin: ChartMargin | undefined,
+  angledTicks: boolean
+): ChartMargin {
+  if (margin) {
+    return margin
+  }
+  return angledTicks
+    ? { ...DEFAULT_MARGIN, bottom: ANGLED_TICK_BOTTOM_MARGIN }
+    : DEFAULT_MARGIN
 }
 
 export function BaseBarChart({
@@ -91,10 +129,13 @@ export function BaseBarChart({
   isLoading = false,
   isError = false,
   noData = false,
-  margin = DEFAULT_MARGIN,
+  margin,
+  angledTicks = false,
+  orientation = BAR_CHART_ORIENTATIONS.VERTICAL,
   xAxis,
   yAxis,
   barSize = 30,
+  minPointSize,
   fill = 'url(#gradient-blue-600-400-vertical)',
   tooltip,
   customShape,
@@ -122,35 +163,60 @@ export function BaseBarChart({
     0,
     (dataMax: number) => dataMax + dataMax * DEFAULT_Y_DOMAIN_PADDING
   ]
+  const resolvedMargin = resolveBarChartMargin(margin, angledTicks)
+  const isHorizontal = orientation === BAR_CHART_ORIENTATIONS.HORIZONTAL
 
   return (
     <StableChartContainer>
       <BarChart
         data={data}
-        margin={margin}
+        layout={isHorizontal ? 'vertical' : undefined}
+        margin={resolvedMargin}
         {...buildBarChartConfig(barGap, barCategoryGap, maxBarSize, syncId)}
       >
         <defs>{getChartGradientsVertical([...CHART_COLOR_SCHEME])}</defs>
         <CartesianGrid
+          horizontal={!isHorizontal}
           opacity={1}
           stroke={CHART_COLORS.GRID_STROKE}
           strokeDasharray='2 2'
           strokeWidth={1}
-          vertical={false}
+          vertical={isHorizontal}
         />
-        <XAxis
-          dataKey={xAxisKey}
-          minTickGap={MIN_TICK_GAP}
-          tickLine={{ transform: 'translate(0, 1)', strokeWidth: 1 }}
-          {...buildXAxisStyleProps(xAxis)}
-          {...buildXAxisConfig(xAxis)}
-        />
-        <YAxis
-          domain={yAxisDomain}
-          tickLine={false}
-          {...buildYAxisStyleProps(yAxis)}
-          {...buildYAxisConfig(yAxis)}
-        />
+        {isHorizontal ? (
+          <XAxis
+            domain={yAxisDomain}
+            tickLine={false}
+            type='number'
+            {...buildYAxisStyleProps(yAxis)}
+            {...buildYAxisConfig(yAxis)}
+          />
+        ) : (
+          <XAxis
+            dataKey={xAxisKey}
+            minTickGap={MIN_TICK_GAP}
+            tickLine={{ transform: 'translate(0, 1)', strokeWidth: 1 }}
+            {...buildXAxisStyleProps(xAxis)}
+            {...buildXAxisConfig(xAxis)}
+          />
+        )}
+        {isHorizontal ? (
+          <YAxis
+            dataKey={xAxisKey}
+            minTickGap={MIN_TICK_GAP}
+            tickLine={{ transform: 'translate(0, 1)', strokeWidth: 1 }}
+            type='category'
+            {...buildXAxisStyleProps(xAxis)}
+            {...buildXAxisConfig(xAxis)}
+          />
+        ) : (
+          <YAxis
+            domain={yAxisDomain}
+            tickLine={false}
+            {...buildYAxisStyleProps(yAxis)}
+            {...buildYAxisConfig(yAxis)}
+          />
+        )}
         {tooltip ? (
           <Tooltip
             allowEscapeViewBox={{ x: false, y: false }}
@@ -168,6 +234,7 @@ export function BaseBarChart({
             barSize={barSize}
             dataKey={dataKey}
             fill={fill}
+            minPointSize={minPointSize}
             {...buildBarConfig(customShape, onBarClick)}
           />
         )}

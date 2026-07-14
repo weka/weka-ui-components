@@ -76,6 +76,7 @@ export interface TableHeaderProps<TData = unknown> {
   customFilters?: CustomFilters
   getCsvData?: () => Promise<readonly TData[]>
   onCsvError?: (message: string) => void
+  showCsvDownload?: boolean
 }
 
 function findNameColumn(
@@ -187,7 +188,8 @@ export function TableHeader({
   onGlobalSearch,
   customFilters,
   getCsvData,
-  onCsvError
+  onCsvError,
+  showCsvDownload = true
 }: Readonly<TableHeaderProps>) {
   const [showSettingsMenu, setShowSettingsMenu] = useState(false)
   const [menuPositionAbove, setMenuPositionAbove] = useState(false)
@@ -564,18 +566,20 @@ export function TableHeader({
           >
             <SettingsIcon variant='outline' />
           </button>
-          <button
-            className={styles.iconButton}
-            data-testid='table-download-button'
-            disabled={isDownloadDisabled}
-            onClick={() => void handleDownload()}
-            title='Download CSV'
-          >
-            <DownloadIcon
-              height={DOWNLOAD_ICON_SIZE}
-              width={DOWNLOAD_ICON_SIZE}
-            />
-          </button>
+          {showCsvDownload ? (
+            <button
+              className={styles.iconButton}
+              data-testid='table-download-button'
+              disabled={isDownloadDisabled}
+              onClick={() => void handleDownload()}
+              title='Download CSV'
+            >
+              <DownloadIcon
+                height={DOWNLOAD_ICON_SIZE}
+                width={DOWNLOAD_ICON_SIZE}
+              />
+            </button>
+          ) : null}
           {renderSettingsMenu()}
         </div>
       </div>
