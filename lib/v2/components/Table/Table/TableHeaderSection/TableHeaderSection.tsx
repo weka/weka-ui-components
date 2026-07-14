@@ -28,6 +28,7 @@ export interface TableHeaderSectionProps<TData> {
   customFilters?: CustomFilters
   getCsvData?: () => Promise<readonly TData[]>
   onCsvError?: (message: string) => void
+  showCsvDownload?: boolean
   onClearAllFilters: () => void
   onFilterChange: (filters: ActiveFilter[]) => void
   onGlobalSearch: (searchTerm: string) => void
@@ -72,6 +73,7 @@ export function TableHeaderSection<TData>({
   customFilters,
   getCsvData,
   onCsvError,
+  showCsvDownload,
   onClearAllFilters,
   onFilterChange,
   onGlobalSearch,
@@ -101,6 +103,7 @@ export function TableHeaderSection<TData>({
         onGlobalSearch={onGlobalSearch}
         onRemoveFilter={onRemoveFilter}
         onResetColumnSizing={onResetColumnSizing}
+        showCsvDownload={showCsvDownload}
         showFilterChips={showFilterChips}
         showSearch={showSearch}
         table={table as unknown as Table<unknown>}

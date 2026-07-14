@@ -1,6 +1,8 @@
 import type { Severity } from '#v2/utils/consts'
 import type { ReactNode } from 'react'
 
+import clsx from 'clsx'
+
 import { InfoIcon } from '../../icons'
 import { AlertBadge } from '../AlertBadge'
 import { Tooltip } from '../Tooltip'
@@ -16,6 +18,18 @@ export interface DashboardCardProps {
   children: ReactNode
   severity?: Severity
   dataTestId?: string
+  /**
+   * When true the card hugs its content height instead of the default fixed
+   * dashboard height. Use for compact summary cards (e.g. a single capacity
+   * readout) that shouldn't reserve a full chart-sized panel.
+   */
+  fitContent?: boolean
+  /**
+   * When true the card drops its own border, shadow and background so it can
+   * sit as one pane inside a shared outer frame (e.g. a split block whose two
+   * halves are separated by a divider rather than each being its own card).
+   */
+  frameless?: boolean
 }
 
 const MAX_DISPLAY_COUNT = 99
@@ -32,7 +46,9 @@ export function DashboardCard({
   severity,
   actions,
   children,
-  dataTestId
+  dataTestId,
+  fitContent = false,
+  frameless = false
 }: Readonly<DashboardCardProps>) {
   const getDisplayCount = (): string | null => {
     if (typeof count === 'number' && count > 0) {
@@ -44,8 +60,11 @@ export function DashboardCard({
 
   return (
     <div
-      className={styles.card}
       data-testid={dataTestId}
+      className={clsx(styles.card, {
+        [styles.fitContent]: fitContent,
+        [styles.frameless]: frameless
+      })}
     >
       <div className={styles.headerContainer}>
         <div className={styles.titleBlock}>

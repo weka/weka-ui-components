@@ -159,4 +159,36 @@ describe('DashboardCard', () => {
       expect(screen.getByRole('button', { name: 'Action' })).toBeInTheDocument()
     })
   })
+
+  describe('fitContent', () => {
+    it('applies the fit-content modifier class when fitContent is true', () => {
+      render(
+        <DashboardCard
+          {...createProps({ fitContent: true, dataTestId: TEST_ID })}
+        />
+      )
+      expect(screen.getByTestId(TEST_ID).className).toMatch(/fitContent/)
+    })
+
+    it('does not apply the fit-content modifier class by default', () => {
+      render(<DashboardCard {...createProps({ dataTestId: TEST_ID })} />)
+      expect(screen.getByTestId(TEST_ID).className).not.toMatch(/fitContent/)
+    })
+  })
+
+  describe('frameless', () => {
+    it('applies the frameless modifier class when frameless is true', () => {
+      render(
+        <DashboardCard
+          {...createProps({ frameless: true, dataTestId: TEST_ID })}
+        />
+      )
+      expect(screen.getByTestId(TEST_ID).className).toMatch(/frameless/)
+    })
+
+    it('does not apply the frameless modifier class by default', () => {
+      render(<DashboardCard {...createProps({ dataTestId: TEST_ID })} />)
+      expect(screen.getByTestId(TEST_ID).className).not.toMatch(/frameless/)
+    })
+  })
 })

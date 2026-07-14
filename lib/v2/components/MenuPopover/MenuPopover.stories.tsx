@@ -20,7 +20,9 @@ const wrapperStyle = {
   paddingTop: '40px'
 }
 
-function MenuPopoverExample() {
+function MenuPopoverExample({
+  compact = false
+}: Readonly<{ compact?: boolean }>) {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
 
@@ -34,6 +36,7 @@ function MenuPopoverExample() {
       </Button>
       <MenuPopover
         anchorRef={anchorRef as RefObject<HTMLElement>}
+        compact={compact}
         onClose={() => setOpen(false)}
         open={open}
       >
@@ -65,4 +68,8 @@ function MenuPopoverExample() {
 
 export const Interactive: Story = {
   render: () => <MenuPopoverExample />
+}
+
+export const Compact: Story = {
+  render: () => <MenuPopoverExample compact />
 }

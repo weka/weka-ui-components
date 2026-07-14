@@ -15,6 +15,10 @@ export default meta
 type Story = StoryObj<typeof DashboardCard>
 
 const cardStyle = { width: '400px' }
+const framedWrapperStyle = {
+  width: '400px',
+  border: '1px solid var(--gray-300-700)'
+}
 const contentTextStyle = { color: 'var(--text-primary)' }
 const iconBtnStyle = {
   background: 'none',
@@ -59,6 +63,32 @@ export const WithSeverityBadge: Story = {
         tooltip='Recent alerts and notifications'
       >
         <div style={contentTextStyle}>Content</div>
+      </DashboardCard>
+    </div>
+  )
+}
+
+export const FitContent: Story = {
+  render: () => (
+    <div style={cardStyle}>
+      <DashboardCard
+        fitContent
+        title='Filesystem Capacity'
+      >
+        <div style={contentTextStyle}>Compact summary content</div>
+      </DashboardCard>
+    </div>
+  )
+}
+
+export const Frameless: Story = {
+  render: () => (
+    <div style={framedWrapperStyle}>
+      <DashboardCard
+        frameless
+        title='Pane Inside A Shared Frame'
+      >
+        <div style={contentTextStyle}>No own border or shadow</div>
       </DashboardCard>
     </div>
   )

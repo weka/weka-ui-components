@@ -2,6 +2,7 @@ import clsx from 'clsx'
 
 import { Tooltip } from '../../Tooltip'
 import { SERIES_TYPES, type SeriesConfig } from '../chartTypes'
+import { resolveSeriesColor } from '../utils/seriesColor'
 
 import styles from './customLegend.module.scss'
 
@@ -32,6 +33,7 @@ export function CustomLegend({
       {series.map((seriesItem) => {
         const isHidden = hiddenMetrics?.has(seriesItem.key)
         const isLine = seriesItem.type === SERIES_TYPES.LINE
+        const swatchColor = resolveSeriesColor(seriesItem.color)
         return (
           <button
             key={seriesItem.key}
@@ -42,8 +44,8 @@ export function CustomLegend({
             <div
               className={clsx(styles.legendDot, isLine && styles.line)}
               style={{
-                backgroundColor: isLine ? 'transparent' : seriesItem.color,
-                borderColor: isLine ? seriesItem.color : 'transparent'
+                backgroundColor: isLine ? 'transparent' : swatchColor,
+                borderColor: isLine ? swatchColor : 'transparent'
               }}
             />
             <Tooltip

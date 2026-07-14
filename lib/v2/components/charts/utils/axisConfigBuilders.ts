@@ -52,6 +52,9 @@ export function buildXAxisConfig(
   if (xAxis?.tick) {
     config.tick = xAxis.tick
   }
+  if (xAxis?.ticks !== undefined) {
+    config.ticks = xAxis.ticks
+  }
   if (xAxis?.tickMargin !== undefined) {
     config.tickMargin = xAxis.tickMargin
   }

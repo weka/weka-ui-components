@@ -130,3 +130,77 @@ function IopsPerformanceChart() {
 export const IopsReadWriteTotal: Story = {
   render: () => <IopsPerformanceChart />
 }
+
+/**
+ * Mirrors dashboard's CapacityOverTime usage: drag across the plot to
+ * highlight a range via `referenceArea` (paired with the mouse handlers) —
+ * the non-brush drag-to-select zoom affordance.
+ */
+export const IopsWithSelectionOverlay: Story = {
+  render: () => (
+    <div style={wrapperStyle}>
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+        referenceArea={{
+          x1: Number(DATA[1].timestamp),
+          x2: Number(DATA[3].timestamp)
+        }}
+        tooltip={
+          <CustomTooltip
+            range={RANGE}
+            series={SERIES}
+            valueFormatter={formatIops}
+          />
+        }
+        xAxis={{
+          dataKey: 'timestamp',
+          type: 'number',
+          tick: <CustomTick range={RANGE} />,
+          tickMargin: TICK_MARGIN
+        }}
+        yAxis={{
+          tickFormatter: (value) => Number(value).toLocaleString()
+        }}
+      />
+    </div>
+  )
+}
+
+/**
+ * Mirrors dashboard's CapacityOverTime usage: a brush for scrubbing the
+ * visible time range on top of the same IOPS series.
+ */
+export const IopsReadWriteTotalWithBrush: Story = {
+  render: () => (
+    <div style={wrapperStyle}>
+      <BaseComposedChart
+        barStackId='iops'
+        data={DATA}
+        series={SERIES}
+        showBrush
+        customBarShape={
+          BarWithGap as ComponentProps<
+            typeof BaseComposedChart
+          >['customBarShape']
+        }
+        tooltip={
+          <CustomTooltip
+            range={RANGE}
+            series={SERIES}
+            valueFormatter={formatIops}
+          />
+        }
+        xAxis={{
+          dataKey: 'timestamp',
+          type: 'number',
+          tick: <CustomTick range={RANGE} />,
+          tickMargin: TICK_MARGIN
+        }}
+        yAxis={{
+          tickFormatter: (value) => Number(value).toLocaleString()
+        }}
+      />
+    </div>
+  )
+}

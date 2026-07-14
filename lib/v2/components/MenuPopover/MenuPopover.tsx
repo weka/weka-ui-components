@@ -19,6 +19,12 @@ export interface MenuPopoverProps {
   children: ReactNode
   /** Extra class applied to the popover container (e.g. to widen it). */
   extraClass?: string
+  /**
+   * Renders a small context-menu-sized popover: content-width instead of the
+   * default fixed width, tighter padding, and smaller menu items. Use for
+   * short single-action menus (e.g. a drilldown confirmation).
+   */
+  compact?: boolean
 }
 
 export function MenuPopover({
@@ -26,7 +32,8 @@ export function MenuPopover({
   onClose,
   anchorRef,
   children,
-  extraClass
+  extraClass,
+  compact = false
 }: Readonly<MenuPopoverProps>) {
   const popRef = useRef<HTMLDivElement>(null)
 
@@ -47,8 +54,12 @@ export function MenuPopover({
   return createPortal(
     <div
       ref={popRef}
-      className={clsx(styles.popover, extraClass)}
       style={position}
+      className={clsx(
+        styles.popover,
+        { [styles.compact]: compact },
+        extraClass
+      )}
     >
       {children}
     </div>,

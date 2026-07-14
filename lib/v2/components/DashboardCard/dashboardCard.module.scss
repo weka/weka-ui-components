@@ -13,6 +13,21 @@
   overflow: hidden;
 }
 
+.fitContent {
+  height: auto;
+}
+
+.frameless {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.fitContent .content {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
 .headerContainer {
   display: flex;
   align-items: center;
@@ -67,6 +82,7 @@
 .infoIcon {
   display: flex;
   align-items: center;
+  height: 20px;
   stroke: var(--gray-650-350);
 }
 

@@ -10,13 +10,29 @@ import {
 } from '../chartTypes'
 import { BaseComposedChart } from './BaseComposedChart'
 
-const { areaMock, barMock, lineMock } = vi.hoisted(() => ({
+const {
+  areaMock,
+  barMock,
+  brushMock,
+  lineMock,
+  yAxisMock,
+  referenceAreaMock,
+  composedChartMock
+} = vi.hoisted(() => ({
   areaMock: vi.fn(),
   barMock: vi.fn(),
-  lineMock: vi.fn()
+  brushMock: vi.fn(),
+  lineMock: vi.fn(),
+  yAxisMock: vi.fn(),
+  referenceAreaMock: vi.fn(),
+  composedChartMock: vi.fn()
 }))
 
-type MockSeriesProps = Readonly<{ dataKey?: string }>
+type MockSeriesProps = Readonly<{
+  dataKey?: string
+  strokeDasharray?: string
+  yAxisId?: string
+}>
 
 vi.mock('../StableChartContainer', () => ({
   StableChartContainer: ({ children }: Readonly<{ children?: ReactNode }>) =>
@@ -32,21 +48,52 @@ vi.mock('recharts', () => ({
     barMock(props)
     return null
   },
+  Brush: (
+    props: Readonly<{
+      dataKey?: string
+      fill?: string
+      height?: number
+      stroke?: string
+      tickFormatter?: (value: number | string, index: number) => string
+      travellerWidth?: number
+    }>
+  ) => {
+    brushMock(props)
+    return null
+  },
   CartesianGrid: () => null,
-  ComposedChart: ({ children }: Readonly<{ children?: ReactNode }>) =>
-    children ?? null,
+  ComposedChart: (props: Readonly<{ children?: ReactNode }>) => {
+    composedChartMock(props)
+    const { children } = props
+    return <>{children}</>
+  },
+  ReferenceArea: (props: Readonly<{ x1?: unknown; x2?: unknown }>) => {
+    referenceAreaMock(props)
+    return null
+  },
   Line: (props: MockSeriesProps) => {
     lineMock(props)
     return null
   },
   Tooltip: () => null,
   XAxis: () => null,
-  YAxis: () => null
+  YAxis: (
+    props: Readonly<{
+      domain?: unknown
+      orientation?: string
+      yAxisId?: string
+    }>
+  ) => {
+    yAxisMock(props)
+    return null
+  }
 }))
 
 const BLUE_FADE_GRADIENT = 'url(#gradient-blue-fade-500)'
 const LINE_COLOR = 'var(--aqua-500)'
 const BAR_COLOR = 'var(--purple-500)'
+const FORECAST_SERIES_KEY = 'forecast'
+const FORECAST_AXIS_ID = 'forecast-axis'
 
 const SERIES: SeriesConfig[] = [
   {
@@ -68,6 +115,7 @@ describe('BaseComposedChart', () => {
   beforeEach(() => {
     areaMock.mockClear()
     barMock.mockClear()
+    brushMock.mockClear()
     lineMock.mockClear()
   })
 
@@ -175,6 +223,209 @@ describe('BaseComposedChart', () => {
     )
     expect(barMock).toHaveBeenCalledWith(
       expect.objectContaining({ dataKey: 'total', hide: true })
+    )
+  })
+})
+
+describe('BaseComposedChart drag-to-select', () => {
+  beforeEach(() => {
+    referenceAreaMock.mockClear()
+    composedChartMock.mockClear()
+  })
+
+  it('renders a ReferenceArea overlay spanning the selected range', () => {
+    render(
+      <BaseComposedChart
+        data={DATA}
+        referenceArea={{ x1: 1700000000000, x2: 1700000060000 }}
+        series={SERIES}
+      />
+    )
+
+    expect(referenceAreaMock).toHaveBeenCalledWith(
+      expect.objectContaining({ x1: 1700000000000, x2: 1700000060000 })
+    )
+  })
+
+  it('does not render a ReferenceArea when no range is selected', () => {
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+      />
+    )
+
+    expect(referenceAreaMock).not.toHaveBeenCalled()
+  })
+
+  it('forwards the drag mouse handlers to the chart', () => {
+    const onMouseDown = vi.fn()
+    const onMouseMove = vi.fn()
+    const onMouseUp = vi.fn()
+    render(
+      <BaseComposedChart
+        data={DATA}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        series={SERIES}
+      />
+    )
+
+    expect(composedChartMock).toHaveBeenCalledWith(
+      expect.objectContaining({ onMouseDown, onMouseMove, onMouseUp })
+    )
+  })
+})
+
+describe('BaseComposedChart Brush', () => {
+  beforeEach(() => {
+    brushMock.mockClear()
+  })
+
+  it('renders a Brush when showBrush is true', () => {
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+        showBrush
+      />
+    )
+
+    expect(brushMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('passes the xAxis tickFormatter through to the Brush', () => {
+    const formatDateTick = (value: number | string) =>
+      new Date(Number(value)).toISOString()
+
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+        showBrush
+        xAxis={{ dataKey: 'timestamp', tickFormatter: formatDateTick }}
+      />
+    )
+
+    expect(brushMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dataKey: 'timestamp',
+        tickFormatter: formatDateTick
+      })
+    )
+  })
+
+  it('styles the Brush with theme tokens and a wider traveller handle', () => {
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+        showBrush
+      />
+    )
+
+    expect(brushMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fill: 'var(--gray-300-700)',
+        stroke: 'var(--gray-650-350)',
+        travellerWidth: 8
+      })
+    )
+  })
+
+  it('does not render a Brush by default', () => {
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+      />
+    )
+
+    expect(brushMock).not.toHaveBeenCalled()
+  })
+})
+
+describe('BaseComposedChart secondary y-axis and dashed lines', () => {
+  beforeEach(() => {
+    areaMock.mockClear()
+    barMock.mockClear()
+    lineMock.mockClear()
+    yAxisMock.mockClear()
+  })
+
+  it('renders a single default y-axis when no series sets yAxisId', () => {
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={SERIES}
+      />
+    )
+
+    expect(yAxisMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('renders a second right-oriented y-axis when a series sets yAxisId', () => {
+    const seriesWithSecondaryAxis: SeriesConfig[] = [
+      ...SERIES,
+      {
+        key: FORECAST_SERIES_KEY,
+        name: 'Forecast',
+        color: LINE_COLOR,
+        type: SERIES_TYPES.LINE,
+        yAxisId: FORECAST_AXIS_ID
+      }
+    ]
+
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={seriesWithSecondaryAxis}
+      />
+    )
+
+    expect(yAxisMock).toHaveBeenCalledTimes(2)
+    expect(yAxisMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orientation: 'right',
+        yAxisId: FORECAST_AXIS_ID
+      })
+    )
+    expect(lineMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dataKey: FORECAST_SERIES_KEY,
+        yAxisId: FORECAST_AXIS_ID
+      })
+    )
+  })
+
+  it('renders a dashed line for series with dashed: true', () => {
+    const seriesWithDashedLine: SeriesConfig[] = [
+      ...SERIES,
+      {
+        key: FORECAST_SERIES_KEY,
+        name: 'Forecast',
+        color: LINE_COLOR,
+        type: SERIES_TYPES.LINE,
+        dashed: true
+      }
+    ]
+
+    render(
+      <BaseComposedChart
+        data={DATA}
+        series={seriesWithDashedLine}
+      />
+    )
+
+    expect(lineMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dataKey: FORECAST_SERIES_KEY,
+        strokeDasharray: '6 4'
+      })
+    )
+    expect(lineMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dataKey: 'write', strokeDasharray: undefined })
     )
   })
 })
