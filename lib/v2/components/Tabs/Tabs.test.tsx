@@ -95,6 +95,16 @@ describe('Tabs - Rendering', () => {
 
     expect(screen.getByText('(42)')).toBeInTheDocument()
   })
+
+  it('renders tab label text', () => {
+    render(<Tabs {...createProps()} />)
+    expect(screen.getByText(TAB_ONE_LABEL)).toBeInTheDocument()
+  })
+
+  it('renders tab label without ellipsis when noLabelEllipsis is true', () => {
+    render(<Tabs {...createProps({ noLabelEllipsis: true })} />)
+    expect(screen.getByText(TAB_ONE_LABEL)).toBeInTheDocument()
+  })
 })
 
 describe('Tabs - Tab Selection', () => {

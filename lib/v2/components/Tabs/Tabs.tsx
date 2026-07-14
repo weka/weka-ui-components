@@ -18,6 +18,7 @@ import {
 } from '#v2/utils/consts'
 
 import { CheckIcon, CloseIcon } from '../../icons'
+import { Tooltip } from '../Tooltip'
 import { AddTabButton } from './AddTabButton'
 import { useTabsCarousel, useTabsDerivedState } from './hooks'
 import { ScrollArrow } from './ScrollArrow'
@@ -545,11 +546,19 @@ export function Tabs({
           isActive={isActive}
           tab={tab}
         />
-        <span
-          className={clsx(styles.tabLabel, noLabelEllipsis && styles.noEllipsis)}
-        >
-          {tab.label}
-        </span>
+        {noLabelEllipsis ? (
+          <span className={clsx(styles.tabLabel, styles.noEllipsis)}>
+            {tab.label}
+          </span>
+        ) : (
+          <Tooltip
+            data={tab.label}
+            ellipsis
+            ellipsisClass={styles.tabLabel}
+          >
+            {tab.label}
+          </Tooltip>
+        )}
         {tab.count !== undefined && (
           <span className={styles.tabCount}>{countDisplay}</span>
         )}

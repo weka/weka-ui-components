@@ -576,9 +576,11 @@ export function Table<TData = unknown>({
               onScroll={handleBodyScroll}
             >
               <table
-                className={styles.table}
                 data-testid={dataTestId}
                 style={{ minWidth: table.getTotalSize() }}
+                className={clsx(styles.table, {
+                  [styles.tableFillEmpty]: displayRows.length === 0
+                })}
               >
                 <tbody className={styles.tableBody}>
                   <TableContent
