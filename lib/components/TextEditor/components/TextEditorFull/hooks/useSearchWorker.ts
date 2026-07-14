@@ -12,7 +12,6 @@ import { useCallback, useEffect, useRef } from 'react'
 import { EMPTY_STRING } from '#consts'
 
 import { countMatches } from '../workers/countMatches'
-import SearchWorker from '../workers/searchWorker?worker'
 
 /**
  * Per-editor match counting off the main thread. The worker is created
@@ -70,7 +69,10 @@ function useSearchWorker() {
       return null
     }
     try {
-      const worker = new SearchWorker()
+      const worker = new Worker(
+        new URL('../workers/searchWorker.ts', import.meta.url),
+        { type: 'module' }
+      )
       worker.onmessage = (message: MessageEvent<SearchWorkerResponse>) => {
         const { requestId, count, exceeded } = message.data
         const pending = pendingRef.current.get(requestId)
