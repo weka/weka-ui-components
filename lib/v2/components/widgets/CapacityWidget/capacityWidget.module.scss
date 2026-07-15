@@ -460,32 +460,3 @@ $capsule-radius: 50px;
     gap: 8px;
   }
 }
-
-@container (width <= 420px) {
-  .widget {
-    flex-direction: column;
-    max-height: none;
-    gap: 0;
-  }
-
-  .usableSection,
-  .provisionedSection {
-    flex: 1 1 0;
-    min-height: 0;
-  }
-
-  .divider {
-    margin: 4px 0;
-  }
-}
-
-@container (width <= 300px) {
-  .usableBody {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .donut {
-    height: 120px;
-  }
-}
