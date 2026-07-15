@@ -32,6 +32,7 @@ import {
   highlightActiveLineGutter,
   keymap,
   lineNumbers,
+  placeholder as placeholderExtension,
   ViewPlugin,
   type ViewUpdate
 } from '@codemirror/view'
@@ -51,8 +52,9 @@ const SELECTION_BG =
 const SELECTION_BG_IMPORTANT = `${SELECTION_BG} !important`
 const SELECTION_MATCH_BG =
   'var(--cm-selection-match-bg, color-mix(in sRGB, var(--blue-500) 18%, transparent))'
-/** Selected autocomplete row — solid, since rows have their own contrast. */
-const ROW_SELECTED_BG = 'var(--gray-200-800)'
+/** Autocomplete: fuchsia key labels over a neutral row-hover background. */
+const KEY_COLOR = 'var(--fuchsia-600-400)'
+const ROW_HOVER_BG = 'var(--gray-200-800)'
 
 /**
  * JSON syntax colors (WEKA palette): fuchsia keys, grayscale values and
@@ -120,13 +122,16 @@ function baseTheme(fontSizePx: number): Extension {
       color: TEXT_COLOR,
       boxShadow: '0 6px 16px rgb(0 0 0 / 35%)'
     },
-    '.cm-tooltip-autocomplete > ul > li[aria-selected]': {
-      backgroundColor: ROW_SELECTED_BG,
-      color: TEXT_COLOR
-    },
     '.cm-tooltip-autocomplete > ul > li': {
       fontFamily: MONO_FONT,
       padding: '2px 8px'
+    },
+    '.cm-tooltip-autocomplete > ul > li[aria-selected], .cm-tooltip-autocomplete > ul > li:hover':
+      { backgroundColor: ROW_HOVER_BG },
+    '.cm-completionLabel': { color: KEY_COLOR },
+    '.cm-completionMatchedText': {
+      color: 'inherit',
+      textDecoration: 'none'
     },
     '.cm-completionDetail': {
       marginLeft: '2ch',
@@ -255,36 +260,45 @@ function completionAdapter(
  * Notifies the caller of cursor/selection/scroll changes with the surrounding
  * document text and the caret's viewport coordinates — enough to position an
  * external affordance (e.g. an insert button) without touching the engine.
+ * Scrolling moves the caret's screen position without changing the selection,
+ * so both view updates and raw scroll events re-emit the coordinates.
  */
 function cursorActivityPlugin(
   getHandler: () => ((context: JsonEditorCursorContext) => void) | undefined
 ): Extension {
-  return EditorView.updateListener.of((update: ViewUpdate) => {
+  const emit = (view: EditorView) => {
     const handler = getHandler()
     if (!handler) {
       return
     }
-    const scrolled = update.transactions.some((tr) => tr.isUserEvent('select'))
-    if (
-      !update.selectionSet &&
-      !update.docChanged &&
-      !update.focusChanged &&
-      !scrolled &&
-      !update.geometryChanged
-    ) {
-      return
-    }
-    const { state, view } = update
-    const head = state.selection.main.head
+    const head = view.state.selection.main.head
     const rect = view.coordsAtPos(head)
     handler({
-      textBefore: state.doc.sliceString(0, head),
-      textAfter: state.doc.sliceString(head),
+      textBefore: view.state.doc.sliceString(0, head),
+      textAfter: view.state.doc.sliceString(head),
       coords: rect
         ? { left: rect.left, top: rect.top, bottom: rect.bottom }
         : null
     })
-  })
+  }
+  return [
+    EditorView.updateListener.of((update: ViewUpdate) => {
+      if (
+        update.selectionSet ||
+        update.docChanged ||
+        update.focusChanged ||
+        update.geometryChanged ||
+        update.viewportChanged
+      ) {
+        emit(update.view)
+      }
+    }),
+    EditorView.domEventHandlers({
+      scroll: (_event, view) => {
+        emit(view)
+      }
+    })
+  ]
 }
 
 /**
@@ -314,22 +328,22 @@ function foldMarkerDOM(open: boolean): HTMLElement {
   return marker
 }
 
-export interface JsonEditorExtensionsConfig {
-  fontSizePx: number
-  showLineNumbers: boolean
+export interface JsonEditorStaticConfig {
   getCompletionSource: () => JsonEditorCompletionSource | undefined
   getCursorHandler: () =>
     | ((context: JsonEditorCursorContext) => void)
     | undefined
 }
 
-export function buildBaseExtensions(
-  config: JsonEditorExtensionsConfig
+/**
+ * Extensions that never change for the editor's lifetime (language, history,
+ * keymaps, selection, autocomplete, cursor tracking). Kept out of any
+ * compartment so reconfiguring layout props doesn't reset document history.
+ */
+export function buildStaticExtensions(
+  config: JsonEditorStaticConfig
 ): Extension[] {
   return [
-    ...(config.showLineNumbers
-      ? [lineNumbers(), foldGutter({ markerDOM: foldMarkerDOM })]
-      : []),
     highlightActiveLine(),
     highlightActiveLineGutter(),
     drawSelection(),
@@ -348,8 +362,49 @@ export function buildBaseExtensions(
       ...searchKeymap,
       ...foldKeymap,
       ...completionKeymap
-    ]),
-    baseTheme(config.fontSizePx)
+    ])
+  ]
+}
+
+function toCssSize(size: number | string | undefined): string | undefined {
+  if (size === undefined) {
+    return undefined
+  }
+  return typeof size === 'number' ? `${size}px` : size
+}
+
+export interface JsonEditorLayoutConfig {
+  fontSizePx: number
+  showLineNumbers: boolean
+  placeholder: string
+  minHeight?: number | string
+  maxHeight?: number | string
+}
+
+/**
+ * Layout/chrome extensions driven by props that may change at runtime
+ * (font size, gutter, placeholder, height bounds). Held in a compartment so
+ * they can be reconfigured without recreating the editor or its state.
+ */
+export function buildLayoutExtensions(
+  config: JsonEditorLayoutConfig
+): Extension {
+  const scroller: Record<string, string> = {}
+  const minHeight = toCssSize(config.minHeight)
+  const maxHeight = toCssSize(config.maxHeight)
+  if (minHeight !== undefined) {
+    scroller.minHeight = minHeight
+  }
+  if (maxHeight !== undefined) {
+    scroller.maxHeight = maxHeight
+  }
+  return [
+    ...(config.showLineNumbers
+      ? [lineNumbers(), foldGutter({ markerDOM: foldMarkerDOM })]
+      : []),
+    baseTheme(config.fontSizePx),
+    ...(config.placeholder ? [placeholderExtension(config.placeholder)] : []),
+    EditorView.theme({ '.cm-scroller': scroller })
   ]
 }
 

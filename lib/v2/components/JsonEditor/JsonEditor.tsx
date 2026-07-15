@@ -7,21 +7,33 @@ import type {
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { startCompletion } from '@codemirror/autocomplete'
-import { EditorState, type Extension } from '@codemirror/state'
-import { Compartment } from '@codemirror/state'
 import {
-  EditorView,
-  placeholder as placeholderExtension
-} from '@codemirror/view'
+  Annotation,
+  Compartment,
+  EditorState,
+  type Extension,
+  Transaction
+} from '@codemirror/state'
+import { EditorView } from '@codemirror/view'
 import clsx from 'clsx'
 
 import { EMPTY_ARRAY, EMPTY_STRING } from '#v2/utils/consts'
 
-import { buildBaseExtensions, decorationsPlugin } from './jsonEditorSetup'
+import {
+  buildLayoutExtensions,
+  buildStaticExtensions,
+  decorationsPlugin
+} from './jsonEditorSetup'
 
 import styles from './jsonEditor.module.scss'
 
 const DEFAULT_FONT_SIZE_PX = 14
+
+/**
+ * Marks the document change made when the controlled `value` prop is synced in,
+ * so the change listener can skip it and only report genuine user edits.
+ */
+const VALUE_SYNC = Annotation.define<boolean>()
 
 export interface JsonEditorProps {
   value: string
@@ -38,13 +50,6 @@ export interface JsonEditorProps {
   autoFocus?: boolean
   extraClass?: string
   dataTestId?: string
-}
-
-function toCssSize(size: number | string | undefined): string | undefined {
-  if (size === undefined) {
-    return undefined
-  }
-  return typeof size === 'number' ? `${size}px` : size
 }
 
 /** Read-only viewers block edits and drop `contenteditable` while staying selectable. */
@@ -86,33 +91,41 @@ export const JsonEditor = forwardRef<
 
   const readOnlyCompartment = useRef(new Compartment())
   const decorationsCompartment = useRef(new Compartment())
+  const layoutCompartment = useRef(new Compartment())
 
   useEffect(() => {
     const parent = parentRef.current
     if (!parent) {
       return undefined
     }
-    const baseExtensions = buildBaseExtensions({
-      showLineNumbers,
-      fontSizePx: fontSize,
+    const staticExtensions = buildStaticExtensions({
       getCompletionSource: () => completionSourceRef.current,
       getCursorHandler: () => cursorHandlerRef.current
     })
     const extensions: Extension[] = [
-      ...baseExtensions,
-      ...(placeholder ? [placeholderExtension(placeholder)] : []),
-      EditorView.theme({
-        '.cm-scroller': {
-          minHeight: toCssSize(minHeight) ?? EMPTY_STRING,
-          maxHeight: toCssSize(maxHeight) ?? EMPTY_STRING
-        }
-      }),
+      ...staticExtensions,
+      layoutCompartment.current.of(
+        buildLayoutExtensions({
+          fontSizePx: fontSize,
+          showLineNumbers,
+          placeholder,
+          minHeight,
+          maxHeight
+        })
+      ),
       readOnlyCompartment.current.of(readOnlyExtension(readOnly)),
       decorationsCompartment.current.of(decorationsPlugin(decorations)),
       EditorView.updateListener.of((update) => {
-        if (update.docChanged) {
-          onChangeRef.current?.(update.state.doc.toString())
+        if (!update.docChanged) {
+          return
         }
+        const isValueSync = update.transactions.some((transaction) =>
+          transaction.annotation(VALUE_SYNC)
+        )
+        if (isValueSync) {
+          return
+        }
+        onChangeRef.current?.(update.state.doc.toString())
       })
     ]
     const view = new EditorView({
@@ -148,6 +161,20 @@ export const JsonEditor = forwardRef<
   }, [decorations])
 
   useEffect(() => {
+    viewRef.current?.dispatch({
+      effects: layoutCompartment.current.reconfigure(
+        buildLayoutExtensions({
+          fontSizePx: fontSize,
+          showLineNumbers,
+          placeholder,
+          minHeight,
+          maxHeight
+        })
+      )
+    })
+  }, [fontSize, showLineNumbers, placeholder, minHeight, maxHeight])
+
+  useEffect(() => {
     const view = viewRef.current
     if (!view) {
       return
@@ -155,7 +182,8 @@ export const JsonEditor = forwardRef<
     const current = view.state.doc.toString()
     if (current !== value) {
       view.dispatch({
-        changes: { from: 0, to: current.length, insert: value }
+        changes: { from: 0, to: current.length, insert: value },
+        annotations: [VALUE_SYNC.of(true), Transaction.addToHistory.of(false)]
       })
     }
   }, [value])

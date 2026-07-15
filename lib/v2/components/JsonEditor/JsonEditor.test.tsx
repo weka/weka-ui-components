@@ -69,6 +69,23 @@ describe('JsonEditor - value sync', () => {
     )
     expect(getContentText(container)).toContain('"a"')
   })
+
+  it('does not fire onChange when the value prop is synced in', () => {
+    const onChange = vi.fn()
+    const { rerender } = render(
+      <JsonEditor
+        onChange={onChange}
+        value='{}'
+      />
+    )
+    rerender(
+      <JsonEditor
+        onChange={onChange}
+        value='{"a":1}'
+      />
+    )
+    expect(onChange).not.toHaveBeenCalled()
+  })
 })
 
 describe('JsonEditor - decorations', () => {
@@ -83,6 +100,28 @@ describe('JsonEditor - decorations', () => {
     expect(container.querySelector(`.${TOKEN_CLASS}`)?.textContent).toBe(
       SEVERITY_TOKEN
     )
+  })
+})
+
+describe('JsonEditor - reactive layout props', () => {
+  it('toggles the line-number gutter when showLineNumbers changes', () => {
+    const { container, rerender } = render(
+      <JsonEditor
+        onChange={vi.fn()}
+        showLineNumbers
+        value='{}'
+      />
+    )
+    expect(container.querySelector('.cm-lineNumbers')).toBeTruthy()
+
+    rerender(
+      <JsonEditor
+        onChange={vi.fn()}
+        showLineNumbers={false}
+        value='{}'
+      />
+    )
+    expect(container.querySelector('.cm-lineNumbers')).toBeFalsy()
   })
 })
 
