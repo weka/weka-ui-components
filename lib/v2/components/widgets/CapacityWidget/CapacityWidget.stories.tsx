@@ -11,7 +11,7 @@ type StoryArgs = ComponentProps<typeof CapacityWidget> & {
 const meta: Meta<StoryArgs> = {
   title: 'v2/Widgets/CapacityWidget',
   component: CapacityWidget,
-  args: { showLimits: true },
+  args: { showLimits: false },
   argTypes: {
     showLimits: { control: 'boolean', name: 'Show widget limits' }
   },
