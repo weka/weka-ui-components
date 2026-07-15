@@ -10,6 +10,7 @@ import {
 } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { NOP } from '#consts'
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { TableHeader } from './TableHeader'
@@ -95,6 +96,52 @@ describe('TableHeader', () => {
       />
     )
     expect(screen.queryByTestId(DOWNLOAD_BUTTON_TESTID)).not.toBeInTheDocument()
+  })
+
+  it.each([
+    {
+      description: 'slugifies the title and appends a UTC timestamp',
+      title: TABLE_TITLE,
+      expectedFilename: 'clusters_2026-07-14T00-03-09Z.csv'
+    },
+    {
+      description: 'strips a trailing .csv, forbidden and control characters',
+      title: '  Weird\u007F: Name?.CSV ',
+      expectedFilename: 'weird_name_2026-07-14T00-03-09Z.csv'
+    },
+    {
+      description: 'falls back to a generic slug when nothing usable remains',
+      title: '<>:"/\\|?*',
+      expectedFilename: 'export_2026-07-14T00-03-09Z.csv'
+    }
+  ])('$description when naming the downloaded csv', ({
+    title,
+    expectedFilename
+  }) => {
+    vi.useFakeTimers()
+    try {
+      vi.setSystemTime(new Date('2026-07-14T00:03:09.123Z'))
+      vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock')
+      vi.spyOn(URL, 'revokeObjectURL').mockImplementation(NOP)
+      const clickSpy = vi
+        .spyOn(HTMLAnchorElement.prototype, 'click')
+        .mockImplementation(NOP)
+
+      render(
+        <TableHeader
+          columns={COLUMNS}
+          data={SAMPLE_DATA}
+          title={title}
+        />
+      )
+      fireEvent.click(screen.getByTestId(DOWNLOAD_BUTTON_TESTID))
+
+      const link = clickSpy.mock.contexts[0] as HTMLAnchorElement
+      expect(link.getAttribute('download')).toBe(expectedFilename)
+    } finally {
+      vi.restoreAllMocks()
+      vi.useRealTimers()
+    }
   })
 
   it('opens the settings menu with a row per column', () => {
