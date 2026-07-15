@@ -220,6 +220,18 @@ export type { TextAreaProps } from './inputs/TextArea'
 export { TextArea } from './inputs/TextArea'
 export type { TextInputProps, TextInputType } from './inputs/TextInput'
 export { TEXT_INPUT_TYPES, TextInput } from './inputs/TextInput'
+export type {
+  JsonEditorCompletion,
+  JsonEditorCompletionContext,
+  JsonEditorCompletionResult,
+  JsonEditorCompletionSource,
+  JsonEditorCursorContext,
+  JsonEditorDecoration,
+  JsonEditorHandle,
+  JsonEditorInsertOptions,
+  JsonEditorProps
+} from './JsonEditor'
+export { JsonEditor } from './JsonEditor'
 export type { LoadingStateProps, StateType } from './LoadingState'
 export { LoadingState, STATE_TYPES } from './LoadingState'
 export type { LoginFieldProps, LoginFieldType } from './LoginField'
