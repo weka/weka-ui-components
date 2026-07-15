@@ -45,7 +45,7 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
   ]
 
   const savings = dataReduction
-    ? formatCapacity(0, unit, dataReduction.savings)
+    ? formatCapacity(0, EMPTY_STRING, dataReduction.savings)
     : null
 
   return (

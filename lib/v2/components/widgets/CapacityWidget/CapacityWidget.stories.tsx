@@ -1,16 +1,25 @@
 import type { CapacityProvisionedData, CapacityUsableData } from './types'
 import type { Meta, StoryObj } from '@storybook/react'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { CapacityWidget } from './CapacityWidget'
 
-const meta: Meta<typeof CapacityWidget> = {
+type StoryArgs = ComponentProps<typeof CapacityWidget> & {
+  showLimits: boolean
+}
+
+const meta: Meta<StoryArgs> = {
   title: 'v2/Widgets/CapacityWidget',
-  component: CapacityWidget
+  component: CapacityWidget,
+  args: { showLimits: true },
+  argTypes: {
+    showLimits: { control: 'boolean', name: 'Show widget limits' }
+  },
+  parameters: { controls: { include: ['showLimits'] } }
 }
 
 export default meta
-type Story = StoryObj<typeof CapacityWidget>
+type Story = StoryObj<StoryArgs>
 
 /** Debug-only outline marking the widget limits in stories. */
 const LIMIT_OUTLINE = '2px dashed #2f6fed'
@@ -63,13 +72,21 @@ const provisionedSsdOnly: CapacityProvisionedData = {
 function Frame({
   width,
   height,
+  showLimits,
   children
 }: Readonly<{
   width: number
   height: number
+  showLimits: boolean
   children: ReactNode
 }>) {
-  return <div style={{ width, height, outline: LIMIT_OUTLINE }}>{children}</div>
+  return (
+    <div
+      style={{ width, height, outline: showLimits ? LIMIT_OUTLINE : undefined }}
+    >
+      {children}
+    </div>
+  )
 }
 
 interface VariantOptions {
@@ -88,9 +105,10 @@ const makeVariant = (options: VariantOptions): Story => {
   const { width, height, obs, dataReduction } = options
   return {
     name: variantName(options),
-    render: () => (
+    render: (args) => (
       <Frame
         height={height}
+        showLimits={args.showLimits}
         width={width}
       >
         <CapacityWidget
@@ -217,9 +235,10 @@ export const NoObsNoDr531x212 = makeVariant({
 })
 
 export const CustomLabels: Story = {
-  render: () => (
+  render: (args) => (
     <Frame
       height={252}
+      showLimits={args.showLimits}
       width={736}
     >
       <CapacityWidget

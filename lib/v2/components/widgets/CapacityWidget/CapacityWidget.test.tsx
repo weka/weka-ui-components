@@ -124,6 +124,20 @@ describe('CapacityWidget', () => {
 
       expect(screen.queryByText('Data Reduction')).not.toBeInTheDocument()
     })
+
+    it('does not append the capacity unit to a unitless savings value', () => {
+      renderWidget({
+        usable: {
+          ...usable,
+          unit: 'PB',
+          dataReduction: { ratio: '2:1', savings: '50' }
+        }
+      })
+
+      expect(screen.getByText(/Saving 50/)).toHaveTextContent(
+        /\(Saving 50\s*\)/
+      )
+    })
   })
 
   describe('Provisioned section', () => {
