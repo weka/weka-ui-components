@@ -460,3 +460,9 @@ $capsule-radius: 50px;
     gap: 8px;
   }
 }
+
+@container (width > 600px) {
+  .provisionedBodyNoObs {
+    padding-left: 20px;
+  }
+}
