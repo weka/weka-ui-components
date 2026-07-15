@@ -1,337 +1,491 @@
-.container {
+$capsule-radius: 50px;
+
+.widget {
+  container-type: size;
   display: flex;
-  height: 100%;
+  align-items: stretch;
+  box-sizing: border-box;
   width: 100%;
-  padding: 10px;
+  max-width: 736px;
+  height: 100%;
+  min-height: 212px;
+  max-height: 252px;
+  margin-inline: auto;
+  gap: 0;
+  color: var(--text-color-primary);
+}
+
+.divider {
+  flex: 0 0 2px;
+  align-self: stretch;
+  margin: 4px 10px;
+  background-color: var(--gray-400-600);
+}
+
+.usableSection,
+.provisionedSection {
+  display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  container-type: inline-size;
-
-  .chartContainer {
-    width: 200px;
-    height: 200px;
-  }
-
-  .topSection {
-    display: flex;
-    gap: 32px;
-    align-items: flex-start;
-  }
-
-  .chartSection {
-    flex-shrink: 0;
-  }
-
-  .valuesSection {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-  }
-
-  .capacityDetails {
-    max-width: 250px;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .dataReduction {
-    width: 100%;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    margin-top: 24px;
-  }
-
-  .separator,
-  .dataReduction {
-    display: none;
-    justify-self: center;
-    width: 80%;
-  }
-
-  .dataReductionBelow {
-    padding-left: 10px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 700;
-    margin-top: 12px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: 4px;
-  }
-
-  .dataReductionSavingsSmall {
-    font-size: 14px;
-    font-weight: 400;
-  }
-
-  .savingsValueSmall {
-    font-size: 14px;
-    font-weight: 400;
-  }
-
-  .savingsUnitSmall {
-    font-size: 14px;
-    font-weight: 400;
-  }
+  gap: 8px;
+  min-width: 0;
 }
 
-.chartSection {
-  flex-shrink: 0;
+.usableSection {
+  flex: 1 1 auto;
+  max-width: 412px;
+  padding: 0 12px 0 6px;
+}
+
+.provisionedSection {
+  flex: 1 1 auto;
+  gap: 0;
+  padding: 0 8px;
+}
+
+.usableBody,
+.provisionedBody {
   display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.usableBody {
+  flex: 0 0 auto;
+  gap: 24px;
   align-items: center;
   justify-content: center;
 }
 
-.chartContainer {
+.provisionedBody {
+  width: 240px;
+  max-width: 100%;
+  padding-bottom: 11px;
+  align-self: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.provisionedBody.provisionedBodyNoObs {
+  width: auto;
+  gap: 12px;
+  padding-bottom: 0;
+  align-self: flex-start;
+  justify-content: flex-start;
+}
+
+.provisionedBody.provisionedBodyNoObsNoDr {
+  gap: 24px;
+}
+
+.provisionedBodyNoObs .tierBlock {
+  gap: 24px;
+}
+
+.donut {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 auto;
+  height: 200px;
+  aspect-ratio: 1 / 1;
 }
 
-.centerText {
+.donutCenter {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   text-align: center;
   pointer-events: none;
 }
 
-.percentage {
-  color: var(--text-color-primary);
-  line-height: 1;
+.donutPercent {
   font-size: 38px;
   font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: var(--gray-900-100);
 }
 
-.usedAmount {
-  color: var(--text-color-secondary);
-  margin-top: 2px;
-  font-size: 22px;
+.donutUsed {
+  font-size: 20px;
   font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: var(--gray-900-100);
 }
 
-.detailsSection {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.capacityDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.capacityItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.capacityValue {
+.donutUsedUnit {
   font-size: 16px;
-  font-weight: 500;
-  color: var(--text-color-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.usableLegend,
+.provisionedLegend {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.usableLegend {
+  align-self: stretch;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.usableLegend.usableLegendNoDr {
+  justify-content: center;
+  gap: 36px;
+}
+
+.provisionedLegend {
+  gap: 12px;
+  justify-content: center;
 
   .number {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 20px;
   }
 
   .unit {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 16px;
   }
 }
 
-.capacityLabel {
-  font-size: 18px;
-  color: var(--text-color-secondary);
+.legendItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.legendLabel {
   display: flex;
   align-items: center;
   gap: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
   white-space: nowrap;
+  color: var(--gray-900-100);
+}
+
+.legendValue {
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--gray-900-100);
+}
+
+.number {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.unit {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.totalProvisionedItem .legendLabel {
+  font-size: 18px;
+}
+
+.totalProvisionedItem .number {
+  font-size: 24px;
+}
+
+.totalProvisionedItem .unit {
+  font-size: 18px;
+}
+
+.dot {
+  display: inline-block;
   flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
-.usedDot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--fuchsia-400-600);
-  display: inline-block;
+.dotUsed {
+  background-color: var(--fuchsia-600-400);
 }
 
-.freeDot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+.dotFree {
   background-color: var(--gray-300-700);
-  display: inline-block;
+}
+
+.dotSsd {
+  background-color: var(--purple-600-400);
+}
+
+.dotObs {
+  background-color: var(--peach-600-400);
 }
 
 .dataReduction {
-  padding-top: 12px;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--gray-900-100);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .dataReductionRatio {
+  font-size: 24px;
   font-weight: 700;
   color: var(--gray-900-100);
-  font-size: 18px;
 }
 
-.dataReductionSavings {
-  display: block;
-  margin-top: 4px;
-  font-size: 14px;
+.saving {
+  font-size: 16px;
   font-weight: 400;
+  white-space: nowrap;
+  color: var(--gray-900-100);
 }
 
-.savingsValue {
-  font-size: 14px;
-  font-weight: 400;
+.savingUnit {
+  font-size: 0.875em;
 }
 
-.savingsUnit {
-  font-size: 14px;
-  font-weight: 400;
+.tierBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-@media (width <= 768px) {
-  .container {
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
-
-    &.small {
-      gap: 12px;
-    }
-  }
-
-  .chartSection {
-    width: 100%;
-  }
-
-  .detailsSection {
-    width: 100%;
-  }
-
-  .capacityItem {
-    justify-content: center;
-    gap: 8px;
-
-    .capacityLabel::before {
-      content: '';
-    }
-  }
-}
-
-@container (min-width: 450px) {
-  .container {
-    .topSection {
-      gap: 24px;
-    }
-
-    .separator,
-    .dataReduction {
-      display: block;
-    }
-
-    .valuesSection {
-      display: block;
-    }
-
-    .dataReductionBelow {
-      display: none;
-    }
-
-    .capacityDetails {
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: center;
-      gap: 12px 16px;
-    }
-
-    .capacityItem {
-      flex-direction: column;
-      align-items: center;
-      width: auto;
-      max-width: 100%;
-    }
-
-    .capacityItem:nth-child(3) {
-      width: 100%;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding-bottom: 0;
-
-      .capacityLabel {
-        color: var(--gray-900-100);
-      }
-    }
-
-    .dataReduction {
-      width: 100%;
-      max-width: 240px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: 700;
-      margin: 2px auto 0;
-    }
-  }
-}
-
-.separator {
+.tierSeparator {
+  flex-shrink: 0;
   width: 100%;
   height: 1px;
   background-color: var(--gray-400-600);
-  margin-top: 24px;
 }
 
-.dataReductionBelow {
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: 12px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 4px;
+.capsules {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 22px;
+  align-items: stretch;
 }
 
-.dataReductionSavingsSmall {
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.dataReductionRatio {
-  font-size: 18px;
-}
-
-.topSection.noDataReductionLayout .valuesSection {
+.capsule {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 2px;
   align-items: center;
+}
+
+.capsuleBar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 180px;
+  overflow: hidden;
+  background-color: var(--gray-300-700);
+  border-radius: $capsule-radius;
+}
+
+.capsuleBarWide {
+  width: 36px;
+  height: 230px;
+}
+
+.capsuleFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  border-radius: 0 0 $capsule-radius $capsule-radius;
+  transition: height 0.3s ease;
+}
+
+.capsuleFillSsd {
+  background: linear-gradient(
+    to top,
+    var(--purple-bar-bottom),
+    var(--purple-bar-top)
+  );
+}
+
+.capsuleFillObs {
+  background: linear-gradient(
+    to top,
+    var(--peach-bar-bottom),
+    var(--peach-bar-top)
+  );
+}
+
+.capsuleLabel {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.capsuleLabelSsd {
+  color: var(--purple-600-400);
+}
+
+.capsuleLabelObs {
+  color: var(--peach-600-400);
+}
+
+.totalPill {
+  display: flex;
+  flex: 0 0 auto;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 16px;
+  width: 358px;
+  max-width: 100%;
+  height: 30px;
+  padding: 1px 4px 2px 8px;
+  background-color: var(--gray-200-800);
+  border-radius: 0;
+}
+
+.totalLabel {
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  color: var(--gray-1000-0);
+}
+
+.totalValue {
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--gray-1000-0);
+}
+
+.usableSection .totalPill {
+  margin-top: auto;
+}
+
+.provisionedSection .totalPill {
+  width: 240px;
+  margin-top: auto;
+}
+
+@container (width <= 600px) {
+  .divider {
+    margin: 4px;
+  }
+
+  .usableSection {
+    flex: 0 0 350px;
+  }
+
+  .usableBody {
+    gap: 14px;
+  }
+
+  .usableBodyNoDr {
+    padding: 0 12px;
+    justify-content: space-between;
+  }
+
+  .number {
+    font-size: 20px;
+  }
+
+  .unit {
+    font-size: 15px;
+  }
+
+  .dataReductionRatio {
+    font-size: 20px;
+  }
+
+  .saving {
+    font-size: 14px;
+  }
+
+  .capsules {
+    gap: 8px;
+  }
+
+  .capsuleBar {
+    width: 25px;
+  }
+
+  .capsuleBarWide {
+    width: 36px;
+  }
+
+  .usableLegend {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .provisionedSection .totalPill {
+    width: 154px;
+  }
+
+  .provisionedSection .totalLabel {
+    width: min-content;
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .totalProvisionedItem .legendLabel {
+    display: block;
+    width: min-content;
+    white-space: normal;
+  }
+}
+
+@container (height <= 240px) {
+  .donut {
+    height: 160px;
+  }
+
+  .donutPercent {
+    font-size: 34px;
+  }
+
+  .capsuleBar {
+    height: 160px;
+  }
+
+  .capsuleBarWide {
+    height: 190px;
+  }
+
+  .provisionedBody {
+    padding-bottom: 2px;
+  }
+
+  .provisionedLegend {
+    gap: 8px;
+  }
+}
+
+@container (width <= 420px) {
+  .widget {
+    flex-direction: column;
+    max-height: none;
+    gap: 0;
+  }
+
+  .usableSection,
+  .provisionedSection {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .divider {
+    margin: 4px 0;
+  }
+}
+
+@container (width <= 300px) {
+  .usableBody {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .donut {
+    height: 120px;
+  }
 }
