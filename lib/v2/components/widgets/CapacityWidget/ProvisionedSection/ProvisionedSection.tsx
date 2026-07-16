@@ -1,4 +1,4 @@
-import type { CapacityTierData, CapacityWidgetLabels } from './types'
+import type { CapacityTierData, CapacityWidgetLabels } from '../types'
 
 import clsx from 'clsx'
 
@@ -6,12 +6,12 @@ import {
   DEFAULT_CAPACITY_UNIT,
   formatCapacity,
   toPercentage
-} from './capacityFormat'
-import { LegendItem } from './LegendItem'
-import { TotalPill } from './TotalPill'
-import { CAPSULE_TONES, type CapsuleTone, VerticalCapsule } from './VerticalCapsule'
+} from '../capacityFormat'
+import { LegendItem } from '../LegendItem'
+import { TotalPill } from '../TotalPill'
+import { CAPSULE_TONES, type CapsuleTone, VerticalCapsule } from '../VerticalCapsule'
 
-import styles from './capacityWidget.module.scss'
+import styles from '../capacityWidget.module.scss'
 
 export interface ProvisionedSectionProps {
   ssd: CapacityTierData

@@ -1,6 +1,6 @@
-import type { FormattedCapacity } from './capacityFormat'
+import type { FormattedCapacity } from '../capacityFormat'
 
-import styles from './capacityWidget.module.scss'
+import styles from '../capacityWidget.module.scss'
 
 export interface TotalPillProps {
   label: string

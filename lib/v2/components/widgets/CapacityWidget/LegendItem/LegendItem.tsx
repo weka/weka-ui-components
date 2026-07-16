@@ -1,8 +1,8 @@
-import type { FormattedCapacity } from './capacityFormat'
+import type { FormattedCapacity } from '../capacityFormat'
 
 import clsx from 'clsx'
 
-import styles from './capacityWidget.module.scss'
+import styles from '../capacityWidget.module.scss'
 
 export interface LegendItemProps {
   label: string

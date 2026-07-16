@@ -1,22 +1,22 @@
-import type { CapacityUsableData, CapacityWidgetLabels } from './types'
+import type { CapacityUsableData, CapacityWidgetLabels } from '../types'
 
 import { useId } from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
 
-import { DonutChart } from '../../charts/DonutChart'
+import { DonutChart } from '../../../charts/DonutChart'
 import {
   clampPercentage,
   DEFAULT_CAPACITY_UNIT,
   formatCapacity,
   formatPercentage,
   toPercentage
-} from './capacityFormat'
-import { LegendItem } from './LegendItem'
-import { TotalPill } from './TotalPill'
+} from '../capacityFormat'
+import { LegendItem } from '../LegendItem'
+import { TotalPill } from '../TotalPill'
 
-import styles from './capacityWidget.module.scss'
+import styles from '../capacityWidget.module.scss'
 
 export interface UsableSectionProps {
   data: CapacityUsableData

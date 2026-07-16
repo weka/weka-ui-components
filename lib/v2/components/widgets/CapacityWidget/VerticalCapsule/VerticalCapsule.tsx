@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 
-import { clampPercentage } from './capacityFormat'
+import { clampPercentage } from '../capacityFormat'
 
-import styles from './capacityWidget.module.scss'
+import styles from '../capacityWidget.module.scss'
 
 export const CAPSULE_TONES = {
   SSD: 'ssd',
