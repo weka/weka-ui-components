@@ -14,10 +14,17 @@ export interface FormattedCapacity {
   unit: string
 }
 
+/** Drops trailing decimal zeros so `'498.00'` -> `'498'`, `'1.50'` -> `'1.5'`. */
+function stripTrailingZeros(value: string): string {
+  const parsed = Number(value)
+  return Number.isNaN(parsed) ? value : String(parsed)
+}
+
 /**
  * Splits a value into a display number and unit. A pre-formatted `displayValue`
  * (e.g. `'406.5 TB'`) wins; otherwise the numeric `value` is formatted with a
- * decimal precision that scales down as the magnitude grows.
+ * decimal precision that scales down as the magnitude grows. Trailing decimal
+ * zeros are trimmed either way (no `'498.00'`).
  */
 export function formatCapacity(
   value: number,
@@ -26,16 +33,25 @@ export function formatCapacity(
 ): FormattedCapacity {
   if (displayValue) {
     const [valuePart, unitPart] = displayValue.split(VALUE_UNIT_SEPARATOR)
-    return { value: valuePart, unit: unitPart || unit }
+    return { value: stripTrailingZeros(valuePart), unit: unitPart || unit }
   }
 
   if (value < SMALL_VALUE_THRESHOLD) {
-    return { value: value.toFixed(SMALL_VALUE_DECIMALS), unit }
+    return {
+      value: stripTrailingZeros(value.toFixed(SMALL_VALUE_DECIMALS)),
+      unit
+    }
   }
   if (value < MEDIUM_VALUE_THRESHOLD) {
-    return { value: value.toFixed(MEDIUM_VALUE_DECIMALS), unit }
+    return {
+      value: stripTrailingZeros(value.toFixed(MEDIUM_VALUE_DECIMALS)),
+      unit
+    }
   }
-  return { value: value.toFixed(LARGE_VALUE_DECIMALS), unit }
+  return {
+    value: stripTrailingZeros(value.toFixed(LARGE_VALUE_DECIMALS)),
+    unit
+  }
 }
 
 /** Percentage of `part` out of `whole`, or 0 when `whole` is non-positive. */
