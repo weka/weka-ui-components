@@ -27,6 +27,7 @@ import { InfoIcon } from './InfoIcon'
 import { InvestigateIcon } from './InvestigateIcon'
 import { LightModeIcon } from './LightModeIcon'
 import { LinkIcon } from './LinkIcon'
+import { LockIcon } from './LockIcon'
 import { LogoutIcon } from './LogoutIcon'
 import { ManageIcon } from './ManageIcon'
 import { MonitorIcon } from './MonitorIcon'
@@ -45,8 +46,10 @@ import { SettingsIcon } from './SettingsIcon'
 import { SortIcon } from './SortIcon'
 import { SortUpDownIcon } from './SortUpDownIcon'
 import { SwapIcon } from './SwapIcon'
+import { TenantIcon } from './TenantIcon'
 import { ThreeDotsMenuIcon } from './ThreeDotsMenuIcon'
 import { UnmuteIcon } from './UnmuteIcon'
+import { UserIcon } from './UserIcon'
 import { VcheckFillIcon } from './VcheckFillIcon'
 import { VcheckGradientIcon } from './VcheckGradientIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
@@ -125,6 +128,7 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'InvestigateIcon', node: <InvestigateIcon /> },
   { name: 'LightModeIcon', node: <LightModeIcon /> },
   { name: 'LinkIcon', node: <LinkIcon /> },
+  { name: 'LockIcon', node: <LockIcon /> },
   { name: 'LogoutIcon', node: <LogoutIcon /> },
   { name: 'ManageIcon', node: <ManageIcon /> },
   { name: 'MonitorIcon', node: <MonitorIcon /> },
@@ -175,8 +179,10 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'SortIcon', node: <SortIcon /> },
   { name: 'SortUpDownIcon', node: <SortUpDownIcon /> },
   { name: 'SwapIcon', node: <SwapIcon /> },
+  { name: 'TenantIcon', node: <TenantIcon /> },
   { name: 'ThreeDotsMenuIcon', node: <ThreeDotsMenuIcon /> },
   { name: 'UnmuteIcon', node: <UnmuteIcon /> },
+  { name: 'UserIcon', node: <UserIcon /> },
   {
     name: 'VcheckFillIcon',
     node: (
