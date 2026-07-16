@@ -29,6 +29,11 @@ const MIN_VISIBLE_COLUMNS = 1
 const NAME_COLUMN_IDS = ['name', 'filename', 'clusterName']
 const MIN_SEARCH_LENGTH = 2
 const DOWNLOAD_ICON_SIZE = 28
+const DEFAULT_CSV_FILENAME_SLUG = 'export'
+const TRAILING_CSV_EXTENSION = /\.csv$/i
+// eslint-disable-next-line no-control-regex -- control characters are invalid in filenames and must be stripped
+const FORBIDDEN_FILENAME_CHARS = /[\x00-\x1f\x7f<>:"/\\|?*]/g
+const MILLISECONDS_SUFFIX = /\.\d{3}Z$/
 
 interface TableCsvColumn {
   header: string
@@ -121,6 +126,30 @@ function getCellValue(row: unknown, col: TableColumn): unknown {
   }
   const columnId = getColumnId(col)
   return columnId ? (row as Record<string, unknown>)[columnId] : undefined
+}
+
+/**
+ * Builds a CSV filename with a sortable UTC timestamp suffix, e.g.
+ * `tenants_2026-07-14T00-03-09Z.csv`. Strips a trailing `.csv` and any
+ * control characters or Windows-reserved characters (a superset of what
+ * POSIX forbids) from the title, falling back to a generic slug if nothing
+ * usable remains. Colons in the timestamp are replaced with hyphens for the
+ * same reason.
+ */
+function buildCsvFilename(fileTitle: string): string {
+  const sanitizedTitle = fileTitle
+    .trim()
+    .replace(TRAILING_CSV_EXTENSION, EMPTY_STRING)
+    .replace(FORBIDDEN_FILENAME_CHARS, EMPTY_STRING)
+    .trim()
+  const slug = sanitizedTitle
+    ? sanitizedTitle.toLowerCase().replace(/\s+/g, '_')
+    : DEFAULT_CSV_FILENAME_SLUG
+  const timestamp = new Date()
+    .toISOString()
+    .replace(MILLISECONDS_SUFFIX, 'Z')
+    .replace(/:/g, '-')
+  return `${slug}_${timestamp}.csv`
 }
 
 function isCsvDownloadDisabled(
@@ -341,10 +370,7 @@ export function TableHeader({
     const link = document.createElement('a')
     const fileTitle = csvFileTitle || title
     link.setAttribute('href', url)
-    link.setAttribute(
-      'download',
-      `${fileTitle.toLowerCase().replace(/\s+/g, '_')}.csv`
-    )
+    link.setAttribute('download', buildCsvFilename(fileTitle))
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
