@@ -30,6 +30,13 @@ export interface DashboardCardProps {
    * halves are separated by a divider rather than each being its own card).
    */
   frameless?: boolean
+  /**
+   * When true the card becomes vertically responsive, filling its grid cell
+   * within a clamped range instead of the default fixed dashboard height. Use
+   * for dashboards (e.g. Home) whose cells stretch, while other consumers keep
+   * the fixed height by leaving this off.
+   */
+  fillHeight?: boolean
 }
 
 const MAX_DISPLAY_COUNT = 99
@@ -48,7 +55,8 @@ export function DashboardCard({
   children,
   dataTestId,
   fitContent = false,
-  frameless = false
+  frameless = false,
+  fillHeight = false
 }: Readonly<DashboardCardProps>) {
   const getDisplayCount = (): string | null => {
     if (typeof count === 'number' && count > 0) {
@@ -63,7 +71,8 @@ export function DashboardCard({
       data-testid={dataTestId}
       className={clsx(styles.card, {
         [styles.fitContent]: fitContent,
-        [styles.frameless]: frameless
+        [styles.frameless]: frameless,
+        [styles.fillHeight]: fillHeight
       })}
     >
       <div className={styles.headerContainer}>

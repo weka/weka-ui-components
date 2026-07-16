@@ -25,9 +25,13 @@ export interface InventoryItem {
 
 export interface InventoryCardProps {
   data: InventoryItem[]
+  onItemClick?: (id: string) => void
 }
 
-export function InventoryCard({ data }: Readonly<InventoryCardProps>) {
+export function InventoryCard({
+  data,
+  onItemClick
+}: Readonly<InventoryCardProps>) {
   const getIcon = (item: InventoryItem) => {
     const iconProps = {
       variant: ICON_VARIANTS.CONTAINER,
@@ -51,12 +55,9 @@ export function InventoryCard({ data }: Readonly<InventoryCardProps>) {
 
   return (
     <div className={styles.container}>
-      {data.map((item, index) => (
-        <Fragment key={item.id}>
-          <div
-            className={styles.inventoryItem}
-            data-testid={`inventory-item-${item.id}`}
-          >
+      {data.map((item, index) => {
+        const itemContent = (
+          <>
             <div className={styles.leftSection}>
               <div className={styles.iconContainer}>{getIcon(item)}</div>
               <div className={styles.textSection}>
@@ -77,10 +78,32 @@ export function InventoryCard({ data }: Readonly<InventoryCardProps>) {
                 {item.description}
               </div>
             </div>
-          </div>
-          {index < data.length - 1 && <div className={styles.separator} />}
-        </Fragment>
-      ))}
+          </>
+        )
+
+        return (
+          <Fragment key={item.id}>
+            {onItemClick ? (
+              <button
+                className={clsx(styles.inventoryItem, styles.clickableItem)}
+                data-testid={`inventory-item-${item.id}`}
+                onClick={() => onItemClick(item.id)}
+                type='button'
+              >
+                {itemContent}
+              </button>
+            ) : (
+              <div
+                className={styles.inventoryItem}
+                data-testid={`inventory-item-${item.id}`}
+              >
+                {itemContent}
+              </div>
+            )}
+            {index < data.length - 1 && <div className={styles.separator} />}
+          </Fragment>
+        )
+      })}
     </div>
   )
 }

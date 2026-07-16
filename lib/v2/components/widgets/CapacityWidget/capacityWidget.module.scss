@@ -9,7 +9,7 @@ $capsule-radius: 50px;
   max-width: 736px;
   height: 100%;
   min-height: 212px;
-  max-height: 252px;
+  max-height: 272px;
   margin-inline: auto;
   gap: 0;
   color: var(--text-color-primary);
@@ -300,19 +300,11 @@ $capsule-radius: 50px;
 }
 
 .capsuleFillSsd {
-  background: linear-gradient(
-    to top,
-    var(--purple-bar-bottom),
-    var(--purple-bar-top)
-  );
+  background: linear-gradient(to top, var(--purple-bar-bottom), var(--purple-bar-top));
 }
 
 .capsuleFillObs {
-  background: linear-gradient(
-    to top,
-    var(--peach-bar-bottom),
-    var(--peach-bar-top)
-  );
+  background: linear-gradient(to top, var(--peach-bar-bottom), var(--peach-bar-top));
 }
 
 .capsuleLabel {
@@ -461,4 +453,3 @@ $capsule-radius: 50px;
     gap: 8px;
   }
 }
-

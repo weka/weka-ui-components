@@ -6,6 +6,14 @@
   position: relative;
 }
 
+.fill {
+  min-height: 0;
+
+  .chartWrapper {
+    min-height: 0;
+  }
+}
+
 .chartWrapper {
   position: relative;
   flex: 1;

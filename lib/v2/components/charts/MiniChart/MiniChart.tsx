@@ -1,6 +1,8 @@
 import type { ComponentProps } from 'react'
 import type { AreaChart } from 'recharts'
 
+import clsx from 'clsx'
+
 import { MiniAreaChart } from './MiniAreaChart'
 
 import styles from './miniChart.module.scss'
@@ -22,6 +24,12 @@ export interface MiniChartProps {
   /** Formats the floating last-value label (default: the raw number). */
   formatValue?: (value: number) => string
   height?: number
+  /**
+   * Fill the available container height instead of the fixed `height`. Set on
+   * a flex-distributed row of charts (e.g. a card that squeezes) so each chart
+   * shrinks/grows with its slot. Leave off for the default fixed-height layout.
+   */
+  fill?: boolean
   isLoading?: boolean
   hasValidData?: boolean
   /** Hide the floating last-value (e.g. while an external tooltip is shown). */
@@ -47,6 +55,7 @@ export function MiniChart({
   color,
   formatValue = String,
   height = DEFAULT_HEIGHT,
+  fill = false,
   isLoading = false,
   hasValidData = true,
   hideLastValue = false,
@@ -60,7 +69,7 @@ export function MiniChart({
 
   return (
     <div
-      className={styles.miniChart}
+      className={clsx(styles.miniChart, { [styles.fill]: fill })}
       data-testid={dataTestId}
     >
       <div className={styles.chartWrapper}>
@@ -73,6 +82,7 @@ export function MiniChart({
           <MiniAreaChart
             color={color}
             data={data}
+            fill={fill}
             hasValidData={hasValidData}
             height={height}
             onMouseLeave={onMouseLeave}

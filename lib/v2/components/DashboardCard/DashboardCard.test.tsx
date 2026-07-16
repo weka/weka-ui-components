@@ -191,4 +191,20 @@ describe('DashboardCard', () => {
       expect(screen.getByTestId(TEST_ID).className).not.toMatch(/frameless/)
     })
   })
+
+  describe('fillHeight', () => {
+    it('applies the fill-height modifier class when fillHeight is true', () => {
+      render(
+        <DashboardCard
+          {...createProps({ fillHeight: true, dataTestId: TEST_ID })}
+        />
+      )
+      expect(screen.getByTestId(TEST_ID).className).toMatch(/fillHeight/)
+    })
+
+    it('does not apply the fill-height modifier class by default', () => {
+      render(<DashboardCard {...createProps({ dataTestId: TEST_ID })} />)
+      expect(screen.getByTestId(TEST_ID).className).not.toMatch(/fillHeight/)
+    })
+  })
 })

@@ -6,6 +6,7 @@ import { EMPTY_STRING, SEVERITY_TYPES } from '#v2/utils/consts'
 import { AlertDetails, type AlertDetailsData } from './AlertDetails'
 
 const ALERT_TIMESTAMP = '2024-01-15T10:30:00Z'
+const STATUS_ROW_SELECTOR = '[class*="statusRow"]'
 
 const createAlert = (
   overrides: Partial<AlertDetailsData> = {}
@@ -76,7 +77,9 @@ describe('AlertDetails', () => {
 
   describe('start time', () => {
     it('renders the timestamp as-is by default', () => {
-      render(<AlertDetails alert={createAlert({ timestamp: ALERT_TIMESTAMP })} />)
+      render(
+        <AlertDetails alert={createAlert({ timestamp: ALERT_TIMESTAMP })} />
+      )
 
       expect(screen.getByText('Start time')).toBeInTheDocument()
       expect(screen.getByText(ALERT_TIMESTAMP)).toBeInTheDocument()
@@ -100,7 +103,7 @@ describe('AlertDetails', () => {
         <AlertDetails alert={createAlert({ severity: SEVERITY_TYPES.MAJOR })} />
       )
 
-      const statusRow = container.querySelector('[class*="statusRow"]')
+      const statusRow = container.querySelector(STATUS_ROW_SELECTOR)
       expect(statusRow?.className).toContain('major')
     })
 
@@ -109,7 +112,7 @@ describe('AlertDetails', () => {
         <AlertDetails alert={createAlert({ severity: EMPTY_STRING })} />
       )
 
-      const statusRow = container.querySelector('[class*="statusRow"]')
+      const statusRow = container.querySelector(STATUS_ROW_SELECTOR)
       expect(statusRow?.className).toContain('default')
     })
   })
@@ -176,6 +179,27 @@ describe('AlertDetails', () => {
       render(<AlertDetails alert={createAlert({ action: undefined })} />)
 
       expect(screen.queryByText('Recommended Action')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('banner size', () => {
+    it('renders a large banner by default', () => {
+      const { container } = render(<AlertDetails alert={createAlert()} />)
+
+      const statusRow = container.querySelector(STATUS_ROW_SELECTOR)
+      expect(statusRow?.className).not.toContain('compact')
+    })
+
+    it('renders a compact banner when bannerSize is small', () => {
+      const { container } = render(
+        <AlertDetails
+          alert={createAlert()}
+          bannerSize='small'
+        />
+      )
+
+      const statusRow = container.querySelector(STATUS_ROW_SELECTOR)
+      expect(statusRow?.className).toContain('compact')
     })
   })
 

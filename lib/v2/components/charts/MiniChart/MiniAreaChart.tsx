@@ -33,6 +33,8 @@ export interface MiniAreaChartProps {
   color: string
   height: number
   hasValidData: boolean
+  /** Fill the container height (height="100%") instead of the fixed `height`. */
+  fill?: boolean
   syncId?: string
   onMouseMove?: AreaChartProps['onMouseMove']
   onMouseLeave?: AreaChartProps['onMouseLeave']
@@ -44,6 +46,7 @@ export function MiniAreaChart({
   color,
   height,
   hasValidData,
+  fill = false,
   syncId,
   onMouseMove,
   onMouseLeave
@@ -57,7 +60,7 @@ export function MiniAreaChart({
   return (
     <ResponsiveContainer
       debounce={RESIZE_DEBOUNCE_MS}
-      height={height}
+      height={fill ? '100%' : height}
       width='100%'
     >
       <AreaChart
