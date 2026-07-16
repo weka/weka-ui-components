@@ -3,8 +3,7 @@
 .segmentedControl {
   display: inline-flex;
   gap: 2px;
-  background: var(--background-secondary);
-  border: 1px solid var(--border-color);
+  background: var(--gray-200-800);
   border-radius: 8px;
   padding: 2px;
 }

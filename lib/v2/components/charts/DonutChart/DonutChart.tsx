@@ -8,6 +8,9 @@ const DEFAULT_PADDING_ANGLE = 3
 const DEFAULT_START_ANGLE = 90
 const DEFAULT_END_ANGLE = 450
 
+/** Zero margin so the ring fills its container edge-to-edge. */
+const NO_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
+
 export interface DonutChartSegment {
   name: string
   value: number
@@ -45,7 +48,7 @@ export function DonutChart({
       height='100%'
       width='100%'
     >
-      <PieChart>
+      <PieChart margin={NO_MARGIN}>
         {defs ? <defs>{defs}</defs> : null}
         <Pie
           cx='50%'

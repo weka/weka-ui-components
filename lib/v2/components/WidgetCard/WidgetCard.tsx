@@ -8,6 +8,12 @@ export interface WidgetCardProps<T> {
   tooltip?: string
   data: T | null
   children: (data: T) => ReactNode
+  /**
+   * When true the underlying card fills its grid cell height (responsive)
+   * instead of the default fixed dashboard height. Passed through to
+   * `DashboardCard`.
+   */
+  fillHeight?: boolean
 }
 
 /**
@@ -20,10 +26,12 @@ export function WidgetCard<T>({
   title,
   tooltip,
   data,
-  children
+  children,
+  fillHeight
 }: Readonly<WidgetCardProps<T>>) {
   return (
     <DashboardCard
+      fillHeight={fillHeight}
       title={title}
       tooltip={tooltip}
     >

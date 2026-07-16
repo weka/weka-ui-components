@@ -13,7 +13,7 @@
   border-radius: 4px;
   padding: 12px 16px;
   margin-right: -16px;
-  height: 80px;
+  height: 66px;
   color: $gray-0;
 
   :global([class*='statusIcon']) {
@@ -23,6 +23,21 @@
     > svg {
       width: 40px !important;
       height: 40px !important;
+    }
+  }
+}
+
+.compact {
+  height: auto;
+  gap: 16px;
+
+  :global([class*='statusIcon']) {
+    width: 16px;
+    height: 16px;
+
+    > svg {
+      width: 16px !important;
+      height: 16px !important;
     }
   }
 }

@@ -453,11 +453,15 @@ export {
   type SortOrder
 } from './widgets/AlertsCard'
 export type {
-  CapacityData,
+  CapacityDataReduction,
+  CapacityProvisionedData,
+  CapacityTierData,
+  CapacityUsableData,
   CapacityWidgetLabels,
-  CapacityWidgetProps
+  CapacityWidgetProps,
+  CapsuleTone
 } from './widgets/CapacityWidget'
-export { CapacityWidget } from './widgets/CapacityWidget'
+export { CapacityWidget, CAPSULE_TONES } from './widgets/CapacityWidget'
 export type {
   ClusterProtectionLabels,
   ClusterProtectionProps
@@ -465,9 +469,3 @@ export type {
 export { ClusterProtection } from './widgets/ClusterProtection'
 export type { InventoryCardProps, InventoryItem } from './widgets/InventoryCard'
 export { InventoryCard } from './widgets/InventoryCard'
-export type {
-  ProvisionedCapacityData,
-  ProvisionedCapacityWidgetLabels,
-  ProvisionedCapacityWidgetProps
-} from './widgets/ProvisionedCapacityWidget'
-export { ProvisionedCapacityWidget } from './widgets/ProvisionedCapacityWidget'

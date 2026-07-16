@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { InventoryCard, type InventoryItem } from './InventoryCard'
 
@@ -209,5 +209,60 @@ describe('InventoryCard', () => {
       expect(screen.getByText('42')).toBeInTheDocument()
       expect(screen.getByText('Online')).toBeInTheDocument()
     })
+  })
+})
+
+describe('InventoryCard Click Interaction', () => {
+  it('renders items as buttons when onItemClick is provided', () => {
+    const onItemClick = vi.fn()
+    render(
+      <InventoryCard
+        {...createProps([createInventoryItem({ id: 'servers' })])}
+        onItemClick={onItemClick}
+      />
+    )
+
+    expect(screen.getAllByRole('button')).toHaveLength(1)
+  })
+
+  it('calls onItemClick with item id when button is clicked', () => {
+    const onItemClick = vi.fn()
+    render(
+      <InventoryCard
+        {...createProps([createInventoryItem({ id: 'servers' })])}
+        onItemClick={onItemClick}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    expect(onItemClick).toHaveBeenCalledOnce()
+    expect(onItemClick).toHaveBeenCalledWith('servers')
+  })
+
+  it('calls onItemClick when Enter is pressed on a button', () => {
+    const onItemClick = vi.fn()
+    render(
+      <InventoryCard
+        {...createProps([createInventoryItem({ id: 'drivers' })])}
+        onItemClick={onItemClick}
+      />
+    )
+
+    const button = screen.getByRole('button')
+    button.focus()
+    fireEvent.keyDown(button, { key: 'Enter', code: 'Enter' })
+    fireEvent.click(button)
+
+    expect(onItemClick).toHaveBeenCalledWith('drivers')
+  })
+
+  it('does not render buttons when onItemClick is absent', () => {
+    render(<InventoryCard {...createProps([createInventoryItem()])} />)
+
+    expect(screen.queryAllByRole('button')).toHaveLength(0)
+    expect(
+      screen.getByTestId('inventory-item-servers').tagName.toLowerCase()
+    ).toBe('div')
   })
 })

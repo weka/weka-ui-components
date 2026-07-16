@@ -3,11 +3,21 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { MiniChart, type MiniChartDataPoint } from './MiniChart'
 
+const responsiveContainerHeightSpy = vi.fn()
+
 vi.mock('recharts', () => ({
   Area: () => null,
   AreaChart: ({ children }: { children?: unknown }) => children ?? null,
-  ResponsiveContainer: ({ children }: { children?: unknown }) =>
-    children ?? null,
+  ResponsiveContainer: ({
+    children,
+    height
+  }: {
+    children?: unknown
+    height?: number | string
+  }) => {
+    responsiveContainerHeightSpy(height)
+    return children ?? null
+  },
   Tooltip: () => null,
   XAxis: () => null,
   YAxis: () => null
@@ -19,6 +29,7 @@ const DATA: MiniChartDataPoint[] = [
   { time: '10:01', value: 250 }
 ]
 const COLOR = 'var(--cyan-500)'
+const DEFAULT_HEIGHT = 50
 
 describe('MiniChart', () => {
   it('renders the title label', () => {
@@ -128,5 +139,32 @@ describe('MiniChart', () => {
     )
 
     expect(screen.queryByTestId(`${TEST_ID}-label`)).not.toBeInTheDocument()
+  })
+
+  it('renders at a fixed numeric height by default', () => {
+    responsiveContainerHeightSpy.mockClear()
+    render(
+      <MiniChart
+        color={COLOR}
+        data={DATA}
+        title={TITLE}
+      />
+    )
+
+    expect(responsiveContainerHeightSpy).toHaveBeenCalledWith(DEFAULT_HEIGHT)
+  })
+
+  it('fills the container height when fill is set', () => {
+    responsiveContainerHeightSpy.mockClear()
+    render(
+      <MiniChart
+        color={COLOR}
+        data={DATA}
+        fill
+        title={TITLE}
+      />
+    )
+
+    expect(responsiveContainerHeightSpy).toHaveBeenCalledWith('100%')
   })
 })

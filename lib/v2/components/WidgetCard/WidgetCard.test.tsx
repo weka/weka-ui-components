@@ -50,4 +50,33 @@ describe('WidgetCard', () => {
 
     expect(screen.getByText(CARD_TITLE)).toBeInTheDocument()
   })
+
+  it('passes fillHeight through to the card when set', () => {
+    const { container } = render(
+      <WidgetCard
+        data={{ label: CHILD_CONTENT }}
+        fillHeight
+        title={CARD_TITLE}
+      >
+        {(resolved) => <span>{resolved.label}</span>}
+      </WidgetCard>
+    )
+
+    expect(container.querySelector('[class*="fillHeight"]')).toBeInTheDocument()
+  })
+
+  it('does not apply fillHeight to the card by default', () => {
+    const { container } = render(
+      <WidgetCard
+        data={{ label: CHILD_CONTENT }}
+        title={CARD_TITLE}
+      >
+        {(resolved) => <span>{resolved.label}</span>}
+      </WidgetCard>
+    )
+
+    expect(
+      container.querySelector('[class*="fillHeight"]')
+    ).not.toBeInTheDocument()
+  })
 })

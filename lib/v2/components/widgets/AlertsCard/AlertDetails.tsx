@@ -3,7 +3,11 @@ import clsx from 'clsx'
 import { EMPTY_STRING, type Severity, SEVERITY_TYPES } from '#v2/utils/consts'
 
 import { MuteIcon, UnmuteIcon } from '../../../icons'
-import { AlertStatusBadge } from '../../AlertStatusBadge'
+import {
+  ALERT_STATUS_BADGE_SIZES,
+  AlertStatusBadge,
+  type AlertStatusBadgeSize
+} from '../../AlertStatusBadge'
 import { type AlertStatus, AlertStatusChip } from '../../AlertStatusChip'
 import { CollapsibleText } from '../../CollapsibleText'
 import { type GroupedAlert, RelatedAlertsTable } from './RelatedAlertsTable'
@@ -52,6 +56,7 @@ export interface AlertDetailsProps {
   alert: AlertDetailsData
   status?: AlertStatus
   showStatus?: boolean
+  bannerSize?: AlertStatusBadgeSize
   formatTimestamp?: (timestamp: string) => string
   labels?: Partial<AlertDetailsLabels>
 }
@@ -60,17 +65,26 @@ export function AlertDetails({
   alert,
   status = 'active',
   showStatus = true,
+  bannerSize = ALERT_STATUS_BADGE_SIZES.LARGE,
   formatTimestamp = identityTimestamp,
   labels
 }: Readonly<AlertDetailsProps>) {
   const text = { ...DEFAULT_LABELS, ...labels }
   const sev = (alert.severity?.toLowerCase?.() ||
     SEVERITY_TYPES.DEFAULT) as Severity
+  const isCompactBanner = bannerSize === ALERT_STATUS_BADGE_SIZES.SMALL
 
   return (
     <div className={styles.container}>
-      <div className={clsx(styles.statusRow, styles[sev])}>
-        <AlertStatusBadge severity={sev} />
+      <div
+        className={clsx(styles.statusRow, styles[sev], {
+          [styles.compact]: isCompactBanner
+        })}
+      >
+        <AlertStatusBadge
+          severity={sev}
+          size={bannerSize}
+        />
         <div className={styles.flexContainer}>
           {showStatus ? (
             <div className={styles.statusBadges}>
