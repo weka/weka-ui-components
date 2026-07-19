@@ -1,0 +1,152 @@
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  max-width: 250px;
+  background: var(--gray-50-920);
+  border: 1px solid var(--gray-450-550);
+  border-radius: 0;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 25%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 16px 12px;
+}
+
+.content {
+  flex: 1;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.searchContainer {
+  position: relative;
+  padding: 0 0 12px;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--gray-100-850);
+  border: 1px solid var(--gray-350-650);
+  border-radius: 4px;
+  height: 32px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--purple-500);
+  }
+}
+
+.searchIcon {
+  padding: 0 4px 0 8px;
+  color: var(--gray-500);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0 8px 0 0;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  height: 100%;
+
+  &::placeholder {
+    color: var(--gray-600-400);
+  }
+}
+
+.selectAllOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  padding: 8px 8px 12px;
+  cursor: pointer;
+  min-width: 0;
+  color: var(--gray-950-20);
+
+  &:hover {
+    background: var(--bg-item-hover);
+  }
+}
+
+.separator {
+  height: 1px;
+  background: var(--gray-350-650);
+  margin-bottom: 12px;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 186px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  cursor: pointer;
+  min-width: 0;
+
+  &:hover {
+    background: var(--bg-item-hover);
+  }
+}
+
+.optionLabel {
+  user-select: none;
+  font-size: 14px;
+  color: var(--gray-950-20);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  display: block;
+}
+
+.optionsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.optionsList::-webkit-scrollbar-track {
+  background: var(--gray-200-800);
+  border-radius: 3px;
+}
+
+.optionsList::-webkit-scrollbar-thumb {
+  background: var(--gray-400-600);
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--gray-500);
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  width: 100%;
+  margin-top: 12px;
+}

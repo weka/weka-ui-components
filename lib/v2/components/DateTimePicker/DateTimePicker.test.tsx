@@ -40,6 +40,21 @@ describe('DateTimePicker - Rendering', () => {
     )
     expect(screen.queryByText('OK')).not.toBeInTheDocument()
   })
+
+  it('applies the fullWidth class when fullWidth is set', () => {
+    const { container } = render(
+      <DateTimePicker
+        fullWidth
+        onChange={vi.fn()}
+      />
+    )
+    expect(container.firstChild).toHaveClass('fullWidth')
+  })
+
+  it('does not apply the fullWidth class by default', () => {
+    const { container } = render(<DateTimePicker onChange={vi.fn()} />)
+    expect(container.firstChild).not.toHaveClass('fullWidth')
+  })
 })
 
 describe('DateTimePicker - Open/Close Behavior', () => {

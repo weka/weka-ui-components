@@ -1,0 +1,238 @@
+@use '../../styles/colors' as *;
+
+$banner-width-xl: 820px;
+$banner-width-lg: 700px;
+$banner-width-md: 630px;
+$text-max-xl: 630px;
+$text-max-lg: 520px;
+$text-max-md: 440px;
+$banner-font-size: 14px;
+$banner-height: 28px;
+$banner-icon-size: 18px;
+$banner-icon-side-padding: 6px;
+$banner-icon-slot-width: $banner-icon-size + ($banner-icon-side-padding * 2);
+$banner-close-icon-size: 14px;
+$banner-close-size: 16px;
+$banner-close-side-padding: 8px;
+$banner-close-slot-width: $banner-close-size + ($banner-close-side-padding * 2);
+$banner-border-radius: 4px;
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: fit-content;
+  max-width: $banner-width-xl;
+  height: $banner-height;
+  min-height: $banner-height;
+  padding: 0;
+  border-radius: $banner-border-radius;
+  box-sizing: border-box;
+  font-size: $banner-font-size;
+  font-weight: 400;
+  flex-shrink: 0;
+
+  @media (width <= 1500px) {
+    max-width: $banner-width-lg;
+  }
+
+  @media (width <= 1320px) {
+    max-width: $banner-width-md;
+  }
+}
+
+.bannerWithoutClose {
+  padding-right: 8px;
+}
+
+%banner-text-on-dark {
+  color: $gray-0;
+
+  .message,
+  .messageArea,
+  .link,
+  .linkButton {
+    color: $gray-0;
+  }
+}
+
+.critical {
+  background: var(--red-700, #{$red-700});
+
+  @extend %banner-text-on-dark;
+}
+
+.major {
+  background: var(--red-500, #{$red-500});
+
+  @extend %banner-text-on-dark;
+}
+
+.minor {
+  background: var(--orange-400, #{$orange-400});
+  color: $gray-920;
+
+  .message,
+  .messageArea,
+  .link,
+  .linkButton {
+    color: $gray-920;
+  }
+}
+
+.warning {
+  background: var(--yellow-600, #{$yellow-600});
+  color: $gray-900;
+
+  .message,
+  .messageArea,
+  .link,
+  .linkButton {
+    color: $gray-900;
+  }
+}
+
+.info {
+  background: var(--gray-150-850);
+  color: var(--text-primary);
+
+  .message,
+  .messageArea,
+  .link,
+  .linkButton {
+    color: var(--text-primary);
+  }
+}
+
+.success {
+  background: var(--green-600, #{$green-600});
+
+  @extend %banner-text-on-dark;
+}
+
+.iconArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $banner-icon-slot-width;
+  height: $banner-height;
+  flex-shrink: 0;
+
+  svg {
+    display: block;
+    width: $banner-icon-size;
+    height: $banner-icon-size;
+  }
+}
+
+.messageArea {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 0;
+  color: inherit;
+}
+
+.message {
+  display: block;
+  min-width: 0;
+  font-size: $banner-font-size;
+  font-weight: 400;
+  line-height: 1.2;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: $text-max-xl;
+  cursor: default;
+
+  @media (width <= 1500px) {
+    max-width: $text-max-lg;
+  }
+
+  @media (width <= 1320px) {
+    max-width: $text-max-md;
+  }
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.messageTooltip {
+  position: fixed;
+  z-index: 2000;
+  max-width: 600px;
+  padding: 6px 8px;
+  border: 1px solid var(--gray-450-550);
+  background-color: var(--gray-50-920);
+  color: var(--gray-900-100);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  box-shadow: 0 0 6px 2px rgb(0 0 0 / 12%);
+  pointer-events: none;
+}
+
+%link-base {
+  flex-shrink: 0;
+  font-size: $banner-font-size;
+  font-weight: 400;
+  margin-left: 8px;
+  padding-right: 0;
+  white-space: nowrap;
+  color: inherit !important;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link[href] {
+  @extend %link-base;
+}
+
+.linkButton {
+  @extend %link-base;
+
+  border: none;
+  background: transparent;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $banner-close-slot-width !important;
+  height: $banner-height !important;
+  min-width: $banner-close-slot-width;
+  margin-left: 0;
+  padding: 0 !important;
+  border: none;
+  background: transparent;
+  color: rgb(255 255 255 / 60%);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  svg {
+    display: block;
+    width: $banner-close-icon-size !important;
+    height: $banner-close-icon-size !important;
+    min-width: $banner-close-icon-size;
+    min-height: $banner-close-icon-size;
+  }
+}
+
+.closeButtonOnLight {
+  color: rgb(0 0 0 / 40%);
+}
+
+.closeButtonOnWarning {
+  color: rgb(0 0 0 / 50%);
+}

@@ -205,7 +205,8 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'WarningCircleIcon (filled)', node: <WarningCircleIcon filled /> },
   { name: 'WarningIcon (outline)', node: <WarningIcon /> },
   { name: 'WarningIcon (filled)', node: <WarningIcon filled /> },
-  { name: 'WarningTriangleIcon', node: <WarningTriangleIcon /> }
+  { name: 'WarningTriangleIcon (outline)', node: <WarningTriangleIcon /> },
+  { name: 'WarningTriangleIcon (filled)', node: <WarningTriangleIcon filled /> }
 ]
 
 export const GeneralIcons: Story = {

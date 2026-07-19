@@ -1,0 +1,14 @@
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-920-50);
+  cursor: default;
+  user-select: none;
+  background: linear-gradient(0deg, var(--gray-300-700) 0%, var(--gray-100-900) 100%);
+}
