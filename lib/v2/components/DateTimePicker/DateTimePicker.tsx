@@ -25,6 +25,7 @@ export interface DateTimePickerProps {
   enableCustomFormat?: boolean
   customFormat?: string
   popperProps?: Partial<PopperProps>
+  fullWidth?: boolean
 }
 
 export function DateTimePicker({
@@ -40,7 +41,8 @@ export function DateTimePicker({
   showNow,
   enableCustomFormat,
   customFormat,
-  popperProps
+  popperProps,
+  fullWidth
 }: Readonly<DateTimePickerProps>) {
   const [isOpen, setIsOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null)
@@ -52,7 +54,7 @@ export function DateTimePicker({
   return (
     <div
       ref={handleRef}
-      className={styles.datetimePicker}
+      className={clsx(styles.datetimePicker, fullWidth && styles.fullWidth)}
     >
       <div
         className={styles.pickerLabel}
