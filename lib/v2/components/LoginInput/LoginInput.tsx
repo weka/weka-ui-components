@@ -6,6 +6,7 @@ import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
 
+import { WarningCircleIcon } from '../../icons'
 import { LOGIN_FIELD_TYPES } from '../LoginField'
 import { PasswordToggleButton } from './PasswordToggleButton'
 
@@ -100,7 +101,12 @@ export function LoginInput({
           </span>
         ) : null}
       </div>
-      {error ? <span className={styles.errorMessage}>{error}</span> : null}
+      {error ? (
+        <span className={styles.errorMessage}>
+          <WarningCircleIcon filled />
+          <span className={styles.errorText}>{error}</span>
+        </span>
+      ) : null}
     </div>
   )
 }
