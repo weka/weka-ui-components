@@ -14,17 +14,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 12px 8px;
   flex: 1;
-
-  &:first-child {
-    padding-top: 0;
-  }
 }
 
 @container (height <= 244px) {
   .inventoryItem {
-    padding: 6px 0;
+    padding: 6px 8px;
   }
 }
 
@@ -33,12 +29,13 @@
   border: none;
   background: transparent;
   width: 100%;
+  box-sizing: border-box;
   font: inherit;
   color: inherit;
   text-align: left;
 
   &:hover {
-    background-color: var(--hover-bg, rgb(255 255 255 / 5%));
+    background-color: var(--gray-50-920);
   }
 }
 
