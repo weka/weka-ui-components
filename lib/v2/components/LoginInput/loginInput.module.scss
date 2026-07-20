@@ -1,6 +1,7 @@
 @use '../../styles/colors' as *;
 
 .fieldContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -39,10 +40,10 @@
 }
 
 .hasError {
-  border-color: $red-500;
+  border-color: var(--red-700-300);
 
   &:focus-within {
-    border-color: $red-500;
+    border-color: var(--red-700-300);
   }
 }
 
@@ -90,7 +91,23 @@
 }
 
 .errorMessage {
-  font-size: 13px;
-  color: $red-500;
-  margin-top: 6px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--red-700-300);
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.errorText::first-letter {
+  text-transform: uppercase;
 }
