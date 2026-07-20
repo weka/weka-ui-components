@@ -332,7 +332,7 @@ $capsule-radius: 50px;
   width: 358px;
   max-width: 100%;
   height: 30px;
-  padding: 1px 4px 2px 8px;
+  padding: 1px 8px 2px 8px;
   background-color: var(--gray-200-800);
   border-radius: 0;
 }
@@ -355,7 +355,7 @@ $capsule-radius: 50px;
 }
 
 .provisionedSection .totalPill {
-  width: 240px;
+  width: 280px;
   margin-top: auto;
   align-self: flex-start;
 }
@@ -411,8 +411,13 @@ $capsule-radius: 50px;
     gap: 12px;
   }
 
+  .provisionedSection {
+    padding-left: 10px;
+    padding-right: 0;
+  }
+
   .provisionedSection .totalPill {
-    width: 154px;
+    width: 200px;
   }
 
   .provisionedSection .totalLabel {
