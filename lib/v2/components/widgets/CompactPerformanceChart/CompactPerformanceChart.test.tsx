@@ -226,6 +226,31 @@ describe('CompactPerformanceChart', () => {
     expect(screen.queryByText(EMPTY_CONTENT)).not.toBeInTheDocument()
   })
 
+  it('does not swap a hovered chart to its loading skeleton mid-hover', () => {
+    const throughputLoadingTestId = `${CONTAINER_TEST_ID}-throughput-loading`
+    capturedOnMouseMove.length = 0
+    const props = buildProps()
+    const { rerender } = render(<CompactPerformanceChart {...props} />)
+
+    act(() => {
+      capturedOnMouseMove[0]({ activeTooltipIndex: 1, activeLabel: '10:01' })
+    })
+
+    rerender(
+      <CompactPerformanceChart
+        {...props}
+        throughput={{ ...props.throughput, isLoading: true }}
+      />
+    )
+    expect(
+      screen.queryByTestId(throughputLoadingTestId)
+    ).not.toBeInTheDocument()
+
+    fireEvent.mouseLeave(screen.getByTestId(CONTAINER_TEST_ID))
+
+    expect(screen.getByTestId(throughputLoadingTestId)).toBeInTheDocument()
+  })
+
   it('resumes live data immediately once the tooltip deactivates', () => {
     capturedOnMouseMove.length = 0
     const props = buildProps()
