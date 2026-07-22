@@ -170,6 +170,8 @@ export {
 } from './DraggableCard'
 export type { EmptyChartStateProps } from './EmptyChartState'
 export { EmptyChartState } from './EmptyChartState'
+export type { ErrorPageProps } from './ErrorPage'
+export { ErrorPage } from './ErrorPage'
 export type { ExpandableSearchProps } from './ExpandableSearch'
 export { ExpandableSearch } from './ExpandableSearch'
 export type {
