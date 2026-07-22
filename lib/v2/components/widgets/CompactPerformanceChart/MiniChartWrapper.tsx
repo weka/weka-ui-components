@@ -7,8 +7,6 @@ import type { Dispatch, MouseEvent, SetStateAction } from 'react'
 
 import { useCallback } from 'react'
 
-import { EMPTY_STRING } from '#v2/utils/consts'
-
 import { MiniChart } from '../../charts/MiniChart'
 
 import styles from './compactPerformanceChart.module.scss'
@@ -27,14 +25,6 @@ interface MiniChartWrapperProps {
 
 const SYNC_ID = 'compact-performance-chart'
 
-const INACTIVE_TOOLTIP_STATE: TooltipState = {
-  active: false,
-  label: EMPTY_STRING,
-  dataIndex: -1,
-  viewportX: 0,
-  viewportY: 0
-}
-
 /**
  * Wraps the shared `MiniChart` with the cross-chart hover coordination
  * (viewport mouse position + active point) that drives the `UnifiedTooltip`;
@@ -42,6 +32,11 @@ const INACTIVE_TOOLTIP_STATE: TooltipState = {
  * (rather than container-relative ones) let the tooltip be portaled to
  * `document.body` and positioned correctly even when an ancestor applies a
  * CSS `zoom`.
+ *
+ * Deactivation is intentionally owned by the parent container's `onMouseLeave`,
+ * not each chart's: moving between the synced charts crosses the gap between
+ * them, and per-chart leave handling would drop the shared tooltip and flash
+ * the last-value badges back mid-hover.
  */
 export function MiniChartWrapper({
   label,
@@ -81,10 +76,6 @@ export function MiniChartWrapper({
     [onTooltipChange]
   )
 
-  const handleMouseLeave = useCallback(() => {
-    onTooltipChange(INACTIVE_TOOLTIP_STATE)
-  }, [onTooltipChange])
-
   const handleWrapperMouseMove = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
       onTooltipChange((prev) => {
@@ -115,7 +106,6 @@ export function MiniChartWrapper({
         hasValidData={hasValidData}
         hideLastValue={isHovered}
         isLoading={isLoading}
-        onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
         syncId={SYNC_ID}
         title={label}

@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { CompactPerformanceChart } from './CompactPerformanceChart'
@@ -7,27 +7,20 @@ type MouseMoveHandler = (state: {
   activeTooltipIndex?: number
   activeLabel?: string
 }) => void
-type MouseLeaveHandler = () => void
 
 const capturedOnMouseMove: MouseMoveHandler[] = []
-const capturedOnMouseLeave: MouseLeaveHandler[] = []
 
 vi.mock('recharts', () => ({
   Area: () => null,
   AreaChart: ({
     children,
-    onMouseMove,
-    onMouseLeave
+    onMouseMove
   }: {
     children?: unknown
     onMouseMove?: MouseMoveHandler
-    onMouseLeave?: MouseLeaveHandler
   }) => {
     if (onMouseMove) {
       capturedOnMouseMove.push(onMouseMove)
-    }
-    if (onMouseLeave) {
-      capturedOnMouseLeave.push(onMouseLeave)
     }
     return children ?? null
   },
@@ -37,6 +30,9 @@ vi.mock('recharts', () => ({
   XAxis: () => null,
   YAxis: () => null
 }))
+
+const CONTAINER_TEST_ID = 'compact-performance'
+const TOOLTIP_TEST_ID = 'compact-performance-tooltip'
 
 const buildProps = () => ({
   throughput: {
@@ -63,7 +59,7 @@ const buildProps = () => ({
     formatValue: (value: number) => `${value} ms`,
     label: 'Avg. Latency'
   },
-  dataTestId: 'compact-performance'
+  dataTestId: CONTAINER_TEST_ID
 })
 
 describe('CompactPerformanceChart', () => {
@@ -86,7 +82,7 @@ describe('CompactPerformanceChart', () => {
     render(<CompactPerformanceChart {...buildProps()} />)
 
     expect(
-      screen.queryByTestId('compact-performance-tooltip')
+      screen.queryByTestId(TOOLTIP_TEST_ID)
     ).not.toBeInTheDocument()
   })
 
@@ -99,7 +95,7 @@ describe('CompactPerformanceChart', () => {
     })
 
     expect(
-      screen.getByTestId('compact-performance-tooltip')
+      screen.getByTestId(TOOLTIP_TEST_ID)
     ).toBeInTheDocument()
     expect(screen.getByText('150 MB/s')).toBeInTheDocument()
     expect(screen.getByText('1500 ops')).toBeInTheDocument()
@@ -150,9 +146,26 @@ describe('CompactPerformanceChart', () => {
     expect(screen.queryByText('999 MB/s')).not.toBeInTheDocument()
   })
 
+  it('hides the unified tooltip once the pointer leaves the chart container', () => {
+    capturedOnMouseMove.length = 0
+    render(<CompactPerformanceChart {...buildProps()} />)
+
+    act(() => {
+      capturedOnMouseMove[0]({ activeTooltipIndex: 1, activeLabel: '10:01' })
+    })
+    expect(
+      screen.getByTestId(TOOLTIP_TEST_ID)
+    ).toBeInTheDocument()
+
+    fireEvent.mouseLeave(screen.getByTestId(CONTAINER_TEST_ID))
+
+    expect(
+      screen.queryByTestId(TOOLTIP_TEST_ID)
+    ).not.toBeInTheDocument()
+  })
+
   it('resumes live data immediately once the tooltip deactivates', () => {
     capturedOnMouseMove.length = 0
-    capturedOnMouseLeave.length = 0
     const props = buildProps()
     const { rerender } = render(<CompactPerformanceChart {...props} />)
 
@@ -169,9 +182,7 @@ describe('CompactPerformanceChart', () => {
     }
     rerender(<CompactPerformanceChart {...updatedProps} />)
 
-    act(() => {
-      capturedOnMouseLeave[0]()
-    })
+    fireEvent.mouseLeave(screen.getByTestId(CONTAINER_TEST_ID))
 
     expect(screen.getByText('999 MB/s')).toBeInTheDocument()
   })

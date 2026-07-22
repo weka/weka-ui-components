@@ -51,10 +51,8 @@ export function interpolateValue(
   return beforePoint.value + valueRange * targetProgress
 }
 
-/** Flat zero-value series at the given timestamps, for a metric with no raw data of its own. */
-export function generateZeroLineData(
-  timestamps: number[]
-): TimeSeriesPoint[] {
+/** Flat zero-value series at the given timestamps, for a series with no raw data of its own. */
+export function generateZeroLineData(timestamps: number[]): TimeSeriesPoint[] {
   return timestamps.map((timestamp) => ({
     timestamp,
     time: formatTooltipTimestamp(timestamp),
@@ -65,23 +63,24 @@ export function generateZeroLineData(
 const hasAnyTimestamp = (points: TimeSeriesPoint[]): boolean =>
   points.some((point) => point.timestamp !== undefined)
 
-const toTimestampedValues = (
-  points: TimeSeriesPoint[]
-): TimestampedValue[] =>
+const toTimestampedValues = (points: TimeSeriesPoint[]): TimestampedValue[] =>
   points
     .filter((point) => point.timestamp !== undefined)
-    .map((point) => ({ timestamp: point.timestamp as number, value: point.value }))
+    .map((point) => ({
+      timestamp: point.timestamp as number,
+      value: point.value
+    }))
 
 /**
- * Aligns the three metric series onto a single common timeline so the same
- * `dataIndex` refers to the same instant in every series (required for the
- * synced hover cursor + unified tooltip to read matching points).
+ * Aligns three raw series onto a single common timeline so the same array
+ * index refers to the same instant in every returned series, letting callers
+ * read matching points across all three by one shared index.
  *
  * When none of the incoming points carry a `timestamp`, the series are
  * assumed already positionally aligned (the common case for a single shared
  * data source) and are returned unchanged. Otherwise every unique timestamp
  * across the three series becomes a row, with missing values filled in by
- * interpolation (or a flat zero line for a metric with no raw data at all).
+ * interpolation (or a flat zero line for a series with no raw data at all).
  */
 export function createCommonTimelineData(
   throughputRaw: TimeSeriesPoint[],
@@ -118,13 +117,20 @@ export function createCommonTimelineData(
     (first, second) => first - second
   )
 
-  const alignToTimeline = (
-    points: TimeSeriesPoint[]
-  ): TimeSeriesPoint[] => {
-    const timestampedValues = toTimestampedValues(points)
-    if (timestampedValues.length === 0) {
+  const alignToTimeline = (points: TimeSeriesPoint[]): TimeSeriesPoint[] => {
+    if (points.length === 0) {
       return generateZeroLineData(sortedTimestamps)
     }
+
+    const timestampedValues = toTimestampedValues(points)
+    if (timestampedValues.length === 0) {
+      return sortedTimestamps.map((timestamp, index) => ({
+        timestamp,
+        time: formatTooltipTimestamp(timestamp),
+        value: points[index]?.value ?? 0
+      }))
+    }
+
     return sortedTimestamps.map((timestamp) => ({
       timestamp,
       time: formatTooltipTimestamp(timestamp),

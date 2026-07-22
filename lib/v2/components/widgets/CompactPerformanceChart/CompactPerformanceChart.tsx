@@ -1,6 +1,6 @@
 import type { CompactPerformanceChartProps, TooltipState } from './types'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
 
@@ -85,10 +85,16 @@ export function CompactPerformanceChart({
   const iopsColor = iops.color ?? DEFAULT_IOPS_COLOR
   const latencyColor = latency.color ?? DEFAULT_LATENCY_COLOR
 
+  const handleMouseLeave = useCallback(
+    () => setTooltipState(INITIAL_TOOLTIP_STATE),
+    []
+  )
+
   return (
     <div
       className={styles.chartsContainer}
       data-testid={dataTestId}
+      onMouseLeave={handleMouseLeave}
     >
       <MiniChartWrapper
         color={throughputColor}

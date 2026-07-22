@@ -102,6 +102,23 @@ describe('createCommonTimelineData', () => {
     expect(result.latencyData).toHaveLength(throughputRaw.length)
   })
 
+  it('keeps a series that has values but no timestamps while a sibling is timestamped', () => {
+    const throughputRaw: TimeSeriesPoint[] = [
+      { time: 't1', timestamp: FIRST_POINT.timestamp, value: 10 },
+      { time: 't2', timestamp: SECOND_POINT.timestamp, value: 20 }
+    ]
+    const iopsRaw: TimeSeriesPoint[] = [
+      { time: 't1', value: 1000 },
+      { time: 't2', value: 1500 }
+    ]
+
+    const result = createCommonTimelineData(throughputRaw, iopsRaw, [])
+
+    expect(result.iopsData.map((point) => point.value)).toEqual(
+      iopsRaw.map((point) => point.value)
+    )
+  })
+
   it('fills a metric with no raw data of its own with a zero line', () => {
     const throughputRaw: TimeSeriesPoint[] = [
       { time: 't1', timestamp: FIRST_POINT.timestamp, value: FIRST_POINT.value }

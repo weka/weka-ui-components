@@ -12,7 +12,6 @@ type CapturedRechartsHandlers = {
     state: { activeTooltipIndex?: number; activeLabel?: string },
     event?: { clientX: number; clientY: number }
   ) => void
-  onMouseLeave?: () => void
 }
 
 const capturedHandlers: CapturedRechartsHandlers = {}
@@ -21,15 +20,12 @@ vi.mock('recharts', () => ({
   Area: () => null,
   AreaChart: ({
     children,
-    onMouseMove,
-    onMouseLeave
+    onMouseMove
   }: {
     children?: unknown
     onMouseMove?: CapturedRechartsHandlers['onMouseMove']
-    onMouseLeave?: CapturedRechartsHandlers['onMouseLeave']
   }) => {
     capturedHandlers.onMouseMove = onMouseMove
-    capturedHandlers.onMouseLeave = onMouseLeave
 
     return children ?? null
   },
@@ -115,19 +111,5 @@ describe('MiniChartWrapper', () => {
     capturedHandlers.onMouseMove?.({})
 
     expect(onTooltipChange).not.toHaveBeenCalled()
-  })
-
-  it('resets the tooltip state on mouse leave', () => {
-    const onTooltipChange = renderWrapper()
-
-    capturedHandlers.onMouseLeave?.()
-
-    expect(onTooltipChange).toHaveBeenCalledWith({
-      active: false,
-      label: EMPTY_STRING,
-      dataIndex: -1,
-      viewportX: 0,
-      viewportY: 0
-    })
   })
 })
