@@ -1,0 +1,77 @@
+.unifiedTooltip {
+  position: fixed;
+  left: var(--tooltip-left);
+  top: var(--tooltip-top);
+  z-index: 2200;
+  pointer-events: none;
+  animation: fade-in-tooltip 0.2s ease-out;
+  background: var(--bg-primary);
+  border: 1px solid var(--gray-600-400);
+  padding: 12px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  min-width: 160px;
+  border-radius: 4px;
+}
+
+.tooltipTime {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltipIcon {
+  color: var(--gray-700-300);
+}
+
+.tooltipMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tooltipMetric {
+  display: grid;
+  grid-template-columns: 8px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tooltipMetricDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tooltipMetricLabel {
+  color: var(--text-secondary);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.tooltipMetricValue {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@keyframes fade-in-tooltip {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

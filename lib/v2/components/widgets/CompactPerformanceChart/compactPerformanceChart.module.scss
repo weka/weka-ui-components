@@ -1,0 +1,16 @@
+.chartsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  position: relative;
+}
+
+.chartHover {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  position: relative;
+}
