@@ -36,6 +36,8 @@ export interface UnifiedTooltipMetric {
   label: string
   color: string
   formatValue: (value: number) => string
+  /** When false the metric is loading or has no real data, so the tooltip shows a placeholder rather than a formatted `0`. */
+  hasData: boolean
 }
 
 export interface UnifiedTooltipProps {

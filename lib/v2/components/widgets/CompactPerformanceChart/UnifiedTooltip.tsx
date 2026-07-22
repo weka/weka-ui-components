@@ -3,6 +3,8 @@ import type { CSSProperties } from 'react'
 
 import { createPortal } from 'react-dom'
 
+import { EMPTY_CONTENT } from '#consts'
+
 import { DateTimeIcon } from '../../../icons'
 import { formatTooltipTimestamp } from '../../charts/utils/xAxisFormatters'
 
@@ -100,7 +102,9 @@ export function UnifiedTooltip({
             />
             <span className={styles.tooltipMetricLabel}>{metric.label}</span>
             <span className={styles.tooltipMetricValue}>
-              {metric.formatValue(points[index]?.value ?? 0)}
+              {metric.hasData
+                ? metric.formatValue(points[index]?.value ?? 0)
+                : EMPTY_CONTENT}
             </span>
           </div>
         ))}

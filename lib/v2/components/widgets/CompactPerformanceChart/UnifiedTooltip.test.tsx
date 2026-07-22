@@ -3,16 +3,20 @@ import type { CompactPerformanceDataPoint, UnifiedTooltipMetric } from './types'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { EMPTY_CONTENT } from '#consts'
+
 import { UnifiedTooltip } from './UnifiedTooltip'
 
 const buildMetric = (
   label: string,
   color: string,
-  data: CompactPerformanceDataPoint[]
+  data: CompactPerformanceDataPoint[],
+  hasData = true
 ): UnifiedTooltipMetric => ({
   data,
   label,
   color,
+  hasData,
   formatValue: (value) => `${value} u`
 })
 
@@ -125,6 +129,20 @@ describe('UnifiedTooltip', () => {
     )
 
     expect(screen.getByText('12:00:00')).toBeInTheDocument()
+  })
+
+  it('shows a placeholder instead of a formatted value for a metric with no data', () => {
+    render(
+      <UnifiedTooltip
+        {...defaultProps}
+        metrics={[
+          buildMetric('IOPS', 'var(--aqua-500)', [iopsPoint], false)
+        ]}
+      />
+    )
+
+    expect(screen.getByText(EMPTY_CONTENT)).toBeInTheDocument()
+    expect(screen.queryByText('500 u')).not.toBeInTheDocument()
   })
 
   it('returns null when dataIndex is negative', () => {

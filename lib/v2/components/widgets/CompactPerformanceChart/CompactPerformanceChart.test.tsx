@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { EMPTY_CONTENT } from '#consts'
+
 import { CompactPerformanceChart } from './CompactPerformanceChart'
 
 type MouseMoveHandler = (state: {
@@ -120,6 +122,25 @@ describe('CompactPerformanceChart', () => {
     expect(screen.getByText('150 MB/s')).toBeInTheDocument()
     expect(screen.getByText('1500 ops')).toBeInTheDocument()
     expect(screen.getByText('2 ms')).toBeInTheDocument()
+  })
+
+  it('shows a placeholder for a still-loading metric instead of a zero value', () => {
+    capturedOnMouseMove.length = 0
+    const props = buildProps()
+    render(
+      <CompactPerformanceChart
+        {...props}
+        iops={{ ...props.iops, data: [], isLoading: true }}
+      />
+    )
+
+    act(() => {
+      capturedOnMouseMove[0]({ activeTooltipIndex: 1, activeLabel: '10:01' })
+    })
+
+    expect(screen.getByText('150 MB/s')).toBeInTheDocument()
+    expect(screen.getByText(EMPTY_CONTENT)).toBeInTheDocument()
+    expect(screen.queryByText('0 ops')).not.toBeInTheDocument()
   })
 
   it('reflects a new data-prop update while the tooltip is inactive', () => {

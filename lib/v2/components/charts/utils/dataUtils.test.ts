@@ -129,6 +129,19 @@ describe('createCommonTimelineData', () => {
     )
   })
 
+  it('zero-fills an untimestamped series that does not line up 1:1 with the timeline', () => {
+    const throughputRaw: TimeSeriesPoint[] = [
+      { time: 't1', timestamp: FIRST_POINT.timestamp, value: 10 },
+      { time: 't2', timestamp: SECOND_POINT.timestamp, value: 20 }
+    ]
+    const iopsRaw: TimeSeriesPoint[] = [{ time: 't1', value: 1000 }]
+
+    const result = createCommonTimelineData(throughputRaw, iopsRaw, [])
+
+    expect(result.iopsData).toHaveLength(throughputRaw.length)
+    expect(result.iopsData.every((point) => point.value === 0)).toBe(true)
+  })
+
   it('fills a metric with no raw data of its own with a zero line', () => {
     const throughputRaw: TimeSeriesPoint[] = [
       { time: 't1', timestamp: FIRST_POINT.timestamp, value: FIRST_POINT.value }

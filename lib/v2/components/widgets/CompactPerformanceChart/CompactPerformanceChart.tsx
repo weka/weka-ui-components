@@ -1,4 +1,8 @@
-import type { CompactPerformanceChartProps, TooltipState } from './types'
+import type {
+  CompactPerformanceChartProps,
+  CompactPerformanceMetricData,
+  TooltipState
+} from './types'
 
 import { useCallback, useId, useMemo, useState } from 'react'
 
@@ -87,6 +91,9 @@ export function CompactPerformanceChart({
   const iopsColor = iops.color ?? DEFAULT_IOPS_COLOR
   const latencyColor = latency.color ?? DEFAULT_LATENCY_COLOR
 
+  const hasRealData = (metric: CompactPerformanceMetricData): boolean =>
+    !metric.isLoading && metric.hasValidData !== false && metric.data.length > 0
+
   const handleMouseLeave = useCallback(
     () => setTooltipState(INITIAL_TOOLTIP_STATE),
     []
@@ -146,19 +153,22 @@ export function CompactPerformanceChart({
               data: throughputData,
               label: throughput.label,
               color: throughputColor,
-              formatValue: throughput.formatValue
+              formatValue: throughput.formatValue,
+              hasData: hasRealData(throughput)
             },
             {
               data: iopsData,
               label: iops.label,
               color: iopsColor,
-              formatValue: iops.formatValue
+              formatValue: iops.formatValue,
+              hasData: hasRealData(iops)
             },
             {
               data: latencyData,
               label: latency.label,
               color: latencyColor,
-              formatValue: latency.formatValue
+              formatValue: latency.formatValue,
+              hasData: hasRealData(latency)
             }
           ]}
         />

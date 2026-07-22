@@ -41,19 +41,22 @@ const METRICS: UnifiedTooltipMetric[] = [
     data: [THROUGHPUT_POINT],
     label: 'Throughput',
     color: 'var(--cyan-500)',
-    formatValue: formatThroughput
+    formatValue: formatThroughput,
+    hasData: true
   },
   {
     data: [IOPS_POINT],
     label: 'IOPS',
     color: 'var(--aqua-500)',
-    formatValue: formatIops
+    formatValue: formatIops,
+    hasData: true
   },
   {
     data: [LATENCY_POINT],
     label: 'Avg. Latency',
     color: 'var(--orange-500)',
-    formatValue: formatLatency
+    formatValue: formatLatency,
+    hasData: true
   }
 ]
 

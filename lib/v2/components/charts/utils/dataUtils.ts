@@ -129,10 +129,13 @@ export function createCommonTimelineData(
 
     const timestampedValues = toTimestampedValues(points)
     if (timestampedValues.length === 0) {
+      if (points.length !== sortedTimestamps.length) {
+        return generateZeroLineData(sortedTimestamps)
+      }
       return sortedTimestamps.map((timestamp, index) => ({
         timestamp,
         time: formatTooltipTimestamp(timestamp),
-        value: points[index]?.value ?? 0
+        value: points[index].value
       }))
     }
 
