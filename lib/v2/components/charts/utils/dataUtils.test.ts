@@ -44,6 +44,16 @@ describe('interpolateValue', () => {
       SECOND_POINT.value
     )
   })
+
+  it('sorts by timestamp so unordered input still picks the correct neighbors', () => {
+    const unorderedSeries = [SECOND_POINT, FIRST_POINT]
+    const midpointTimestamp =
+      (FIRST_POINT.timestamp + SECOND_POINT.timestamp) / 2
+    const midpointValue = (FIRST_POINT.value + SECOND_POINT.value) / 2
+    expect(interpolateValue(unorderedSeries, midpointTimestamp)).toBe(
+      midpointValue
+    )
+  })
 })
 
 describe('generateZeroLineData', () => {

@@ -51,6 +51,7 @@ const renderWrapper = (onTooltipChange = vi.fn()) => {
       isHovered={false}
       label='Throughput'
       onTooltipChange={onTooltipChange}
+      syncId='test-sync-id'
     />
   )
   return onTooltipChange

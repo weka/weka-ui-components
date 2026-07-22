@@ -9,18 +9,24 @@ type MouseMoveHandler = (state: {
 }) => void
 
 const capturedOnMouseMove: MouseMoveHandler[] = []
+const capturedSyncIds: string[] = []
 
 vi.mock('recharts', () => ({
   Area: () => null,
   AreaChart: ({
     children,
-    onMouseMove
+    onMouseMove,
+    syncId
   }: {
     children?: unknown
     onMouseMove?: MouseMoveHandler
+    syncId?: string
   }) => {
     if (onMouseMove) {
       capturedOnMouseMove.push(onMouseMove)
+    }
+    if (syncId) {
+      capturedSyncIds.push(syncId)
     }
     return children ?? null
   },
@@ -76,6 +82,20 @@ describe('CompactPerformanceChart', () => {
     expect(screen.getByText('Throughput')).toBeInTheDocument()
     expect(screen.getByText('IOPS')).toBeInTheDocument()
     expect(screen.getByText('Avg. Latency')).toBeInTheDocument()
+  })
+
+  it('syncs its own three charts together but not across separate instances', () => {
+    const CHARTS_PER_INSTANCE = 3
+    capturedSyncIds.length = 0
+    render(<CompactPerformanceChart {...buildProps()} />)
+    render(<CompactPerformanceChart {...buildProps()} />)
+
+    const firstInstance = capturedSyncIds.slice(0, CHARTS_PER_INSTANCE)
+    const secondInstance = capturedSyncIds.slice(CHARTS_PER_INSTANCE)
+
+    expect(new Set(firstInstance).size).toBe(1)
+    expect(new Set(secondInstance).size).toBe(1)
+    expect(firstInstance[0]).not.toBe(secondInstance[0])
   })
 
   it('does not render the unified tooltip before any chart is hovered', () => {

@@ -1,6 +1,6 @@
 import type { CompactPerformanceChartProps, TooltipState } from './types'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useId, useMemo, useState } from 'react'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
 
@@ -42,6 +42,8 @@ export function CompactPerformanceChart({
   const [tooltipState, setTooltipState] = useState<TooltipState>(
     INITIAL_TOOLTIP_STATE
   )
+
+  const syncId = useId()
 
   const liveSeries = useMemo(
     () => createCommonTimelineData(throughput.data, iops.data, latency.data),
@@ -106,6 +108,7 @@ export function CompactPerformanceChart({
         isLoading={throughput.isLoading}
         label={throughput.label}
         onTooltipChange={setTooltipState}
+        syncId={syncId}
       />
       <MiniChartWrapper
         color={iopsColor}
@@ -117,6 +120,7 @@ export function CompactPerformanceChart({
         isLoading={iops.isLoading}
         label={iops.label}
         onTooltipChange={setTooltipState}
+        syncId={syncId}
       />
       <MiniChartWrapper
         color={latencyColor}
@@ -128,6 +132,7 @@ export function CompactPerformanceChart({
         isLoading={latency.isLoading}
         label={latency.label}
         onTooltipChange={setTooltipState}
+        syncId={syncId}
       />
       {tooltipState.active ? (
         <UnifiedTooltip

@@ -16,14 +16,13 @@ interface MiniChartWrapperProps {
   data: CompactPerformanceDataPoint[]
   color: string
   formatValue: (value: number) => string
+  syncId: string
   isLoading?: boolean
   hasValidData?: boolean
   isHovered: boolean
   onTooltipChange: Dispatch<SetStateAction<TooltipState>>
   dataTestId?: string
 }
-
-const SYNC_ID = 'compact-performance-chart'
 
 /**
  * Wraps the shared `MiniChart` with the cross-chart hover coordination
@@ -43,6 +42,7 @@ export function MiniChartWrapper({
   data,
   color,
   formatValue,
+  syncId,
   isLoading = false,
   hasValidData = true,
   isHovered,
@@ -107,7 +107,7 @@ export function MiniChartWrapper({
         hideLastValue={isHovered}
         isLoading={isLoading}
         onMouseMove={handleMouseMove}
-        syncId={SYNC_ID}
+        syncId={syncId}
         title={label}
       />
     </div>

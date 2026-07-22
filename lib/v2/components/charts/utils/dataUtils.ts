@@ -11,7 +11,8 @@ interface TimestampedValue {
  * Value at `targetTimestamp` for a raw time series: an exact match when one
  * exists, otherwise linear interpolation between the nearest surrounding
  * points (or the nearest edge point when `targetTimestamp` falls outside the
- * series). Returns `0` for an empty series.
+ * series). Returns `0` for an empty series. Input order does not matter — the
+ * points are sorted by timestamp before the neighbors are picked.
  */
 export function interpolateValue(
   rawData: TimestampedValue[],
@@ -21,17 +22,21 @@ export function interpolateValue(
     return 0
   }
 
-  const exactMatch = rawData.find(
+  const sortedData = [...rawData].sort(
+    (first, second) => first.timestamp - second.timestamp
+  )
+
+  const exactMatch = sortedData.find(
     (point) => point.timestamp === targetTimestamp
   )
   if (exactMatch) {
     return exactMatch.value
   }
 
-  const beforePoints = rawData.filter(
+  const beforePoints = sortedData.filter(
     (point) => point.timestamp < targetTimestamp
   )
-  const afterPoints = rawData.filter(
+  const afterPoints = sortedData.filter(
     (point) => point.timestamp > targetTimestamp
   )
 
