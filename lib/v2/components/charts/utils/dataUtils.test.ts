@@ -88,6 +88,40 @@ describe('createCommonTimelineData', () => {
     expect(result.latencyData).toBe(latencyRaw)
   })
 
+  it('pads an empty positional metric to its siblings length to keep index sync', () => {
+    const throughputRaw: TimeSeriesPoint[] = [
+      { time: 't1', value: 100 },
+      { time: 't2', value: 150 }
+    ]
+    const iopsRaw: TimeSeriesPoint[] = []
+    const latencyRaw: TimeSeriesPoint[] = [
+      { time: 't1', value: 1 },
+      { time: 't2', value: 2 }
+    ]
+
+    const result = createCommonTimelineData(throughputRaw, iopsRaw, latencyRaw)
+
+    expect(result.iopsData).toHaveLength(throughputRaw.length)
+    expect(result.iopsData.every((point) => point.value === 0)).toBe(true)
+    expect(result.iopsData.map((point) => point.time)).toEqual(
+      throughputRaw.map((point) => point.time)
+    )
+  })
+
+  it('pads a shorter positional metric with zeros while keeping its real values', () => {
+    const throughputRaw: TimeSeriesPoint[] = [
+      { time: 't1', value: 100 },
+      { time: 't2', value: 150 }
+    ]
+    const iopsRaw: TimeSeriesPoint[] = [{ time: 't1', value: 1000 }]
+
+    const result = createCommonTimelineData(throughputRaw, iopsRaw, [])
+
+    expect(result.iopsData).toHaveLength(throughputRaw.length)
+    expect(result.iopsData[0].value).toBe(iopsRaw[0].value)
+    expect(result.iopsData[1].value).toBe(0)
+  })
+
   it('merges timestamped series onto their union of timestamps', () => {
     const throughputRaw: TimeSeriesPoint[] = [
       { time: 't1', timestamp: FIRST_POINT.timestamp, value: 10 },

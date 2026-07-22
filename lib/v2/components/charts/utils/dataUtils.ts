@@ -76,37 +76,73 @@ const toTimestampedValues = (points: TimeSeriesPoint[]): TimestampedValue[] =>
       value: point.value
     }))
 
+interface AlignedSeries {
+  throughputData: TimeSeriesPoint[]
+  iopsData: TimeSeriesPoint[]
+  latencyData: TimeSeriesPoint[]
+}
+
+/**
+ * Pads positional (untimestamped) series to a common length so an empty or
+ * shorter metric still lines up index-for-index with its siblings. Otherwise
+ * `MiniAreaChart` substitutes its 2-point baseline for the short series, which
+ * desyncs `syncId` index hover and lets the tooltip read past its end. Series
+ * that are already the common length are returned untouched.
+ */
+function alignPositionalSeries(
+  throughputRaw: TimeSeriesPoint[],
+  iopsRaw: TimeSeriesPoint[],
+  latencyRaw: TimeSeriesPoint[]
+): AlignedSeries {
+  const maxLength = Math.max(
+    throughputRaw.length,
+    iopsRaw.length,
+    latencyRaw.length
+  )
+  const reference =
+    [throughputRaw, iopsRaw, latencyRaw].find(
+      (points) => points.length === maxLength
+    ) ?? []
+
+  const padToLength = (points: TimeSeriesPoint[]): TimeSeriesPoint[] =>
+    points.length === maxLength
+      ? points
+      : reference.map(
+          (referencePoint, index) =>
+            points[index] ?? { time: referencePoint.time, value: 0 }
+        )
+
+  return {
+    throughputData: padToLength(throughputRaw),
+    iopsData: padToLength(iopsRaw),
+    latencyData: padToLength(latencyRaw)
+  }
+}
+
 /**
  * Aligns three raw series onto a single common timeline so the same array
  * index refers to the same instant in every returned series, letting callers
  * read matching points across all three by one shared index.
  *
- * When none of the incoming points carry a `timestamp`, the series are
- * assumed already positionally aligned (the common case for a single shared
- * data source) and are returned unchanged. Otherwise every unique timestamp
- * across the three series becomes a row, with missing values filled in by
- * interpolation (or a flat zero line for a series with no raw data at all).
+ * When none of the incoming points carry a `timestamp`, the series are assumed
+ * already positionally aligned (the common case for a single shared data
+ * source) and are only padded to a common length so an empty/shorter metric
+ * stays index-aligned. Otherwise every unique timestamp across the three
+ * series becomes a row, with missing values filled in by interpolation (or a
+ * flat zero line for a series with no raw data at all).
  */
 export function createCommonTimelineData(
   throughputRaw: TimeSeriesPoint[],
   iopsRaw: TimeSeriesPoint[],
   latencyRaw: TimeSeriesPoint[]
-): {
-  throughputData: TimeSeriesPoint[]
-  iopsData: TimeSeriesPoint[]
-  latencyData: TimeSeriesPoint[]
-} {
+): AlignedSeries {
   const isTimestamped =
     hasAnyTimestamp(throughputRaw) ||
     hasAnyTimestamp(iopsRaw) ||
     hasAnyTimestamp(latencyRaw)
 
   if (!isTimestamped) {
-    return {
-      throughputData: throughputRaw,
-      iopsData: iopsRaw,
-      latencyData: latencyRaw
-    }
+    return alignPositionalSeries(throughputRaw, iopsRaw, latencyRaw)
   }
 
   const allTimestamps = new Set<number>()
