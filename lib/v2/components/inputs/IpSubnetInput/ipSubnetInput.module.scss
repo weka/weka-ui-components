@@ -1,0 +1,89 @@
+@use '../../../styles/colors' as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-600-400);
+  margin-bottom: 6px;
+  padding-left: 4px;
+}
+
+.requiredStar {
+  color: var(--red-500);
+}
+
+.subnetRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.ipBox {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.subnetSeparator {
+  font-size: 16px;
+  color: var(--gray-600-400);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.bitsBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0 12px;
+  border: 1px solid var(--gray-350-650);
+  border-radius: 4px;
+  height: 36px;
+  width: 64px;
+  background: var(--gray-50-920);
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--purple-500);
+    box-shadow: 0 0 0 1px var(--purple-500);
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.bitsInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-950-20);
+  padding: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.errorText {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--red-500);
+  padding-left: 4px;
+}
