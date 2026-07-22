@@ -489,5 +489,11 @@ export type {
   ClusterProtectionProps
 } from './widgets/ClusterProtection'
 export { ClusterProtection } from './widgets/ClusterProtection'
+export type {
+  CompactPerformanceChartProps,
+  CompactPerformanceDataPoint,
+  CompactPerformanceMetricData
+} from './widgets/CompactPerformanceChart'
+export { CompactPerformanceChart } from './widgets/CompactPerformanceChart'
 export type { InventoryCardProps, InventoryItem } from './widgets/InventoryCard'
 export { InventoryCard } from './widgets/InventoryCard'

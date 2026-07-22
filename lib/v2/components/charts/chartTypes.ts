@@ -1,5 +1,11 @@
 export type ChartDataPoint = Record<string, number | string | null | undefined>
 
+export interface TimeSeriesPoint {
+  time: string
+  timestamp?: number
+  value: number
+}
+
 export type TickValue = string | number
 
 export type DomainValue = number | string | ((value: number) => number)
