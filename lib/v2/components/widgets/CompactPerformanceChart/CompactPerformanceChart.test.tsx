@@ -205,6 +205,27 @@ describe('CompactPerformanceChart', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('keeps a frozen metric value in the tooltip when it starts loading mid-hover', () => {
+    capturedOnMouseMove.length = 0
+    const props = buildProps()
+    const { rerender } = render(<CompactPerformanceChart {...props} />)
+
+    act(() => {
+      capturedOnMouseMove[0]({ activeTooltipIndex: 1, activeLabel: '10:01' })
+    })
+    expect(screen.getByText('1500 ops')).toBeInTheDocument()
+
+    rerender(
+      <CompactPerformanceChart
+        {...props}
+        iops={{ ...props.iops, data: [], isLoading: true }}
+      />
+    )
+
+    expect(screen.getByText('1500 ops')).toBeInTheDocument()
+    expect(screen.queryByText(EMPTY_CONTENT)).not.toBeInTheDocument()
+  })
+
   it('resumes live data immediately once the tooltip deactivates', () => {
     capturedOnMouseMove.length = 0
     const props = buildProps()

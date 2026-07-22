@@ -19,6 +19,7 @@ interface MiniChartWrapperProps {
   syncId: string
   isLoading?: boolean
   hasValidData?: boolean
+  hasData?: boolean
   isHovered: boolean
   onTooltipChange: Dispatch<SetStateAction<TooltipState>>
   dataTestId?: string
@@ -45,6 +46,7 @@ export function MiniChartWrapper({
   syncId,
   isLoading = false,
   hasValidData = true,
+  hasData = true,
   isHovered,
   onTooltipChange,
   dataTestId
@@ -104,7 +106,7 @@ export function MiniChartWrapper({
         fill
         formatValue={formatValue}
         hasValidData={hasValidData}
-        hideLastValue={isHovered}
+        hideLastValue={isHovered || !hasData}
         isLoading={isLoading}
         onMouseMove={handleMouseMove}
         syncId={syncId}

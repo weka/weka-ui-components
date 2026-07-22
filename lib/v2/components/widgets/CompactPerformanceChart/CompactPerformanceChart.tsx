@@ -31,6 +31,9 @@ const testId = (
   suffix: string
 ): string | undefined => (dataTestId ? `${dataTestId}-${suffix}` : undefined)
 
+const hasRealData = (metric: CompactPerformanceMetricData): boolean =>
+  !metric.isLoading && metric.hasValidData !== false && metric.data.length > 0
+
 /**
  * Three syncId-synced mini charts (throughput, IOPS, avg. latency) with a
  * unified cross-chart hover tooltip. Prop-only: the caller supplies each
@@ -49,13 +52,36 @@ export function CompactPerformanceChart({
 
   const syncId = useId()
 
-  const liveSeries = useMemo(
-    () => createCommonTimelineData(throughput.data, iops.data, latency.data),
-    [throughput.data, iops.data, latency.data]
+  const throughputHasData = hasRealData(throughput)
+  const iopsHasData = hasRealData(iops)
+  const latencyHasData = hasRealData(latency)
+
+  const liveSnapshot = useMemo(
+    () => ({
+      series: createCommonTimelineData(
+        throughput.data,
+        iops.data,
+        latency.data
+      ),
+      hasData: {
+        throughput: throughputHasData,
+        iops: iopsHasData,
+        latency: latencyHasData
+      }
+    }),
+    [
+      throughput.data,
+      iops.data,
+      latency.data,
+      throughputHasData,
+      iopsHasData,
+      latencyHasData
+    ]
   )
 
   /**
-   * Freeze the aligned series while the tooltip is active.
+   * Freeze the aligned series and each metric's data-availability while the
+   * tooltip is active.
    *
    * Recharts re-selects its active point from an unscaled, stored `chartX`
    * whenever it re-renders with a new `data` array and no accompanying mouse
@@ -64,7 +90,9 @@ export function CompactPerformanceChart({
    * the live-polling `data` props change every few seconds, holding the last
    * pre-hover snapshot for as long as the tooltip stays active (instead of
    * feeding recharts the incoming data) keeps the inspected point stable;
-   * resuming live data is instant once the tooltip deactivates.
+   * resuming live data is instant once the tooltip deactivates. Freezing
+   * `hasData` alongside the series keeps the tooltip from flipping a value to
+   * or from its placeholder mid-hover when a poll changes a metric's state.
    *
    * This mirrors React's "adjusting state during render" pattern (comparing
    * against the previous render's value directly in the render body) rather
@@ -75,24 +103,20 @@ export function CompactPerformanceChart({
   const [wasTooltipActive, setWasTooltipActive] = useState(
     tooltipState.active
   )
-  const [frozenSeries, setFrozenSeries] = useState(liveSeries)
+  const [frozenSnapshot, setFrozenSnapshot] = useState(liveSnapshot)
   if (tooltipState.active !== wasTooltipActive) {
     setWasTooltipActive(tooltipState.active)
     if (tooltipState.active) {
-      setFrozenSeries(liveSeries)
+      setFrozenSnapshot(liveSnapshot)
     }
   }
 
-  const { throughputData, iopsData, latencyData } = tooltipState.active
-    ? frozenSeries
-    : liveSeries
+  const activeSnapshot = tooltipState.active ? frozenSnapshot : liveSnapshot
+  const { throughputData, iopsData, latencyData } = activeSnapshot.series
 
   const throughputColor = throughput.color ?? DEFAULT_THROUGHPUT_COLOR
   const iopsColor = iops.color ?? DEFAULT_IOPS_COLOR
   const latencyColor = latency.color ?? DEFAULT_LATENCY_COLOR
-
-  const hasRealData = (metric: CompactPerformanceMetricData): boolean =>
-    !metric.isLoading && metric.hasValidData !== false && metric.data.length > 0
 
   const handleMouseLeave = useCallback(
     () => setTooltipState(INITIAL_TOOLTIP_STATE),
@@ -110,6 +134,7 @@ export function CompactPerformanceChart({
         data={throughputData}
         dataTestId={testId(dataTestId, 'throughput')}
         formatValue={throughput.formatValue}
+        hasData={throughputHasData}
         hasValidData={throughput.hasValidData}
         isHovered={tooltipState.active}
         isLoading={throughput.isLoading}
@@ -122,6 +147,7 @@ export function CompactPerformanceChart({
         data={iopsData}
         dataTestId={testId(dataTestId, 'iops')}
         formatValue={iops.formatValue}
+        hasData={iopsHasData}
         hasValidData={iops.hasValidData}
         isHovered={tooltipState.active}
         isLoading={iops.isLoading}
@@ -134,6 +160,7 @@ export function CompactPerformanceChart({
         data={latencyData}
         dataTestId={testId(dataTestId, 'latency')}
         formatValue={latency.formatValue}
+        hasData={latencyHasData}
         hasValidData={latency.hasValidData}
         isHovered={tooltipState.active}
         isLoading={latency.isLoading}
@@ -154,21 +181,21 @@ export function CompactPerformanceChart({
               label: throughput.label,
               color: throughputColor,
               formatValue: throughput.formatValue,
-              hasData: hasRealData(throughput)
+              hasData: activeSnapshot.hasData.throughput
             },
             {
               data: iopsData,
               label: iops.label,
               color: iopsColor,
               formatValue: iops.formatValue,
-              hasData: hasRealData(iops)
+              hasData: activeSnapshot.hasData.iops
             },
             {
               data: latencyData,
               label: latency.label,
               color: latencyColor,
               formatValue: latency.formatValue,
-              hasData: hasRealData(latency)
+              hasData: activeSnapshot.hasData.latency
             }
           ]}
         />

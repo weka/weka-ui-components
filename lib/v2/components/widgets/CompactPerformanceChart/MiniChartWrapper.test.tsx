@@ -41,13 +41,14 @@ const DATA: CompactPerformanceDataPoint[] = [
   { time: '10:01', value: 250 }
 ]
 
-const renderWrapper = (onTooltipChange = vi.fn()) => {
+const renderWrapper = (onTooltipChange = vi.fn(), hasData = true) => {
   render(
     <MiniChartWrapper
       color='var(--cyan-500)'
       data={DATA}
       dataTestId='throughput-chart'
       formatValue={(value) => `${value} MB/s`}
+      hasData={hasData}
       isHovered={false}
       label='Throughput'
       onTooltipChange={onTooltipChange}
@@ -56,6 +57,8 @@ const renderWrapper = (onTooltipChange = vi.fn()) => {
   )
   return onTooltipChange
 }
+
+const LAST_VALUE_BADGE = '250 MB/s'
 
 describe('MiniChartWrapper', () => {
   it('renders the label and forwards the dataTestId', () => {
@@ -112,5 +115,17 @@ describe('MiniChartWrapper', () => {
     capturedHandlers.onMouseMove?.({})
 
     expect(onTooltipChange).not.toHaveBeenCalled()
+  })
+
+  it('shows the last-value badge when the metric has data', () => {
+    renderWrapper()
+
+    expect(screen.getByText(LAST_VALUE_BADGE)).toBeInTheDocument()
+  })
+
+  it('hides the last-value badge when the metric has no data', () => {
+    renderWrapper(vi.fn(), false)
+
+    expect(screen.queryByText(LAST_VALUE_BADGE)).not.toBeInTheDocument()
   })
 })
