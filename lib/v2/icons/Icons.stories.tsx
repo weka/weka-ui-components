@@ -29,11 +29,13 @@ import { LightModeIcon } from './LightModeIcon'
 import { LinkIcon } from './LinkIcon'
 import { LockIcon } from './LockIcon'
 import { LogoutIcon } from './LogoutIcon'
+import { MaintenanceIcon } from './MaintenanceIcon'
 import { ManageIcon } from './ManageIcon'
 import { MonitorIcon } from './MonitorIcon'
 import { MuteIcon } from './MuteIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
+import { NotFoundIcon } from './NotFoundIcon'
 import { NotificationsIcon } from './NotificationsIcon'
 import { PauseIcon } from './PauseIcon'
 import { PlusIcon } from './PlusIcon'
@@ -78,6 +80,7 @@ const rowStyle = {
 const SMALL_ICON_SIZE = 16
 const SEARCH_ICON_SIZE = 20
 const VCHECK_ICON_SIZE = 24
+const PAGE_ICON_SIZE = 40
 
 const generalIcons: { name: string; node: ReactNode }[] = [
   {
@@ -130,11 +133,29 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'LinkIcon', node: <LinkIcon /> },
   { name: 'LockIcon', node: <LockIcon /> },
   { name: 'LogoutIcon', node: <LogoutIcon /> },
+  {
+    name: 'MaintenanceIcon',
+    node: (
+      <MaintenanceIcon
+        height={PAGE_ICON_SIZE}
+        width={PAGE_ICON_SIZE}
+      />
+    )
+  },
   { name: 'ManageIcon', node: <ManageIcon /> },
   { name: 'MonitorIcon', node: <MonitorIcon /> },
   { name: 'MuteIcon', node: <MuteIcon /> },
   { name: 'NavChevronLeftIcon', node: <NavChevronLeftIcon /> },
   { name: 'NavChevronRightIcon', node: <NavChevronRightIcon /> },
+  {
+    name: 'NotFoundIcon',
+    node: (
+      <NotFoundIcon
+        height={PAGE_ICON_SIZE}
+        width={PAGE_ICON_SIZE}
+      />
+    )
+  },
   { name: 'NotificationsIcon', node: <NotificationsIcon /> },
   {
     name: 'PauseIcon',
