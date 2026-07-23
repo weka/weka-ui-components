@@ -88,6 +88,8 @@ export interface TableProps<TData = unknown> {
 
   title?: string
   customTitle?: ReactNode
+  /** System maximum for the listed entity; renders the count as "N of MAX". */
+  maxCount?: number
   useTableHeader?: boolean
   tableHeaderActions?: ReactNode
   tableActions?: ReactNode
@@ -143,6 +145,7 @@ export function Table<TData = unknown>({
   pageSize = DEFAULT_PAGE_SIZE,
   title,
   customTitle,
+  maxCount,
   showFilterChips = true,
   showSearch = false,
   tableHeaderActions,
@@ -460,6 +463,7 @@ export function Table<TData = unknown>({
         data={data}
         endless={endless}
         getCsvData={getCsvData}
+        maxCount={maxCount}
         onClearAllFilters={handleClearAllFilters}
         onCsvError={onCsvError}
         onFilterChange={setActiveFilters}

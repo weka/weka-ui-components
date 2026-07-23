@@ -78,7 +78,11 @@ export {
   PROTECTION_STATUS_MAP,
   PROTECTION_STATUS_TYPES
 } from '#v2/utils/protectionStatus'
-export { highlightText, truncateText } from '#v2/utils/textUtils'
+export {
+  formatCountWithMax,
+  highlightText,
+  truncateText
+} from '#v2/utils/textUtils'
 export type { TimestampInput } from '#v2/utils/timeUtils'
 export {
   formatDate,

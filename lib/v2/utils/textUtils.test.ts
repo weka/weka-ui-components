@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { truncateText } from '#v2/utils/textUtils'
+import { formatCountWithMax, truncateText } from '#v2/utils/textUtils'
 
 const MAX_LENGTH = 13
 
@@ -18,5 +18,20 @@ describe('truncateText', () => {
 
     expect(result).toBe('a-very-lon...')
     expect(result).toHaveLength(MAX_LENGTH)
+  })
+})
+
+const COUNT = 42
+const MAX_COUNT = 1024
+
+describe('formatCountWithMax', () => {
+  it('returns the count alone when no maximum is provided', () => {
+    expect(formatCountWithMax(COUNT)).toBe(`${COUNT}`)
+  })
+
+  it('appends the maximum when provided', () => {
+    expect(formatCountWithMax(COUNT, MAX_COUNT)).toBe(
+      `${COUNT} of ${MAX_COUNT}`
+    )
   })
 })

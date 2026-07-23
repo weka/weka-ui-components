@@ -16,6 +16,94 @@
   align-items: center;
   padding: 12px 8px;
   flex: 1;
+  min-width: 0;
+  gap: 8px;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.textSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.description {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-900-100);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+@container (width <= 300px) {
+  .inventoryItem {
+    padding: 10px 8px;
+  }
+
+  .leftSection {
+    gap: 10px;
+  }
+
+  .iconContainer svg {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @container (height <= 244px) {
@@ -37,60 +125,6 @@
   &:hover {
     background-color: var(--gray-50-920);
   }
-}
-
-.leftSection {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.iconContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.textSection {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--gray-900-100);
-  line-height: 1.2;
-}
-
-.subtitle {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--gray-900-100);
-  line-height: 1.2;
-}
-
-.rightSection {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.value {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--gray-900-100);
-  line-height: 1.2;
-}
-
-.description {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--gray-900-100);
-  line-height: 1.2;
 }
 
 .warningText {

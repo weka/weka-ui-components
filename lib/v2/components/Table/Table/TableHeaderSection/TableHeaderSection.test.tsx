@@ -69,6 +69,21 @@ describe('TableHeaderSection', () => {
     expect(screen.getByText('(1)')).toBeInTheDocument()
   })
 
+  it('renders the count with the system maximum when maxCount is provided', () => {
+    renderSection({ title: 'Buckets', actualFilteredCount: 2, maxCount: 2048 })
+    expect(screen.getByText('(2 of 2048)')).toBeInTheDocument()
+  })
+
+  it('passes maxCount through to the full TableHeader', () => {
+    renderSection({
+      useTableHeader: true,
+      title: 'Buckets',
+      actualFilteredCount: 2,
+      maxCount: 2048
+    })
+    expect(screen.getByText('(2 of 2048)')).toBeInTheDocument()
+  })
+
   it('renders the full TableHeader when useTableHeader is true', () => {
     renderSection({ useTableHeader: true, title: 'Buckets' })
     expect(screen.getByTestId('table-header-title')).toHaveTextContent(
