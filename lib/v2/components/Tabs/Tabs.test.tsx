@@ -96,6 +96,26 @@ describe('Tabs - Rendering', () => {
     expect(screen.getByText('(42)')).toBeInTheDocument()
   })
 
+  it('renders the count with its maximum when maxCount is provided', () => {
+    render(
+      <Tabs
+        {...createProps({
+          variant: TAB_VARIANTS.UNDERLINE,
+          tabs: [
+            createTab({
+              id: TAB_ONE_ID,
+              label: TAB_ONE_LABEL,
+              count: 2,
+              maxCount: 1024
+            })
+          ]
+        })}
+      />
+    )
+
+    expect(screen.getByText('(2 of 1024)')).toBeInTheDocument()
+  })
+
   it('renders tab label text', () => {
     render(<Tabs {...createProps()} />)
     expect(screen.getByText(TAB_ONE_LABEL)).toBeInTheDocument()

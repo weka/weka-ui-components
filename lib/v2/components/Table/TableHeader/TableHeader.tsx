@@ -13,6 +13,7 @@ import {
   FILTER_TYPES,
   SEARCH_PLACEHOLDER
 } from '#v2/utils/consts'
+import { formatCountWithMax } from '#v2/utils/textUtils'
 
 import { DownloadIcon, ResetIcon, SettingsIcon } from '../../../icons'
 import { ExpandableSearch } from '../../ExpandableSearch'
@@ -64,6 +65,7 @@ export interface TableHeaderProps<TData = unknown> {
   title: string
   customTitle?: ReactNode
   count?: number
+  maxCount?: number
   endless?: boolean
   activeFilters?: readonly ActiveFilter[]
   onRemoveFilter?: (columnId: string) => void
@@ -201,6 +203,7 @@ export function TableHeader({
   customTitle,
   csvFileTitle,
   count,
+  maxCount,
   endless = false,
   activeFilters = EMPTY_ARRAY,
   onRemoveFilter,
@@ -274,10 +277,15 @@ export function TableHeader({
 
   const renderCount = useCallback(() => {
     const displayCount = getDisplayCount()
-    return displayCount !== undefined ? (
-      <span className={styles.count}>({displayCount})</span>
-    ) : null
-  }, [getDisplayCount])
+    if (displayCount === undefined) {
+      return null
+    }
+    return (
+      <span className={styles.count}>
+        ({formatCountWithMax(displayCount, maxCount)})
+      </span>
+    )
+  }, [getDisplayCount, maxCount])
 
   const handleAddToFilter = useCallback(
     (value: string) => {

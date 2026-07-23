@@ -5,6 +5,7 @@ import type { ColumnDef, Table } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
+import { formatCountWithMax } from '#v2/utils/textUtils'
 
 import { FilterChips } from '../../FilterChips'
 import { TableHeader } from '../../TableHeader'
@@ -16,6 +17,7 @@ export interface TableHeaderSectionProps<TData> {
   title?: string
   customTitle?: ReactNode
   actualFilteredCount: number
+  maxCount?: number
   activeFilters: ActiveFilter[]
   showFilterChips: boolean
   showSearch: boolean
@@ -37,12 +39,21 @@ export interface TableHeaderSectionProps<TData> {
   endless?: boolean
 }
 
-function renderTitleSection(
-  title: string | undefined,
-  customTitle: ReactNode,
-  actualFilteredCount: number,
+interface TitleSectionParams {
+  title: string | undefined
+  customTitle: ReactNode
+  actualFilteredCount: number
   endless: boolean
-): ReactNode {
+  maxCount: number | undefined
+}
+
+function renderTitleSection({
+  title,
+  customTitle,
+  actualFilteredCount,
+  endless,
+  maxCount
+}: TitleSectionParams): ReactNode {
   if (customTitle) {
     return <div className={styles.customTitle}>{customTitle}</div>
   }
@@ -50,7 +61,9 @@ function renderTitleSection(
     <>
       <h3 className={styles.tableTitle}>{title}</h3>
       {!endless && actualFilteredCount > 0 ? (
-        <span className={styles.tableCount}>({actualFilteredCount})</span>
+        <span className={styles.tableCount}>
+          ({formatCountWithMax(actualFilteredCount, maxCount)})
+        </span>
       ) : null}
     </>
   )
@@ -61,6 +74,7 @@ export function TableHeaderSection<TData>({
   title,
   customTitle,
   actualFilteredCount,
+  maxCount,
   activeFilters,
   showFilterChips,
   showSearch,
@@ -97,6 +111,7 @@ export function TableHeaderSection<TData>({
         data={data}
         endless={endless}
         getCsvData={getCsvData}
+        maxCount={maxCount}
         onClearAllFilters={onClearAllFilters}
         onCsvError={onCsvError}
         onFilterChange={onFilterChange}
@@ -121,7 +136,13 @@ export function TableHeaderSection<TData>({
     <div className={styles.tableHeader}>
       <div className={styles.titleRow}>
         <div className={styles.titleSection}>
-          {renderTitleSection(title, customTitle, actualFilteredCount, endless)}
+          {renderTitleSection({
+            title,
+            customTitle,
+            actualFilteredCount,
+            endless,
+            maxCount
+          })}
         </div>
         {showFilterChips && hasActiveFilters ? (
           <FilterChips

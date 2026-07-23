@@ -33,6 +33,7 @@ const BASIC_TABS: Tab[] = [
 const UNDERLINE_TABS: Tab[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'alerts', label: 'Alerts', count: 4 },
+  { id: 'filesystems', label: 'Filesystems', count: 2, maxCount: 1024 },
   { id: 'audit', label: 'Audit log' }
 ]
 

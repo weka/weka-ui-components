@@ -22,6 +22,7 @@ import { Tooltip } from '../Tooltip'
 import { AddTabButton } from './AddTabButton'
 import { useTabsCarousel, useTabsDerivedState } from './hooks'
 import { ScrollArrow } from './ScrollArrow'
+import { TabCount } from './TabCount'
 import { TabEditableActions } from './TabEditableActions'
 import { TabIcon } from './TabIcon'
 import {
@@ -537,9 +538,6 @@ export function Tabs({
       )
     }
 
-    const countDisplay =
-      variant === TAB_VARIANTS.UNDERLINE ? `(${tab.count})` : tab.count
-
     return (
       <>
         <TabIcon
@@ -559,9 +557,10 @@ export function Tabs({
             {tab.label}
           </Tooltip>
         )}
-        {tab.count !== undefined && (
-          <span className={styles.tabCount}>{countDisplay}</span>
-        )}
+        <TabCount
+          tab={tab}
+          variant={variant}
+        />
         {isEditable ? (
           <TabEditableActions
             canDelete={canDelete}

@@ -22,6 +22,7 @@ export interface Tab {
   icon?: ReactNode
   Icon?: ComponentType<{ width?: number; height?: number; color?: string }>
   count?: number
+  maxCount?: number
   subTab?: string
   isLocked?: boolean
 }

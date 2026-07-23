@@ -81,6 +81,22 @@
   &::placeholder {
     color: $gray-50;
   }
+
+  /*
+   * Chrome repaints autofilled fields with its own background
+   * (input:-internal-autofill-selected), which cannot be overridden
+   * directly. The endless background-color transition means that repaint
+   * never lands, so the input keeps its transparent background, and
+   * -webkit-text-fill-color keeps the login's white text.
+   */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    caret-color: white;
+    transition: background-color 2147483647s ease-out;
+  }
 }
 
 .eyeButton {

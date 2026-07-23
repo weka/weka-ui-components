@@ -18,6 +18,14 @@ export function truncateText(text: string, maxLength: number): string {
 }
 
 /**
+ * Formats a count for display, appending the maximum when provided
+ * (e.g. `2 of 1024`).
+ */
+export function formatCountWithMax(count: number, maxCount?: number): string {
+  return maxCount === undefined ? String(count) : `${count} of ${maxCount}`
+}
+
+/**
  * Wraps occurrences of `query` in `text` with a given element to highlight matches.
  * Case-insensitive. Returns ReactNode parts so React keys can be applied.
  */
