@@ -234,6 +234,13 @@ export const NoObsNoDr531x212 = makeVariant({
   dataReduction: false
 })
 
+export const NoObsNoDr736x400 = makeVariant({
+  width: 736,
+  height: 400,
+  obs: false,
+  dataReduction: false
+})
+
 export const CustomLabels: Story = {
   render: (args) => (
     <Frame
