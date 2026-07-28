@@ -453,7 +453,16 @@ export function Select({
   }
 
   const renderMenuContent = (): ReactNode => {
-    if (isLoading && filteredOptions.length === 0) {
+    /*
+     * While an async search is in flight, keep showing the previously loaded
+     * options (narrowed by the client-side filter) so the list doesn't flicker
+     * to "Loading..." on every keystroke — the search input shows a spinner
+     * instead. The loading row appears only when there is nothing real to
+     * show: no options loaded yet (filteredOptions may still hold the
+     * synthetic row injected for the selected value), or the query filtered
+     * everything out.
+     */
+    if (isLoading && (options.length === 0 || filteredOptions.length === 0)) {
       return (
         <MenuItem
           disabled

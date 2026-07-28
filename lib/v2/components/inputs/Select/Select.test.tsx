@@ -523,6 +523,19 @@ describe('Select - Loading state', () => {
     })
   })
 
+  it('shows the loading row when only the synthetic selected option exists', async () => {
+    render(
+      <Select
+        {...createProps({ isLoading: true, options: [], value: 'option1' })}
+      />
+    )
+    openSelect()
+
+    await waitFor(() => {
+      expect(screen.getByText(LOADING_TEXT)).toBeInTheDocument()
+    })
+  })
+
   it('keeps showing existing options instead of the loading row while loading', async () => {
     render(<Select {...createProps({ isLoading: true })} />)
     openSelect()
