@@ -28,6 +28,7 @@ import { highlightText } from '#v2/utils/textUtils'
 
 import { ChevronDownSmallIcon, CloseIcon, SearchIcon } from '../../../icons'
 import { Chip } from '../../Chip'
+import { SearchLoadingSpinner } from './SearchLoadingSpinner'
 import {
   applyAnyValueRules,
   getNextEnabledIndex,
@@ -452,7 +453,7 @@ export function Select({
   }
 
   const renderMenuContent = (): ReactNode => {
-    if (isLoading) {
+    if (isLoading && filteredOptions.length === 0) {
       return (
         <MenuItem
           disabled
@@ -619,6 +620,7 @@ export function Select({
                     }
                   }}
                 />
+                <SearchLoadingSpinner visible={isLoading} />
                 {searchQuery ? (
                   <button
                     className={styles.searchClearButton}

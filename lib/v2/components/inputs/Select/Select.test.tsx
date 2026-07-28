@@ -514,13 +514,36 @@ describe('Select - Search functionality', () => {
 })
 
 describe('Select - Loading state', () => {
-  it('shows loading indicator when isLoading is true', async () => {
-    render(<Select {...createProps({ isLoading: true })} />)
+  it('shows loading indicator when isLoading is true and there are no options', async () => {
+    render(<Select {...createProps({ isLoading: true, options: [] })} />)
     openSelect()
 
     await waitFor(() => {
       expect(screen.getByText(LOADING_TEXT)).toBeInTheDocument()
     })
+  })
+
+  it('keeps showing existing options instead of the loading row while loading', async () => {
+    render(<Select {...createProps({ isLoading: true })} />)
+    openSelect()
+
+    await waitFor(() => {
+      expect(screen.getByText(OPTION_1)).toBeInTheDocument()
+    })
+    expect(screen.queryByText(LOADING_TEXT)).not.toBeInTheDocument()
+  })
+
+  it('shows a spinner in the search input while loading with options visible', async () => {
+    render(
+      <Select {...createProps({ isLoading: true, options: fruitOptions })} />
+    )
+    openSelect()
+
+    await waitFor(() => {
+      expect(screen.getByTestId('select-search-loading')).toBeInTheDocument()
+    })
+    expect(screen.getByText('Apple')).toBeInTheDocument()
+    expect(screen.queryByText(LOADING_TEXT)).not.toBeInTheDocument()
   })
 })
 
