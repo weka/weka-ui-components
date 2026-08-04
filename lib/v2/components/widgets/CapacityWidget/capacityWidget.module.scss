@@ -58,12 +58,12 @@ $capsule-radius: 50px;
 }
 
 .provisionedBody {
-  width: 240px;
   max-width: 100%;
+  gap: 48px;
   padding-bottom: 11px;
-  align-self: flex-start;
+  align-self: center;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .provisionedBody.provisionedBodyNoObs {
@@ -369,7 +369,7 @@ $capsule-radius: 50px;
 .provisionedSection .totalPill {
   width: 280px;
   margin-top: auto;
-  align-self: flex-start;
+  align-self: center;
 }
 
 @container (width <= 700px) {

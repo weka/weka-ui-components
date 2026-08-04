@@ -1,5 +1,6 @@
 import type { StatusCellValue, StatusVariant } from './statusUtils'
 import type { CellContext } from '@tanstack/react-table'
+import type { ReactNode } from 'react'
 
 import clsx from 'clsx'
 
@@ -23,6 +24,24 @@ export interface StatusCellOptions {
   formatLabel?: (status: string) => string
 }
 
+function renderStatusIndicator(variant: StatusVariant): ReactNode {
+  if (variant === STATUS_VARIANTS.UP) {
+    return (
+      <VcheckFillIcon
+        extraClass={styles.statusCheckIcon}
+        height={18}
+        width={18}
+      />
+    )
+  }
+
+  if (variant === STATUS_VARIANTS.WORKING) {
+    return <span className={styles.statusSpinner} />
+  }
+
+  return <span className={clsx(styles.statusDot, STATUS_DOT_CLASS[variant])} />
+}
+
 export function StatusCell<TData>({
   cell,
   column
@@ -38,35 +57,13 @@ export function StatusCell<TData>({
     ? cellOptions?.formatLabel?.(value) ?? value.replace(/_/g, ' ')
     : EMPTY_STRING
 
-  if (variant === STATUS_VARIANTS.UP) {
-    return (
-      <Tooltip data={label}>
-        <div className={styles.statusCell}>
-          <VcheckFillIcon
-            extraClass={styles.statusCheckIcon}
-            height={18}
-            width={18}
-          />
-        </div>
-      </Tooltip>
-    )
-  }
-
-  if (variant === STATUS_VARIANTS.WORKING) {
-    return (
-      <Tooltip data={label}>
-        <div className={styles.statusCell}>
-          <span className={styles.statusSpinner} />
-        </div>
-      </Tooltip>
-    )
-  }
-
   return (
-    <Tooltip data={label}>
-      <div className={styles.statusCell}>
-        <span className={clsx(styles.statusDot, STATUS_DOT_CLASS[variant])} />
-      </div>
-    </Tooltip>
+    <span className={styles.statusCellAlign}>
+      <Tooltip data={label}>
+        <div className={styles.statusCell}>
+          {renderStatusIndicator(variant)}
+        </div>
+      </Tooltip>
+    </span>
   )
 }
