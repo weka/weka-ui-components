@@ -312,6 +312,7 @@ export type { SwitchProps } from './Switch'
 export { Switch } from './Switch'
 export type { SystemStatusProps } from './SystemStatus'
 export { SystemStatus } from './SystemStatus'
+export { AggregatedCountCell } from './Table/AggregatedCountCell'
 export type {
   BooleanIconCellOptions,
   BooleanIconCellValue
@@ -387,6 +388,12 @@ export {
   isNumRangeValue,
   normalizeFilterOptions
 } from './Table/filterUtils'
+export type { GroupedCellMode } from './Table/groupingUtils'
+export {
+  getGroupedCellMode,
+  getGroupUniqueCount,
+  GROUPED_CELL_MODES
+} from './Table/groupingUtils'
 export type { NumberRangeProps, NumRangeFilterType } from './Table/NumberRange'
 export { NumberRange } from './Table/NumberRange'
 export type { PaginationProps } from './Table/Pagination'

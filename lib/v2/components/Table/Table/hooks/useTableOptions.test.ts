@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, GroupingState } from '@tanstack/react-table'
 
 import { renderHook } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
@@ -10,8 +10,13 @@ interface Row {
 }
 
 const COLUMNS: ColumnDef<Row>[] = [{ accessorKey: 'name' }]
+const NO_GROUPING: GroupingState = []
 
-function setup(manualPagination: boolean) {
+function setup(
+  manualPagination: boolean,
+  grouping: GroupingState = NO_GROUPING,
+  endless = false
+) {
   return renderHook(() =>
     useTableOptions<Row>({
       displayData: [{ name: 'a' }],
@@ -27,7 +32,11 @@ function setup(manualPagination: boolean) {
       currentPage: 2,
       effectivePageSize: 25,
       manualSorting: false,
-      manualPagination
+      manualPagination,
+      grouping,
+      expanded: {},
+      setExpanded: vi.fn(),
+      endless
     })
   )
 }
@@ -55,5 +64,38 @@ describe('useTableOptions', () => {
     }
     expect(options.manualPagination).toBe(true)
     expect(options.pageCount).toBe(-1)
+  })
+
+  it('leaves the grouping row models out when no grouping is requested', () => {
+    const { result } = setup(false)
+    expect('getGroupedRowModel' in result.current).toBe(false)
+    expect(result.current.state).not.toHaveProperty('grouping')
+  })
+
+  it('adds the grouping row models and keeps groups off the page count', () => {
+    const { result } = setup(false, ['name'])
+    const options = result.current as typeof result.current & {
+      paginateExpandedRows?: boolean
+    }
+    expect('getGroupedRowModel' in options).toBe(true)
+    expect('getExpandedRowModel' in options).toBe(true)
+    expect(options.paginateExpandedRows).toBe(false)
+    expect(result.current.state).toHaveProperty('grouping', ['name'])
+  })
+
+  it('flattens expanded groups immediately in endless mode', () => {
+    const { result } = setup(false, ['name'], true)
+    const options = result.current as typeof result.current & {
+      paginateExpandedRows?: boolean
+    }
+    expect(options.paginateExpandedRows).toBe(true)
+  })
+
+  it('flattens expanded groups immediately under manual pagination', () => {
+    const { result } = setup(true, ['name'])
+    const options = result.current as typeof result.current & {
+      paginateExpandedRows?: boolean
+    }
+    expect(options.paginateExpandedRows).toBe(true)
   })
 })

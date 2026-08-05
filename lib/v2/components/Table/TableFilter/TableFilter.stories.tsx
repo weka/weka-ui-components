@@ -78,7 +78,8 @@ function TableFilterDemo() {
           ? 'none'
           : filters
               .map(
-                (filter) => `${filter.columnId} → ${JSON.stringify(filter.value)}`
+                (filter) =>
+                  `${filter.columnId} → ${JSON.stringify(filter.value)}`
               )
               .join(' · ')}
       </div>

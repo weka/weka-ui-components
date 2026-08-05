@@ -75,33 +75,46 @@ export function TableContent<TData>({
     return undefined
   }
 
-  const isActiveRow = (rowData: TData): boolean => {
-    if (activeRowId === undefined || activeRowId === null) {
+  const isActiveRow = (row: Row<TData>): boolean => {
+    if (
+      activeRowId === undefined ||
+      activeRowId === null ||
+      row.getIsGrouped()
+    ) {
       return false
     }
 
-    const rowId = getRowIdValue(rowData)
+    const rowId = getRowIdValue(row.original)
     if (rowId === undefined || rowId === null) {
       return false
     }
     return rowId === activeRowId
   }
 
+  const handleRowClick = (row: Row<TData>) => {
+    if (row.getIsGrouped()) {
+      row.toggleExpanded()
+      return
+    }
+    onRowClick?.(row.original)
+  }
+
   return (
     <>
       {rows.map((row, index) => {
-        const rowId = getRowIdValue(row.original)
+        const isGroupRow = row.getIsGrouped()
         return (
           <tr
             key={row.id}
-            data-row-id={rowId}
-            onClick={() => onRowClick?.(row.original)}
+            data-row-id={isGroupRow ? row.id : getRowIdValue(row.original)}
+            onClick={() => handleRowClick(row)}
             className={clsx(
               styles.tableRow,
               index % ROW_PARITY_DIVISOR === 0 ? styles.evenRow : styles.oddRow,
               {
-                [styles.activeRow]: isActiveRow(row.original),
-                [styles.clickable]: onRowClick !== undefined
+                [styles.activeRow]: isActiveRow(row),
+                [styles.groupRow]: isGroupRow,
+                [styles.clickable]: isGroupRow || onRowClick !== undefined
               }
             )}
           >
