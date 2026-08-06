@@ -19,6 +19,7 @@ interface UseScrollToRowParams<TData> {
   currentPage: number
   setInternalCurrentPage: (page: number) => void
   data: TData[]
+  isGrouped: boolean
 }
 
 function resolveRowId<TData>(
@@ -34,10 +35,78 @@ function resolveRowId<TData>(
   return undefined
 }
 
+function toTargetPage(index: number, effectivePageSize: number): number {
+  return Math.floor(index / effectivePageSize) + FIRST_PAGE
+}
+
+/**
+ * Grouped pagination counts top-level group rows, and the target row may be a
+ * leaf nested inside a collapsed group — search the full grouped tree
+ * (flatRows includes leaves regardless of expand state), expand the leaf's
+ * top-level group, and page by that group's index rather than the leaf's.
+ */
+function resolveGroupedTargetPage<TData>(
+  table: Table<TData>,
+  scrollToRowId: RowIdValue,
+  getRowId: ((row: TData) => RowIdValue) | undefined,
+  effectivePageSize: number
+): number | null {
+  const targetRow = table
+    .getGroupedRowModel()
+    .flatRows.find(
+      (row) =>
+        String(resolveRowId(row.original, getRowId)) === String(scrollToRowId)
+    )
+
+  if (!targetRow) {
+    return null
+  }
+
+  let topRow = targetRow
+  let parentRow = topRow.getParentRow()
+  while (parentRow) {
+    topRow = parentRow
+    parentRow = topRow.getParentRow()
+  }
+
+  if (!topRow.getIsExpanded()) {
+    topRow.toggleExpanded(true)
+  }
+
+  const topRowIndex = table
+    .getGroupedRowModel()
+    .rows.findIndex((row) => row.id === topRow.id)
+
+  return topRowIndex === NOT_FOUND_INDEX
+    ? null
+    : toTargetPage(topRowIndex, effectivePageSize)
+}
+
+function resolveFlatTargetPage<TData>(
+  table: Table<TData>,
+  scrollToRowId: RowIdValue,
+  getRowId: ((row: TData) => RowIdValue) | undefined,
+  effectivePageSize: number
+): number | null {
+  const rowIndex = table
+    .getPrePaginationRowModel()
+    .rows.findIndex(
+      (row) =>
+        String(resolveRowId(row.original, getRowId)) === String(scrollToRowId)
+    )
+
+  return rowIndex === NOT_FOUND_INDEX
+    ? null
+    : toTargetPage(rowIndex, effectivePageSize)
+}
+
 /**
  * Brings the row matching `scrollToRowId` into view, paging to it first when
- * client-side pagination would otherwise hide it. Retries briefly while the
- * row element mounts. Under manual pagination the consumer owns which page is
+ * client-side pagination would otherwise hide it. When grouped, the target
+ * may be a leaf nested in a collapsed group — it is located via the full
+ * grouped tree, its top-level group is expanded, and paging targets that
+ * group's index rather than the leaf's. Retries briefly while the row
+ * element mounts. Under manual pagination the consumer owns which page is
  * shown, so paging is skipped and the hook only scrolls once the row mounts —
  * re-attempting whenever `data` changes (e.g. a new server page arrives).
  */
@@ -49,7 +118,8 @@ export function useScrollToRow<TData>({
   effectivePageSize,
   currentPage,
   setInternalCurrentPage,
-  data
+  data,
+  isGrouped
 }: UseScrollToRowParams<TData>) {
   const lastScrolledRowIdRef = useRef<string | number | null>(null)
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -65,17 +135,23 @@ export function useScrollToRow<TData>({
     }
 
     if (!manualPagination) {
-      const prePaginationRows = table.getPrePaginationRowModel().rows
-      const rowIndex = prePaginationRows.findIndex(
-        (row) =>
-          String(resolveRowId(row.original, getRowId)) === String(scrollToRowId)
-      )
+      const targetPage = isGrouped
+        ? resolveGroupedTargetPage(
+            table,
+            scrollToRowId,
+            getRowId,
+            effectivePageSize
+          )
+        : resolveFlatTargetPage(
+            table,
+            scrollToRowId,
+            getRowId,
+            effectivePageSize
+          )
 
-      if (rowIndex === NOT_FOUND_INDEX) {
+      if (targetPage === null) {
         return
       }
-
-      const targetPage = Math.floor(rowIndex / effectivePageSize) + FIRST_PAGE
       if (targetPage !== currentPage) {
         setInternalCurrentPage(targetPage)
       }
@@ -124,6 +200,7 @@ export function useScrollToRow<TData>({
     currentPage,
     manualPagination,
     setInternalCurrentPage,
-    data
+    data,
+    isGrouped
   ])
 }

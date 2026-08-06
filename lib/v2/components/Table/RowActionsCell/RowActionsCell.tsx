@@ -1,5 +1,5 @@
 import type { RowAction } from '../Table'
-import type { CellContext } from '@tanstack/react-table'
+import type { CellContext, Row } from '@tanstack/react-table'
 import type { MouseEvent, RefObject } from 'react'
 
 import { useRef, useState } from 'react'
@@ -17,10 +17,11 @@ interface RowActionsCellMeta<TData> {
 }
 
 function resolveDisabledTooltip<TData>(
-  tooltip: string | ((row: TData) => string),
-  row: TData
+  tooltip: NonNullable<RowAction<TData>['disabledTooltip']>,
+  values: TData,
+  row: Row<TData>
 ): string {
-  return typeof tooltip === 'function' ? tooltip(row) : tooltip
+  return typeof tooltip === 'function' ? tooltip(values, row) : tooltip
 }
 
 export function RowActionsCell<TData>({
@@ -34,7 +35,7 @@ export function RowActionsCell<TData>({
   const rowActions = meta?.rowActions ?? []
 
   const visibleActions = rowActions.filter(
-    (action) => !action.hideAction?.(row.original)
+    (action) => !action.hideAction?.(row.original, row)
   )
   const hasVisibleActions = visibleActions.length > 0
 
@@ -81,7 +82,7 @@ export function RowActionsCell<TData>({
       >
         {visibleActions.map((action) => {
           const body = action.content ? (
-            action.content(row.original)
+            action.content(row.original, row)
           ) : (
             <>
               {action.icon}
@@ -104,10 +105,14 @@ export function RowActionsCell<TData>({
             )
           }
 
-          const isDisabled = action.disabled?.(row.original) ?? false
+          const isDisabled = action.disabled?.(row.original, row) ?? false
           const disabledTooltip =
             isDisabled && action.disabledTooltip
-              ? resolveDisabledTooltip(action.disabledTooltip, row.original)
+              ? resolveDisabledTooltip(
+                  action.disabledTooltip,
+                  row.original,
+                  row
+                )
               : undefined
 
           const button = (
@@ -123,8 +128,11 @@ export function RowActionsCell<TData>({
               )}
               onClick={(e) => {
                 e.stopPropagation()
-                action.action?.(row.original)
-                handleClose()
+                try {
+                  action.action?.(row.original, row)
+                } finally {
+                  handleClose()
+                }
               }}
             >
               {body}

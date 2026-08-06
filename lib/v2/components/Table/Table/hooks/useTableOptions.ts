@@ -2,6 +2,8 @@ import type {
   ColumnDef,
   ColumnFiltersState,
   ColumnResizeMode,
+  ExpandedState,
+  GroupingState,
   OnChangeFn,
   SortingState,
   VisibilityState
@@ -10,11 +12,14 @@ import type {
 import { useMemo } from 'react'
 import {
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
+  getGroupedRowModel,
   getPaginationRowModel,
   getSortedRowModel
 } from '@tanstack/react-table'
 
+import { AggregatedCountCell } from '../../AggregatedCountCell'
 import { DefaultCell } from '../../DefaultCell'
 
 const DEFAULT_COLUMN_SIZE = 150
@@ -39,11 +44,16 @@ interface UseTableOptionsParams<TData> {
   manualPagination: boolean | undefined
   manualFiltering?: boolean
   manualSorting?: boolean
+  grouping: GroupingState
+  expanded: ExpandedState
+  setExpanded: OnChangeFn<ExpandedState>
+  endless: boolean
 }
 
 /**
  * Builds the memoized TanStack table options, wiring sorting, filtering,
- * column visibility, resizing, and either client-side or manual pagination.
+ * column visibility, resizing, grouping, and either client-side or manual
+ * pagination.
  */
 export function useTableOptions<TData>({
   displayData,
@@ -60,9 +70,15 @@ export function useTableOptions<TData>({
   effectivePageSize,
   manualPagination,
   manualFiltering,
-  manualSorting
+  manualSorting,
+  grouping,
+  expanded,
+  setExpanded,
+  endless
 }: UseTableOptionsParams<TData>) {
   return useMemo(() => {
+    const isGrouped = grouping.length > 0
+
     const baseOptions = {
       data: displayData,
       columns: tableColumns,
@@ -74,7 +90,8 @@ export function useTableOptions<TData>({
         pagination: {
           pageIndex: currentPage - FIRST_PAGE,
           pageSize: effectivePageSize
-        }
+        },
+        ...(isGrouped && { grouping, expanded })
       },
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,
@@ -83,11 +100,20 @@ export function useTableOptions<TData>({
         size: DEFAULT_COLUMN_SIZE,
         minSize: MIN_COLUMN_SIZE,
         maxSize: MAX_COLUMN_SIZE,
-        cell: DefaultCell as ColumnDef<TData>['cell']
+        cell: DefaultCell as ColumnDef<TData>['cell'],
+        aggregatedCell:
+          AggregatedCountCell as ColumnDef<TData>['aggregatedCell']
       },
       getCoreRowModel: getCoreRowModel(),
       ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
       getFilteredRowModel: getFilteredRowModel(),
+      ...(isGrouped && {
+        getGroupedRowModel: getGroupedRowModel(),
+        getExpandedRowModel: getExpandedRowModel(),
+        onExpandedChange: setExpanded,
+        autoResetExpanded: false,
+        paginateExpandedRows: Boolean(manualPagination) || endless
+      }),
       columnResizeMode,
       manualFiltering,
       manualSorting
@@ -120,6 +146,10 @@ export function useTableOptions<TData>({
     effectivePageSize,
     manualPagination,
     manualFiltering,
-    manualSorting
+    manualSorting,
+    grouping,
+    expanded,
+    setExpanded,
+    endless
   ])
 }

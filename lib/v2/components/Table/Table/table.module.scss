@@ -260,6 +260,14 @@ thead.tableHeader {
     background-color: var(--gray-50-920);
   }
 
+  &.groupRow {
+    background-color: var(--gray-100-900);
+
+    .tableCell {
+      font-weight: 600;
+    }
+  }
+
   &.activeRow {
     background-color: var(--purple-100-800) !important;
 
@@ -302,6 +310,40 @@ thead.tableHeader {
   padding: 0;
 }
 
+.groupCell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.groupCellValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.groupExpander {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--gray-950-20);
+}
+
+.groupExpanderIcon {
+  transition: transform 0.2s ease;
+
+  &.collapsed {
+    transform: rotate(-90deg);
+  }
+}
+
 .stickyActions {
   position: sticky;
   right: 0;
@@ -331,6 +373,10 @@ thead.tableHeader {
     background-color: var(--table-sticky-bg, var(--gray-50-920));
   }
 
+  tbody tr.groupRow & {
+    background-color: var(--table-sticky-bg, var(--gray-100-900));
+  }
+
   tbody tr.activeRow & {
     background-color: var(--purple-100-800) !important;
   }
@@ -357,6 +403,10 @@ thead.tableHeader {
 
   tbody tr.oddRow & {
     background-color: var(--table-sticky-bg, var(--gray-50-920));
+  }
+
+  tbody tr.groupRow & {
+    background-color: var(--table-sticky-bg, var(--gray-100-900));
   }
 
   tbody tr.activeRow & {

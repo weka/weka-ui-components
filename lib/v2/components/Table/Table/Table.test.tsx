@@ -113,7 +113,6 @@ describe('Table', () => {
       )
       expect(screen.getByText(EMPTY_MESSAGE)).toBeInTheDocument()
     })
-
   })
 
   describe('row click handler', () => {
@@ -332,7 +331,10 @@ describe('Table rowActions', () => {
     const [firstButton] = screen.getAllByTestId(ROW_ACTIONS_BUTTON_TESTID)
     fireEvent.click(firstButton)
     fireEvent.click(screen.getByTestId('row-action-edit'))
-    expect(editAction).toHaveBeenCalledWith(DATA[0])
+    expect(editAction).toHaveBeenCalledWith(
+      DATA[0],
+      expect.objectContaining({ original: DATA[0] })
+    )
   })
 
   it('renders no kebab button when all actions are hidden for a row', () => {

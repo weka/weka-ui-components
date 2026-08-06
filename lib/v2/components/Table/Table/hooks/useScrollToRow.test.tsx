@@ -43,7 +43,8 @@ function Harness({
     effectivePageSize: PAGE_SIZE,
     currentPage: 1,
     setInternalCurrentPage,
-    data: DATA
+    data: DATA,
+    isGrouped: false
   })
 
   return (

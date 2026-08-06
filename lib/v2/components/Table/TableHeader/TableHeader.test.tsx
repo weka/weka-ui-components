@@ -114,35 +114,35 @@ describe('TableHeader', () => {
       title: '<>:"/\\|?*',
       expectedFilename: 'export_2026-07-14T00-03-09Z.csv'
     }
-  ])('$description when naming the downloaded csv', ({
-    title,
-    expectedFilename
-  }) => {
-    vi.useFakeTimers()
-    try {
-      vi.setSystemTime(new Date('2026-07-14T00:03:09.123Z'))
-      vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock')
-      vi.spyOn(URL, 'revokeObjectURL').mockImplementation(NOP)
-      const clickSpy = vi
-        .spyOn(HTMLAnchorElement.prototype, 'click')
-        .mockImplementation(NOP)
+  ])(
+    '$description when naming the downloaded csv',
+    ({ title, expectedFilename }) => {
+      vi.useFakeTimers()
+      try {
+        vi.setSystemTime(new Date('2026-07-14T00:03:09.123Z'))
+        vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock')
+        vi.spyOn(URL, 'revokeObjectURL').mockImplementation(NOP)
+        const clickSpy = vi
+          .spyOn(HTMLAnchorElement.prototype, 'click')
+          .mockImplementation(NOP)
 
-      render(
-        <TableHeader
-          columns={COLUMNS}
-          data={SAMPLE_DATA}
-          title={title}
-        />
-      )
-      fireEvent.click(screen.getByTestId(DOWNLOAD_BUTTON_TESTID))
+        render(
+          <TableHeader
+            columns={COLUMNS}
+            data={SAMPLE_DATA}
+            title={title}
+          />
+        )
+        fireEvent.click(screen.getByTestId(DOWNLOAD_BUTTON_TESTID))
 
-      const link = clickSpy.mock.contexts[0] as HTMLAnchorElement
-      expect(link.getAttribute('download')).toBe(expectedFilename)
-    } finally {
-      vi.restoreAllMocks()
-      vi.useRealTimers()
+        const link = clickSpy.mock.contexts[0] as HTMLAnchorElement
+        expect(link.getAttribute('download')).toBe(expectedFilename)
+      } finally {
+        vi.restoreAllMocks()
+        vi.useRealTimers()
+      }
     }
-  })
+  )
 
   it('opens the settings menu with a row per column', () => {
     render(

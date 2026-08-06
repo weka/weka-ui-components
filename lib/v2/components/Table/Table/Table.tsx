@@ -10,10 +10,10 @@ import type {
   TableOptions,
   VisibilityState
 } from '@tanstack/react-table'
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { flexRender, useReactTable } from '@tanstack/react-table'
+import { useReactTable } from '@tanstack/react-table'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#consts'
@@ -22,19 +22,23 @@ import { NOOP } from '#v2/utils/consts'
 import { Spinner } from '../../Spinner'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
-import { TableFilter } from '../TableFilter'
-import { buildTableColumns, getCanShowFilter } from '../tableUtils'
+import { buildTableColumns } from '../tableUtils'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useEndlessScroll } from './hooks/useEndlessScroll'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
+import { useGroupExpansion } from './hooks/useGroupExpansion'
 import { useInitialSorting } from './hooks/useInitialSorting'
 import { usePaginationState } from './hooks/usePaginationState'
 import { useScrollToRow } from './hooks/useScrollToRow'
+import { useTableCounts } from './hooks/useTableCounts'
 import { useTableOptions } from './hooks/useTableOptions'
 import { EndlessScrollExtras } from './EndlessScrollExtras'
 import { renderTableBody } from './renderTableBody'
+import { TableBodyCell } from './TableBodyCell'
+import { ROW_ACTIONS_COLUMN_ID } from './tableConsts'
 import { TableContent } from './TableContent'
 import { TableHeaderSection } from './TableHeaderSection'
+import { TableHeadRow } from './TableHeadRow'
 
 import styles from './table.module.scss'
 
@@ -44,6 +48,7 @@ const ROW_ACTIONS_COLUMN_SIZE = 56
 
 const EMPTY_ACTIVE_FILTERS: ActiveFilter[] = []
 const EMPTY_EXCLUDED_FIELDS: string[] = []
+const EMPTY_GROUPING: string[] = []
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -110,6 +115,16 @@ export interface TableProps<TData = unknown> {
   showCsvDownload?: boolean
   dataTestId?: string
   rowActions?: RowAction<TData>[]
+
+  /**
+   * Column ids to group rows by. Group headers render an expand/collapse
+   * chevron, and non-grouping columns fall back to their `aggregatedCell`
+   * (a distinct-value count unless the column defines its own).
+   */
+  grouping?: string[]
+  /** Expands every group on first render instead of starting collapsed. */
+  defaultExpandedGroups?: boolean
+
   pinFirstColumn?: boolean
   drawer?: ReactNode
   drawerOpen?: boolean
@@ -122,7 +137,7 @@ export interface TableProps<TData = unknown> {
   onLoadMore?: () => void
 }
 
-export const ROW_ACTIONS_COLUMN_ID = '__rowActions__'
+export { ROW_ACTIONS_COLUMN_ID } from './tableConsts'
 
 const COLUMN_RESIZE_MODE: ColumnResizeMode = 'onChange'
 
@@ -176,6 +191,8 @@ export function Table<TData = unknown>({
   currentPage: currentPageProp,
   isPaginationPageEnabled,
   rowActions,
+  grouping = EMPTY_GROUPING,
+  defaultExpandedGroups = false,
   pinFirstColumn = false,
   drawer,
   drawerOpen = false,
@@ -201,6 +218,9 @@ export function Table<TData = unknown>({
   )
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+  const isGrouped = grouping.length > 0
+  const { expanded, setExpanded } = useGroupExpansion(defaultExpandedGroups)
 
   const { filteredData, globalSearchTerm, handleGlobalSearch } =
     useGlobalSearch(data, columns, searchExcludedFields)
@@ -286,8 +306,10 @@ export function Table<TData = unknown>({
       enableHiding: false,
       size: rowActionsWidth,
       minSize: rowActionsWidth,
+      enableGrouping: false,
       meta: { rowActions } as Record<string, unknown>,
-      cell: (ctx) => <RowActionsCell {...ctx} />
+      cell: (ctx) => <RowActionsCell {...ctx} />,
+      aggregatedCell: (ctx) => <RowActionsCell {...ctx} />
     }
     return [...builtColumns, rowActionsColumn]
   }, [columns, hasResizableColumns, rowActions, rowActionsWidth])
@@ -307,19 +329,26 @@ export function Table<TData = unknown>({
     effectivePageSize,
     manualPagination,
     manualFiltering,
-    manualSorting
+    manualSorting,
+    grouping,
+    expanded,
+    setExpanded,
+    endless
   })
 
   const table = useReactTable(tableOptions as TableOptions<TData>)
 
   const filteredRowCount = table.getFilteredRowModel().rows.length
 
-  const totalItems = useMemo(() => {
-    if (manualPagination) {
-      return itemsAmount || 0
-    }
-    return filteredRowCount
-  }, [manualPagination, itemsAmount, filteredRowCount])
+  const { totalItems, filteredCount } = useTableCounts({
+    table,
+    data,
+    activeFilters,
+    filteredRowCount,
+    itemsAmount,
+    manualPagination,
+    isGrouped
+  })
 
   const totalPages = Math.ceil(totalItems / effectivePageSize)
   const showPagination = totalPages > 1
@@ -344,24 +373,9 @@ export function Table<TData = unknown>({
     effectivePageSize,
     currentPage,
     setInternalCurrentPage,
-    data
+    data,
+    isGrouped
   })
-
-  const actualFilteredCount = useMemo(() => {
-    if (manualPagination) {
-      return itemsAmount || 0
-    }
-    if (activeFilters.length === 0) {
-      return itemsAmount || data.length
-    }
-    return filteredRowCount
-  }, [
-    manualPagination,
-    itemsAmount,
-    data.length,
-    activeFilters,
-    filteredRowCount
-  ])
 
   const paginatedRows = table.getRowModel().rows
   const visibleRowCount = paginatedRows.length
@@ -455,7 +469,7 @@ export function Table<TData = unknown>({
     >
       <TableHeaderSection
         activeFilters={activeFilters}
-        actualFilteredCount={actualFilteredCount}
+        actualFilteredCount={filteredCount}
         columns={columns}
         csvFileTitle={csvFileTitle}
         customFilters={customFilters}
@@ -506,75 +520,15 @@ export function Table<TData = unknown>({
                 className={styles.table}
                 style={{ minWidth: table.getTotalSize() }}
               >
-                <thead className={styles.tableHeader}>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers
-                        .filter((header) => header.column.getIsVisible())
-                        .map((header) => {
-                          const columnId = header.column.id || header.id
-                          const isActionsColumn =
-                            header.column.id === ROW_ACTIONS_COLUMN_ID
-                          const isFirstColumn =
-                            header.column.id === firstDataColumnId
-                          return (
-                            <th
-                              key={header.id}
-                              data-testid={`column-header-${columnId}`}
-                              style={{ width: header.getSize() }}
-                              className={clsx(styles.headerCell, {
-                                [styles.stickyActions]: isActionsColumn,
-                                [styles.stickyFirst]: isFirstColumn
-                              })}
-                            >
-                              <div className={styles.headerContent}>
-                                <div className={styles.headerMain}>
-                                  <div
-                                    onClick={header.column.getToggleSortingHandler()}
-                                    className={
-                                      header.column.getCanSort()
-                                        ? styles.sortableHeader
-                                        : styles.headerText
-                                    }
-                                  >
-                                    {flexRender(
-                                      header.column.columnDef.header,
-                                      header.getContext()
-                                    )}
-                                  </div>
-                                  <div className={styles.headerIcons}>
-                                    {(getCanShowFilter(header) ||
-                                      header.column.getCanSort()) && (
-                                      <TableFilter
-                                        activeFilters={activeFilters}
-                                        canFilter={getCanShowFilter(header)}
-                                        canSort={header.column.getCanSort()}
-                                        columnId={header.column.id}
-                                        columns={columns}
-                                        customFilters={customFilters}
-                                        onFilterChange={setActiveFilters}
-                                        onSortClick={header.column.getToggleSortingHandler()}
-                                        sortDirection={header.column.getIsSorted()}
-                                      />
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                              {hasResizableColumns &&
-                              header.column.getCanResize() ? (
-                                <div
-                                  className={styles.resizer}
-                                  data-testid={`column-resizer-${columnId}`}
-                                  onMouseDown={header.getResizeHandler()}
-                                  onTouchStart={header.getResizeHandler()}
-                                />
-                              ) : null}
-                            </th>
-                          )
-                        })}
-                    </tr>
-                  ))}
-                </thead>
+                <TableHeadRow
+                  activeFilters={activeFilters}
+                  columns={columns}
+                  customFilters={customFilters}
+                  firstDataColumnId={firstDataColumnId}
+                  hasResizableColumns={hasResizableColumns}
+                  onFilterChange={setActiveFilters}
+                  table={table}
+                />
               </table>
             </div>
             <div
@@ -597,32 +551,14 @@ export function Table<TData = unknown>({
                     loading={loading}
                     onRowClick={onRowClick}
                     rows={displayRows}
-                    renderCell={(cell) => {
-                      const cellMeta = cell.column.columnDef.meta as
-                        | { cellStyle?: CSSProperties }
-                        | undefined
-                      const cellStyle = cellMeta?.cellStyle || {}
-                      const isActionsCell =
-                        cell.column.id === ROW_ACTIONS_COLUMN_ID
-                      const isFirstCell = cell.column.id === firstDataColumnId
-                      const cellWidth = cell.column.getSize()
-
-                      return (
-                        <td
-                          key={cell.id}
-                          style={{ width: cellWidth, ...cellStyle }}
-                          className={clsx(styles.tableCell, {
-                            [styles.stickyActions]: isActionsCell,
-                            [styles.stickyFirst]: isFirstCell
-                          })}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      )
-                    }}
+                    renderCell={(cell) => (
+                      <TableBodyCell
+                        key={cell.id}
+                        cell={cell}
+                        firstDataColumnId={firstDataColumnId}
+                        isGrouped={isGrouped}
+                      />
+                    )}
                   />
                 </tbody>
               </table>

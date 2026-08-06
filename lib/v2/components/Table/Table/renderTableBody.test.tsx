@@ -6,9 +6,7 @@ import { renderTableBody } from './renderTableBody'
 const BODY = <span data-testid='body-content'>content</span>
 const BODY_AREA = '.tableBodyArea'
 
-function renderBody(
-  args: Partial<Parameters<typeof renderTableBody>[0]> = {}
-) {
+function renderBody(args: Partial<Parameters<typeof renderTableBody>[0]> = {}) {
   return render(
     <div>
       {renderTableBody({

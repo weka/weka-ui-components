@@ -1,5 +1,5 @@
 import type { RowAction } from '../Table'
-import type { CellContext } from '@tanstack/react-table'
+import type { CellContext, Row } from '@tanstack/react-table'
 
 import {
   cleanup,
@@ -18,6 +18,7 @@ interface TestRow {
 }
 
 const SAMPLE_ROW: TestRow = { id: 'r1', name: 'Item 1' }
+const SAMPLE_TABLE_ROW = { original: SAMPLE_ROW } as Row<TestRow>
 
 const ROW_ACTIONS_BUTTON_TESTID = 'row-actions-button'
 const EDIT_ACTION_TESTID = 'row-action-edit'
@@ -27,7 +28,7 @@ function buildCellContext(
   rowActions: RowAction<TestRow>[] | undefined
 ): CellContext<TestRow, unknown> {
   return {
-    row: { original: SAMPLE_ROW },
+    row: SAMPLE_TABLE_ROW,
     column: { columnDef: { meta: rowActions ? { rowActions } : undefined } }
   } as unknown as CellContext<TestRow, unknown>
 }
@@ -126,12 +127,12 @@ describe('RowActionsCell', () => {
     expect(screen.getByTestId('row-action-delete')).toBeDisabled()
   })
 
-  it('calls the action with the row data when a menu item is clicked', () => {
+  it('calls the action with the row data and the table row', () => {
     const editAction = vi.fn()
     renderCell([{ key: 'edit', text: EDIT_TEXT, action: editAction }])
     fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
     fireEvent.click(screen.getByTestId(EDIT_ACTION_TESTID))
-    expect(editAction).toHaveBeenCalledWith(SAMPLE_ROW)
+    expect(editAction).toHaveBeenCalledWith(SAMPLE_ROW, SAMPLE_TABLE_ROW)
   })
 
   it('passes the row to hideAction and disabled predicates', () => {
@@ -141,8 +142,8 @@ describe('RowActionsCell', () => {
       { key: 'edit', text: EDIT_TEXT, action: vi.fn(), hideAction, disabled }
     ])
     fireEvent.click(screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID))
-    expect(hideAction).toHaveBeenCalledWith(SAMPLE_ROW)
-    expect(disabled).toHaveBeenCalledWith(SAMPLE_ROW)
+    expect(hideAction).toHaveBeenCalledWith(SAMPLE_ROW, SAMPLE_TABLE_ROW)
+    expect(disabled).toHaveBeenCalledWith(SAMPLE_ROW, SAMPLE_TABLE_ROW)
   })
 
   it('renders custom content when an action provides it', () => {
@@ -249,7 +250,7 @@ describe('RowActionsCell - disabledTooltip', () => {
     await waitFor(() => {
       expect(screen.getByText('reason for r1')).toBeInTheDocument()
     })
-    expect(disabledTooltip).toHaveBeenCalledWith(SAMPLE_ROW)
+    expect(disabledTooltip).toHaveBeenCalledWith(SAMPLE_ROW, SAMPLE_TABLE_ROW)
   })
 
   it('does not wrap an enabled action in a tooltip even if disabledTooltip is set', () => {

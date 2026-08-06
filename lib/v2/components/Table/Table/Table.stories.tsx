@@ -127,6 +127,52 @@ export const WithRowActions: Story = {
   )
 }
 
+const GROUPING = ['region']
+
+const GROUPED_ROW_ACTIONS: RowAction<Cluster>[] = [
+  {
+    key: 'decommission-region',
+    text: 'Decommission region',
+    hideAction: (_values, row) => !row.getIsGrouped(),
+    action: (_values, row) => alert(`Decommission ${row.getValue('region')}`)
+  },
+  {
+    key: 'edit',
+    text: 'Edit',
+    hideAction: (_values, row) => row.getIsGrouped(),
+    action: (values) => alert(`Edit ${values.name}`)
+  }
+]
+
+export const Grouped: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        grouping={GROUPING}
+        rowActions={GROUPED_ROW_ACTIONS}
+        showSearch
+        title='Clusters by region'
+      />
+    </div>
+  )
+}
+
+export const GroupedExpandedByDefault: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <Table
+        columns={COLUMNS}
+        data={DATA}
+        defaultExpandedGroups
+        grouping={GROUPING}
+        title='Clusters by region (expanded)'
+      />
+    </div>
+  )
+}
+
 interface WideCluster extends Cluster {
   tier: string
   backend: string
