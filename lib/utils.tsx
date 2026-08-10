@@ -488,7 +488,9 @@ const utils = {
     if (showSeconds) {
       units.push('seconds')
     }
-    const durationObj = DateTime.fromISO(date).toUTC().diffNow(units).toObject()
+    // Keep the same zone as `DateTime.now()`: Luxon diffs days by calendar date
+    // per operand zone, so a `.toUTC()` here yielded `{ days: 1, hours: -24 }`.
+    const durationObj = DateTime.fromISO(date).diffNow(units).toObject()
     let stringToShow = EMPTY_STRING
     let isPast = true
     const durationObjWithValues: { [key: string]: any } = {}
