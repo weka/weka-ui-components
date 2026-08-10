@@ -483,12 +483,19 @@ const utils = {
       showTime
     )
   },
+  /**
+   * Formats an ISO date as a relative time string (e.g. `55min ago`, `in 2d 3h`).
+   *
+   * The parsed date keeps the same zone as `DateTime.now()`: Luxon diffs days by
+   * calendar date per operand zone, so converting to UTC first yielded
+   * mixed-sign durations such as `{ days: 1, hours: -24 }`.
+   */
   getRelativeTimeFromISODate: (date: string, showSeconds = false) => {
     const units: DurationUnits = ['years', 'months', 'days', 'hours', 'minutes']
     if (showSeconds) {
       units.push('seconds')
     }
-    const durationObj = DateTime.fromISO(date).toUTC().diffNow(units).toObject()
+    const durationObj = DateTime.fromISO(date).diffNow(units).toObject()
     let stringToShow = EMPTY_STRING
     let isPast = true
     const durationObjWithValues: { [key: string]: any } = {}
