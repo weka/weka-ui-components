@@ -178,7 +178,7 @@ export function normalizeFilterOptions(
 
 /** Finds a column definition by id, accessorKey, or accessorFn */
 export function findColumn(
-  columns: unknown[],
+  columns: readonly unknown[],
   columnId: string
 ): ColumnDef | undefined {
   const cols = columns as ColumnDef[]
