@@ -11,11 +11,59 @@ import { DOM_EVENTS } from '#v2/utils/consts'
 
 const DEFAULT_OFFSET_PX = 4
 const DEFAULT_SCROLL_THRESHOLD_PX = 50
+const VIEWPORT_MARGIN_PX = 8
+
+export const POPOVER_ALIGN = {
+  LEFT: 'left',
+  RIGHT: 'right',
+  CENTER: 'center'
+} as const
+
+export type PopoverAlign = (typeof POPOVER_ALIGN)[keyof typeof POPOVER_ALIGN]
+
+/**
+ * Clamp a desired left edge so the popover never overflows the viewport. A
+ * `contentWidth` of 0 (not yet measured) uses the desired left as-is.
+ */
+function clampLeft(desiredLeft: number, contentWidth: number): CSSProperties {
+  if (contentWidth === 0) {
+    return { left: desiredLeft }
+  }
+  const maxLeft = window.innerWidth - contentWidth - VIEWPORT_MARGIN_PX
+  return { left: Math.max(VIEWPORT_MARGIN_PX, Math.min(desiredLeft, maxLeft)) }
+}
+
+/**
+ * Horizontal placement for the popover. `RIGHT` (default) right-aligns to the
+ * anchor's right edge (menus open leftward from their trigger); if that would
+ * push the popover off the left of the viewport it falls back to a clamped left
+ * edge. `LEFT` left-aligns to the anchor's left edge (dropdowns drop straight
+ * down). `CENTER` centers the popover under the anchor. All non-default modes
+ * are clamped on-screen.
+ */
+function getHorizontalPlacement(
+  rect: DOMRect,
+  contentWidth: number,
+  align: PopoverAlign
+): CSSProperties {
+  if (align === POPOVER_ALIGN.LEFT) {
+    return clampLeft(rect.left, contentWidth)
+  }
+  if (align === POPOVER_ALIGN.CENTER) {
+    const centeredLeft = rect.left + rect.width / 2 - contentWidth / 2
+    return clampLeft(centeredLeft, contentWidth)
+  }
+  if (contentWidth === 0 || rect.right - contentWidth >= VIEWPORT_MARGIN_PX) {
+    return { right: window.innerWidth - rect.right }
+  }
+  return clampLeft(rect.left, contentWidth)
+}
 
 interface UsePopoverPositionOptions {
   offset?: number
   scrollCloseThreshold?: number
   contentRef?: RefObject<HTMLElement>
+  align?: PopoverAlign
 }
 
 interface UsePopoverPositionResult {
@@ -35,7 +83,8 @@ export function usePopoverPosition(
   const {
     offset = DEFAULT_OFFSET_PX,
     scrollCloseThreshold = DEFAULT_SCROLL_THRESHOLD_PX,
-    contentRef
+    contentRef,
+    align = POPOVER_ALIGN.RIGHT
   } = options
 
   const initialAnchorTop = useRef<number | null>(null)
@@ -50,31 +99,28 @@ export function usePopoverPosition(
     if (!rect) {
       return { position: 'fixed', visibility: 'hidden' }
     }
-    const right = window.innerWidth - rect.right
     const contentHeight = contentRef?.current?.offsetHeight ?? 0
+    const contentWidth = contentRef?.current?.offsetWidth ?? 0
     const spaceBelow = window.innerHeight - rect.bottom
+
+    const horizontal = getHorizontalPlacement(rect, contentWidth, align)
 
     const openUp =
       contentHeight > 0 &&
       contentHeight + offset > spaceBelow &&
       rect.top > spaceBelow
 
-    if (openUp) {
-      return {
-        position: 'fixed',
-        bottom: window.innerHeight - rect.top + offset,
-        visibility: 'visible',
-        right
-      }
-    }
+    const vertical: CSSProperties = openUp
+      ? { bottom: window.innerHeight - rect.top + offset }
+      : { top: rect.bottom + offset }
 
     return {
       position: 'fixed',
-      top: rect.bottom + offset,
       visibility: 'visible',
-      right
+      ...vertical,
+      ...horizontal
     }
-  }, [anchorRef, offset, contentRef])
+  }, [anchorRef, offset, contentRef, align])
 
   const [position, setPosition] = useState<CSSProperties>({
     position: 'fixed',

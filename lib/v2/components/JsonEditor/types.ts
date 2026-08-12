@@ -45,6 +45,13 @@ export interface JsonEditorDecoration {
   className: string | ((match: string) => string)
 }
 
+/** A JSON parse error reported by {@link JsonEditorProps.onValidate}. */
+export interface JsonEditorValidationError {
+  text: string
+  /** Zero-based line index of the error. */
+  row: number
+}
+
 /** Cursor state reported by {@link JsonEditorProps.onCursorActivity}. */
 export interface JsonEditorCursorContext {
   textBefore: string

@@ -1,7 +1,8 @@
 import type {
   JsonEditorCompletionSource,
   JsonEditorCursorContext,
-  JsonEditorDecoration
+  JsonEditorDecoration,
+  JsonEditorValidationError
 } from './types'
 import type { Extension } from '@codemirror/state'
 
@@ -12,7 +13,7 @@ import {
   type CompletionResult
 } from '@codemirror/autocomplete'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
-import { json } from '@codemirror/lang-json'
+import { json, jsonParseLinter } from '@codemirror/lang-json'
 import {
   bracketMatching,
   foldGutter,
@@ -21,6 +22,7 @@ import {
   indentOnInput,
   syntaxHighlighting
 } from '@codemirror/language'
+import { linter } from '@codemirror/lint'
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search'
 import { RangeSetBuilder } from '@codemirror/state'
 import {
@@ -333,6 +335,37 @@ export interface JsonEditorStaticConfig {
   getCursorHandler: () =>
     | ((context: JsonEditorCursorContext) => void)
     | undefined
+  getOnValidate: () =>
+    | ((errors: JsonEditorValidationError[]) => void)
+    | undefined
+}
+
+const JSON_LINT_DELAY_MS = 300
+
+/**
+ * Lints the document as JSON, surfacing parse errors both as editor markers and
+ * through the caller's `onValidate` handler (as zero-based `{ text, row }`). An
+ * empty (whitespace-only) document is treated as blank rather than invalid, so
+ * a not-yet-filled editor never reports an "unexpected end of input" error.
+ */
+function jsonValidationLinter(
+  getOnValidate: JsonEditorStaticConfig['getOnValidate']
+): Extension {
+  const parseLinter = jsonParseLinter()
+  return linter(
+    (view) => {
+      const isBlank = view.state.doc.toString().trim().length === 0
+      const diagnostics = isBlank ? [] : parseLinter(view)
+      getOnValidate()?.(
+        diagnostics.map((diagnostic) => ({
+          text: diagnostic.message,
+          row: view.state.doc.lineAt(diagnostic.from).number - 1
+        }))
+      )
+      return diagnostics
+    },
+    { delay: JSON_LINT_DELAY_MS }
+  )
 }
 
 /**
@@ -353,6 +386,7 @@ export function buildStaticExtensions(
     highlightSelectionMatches(),
     json(),
     syntaxHighlighting(jsonHighlightStyle),
+    jsonValidationLinter(config.getOnValidate),
     completionAdapter(config.getCompletionSource),
     cursorActivityPlugin(config.getCursorHandler),
     blockTextSubstitution,

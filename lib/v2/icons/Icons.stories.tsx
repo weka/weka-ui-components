@@ -14,6 +14,7 @@ import { CloseIcon } from './CloseIcon'
 import { CloseRoundedIcon } from './CloseRoundedIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
 import { ConfigureIcon } from './ConfigureIcon'
+import { CopyIcon } from './CopyIcon'
 import { DarkModeIcon } from './DarkModeIcon'
 import { DateTimeIcon } from './DateTimeIcon'
 import { DownloadIcon } from './DownloadIcon'
@@ -119,6 +120,7 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'CloseRoundedIcon', node: <CloseRoundedIcon /> },
   { name: 'CloseWithBgIcon', node: <CloseWithBgIcon /> },
   { name: 'ConfigureIcon', node: <ConfigureIcon /> },
+  { name: 'CopyIcon', node: <CopyIcon /> },
   { name: 'DarkModeIcon', node: <DarkModeIcon /> },
   { name: 'DateTimeIcon', node: <DateTimeIcon /> },
   { name: 'DownloadIcon', node: <DownloadIcon /> },

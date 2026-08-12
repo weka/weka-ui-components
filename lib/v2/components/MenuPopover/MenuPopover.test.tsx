@@ -2,11 +2,14 @@ import { type ReactNode, type RefObject, useRef } from 'react'
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { MenuPopover } from './MenuPopover'
+import { usePopoverPosition } from '#v2/hooks'
 
-vi.mock('../../hooks', () => ({
+import { MenuPopover, POPOVER_ALIGN } from './MenuPopover'
+
+vi.mock('#v2/hooks', () => ({
   useClickOutside: vi.fn(),
-  usePopoverPosition: vi.fn(() => ({ position: { position: 'fixed' } }))
+  usePopoverPosition: vi.fn(() => ({ position: { position: 'fixed' } })),
+  POPOVER_ALIGN: { LEFT: 'left', RIGHT: 'right', CENTER: 'center' }
 }))
 
 const MENU_CONTENT = 'Menu Content'
@@ -186,6 +189,47 @@ describe('MenuPopover', () => {
       )
       const popover = document.body.querySelector(POPOVER_CLASS_SELECTOR)
       expect(popover?.className).not.toMatch(/compact/)
+    })
+  })
+
+  describe('Alignment', () => {
+    it('forwards right alignment to the positioning hook by default', () => {
+      const anchorRef = createMockAnchorRef()
+      render(
+        <MenuPopover
+          anchorRef={anchorRef as unknown as RefObject<HTMLElement>}
+          onClose={vi.fn()}
+          open
+        >
+          <div>{MENU_CONTENT}</div>
+        </MenuPopover>
+      )
+      expect(usePopoverPosition).toHaveBeenLastCalledWith(
+        true,
+        expect.anything(),
+        expect.any(Function),
+        expect.objectContaining({ align: POPOVER_ALIGN.RIGHT })
+      )
+    })
+
+    it('forwards a left alignment to the positioning hook', () => {
+      const anchorRef = createMockAnchorRef()
+      render(
+        <MenuPopover
+          align={POPOVER_ALIGN.LEFT}
+          anchorRef={anchorRef as unknown as RefObject<HTMLElement>}
+          onClose={vi.fn()}
+          open
+        >
+          <div>{MENU_CONTENT}</div>
+        </MenuPopover>
+      )
+      expect(usePopoverPosition).toHaveBeenLastCalledWith(
+        true,
+        expect.anything(),
+        expect.any(Function),
+        expect.objectContaining({ align: POPOVER_ALIGN.LEFT })
+      )
     })
   })
 

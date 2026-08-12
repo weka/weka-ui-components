@@ -22,6 +22,21 @@
   color: var(--red-500);
 }
 
+.inputControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--gray-600-400);
+  pointer-events: none;
+}
+
 .input {
   width: 100%;
   padding: 10px;
@@ -36,6 +51,10 @@
   transition: all 0.2s ease;
   cursor: text;
   pointer-events: auto;
+
+  &.hasIcon {
+    padding-left: 36px;
+  }
 
   &:hover:not(:disabled, :read-only, :focus) {
     border-color: var(--gray-400-600);

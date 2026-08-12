@@ -74,6 +74,7 @@
     "@codemirror/commands": "^6",
     "@codemirror/lang-json": "^6",
     "@codemirror/language": "^6",
+    "@codemirror/lint": "^6",
     "@codemirror/search": "^6",
     "@codemirror/state": "^6",
     "@codemirror/view": "^6",

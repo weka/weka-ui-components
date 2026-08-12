@@ -1,0 +1,28 @@
+export interface CopyIconProps {
+  width?: number
+  height?: number
+  extraClass?: string
+  fill?: string
+}
+
+export function CopyIcon({
+  width = 14,
+  height = 14,
+  extraClass,
+  fill = 'currentColor'
+}: Readonly<CopyIconProps>) {
+  return (
+    <svg
+      className={extraClass}
+      height={height}
+      viewBox='0 0 16 16'
+      width={width}
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M4,11H1.5A1.5,1.5,0,0,1,0,9.5v-8A1.5,1.5,0,0,1,1.5,0h8A1.5,1.5,0,0,1,11,1.5V4H10V1.5A.5.5,0,0,0,9.5,1h-8a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5H4ZM6,7.5v-1A.5.5,0,0,1,6.5,6h1a.5.5,0,0,0,0-1h-1A1.5,1.5,0,0,0,5,6.5v1a.5.5,0,0,0,1,0Zm10,0v-1A1.5,1.5,0,0,0,14.5,5h-1a.5.5,0,0,0,0,1h1a.5.5,0,0,1,.5.5v1a.5.5,0,0,0,1,0Zm0,7v-1a.5.5,0,0,0-1,0v1a.5.5,0,0,1-.5.5h-1a.5.5,0,0,0,0,1h1A1.5,1.5,0,0,0,16,14.5Zm-8,1a.5.5,0,0,0-.5-.5h-1a.5.5,0,0,1-.5-.5v-1a.5.5,0,0,0-1,0v1A1.5,1.5,0,0,0,6.5,16h1A.5.5,0,0,0,8,15.5Zm-2-4v-2a.5.5,0,0,0-1,0v2a.5.5,0,0,0,1,0Zm10,0v-2a.5.5,0,0,0-1,0v2a.5.5,0,0,0,1,0Zm-4-6a.5.5,0,0,0-.5-.5h-2a.5.5,0,0,0,0,1h2A.5.5,0,0,0,12,5.5Zm0,10a.5.5,0,0,0-.5-.5h-2a.5.5,0,0,0,0,1h2A.5.5,0,0,0,12,15.5Z'
+        fill={fill}
+      />
+    </svg>
+  )
+}

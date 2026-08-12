@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent } from 'react'
+import type { ChangeEvent, FocusEvent, ReactNode } from 'react'
 
 import clsx from 'clsx'
 
@@ -32,6 +32,7 @@ export interface TextInputProps {
   autoFocus?: boolean
   selectOnFocus?: boolean
   dataTestId?: string
+  icon?: ReactNode
 }
 
 export function TextInput({
@@ -48,7 +49,8 @@ export function TextInput({
   type = TEXT_INPUT_TYPES.TEXT,
   autoFocus = false,
   selectOnFocus = false,
-  dataTestId
+  dataTestId,
+  icon
 }: Readonly<TextInputProps>) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value)
@@ -59,6 +61,12 @@ export function TextInput({
       e.target.select()
     }
   }
+
+  const inputClassName = clsx(
+    styles.input,
+    { [styles.hasIcon]: Boolean(icon) },
+    extraClass
+  )
 
   return (
     <div className={styles.inputWrapper}>
@@ -71,21 +79,24 @@ export function TextInput({
           {required ? <span className={styles.required}> *</span> : null}
         </label>
       ) : null}
-      <input
-        autoComplete='off'
-        autoFocus={autoFocus}
-        className={clsx(styles.input, extraClass)}
-        data-testid={dataTestId}
-        disabled={disabled}
-        id={id}
-        name={name}
-        onChange={handleChange}
-        onFocus={handleFocus}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        type={type}
-        value={value}
-      />
+      <div className={styles.inputControl}>
+        {icon ? <span className={styles.icon}>{icon}</span> : null}
+        <input
+          autoComplete='off'
+          autoFocus={autoFocus}
+          className={inputClassName}
+          data-testid={dataTestId}
+          disabled={disabled}
+          id={id}
+          name={name}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          type={type}
+          value={value}
+        />
+      </div>
     </div>
   )
 }

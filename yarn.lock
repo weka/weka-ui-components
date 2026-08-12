@@ -2971,6 +2971,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codemirror/lint@npm:^6":
+  version: 6.9.7
+  resolution: "@codemirror/lint@npm:6.9.7"
+  dependencies:
+    "@codemirror/state": "npm:^6.0.0"
+    "@codemirror/view": "npm:^6.42.0"
+    crelt: "npm:^1.0.5"
+  checksum: 10c0/5c2985e1118c96d76ccc2295e86476b6a56d4cb764e228b0d42ad08f9e2bb2f4862a2609196099d0242b639e924cd93acc1cca8ae55b4910c4f4e66856981fe0
+  languageName: node
+  linkType: hard
+
 "@codemirror/search@npm:^6":
   version: 6.7.1
   resolution: "@codemirror/search@npm:6.7.1"
@@ -2991,15 +3002,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/view@npm:^6, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0, @codemirror/view@npm:^6.37.0":
-  version: 6.43.6
-  resolution: "@codemirror/view@npm:6.43.6"
+"@codemirror/view@npm:^6, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0, @codemirror/view@npm:^6.37.0, @codemirror/view@npm:^6.42.0":
+  version: 6.43.7
+  resolution: "@codemirror/view@npm:6.43.7"
   dependencies:
     "@codemirror/state": "npm:^6.7.0"
     crelt: "npm:^1.0.6"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10c0/930b043b8d48e02421a1cb15eb311fb39edbb9709a107eeea8de133aad8ab3fb9bbfae9e829216914cb997026d06d26a71768ff0e2a8d679c9d27d3cb1b940eb
+  checksum: 10c0/f4a667a064ed85bc995f52855180bff01ef0e1c1f89121d7895bd811e9f83677e6471596a2a9a20e3b7f9e69be654383ebff312c177a6d840e8b0b55729e86d2
   languageName: node
   linkType: hard
 
@@ -6622,6 +6633,7 @@ __metadata:
     "@codemirror/commands": "npm:^6"
     "@codemirror/lang-json": "npm:^6"
     "@codemirror/language": "npm:^6"
+    "@codemirror/lint": "npm:^6"
     "@codemirror/search": "npm:^6"
     "@codemirror/state": "npm:^6"
     "@codemirror/view": "npm:^6"

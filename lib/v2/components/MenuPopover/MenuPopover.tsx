@@ -2,9 +2,17 @@ import { type ReactNode, type RefObject, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 
-import { useClickOutside, usePopoverPosition } from '#v2/hooks'
+import {
+  POPOVER_ALIGN,
+  type PopoverAlign,
+  useClickOutside,
+  usePopoverPosition
+} from '#v2/hooks'
 
 import styles from './menuPopover.module.scss'
+
+export { POPOVER_ALIGN }
+export type { PopoverAlign }
 
 export const MENU_POPOVER_STYLES = {
   menuItem: styles.menuItem,
@@ -25,6 +33,13 @@ export interface MenuPopoverProps {
    * short single-action menus (e.g. a drilldown confirmation).
    */
   compact?: boolean
+  /**
+   * Horizontal alignment relative to the anchor. `RIGHT` (default) opens
+   * leftward from the anchor's right edge — for icon/kebab triggers. `LEFT`
+   * drops straight down from the anchor's left edge — for labeled dropdowns.
+   * `CENTER` centers the popover under the anchor.
+   */
+  align?: PopoverAlign
 }
 
 export function MenuPopover({
@@ -33,7 +48,8 @@ export function MenuPopover({
   anchorRef,
   children,
   extraClass,
-  compact = false
+  compact = false,
+  align = POPOVER_ALIGN.RIGHT
 }: Readonly<MenuPopoverProps>) {
   const popRef = useRef<HTMLDivElement>(null)
 
@@ -44,7 +60,8 @@ export function MenuPopover({
   })
 
   const { position } = usePopoverPosition(open, anchorRef, onClose, {
-    contentRef: popRef as unknown as RefObject<HTMLElement>
+    contentRef: popRef as unknown as RefObject<HTMLElement>,
+    align
   })
 
   if (!open) {
