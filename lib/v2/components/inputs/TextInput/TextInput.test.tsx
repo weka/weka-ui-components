@@ -17,6 +17,7 @@ const TEST_ID = 'my-input'
 const PASS_TEST_ID = 'pass-input'
 const TYPED_CHAR = 'a'
 const SELECT_END_POSITION = 4
+const ICON_TEST_ID = 'leading-icon'
 
 const createProps = (overrides = {}) => ({
   value: EMPTY_STRING,
@@ -74,6 +75,22 @@ describe('TextInput - Rendering', () => {
   it('renders with data-testid', () => {
     render(<TextInput {...createProps({ dataTestId: TEST_ID })} />)
     expect(screen.getByTestId(TEST_ID)).toBeInTheDocument()
+  })
+})
+
+describe('TextInput - Icon', () => {
+  it('renders a leading icon when the icon prop is provided', () => {
+    render(
+      <TextInput
+        {...createProps({ icon: <span data-testid={ICON_TEST_ID} /> })}
+      />
+    )
+    expect(screen.getByTestId(ICON_TEST_ID)).toBeInTheDocument()
+  })
+
+  it('does not render an icon when the icon prop is omitted', () => {
+    render(<TextInput {...createProps()} />)
+    expect(screen.queryByTestId(ICON_TEST_ID)).not.toBeInTheDocument()
   })
 })
 

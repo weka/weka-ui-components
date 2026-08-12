@@ -2,7 +2,8 @@ import type {
   JsonEditorCompletionSource,
   JsonEditorCursorContext,
   JsonEditorDecoration,
-  JsonEditorHandle
+  JsonEditorHandle,
+  JsonEditorValidationError
 } from './types'
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
@@ -19,6 +20,7 @@ import clsx from 'clsx'
 
 import { EMPTY_ARRAY, EMPTY_STRING } from '#v2/utils/consts'
 
+import { JsonEditorCopyButton } from './JsonEditorCopyButton'
 import {
   buildLayoutExtensions,
   buildStaticExtensions,
@@ -38,7 +40,9 @@ const VALUE_SYNC = Annotation.define<boolean>()
 export interface JsonEditorProps {
   value: string
   onChange?: (value: string) => void
+  onValidate?: (errors: JsonEditorValidationError[]) => void
   readOnly?: boolean
+  allowCopy?: boolean
   placeholder?: string
   minHeight?: number | string
   maxHeight?: number | string
@@ -64,7 +68,9 @@ export const JsonEditor = forwardRef<
   {
     value,
     onChange,
+    onValidate,
     readOnly = false,
+    allowCopy = false,
     placeholder = EMPTY_STRING,
     minHeight,
     maxHeight,
@@ -83,9 +89,11 @@ export const JsonEditor = forwardRef<
   const viewRef = useRef<EditorView | null>(null)
 
   const onChangeRef = useRef(onChange)
+  const onValidateRef = useRef(onValidate)
   const completionSourceRef = useRef(completionSource)
   const cursorHandlerRef = useRef(onCursorActivity)
   onChangeRef.current = onChange
+  onValidateRef.current = onValidate
   completionSourceRef.current = completionSource
   cursorHandlerRef.current = onCursorActivity
 
@@ -100,7 +108,8 @@ export const JsonEditor = forwardRef<
     }
     const staticExtensions = buildStaticExtensions({
       getCompletionSource: () => completionSourceRef.current,
-      getCursorHandler: () => cursorHandlerRef.current
+      getCursorHandler: () => cursorHandlerRef.current,
+      getOnValidate: () => onValidateRef.current
     })
     const extensions: Extension[] = [
       ...staticExtensions,
@@ -217,9 +226,18 @@ export const JsonEditor = forwardRef<
 
   return (
     <div
-      ref={parentRef}
       className={clsx(styles.jsonEditor, extraClass)}
       data-testid={dataTestId}
-    />
+    >
+      <div
+        ref={parentRef}
+        className={styles.editorHost}
+      />
+      {allowCopy ? (
+        <JsonEditorCopyButton
+          getText={() => viewRef.current?.state.doc.toString() ?? value}
+        />
+      ) : null}
+    </div>
   )
 })

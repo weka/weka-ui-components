@@ -105,3 +105,16 @@ export const ReadOnly: Story = {
     </div>
   )
 }
+
+export const WithCopyButton: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <JsonEditor
+        allowCopy
+        maxHeight={280}
+        readOnly
+        value={READ_ONLY_VALUE}
+      />
+    </div>
+  )
+}

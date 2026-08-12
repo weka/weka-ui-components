@@ -6,7 +6,10 @@ import { useState } from 'react'
 import { NOP } from '#consts'
 import { EMPTY_STRING } from '#v2/utils/consts'
 
+import { SearchIcon } from '../../../icons'
 import { TEXT_INPUT_TYPES, TextInput } from './TextInput'
+
+const SEARCH_ICON_DIMENSION = 20
 
 const CONTAINER_STYLE: CSSProperties = {
   width: '320px',
@@ -20,8 +23,22 @@ function TextInputDemo() {
   const [name, setName] = useState('Jane Doe')
   const [email, setEmail] = useState(EMPTY_STRING)
   const [password, setPassword] = useState(EMPTY_STRING)
+  const [filter, setFilter] = useState(EMPTY_STRING)
   return (
     <div style={CONTAINER_STYLE}>
+      <TextInput
+        id='filter'
+        label='With leading icon'
+        onChange={setFilter}
+        placeholder='Filter'
+        value={filter}
+        icon={
+          <SearchIcon
+            height={SEARCH_ICON_DIMENSION}
+            width={SEARCH_ICON_DIMENSION}
+          />
+        }
+      />
       <TextInput
         autoFocus
         id='name'

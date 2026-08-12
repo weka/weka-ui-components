@@ -37,10 +37,9 @@
 .content {
   flex: 1;
   overflow: auto;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable both-edges;
   color: var(--text-primary);
   font-size: 14px;
-  padding-right: 16px;
   scrollbar-width: auto;
   scrollbar-color: var(--gray-400-600) transparent;
 
@@ -64,7 +63,6 @@
 }
 
 .contentNoScrollbar {
-  padding-right: 0;
   scrollbar-gutter: auto;
 }
 

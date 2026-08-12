@@ -1,5 +1,5 @@
 import { createRef } from 'react'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { EMPTY_STRING } from '#consts'
@@ -153,5 +153,94 @@ describe('JsonEditor - imperative handle', () => {
     ref.current?.insert('""', { cursorOffsetFromEnd: 1 })
     ref.current?.insert('X')
     expect(onChange).toHaveBeenLastCalledWith('"X"')
+  })
+})
+
+describe('JsonEditor - validation', () => {
+  it('reports JSON parse errors through onValidate', async () => {
+    const onValidate = vi.fn()
+    render(
+      <JsonEditor
+        onChange={vi.fn()}
+        onValidate={onValidate}
+        value='{ "a": }'
+      />
+    )
+
+    await waitFor(() => {
+      expect(onValidate).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            text: expect.any(String),
+            row: expect.any(Number)
+          })
+        ])
+      )
+    })
+  })
+
+  it('reports no errors through onValidate for valid JSON', async () => {
+    const onValidate = vi.fn()
+    render(
+      <JsonEditor
+        onChange={vi.fn()}
+        onValidate={onValidate}
+        value='{ "a": 1 }'
+      />
+    )
+
+    await waitFor(() => {
+      expect(onValidate).toHaveBeenCalledWith([])
+    })
+  })
+
+  it('reports no errors through onValidate for an empty document', async () => {
+    const onValidate = vi.fn()
+    render(
+      <JsonEditor
+        onChange={vi.fn()}
+        onValidate={onValidate}
+        value={EMPTY_STRING}
+      />
+    )
+
+    await waitFor(() => {
+      expect(onValidate).toHaveBeenCalledWith([])
+    })
+    expect(onValidate).not.toHaveBeenCalledWith(
+      expect.arrayContaining([expect.anything()])
+    )
+  })
+})
+
+describe('JsonEditor - copy button', () => {
+  it('does not render a copy button by default', () => {
+    const { queryByRole } = render(
+      <JsonEditor
+        readOnly
+        value={SAMPLE_JSON}
+      />
+    )
+    expect(queryByRole('button', { name: 'Copy' })).toBeNull()
+  })
+
+  it('copies the editor content to the clipboard on click', () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    })
+    const { getByRole } = render(
+      <JsonEditor
+        allowCopy
+        readOnly
+        value={SAMPLE_JSON}
+      />
+    )
+
+    fireEvent.click(getByRole('button', { name: 'Copy' }))
+
+    expect(writeText).toHaveBeenCalledWith(SAMPLE_JSON)
+    expect(getByRole('button', { name: 'Copied' })).toBeTruthy()
   })
 })
