@@ -36,16 +36,15 @@ export interface FilterChipsProps {
 }
 
 /**
- * Resolve multiselect values to their option labels so the chip text matches
- * what the dropdown shows (e.g. severity 'critical' -> 'Critical'). Falls back
- * to the raw value when the column has no labeled options.
+ * Build a value -> label lookup from a column's filter options, so chip text
+ * matches what the filter UI shows (e.g. 'critical' -> 'Critical', 'true' ->
+ * 'Yes'). Returns undefined when the column has no labeled options.
  */
-function resolveMultiselectLabels(
+function getOptionLabelMap(
   columns: readonly unknown[] | undefined,
-  columnId: string,
-  values: string[]
-): string[] {
-  const column = columns ? findColumn([...columns], columnId) : undefined
+  columnId: string
+): Map<string, string> | undefined {
+  const column = columns ? findColumn(columns, columnId) : undefined
   const filterMeta = (column as { meta?: { filter?: unknown } } | undefined)
     ?.meta?.filter
   if (
@@ -53,13 +52,30 @@ function resolveMultiselectLabels(
     typeof filterMeta !== 'object' ||
     !('options' in filterMeta)
   ) {
+    return undefined
+  }
+  const options = normalizeFilterOptions(
+    (filterMeta as { options?: unknown[] }).options
+  )
+  if (options.length === 0) {
+    return undefined
+  }
+  return new Map(options.map((option) => [option.value, option.label]))
+}
+
+/**
+ * Resolve multiselect values to their option labels. Falls back to the raw
+ * value when the column has no labeled options.
+ */
+function resolveMultiselectLabels(
+  columns: readonly unknown[] | undefined,
+  columnId: string,
+  values: string[]
+): string[] {
+  const labelByValue = getOptionLabelMap(columns, columnId)
+  if (!labelByValue) {
     return values
   }
-  const labelByValue = new Map(
-    normalizeFilterOptions((filterMeta as { options?: unknown[] }).options).map(
-      (option) => [option.value, option.label]
-    )
-  )
   return values.map((value) => labelByValue.get(value) ?? value)
 }
 
@@ -225,17 +241,20 @@ function FilterChips({
         return { compact: false, display: getNumRangeChip(filter) }
       default: {
         const column = columns
-          ? findColumn([...columns], filter.columnId)
+          ? findColumn(columns, filter.columnId)
           : undefined
         const filterMeta = (
           column as
             | { meta?: { filter?: { uppercaseValue?: boolean } } }
             | undefined
         )?.meta?.filter
+        const rawValue = String(filter.value)
+        const labelByValue = getOptionLabelMap(columns, filter.columnId)
+        const display = labelByValue?.get(rawValue) ?? rawValue
         if (filterMeta?.uppercaseValue) {
-          return { compact: false, display: String(filter.value).toUpperCase() }
+          return { compact: false, display: display.toUpperCase() }
         }
-        return { compact: false, display: filter.value as string }
+        return { compact: false, display }
       }
     }
   }
