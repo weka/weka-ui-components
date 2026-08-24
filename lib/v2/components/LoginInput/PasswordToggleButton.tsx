@@ -26,6 +26,7 @@ export function PasswordToggleButton({
         disabled={disabled}
         onClick={onToggle}
         small
+        tabIndex={-1}
       >
         {isVisible ? <EyeOffIcon /> : <EyeIcon />}
       </IconButton>

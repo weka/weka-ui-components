@@ -76,6 +76,29 @@ describe('IconButton', () => {
     )
   })
 
+  it('forwards tabIndex to the button only when provided', () => {
+    const { rerender } = render(
+      <IconButton ariaLabel={NOTIFICATIONS_LABEL}>
+        <svg />
+      </IconButton>
+    )
+    expect(screen.getByLabelText(NOTIFICATIONS_LABEL)).not.toHaveAttribute(
+      'tabindex'
+    )
+    rerender(
+      <IconButton
+        ariaLabel={NOTIFICATIONS_LABEL}
+        tabIndex={-1}
+      >
+        <svg />
+      </IconButton>
+    )
+    expect(screen.getByLabelText(NOTIFICATIONS_LABEL)).toHaveAttribute(
+      'tabindex',
+      '-1'
+    )
+  })
+
   it('ignores clicks when disabled', () => {
     const onClick = vi.fn()
     render(

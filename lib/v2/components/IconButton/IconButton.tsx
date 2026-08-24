@@ -14,6 +14,7 @@ export interface IconButtonProps {
   maxBadgeCount?: number
   disabled?: boolean
   small?: boolean
+  tabIndex?: number
   extraClass?: string
   dataTestId?: string
 }
@@ -30,6 +31,7 @@ export function IconButton({
   maxBadgeCount = DEFAULT_MAX_BADGE_COUNT,
   disabled = false,
   small = false,
+  tabIndex,
   extraClass,
   dataTestId
 }: Readonly<IconButtonProps>) {
@@ -40,6 +42,7 @@ export function IconButton({
       data-testid={dataTestId}
       disabled={disabled}
       onClick={onClick}
+      tabIndex={tabIndex}
       type='button'
     >
       {children}
