@@ -118,6 +118,13 @@ describe('PasswordInput - Eye toggle', () => {
     expect(input).toHaveAttribute('type', 'password')
   })
 
+  it('keeps the eye button out of the tab order', () => {
+    render(<PasswordInput {...createProps()} />)
+    expect(
+      screen.getByRole('button', { name: SHOW_BTN_LABEL })
+    ).toHaveAttribute('tabindex', '-1')
+  })
+
   it('updates aria-label on eye button after toggle', () => {
     render(<PasswordInput {...createProps()} />)
     const button = screen.getByRole('button', { name: SHOW_BTN_LABEL })

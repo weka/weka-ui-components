@@ -89,6 +89,7 @@ export function PasswordInput({
               ariaLabel={showPassword ? HIDE_LABEL : SHOW_LABEL}
               onClick={toggleShowPassword}
               small
+              tabIndex={-1}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
             </IconButton>

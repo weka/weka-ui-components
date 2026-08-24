@@ -83,6 +83,20 @@ describe('LoginInput', () => {
       expect(input).toHaveAttribute('type', 'password')
     })
 
+    it('keeps the visibility toggle out of the tab order', () => {
+      render(
+        <LoginInput
+          {...defaultProps}
+          type='password'
+        />
+      )
+
+      expect(screen.getByRole('button', { name: SHOW_LABEL })).toHaveAttribute(
+        'tabindex',
+        '-1'
+      )
+    })
+
     it('does not render a visibility toggle for text inputs', () => {
       render(<LoginInput {...defaultProps} />)
 
