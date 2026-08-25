@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import clsx from 'clsx'
+
 import styles from './table.module.scss'
 
 const DRAWER_GAP = 24
@@ -11,6 +13,8 @@ interface RenderTableBodyArgs {
   readonly framed: boolean
   readonly tableContainerContent: ReactNode
   readonly footer: ReactNode
+  /** True when a `filterBar` row precedes this container, so it should skip its own top border/radius and continue that row's instead. */
+  readonly afterFilterBar?: boolean
 }
 
 /**
@@ -24,10 +28,18 @@ export function renderTableBody({
   drawerWidth,
   framed,
   tableContainerContent,
-  footer
+  footer,
+  afterFilterBar = false
 }: RenderTableBodyArgs) {
   const tableContainer = (
-    <div className={styles.tableContainer}>{tableContainerContent}</div>
+    <div
+      className={clsx(
+        styles.tableContainer,
+        afterFilterBar && styles.tableContainerAfterFilterBar
+      )}
+    >
+      {tableContainerContent}
+    </div>
   )
 
   if (!drawer && !framed) {

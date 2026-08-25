@@ -64,6 +64,16 @@
   border-top-right-radius: 4px;
 }
 
+.filterBarRow {
+  padding: 10px 16px;
+  background-color: var(--gray-100-900);
+  border: 1px solid var(--gray-300-700);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
 .titleRow {
   display: flex;
   align-items: center;
@@ -104,6 +114,12 @@
   border-top-right-radius: 4px;
   overflow: hidden;
   position: relative;
+}
+
+.tableContainerAfterFilterBar {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .tableScrollContainer {

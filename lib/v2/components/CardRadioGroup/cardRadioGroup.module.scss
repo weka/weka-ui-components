@@ -1,0 +1,117 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vertical {
+  flex-flow: column nowrap;
+}
+
+.vertical .card {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  background: var(--gray-150-850);
+  border: none;
+  border-radius: 4px;
+
+  &:hover {
+    border-color: transparent;
+  }
+}
+
+.vertical .selected {
+  background: var(--gray-250-750);
+  border-color: transparent;
+
+  &:hover {
+    border-color: transparent;
+  }
+}
+
+.radioCircle {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background-color: var(--gray-100-900);
+  border: 1px solid var(--gray-650-350);
+  border-radius: 50%;
+}
+
+.radioCircleSelected {
+  border-color: var(--purple-500);
+}
+
+.radioDot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--purple-500);
+  border-radius: 50%;
+}
+
+.spacer {
+  flex: 1 0 0;
+}
+
+.card {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--gray-350-650);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--purple-500);
+    outline-offset: 1px;
+  }
+}
+
+.selected {
+  border-color: var(--purple-500);
+  background: var(--purple-100-900);
+
+  &:hover {
+    border-color: var(--purple-500);
+  }
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+
+  &:hover {
+    border-color: var(--border-light);
+  }
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.description {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.note {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--warning);
+}

@@ -16,11 +16,17 @@ const STATUS_DOT_CLASS: Record<StatusVariant, string> = {
   [STATUS_VARIANTS.UP]: styles.statusDotUp,
   [STATUS_VARIANTS.WORKING]: styles.statusDotWorking,
   [STATUS_VARIANTS.DEGRADED]: styles.statusDotDegraded,
-  [STATUS_VARIANTS.DOWN]: styles.statusDotDown
+  [STATUS_VARIANTS.DOWN]: styles.statusDotDown,
+  [STATUS_VARIANTS.INFO]: styles.statusDotInfo
 }
 
-export interface StatusCellOptions {
-  classify?: (status: StatusCellValue) => StatusVariant
+export interface StatusCellOptions<TRow = unknown> {
+  /**
+   * `row` is the full row data, for classification that depends on more than
+   * the cell's own value (e.g. a derived status combining two fields).
+   * Existing single-argument classifiers keep working unchanged.
+   */
+  classify?: (status: StatusCellValue, row?: TRow) => StatusVariant
   formatLabel?: (status: string) => string
 }
 
@@ -44,15 +50,17 @@ function renderStatusIndicator(variant: StatusVariant): ReactNode {
 
 export function StatusCell<TData>({
   cell,
-  column
+  column,
+  row
 }: Readonly<CellContext<TData, StatusCellValue>>) {
   const meta = column.columnDef.meta as
-    | { cellOptions?: StatusCellOptions }
+    | { cellOptions?: StatusCellOptions<TData> }
     | undefined
   const cellOptions = meta?.cellOptions
 
   const value = cell.getValue()
-  const variant = cellOptions?.classify?.(value) ?? getStatusVariant(value)
+  const variant =
+    cellOptions?.classify?.(value, row.original) ?? getStatusVariant(value)
   const label = value
     ? cellOptions?.formatLabel?.(value) ?? value.replace(/_/g, ' ')
     : EMPTY_STRING

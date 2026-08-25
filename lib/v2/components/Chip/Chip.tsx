@@ -21,6 +21,10 @@ export interface ChipProps {
   extraClass?: string
   backgroundColor?: string
   textColor?: string
+  /** Renders an outlined chip (1px border, this color) instead of a filled one — the background stays transparent unless `backgroundColor` is also set. */
+  borderColor?: string
+  /** Overrides the chip's corner radius (e.g. `'99px'` for a pill) — set via inline style so it always wins over `extraClass`, regardless of CSS module load order. */
+  borderRadius?: string
   closable?: boolean
   closeIconFill?: string
   onClose?: (event: MouseEvent<HTMLButtonElement>) => void
@@ -33,6 +37,8 @@ export function Chip({
   extraClass,
   backgroundColor,
   textColor,
+  borderColor,
+  borderRadius,
   closable = false,
   closeIconFill = CSS_VARS.GRAY_900_100,
   onClose,
@@ -41,7 +47,12 @@ export function Chip({
 }: Readonly<ChipProps>) {
   const chipStyle = {
     ...(backgroundColor && { backgroundColor }),
+    ...(borderColor && {
+      border: `1px solid ${borderColor}`,
+      ...(backgroundColor ? {} : { background: 'transparent' })
+    }),
     ...(textColor && { color: textColor }),
+    ...(borderRadius && { borderRadius }),
     ...(maxWidth && { maxWidth })
   }
 

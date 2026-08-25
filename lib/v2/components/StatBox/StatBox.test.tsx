@@ -1,7 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { EMPTY_STRING } from '#consts'
+
 import { StatBox } from './StatBox'
+
+const LONG_LABEL = 'source-fs → disaster-recovery-peer-2'
 
 describe('StatBox', () => {
   describe('Rendering', () => {
@@ -55,6 +59,24 @@ describe('StatBox', () => {
       expect(
         screen.getByRole('button', { name: '7 Stale' })
       ).toBeInTheDocument()
+    })
+
+    it('forwards a sub-stat labelTooltip through to the rendered label', () => {
+      render(
+        <StatBox
+          colorVariant='peach'
+          mainValue='52s'
+          title='Next Scheduled Sync'
+          subStats={[
+            {
+              label: LONG_LABEL,
+              labelTooltip: LONG_LABEL,
+              value: EMPTY_STRING
+            }
+          ]}
+        />
+      )
+      expect(screen.getByText(LONG_LABEL)).toHaveClass('ellipsisWrapper')
     })
 
     it('renders no sub-stats when the list is empty', () => {

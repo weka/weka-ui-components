@@ -98,6 +98,16 @@ export interface TableProps<TData = unknown> {
   useTableHeader?: boolean
   tableHeaderActions?: ReactNode
   tableActions?: ReactNode
+  /**
+   * An always-visible facet-filter toolbar row, rendered inside the table's
+   * own header area (below the title row, above the column headers) rather
+   * than as a separate element the consumer positions themselves. The
+   * consumer owns the filter UI and its state entirely — the table only
+   * provides the slot. This row and the column-header/body grid below it
+   * share one continuous border and corner radius (the grid's own top
+   * border/radius is suppressed so the two don't double up).
+   */
+  filterBar?: ReactNode
 
   defaultSortColumn?: string
   defaultSortDirection?: SortDirection
@@ -165,6 +175,7 @@ export function Table<TData = unknown>({
   showSearch = false,
   tableHeaderActions,
   tableActions,
+  filterBar,
   useTableHeader = true,
   defaultSortColumn,
   defaultSortDirection = 'asc',
@@ -476,6 +487,7 @@ export function Table<TData = unknown>({
         customTitle={customTitle}
         data={data}
         endless={endless}
+        filterBar={filterBar}
         getCsvData={getCsvData}
         maxCount={maxCount}
         onClearAllFilters={handleClearAllFilters}
@@ -498,6 +510,7 @@ export function Table<TData = unknown>({
         drawerOpen,
         drawerWidth,
         framed,
+        afterFilterBar: Boolean(filterBar),
         footer: (
           <div className={styles.tableFooter}>
             {effectiveShowPagination ? (

@@ -42,6 +42,7 @@ export function StatBox({
             <SubStat
               key={subStat.label}
               label={subStat.label}
+              labelTooltip={subStat.labelTooltip}
               unit={subStat.unit}
               value={subStat.value}
             />

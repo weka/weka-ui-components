@@ -1,0 +1,143 @@
+.statusChip {
+  gap: 6px;
+}
+
+.statusChip.clickable {
+  cursor: pointer;
+}
+
+/*
+ * The selected background must move opposite the text across themes —
+ * a light-tint token that resolves to purple-400 in dark mode leaves the
+ * purple-500 label invisible on it.
+ */
+.statusChip.selected {
+  color: var(--purple-500);
+  background: var(--purple-100-900);
+  border-color: var(--purple-500);
+}
+
+.statusChip.selected .count {
+  color: var(--gray-0);
+  background: var(--purple-500);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.dotUp {
+  background-color: var(--green-500);
+}
+
+.dotWorking {
+  background-color: var(--orange-500);
+}
+
+.dotDegraded {
+  background-color: var(--orange-500);
+}
+
+.dotDown {
+  background-color: var(--red-500);
+}
+
+.dotInfo {
+  background-color: var(--cyan-500);
+}
+
+.chipUp {
+  background: var(--green-100-900);
+}
+
+.chipWorking {
+  background: var(--orange-100-900);
+}
+
+.chipDegraded {
+  background: var(--orange-100-900);
+}
+
+.chipDown {
+  background: var(--red-100-900);
+}
+
+.chipInfo {
+  background: var(--cyan-100-400);
+}
+
+/*
+ * Table-cell badge look (opt-in via `tinted`): a light tint of the variant
+ * color behind a same-hue, dark, semibold label and a small rounded-square
+ * dot, with a 4px corner radius — matching the design's in-row status pill
+ * (node 15161:30090 in Figma) — distinct from the plain neutral chip +
+ * colored dot every other `StatusChip` consumer still uses. The `.statusChip`
+ * compound raises specificity above Chip's own same-specificity `.chip`
+ * rule (which sets `border-radius: 2px`), so this wins regardless of which
+ * stylesheet's CSS module happens to load last across the app/lib bundle
+ * boundary.
+ */
+.statusChip.tinted {
+  border-radius: 4px;
+}
+
+.tinted.chipUp {
+  background: var(--green-200-800);
+  color: var(--green-800-200);
+}
+
+.tinted.chipWorking,
+.tinted.chipDegraded {
+  background: var(--orange-200-800);
+  color: var(--orange-800-200);
+}
+
+.tinted.chipDown {
+  background: var(--red-200-800);
+  color: var(--red-800-200);
+}
+
+.tinted.chipInfo {
+  background: var(--cyan-200-800);
+  color: var(--cyan-800-200);
+}
+
+.tinted .dot {
+  border-radius: 4px;
+}
+
+.tinted .dotUp {
+  background-color: var(--green-800-200);
+}
+
+.tinted .dotWorking,
+.tinted .dotDegraded {
+  background-color: var(--orange-800-200);
+}
+
+.tinted .dotDown {
+  background-color: var(--red-800-200);
+}
+
+.tinted .dotInfo {
+  background-color: var(--cyan-800-200);
+}
+
+.tinted .label {
+  font-weight: 600;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.count {
+  padding: 1px 6px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--gray-300-700);
+}

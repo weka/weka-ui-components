@@ -24,7 +24,8 @@ const SAMPLE_ROWS: Row[] = [
   { id: 'node-1', status: 'UP', customStatus: 'ONLINE' },
   { id: 'node-2', status: 'CREATING', customStatus: 'SYNCING' },
   { id: 'node-3', status: 'DEGRADED', customStatus: 'PARTIAL' },
-  { id: 'node-4', status: 'OFFLINE', customStatus: 'OFFLINE' }
+  { id: 'node-4', status: 'OFFLINE', customStatus: 'OFFLINE' },
+  { id: 'node-5', status: 'INFO', customStatus: 'PAIRING' }
 ]
 
 const columns: ColumnDef<Row, StatusCellValue>[] = [
@@ -50,6 +51,9 @@ const columns: ColumnDef<Row, StatusCellValue>[] = [
           }
           if (s === 'PARTIAL') {
             return STATUS_VARIANTS.DEGRADED
+          }
+          if (s === 'PAIRING') {
+            return STATUS_VARIANTS.INFO
           }
           return STATUS_VARIANTS.DOWN
         }
