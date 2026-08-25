@@ -2,7 +2,8 @@ export const STATUS_VARIANTS = {
   UP: 'up',
   WORKING: 'working',
   DEGRADED: 'degraded',
-  DOWN: 'down'
+  DOWN: 'down',
+  INFO: 'info'
 } as const
 
 export type StatusVariant =
@@ -22,6 +23,7 @@ export const WORKING_STATUSES = new Set([
   'PHASING_OUT'
 ])
 export const DEGRADED_STATUSES = new Set(['DEGRADED'])
+export const INFO_STATUSES = new Set(['INFO'])
 
 export function getStatusVariant(
   status: StatusCellValue,
@@ -29,6 +31,7 @@ export function getStatusVariant(
     up?: Set<string>
     working?: Set<string>
     degraded?: Set<string>
+    info?: Set<string>
   }
 ): StatusVariant {
   if (!status) {
@@ -45,6 +48,9 @@ export function getStatusVariant(
   }
   if ((sets?.degraded ?? DEGRADED_STATUSES).has(normalized)) {
     return STATUS_VARIANTS.DEGRADED
+  }
+  if ((sets?.info ?? INFO_STATUSES).has(normalized)) {
+    return STATUS_VARIANTS.INFO
   }
 
   return STATUS_VARIANTS.DOWN

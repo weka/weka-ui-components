@@ -3,7 +3,7 @@ import type { StatusCellValue } from './statusUtils'
 import type { CellContext } from '@tanstack/react-table'
 
 import { cleanup, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { EMPTY_STRING } from '#consts'
 
@@ -131,6 +131,20 @@ describe('StatusCell - renders correct visual per variant', () => {
     )
     const svg = container.querySelector('svg')
     expect(svg).toBeInTheDocument()
+  })
+
+  it('passes the full row to a custom classify function', () => {
+    const classify = vi.fn(() => STATUS_VARIANTS.UP)
+    render(
+      <StatusCell
+        {...buildCellContext({
+          value: 'ONLINE',
+          cellOptions: { classify }
+        })}
+      />
+    )
+
+    expect(classify).toHaveBeenCalledWith('ONLINE', SAMPLE_ROW)
   })
 
   it('formats label using formatLabel option', () => {

@@ -44,6 +44,12 @@ export {
   CAPACITY_FILL_COLORS,
   CapacityProgressBar
 } from './CapacityProgressBar'
+export type {
+  CardRadioGroupOrientation,
+  CardRadioGroupProps,
+  CardRadioOption
+} from './CardRadioGroup'
+export { CARD_RADIO_GROUP_ORIENTATIONS, CardRadioGroup } from './CardRadioGroup'
 export { BarChartTick } from './charts/BarChartTick'
 export { BarWithGap } from './charts/BarWithGap'
 export type { BaseBarChartProps } from './charts/BaseBarChart'
@@ -308,8 +314,16 @@ export {
   type StatBoxSubStat,
   type StatColorVariant
 } from './StatBox'
+export type { StatusChipProps } from './StatusChip'
+export { StatusChip } from './StatusChip'
+export type { StepperOrientation, StepperProps, StepperStep } from './Stepper'
+export { Stepper, STEPPER_ORIENTATIONS } from './Stepper'
+export type { StepperRowProps, StepperRowState } from './StepperRow'
+export { STEPPER_ROW_STATES, StepperRow } from './StepperRow'
 export type { SwitchProps } from './Switch'
 export { Switch } from './Switch'
+export type { SyncProgressBarProps } from './SyncProgressBar'
+export { SyncProgressBar } from './SyncProgressBar'
 export type { SystemStatusProps } from './SystemStatus'
 export { SystemStatus } from './SystemStatus'
 export { AggregatedCountCell } from './Table/AggregatedCountCell'

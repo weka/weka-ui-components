@@ -26,8 +26,10 @@
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
+  align-self: stretch;
   justify-content: flex-start;
   gap: 0;
+  min-width: 0;
 
   &.purple .mainValue {
     color: var(--purple-600-400);
@@ -84,12 +86,15 @@
   display: flex;
   flex-direction: row;
   gap: 12px;
+  width: 100%;
+  min-width: 0;
 }
 
 .subStat {
   display: flex;
   align-items: center;
   gap: 4px;
+  min-width: 0;
   font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;

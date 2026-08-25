@@ -1,0 +1,61 @@
+@use 'stepperIndicator' as *;
+
+.rail {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.horizontal {
+  flex-direction: row;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 6px;
+}
+
+.current {
+  background: var(--gray-150-850);
+
+  .label {
+    color: var(--gray-1000-0);
+  }
+}
+
+.indicator {
+  @include stepper-indicator;
+
+  &:not(.indicatorCurrent) {
+    opacity: 0.9;
+  }
+}
+
+.indicatorDone {
+  @include stepper-indicator-done;
+}
+
+.indicatorError {
+  @include stepper-indicator-error;
+}
+
+.indicatorCurrent {
+  @include stepper-indicator-current;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-500);
+  white-space: nowrap;
+}

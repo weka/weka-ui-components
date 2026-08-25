@@ -1,0 +1,83 @@
+@use '../Stepper/stepperIndicator' as *;
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.indicator {
+  @include stepper-indicator;
+}
+
+.indicatorDone {
+  @include stepper-indicator-done;
+}
+
+/*
+ * Running is StepperRow-specific (the design's Step Icon set has no spinner
+ * variant): a hollow spinner ring, so the shared fill and inner gradient
+ * are cleared — a filled, gradiented circle would visibly rotate with the
+ * animation.
+ */
+.indicatorRunning {
+  border: 2px solid var(--border-light);
+  border-top-color: var(--purple-500);
+  background: transparent;
+  animation: stepper-row-spin 0.9s linear infinite;
+
+  &::before {
+    display: none;
+  }
+}
+
+@keyframes stepper-row-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  color: var(--text-tertiary);
+  font-weight: 700;
+}
+
+.labelActive {
+  color: var(--text-primary);
+}
+
+.description {
+  margin-top: 2px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.stateLabel {
+  flex-shrink: 0;
+  padding-top: 4px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.stateLabelRunning {
+  color: var(--purple-500);
+}
+
+.stateLabelDone {
+  color: var(--green-600-400);
+}

@@ -24,6 +24,13 @@ export interface StatBoxSubStat {
   label: string
   value: string | number
   unit?: string
+  /**
+   * When set, the label is truncated with an ellipsis and this full text is
+   * shown in a tooltip on hover — but only while the label is actually
+   * truncated (handled by the v2 `Tooltip` ellipsis mode). Use for labels
+   * whose length isn't bounded, e.g. a `source → peer` name pair.
+   */
+  labelTooltip?: string
 }
 
 export interface StatBoxProps {

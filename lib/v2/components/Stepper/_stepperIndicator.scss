@@ -1,0 +1,64 @@
+@use '../../styles/colors' as *;
+
+/*
+ * The step-state circle shared by Stepper and StepperRow, so both render
+ * the design's Step Icon identically. The outer 30px circle is only ever a
+ * thin ring — Figma insets a second, separately-gradiented 20px circle 5px
+ * in from every edge on top of it (baked as a static asset per step state,
+ * not a design token, so it's the same gradient in both themes).
+ * `isolation` forces a stacking context so the negative-z-index inner
+ * circle paints above this element's own background — without it,
+ * z-index: -1 escapes to an ancestor context and the gradient hides behind
+ * the ring entirely.
+ */
+@mixin stepper-indicator {
+  position: relative;
+  display: flex;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--gray-200-800);
+  color: var(--gray-900-100);
+  font-size: 13px;
+  font-weight: 700;
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    z-index: -1;
+    border-radius: 50%;
+    background: linear-gradient(to top, $gray-700, $gray-500);
+  }
+}
+
+@mixin stepper-indicator-done {
+  background: var(--green-300-700);
+
+  &::before {
+    background: linear-gradient(to top, $green-600, $green-400);
+  }
+}
+
+@mixin stepper-indicator-error {
+  background: var(--red-300-700);
+
+  &::before {
+    background: linear-gradient(to top, $red-600, $red-400);
+  }
+}
+
+@mixin stepper-indicator-current {
+  border: 1px solid var(--purple-500);
+  background: var(--purple-200-800);
+  color: var(--gray-0);
+
+  &::before {
+    background: linear-gradient(to top, $purple-500, $purple-300);
+  }
+}

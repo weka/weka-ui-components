@@ -11,6 +11,7 @@ import { Button } from '../../Button'
 import { EndlessScrollDemo } from './EndlessScrollDemo'
 import { Table } from './Table'
 import { TableWithDrawerDemo } from './TableWithDrawerDemo'
+import { TableWithFilterBarDemo } from './TableWithFilterBarDemo'
 
 const meta: Meta<typeof Table> = {
   title: 'v2/Table/Table'
@@ -297,4 +298,8 @@ export const Framed: Story = {
 
 export const EndlessScroll: Story = {
   render: () => <EndlessScrollDemo />
+}
+
+export const WithFilterBar: Story = {
+  render: () => <TableWithFilterBarDemo />
 }

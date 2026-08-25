@@ -25,11 +25,15 @@
 }
 
 .statusDotDegraded {
-  background-color: var(--yellow-600);
+  background-color: var(--orange-500);
 }
 
 .statusDotDown {
   background-color: var(--red-500);
+}
+
+.statusDotInfo {
+  background-color: var(--cyan-500);
 }
 
 .statusCheckIcon {

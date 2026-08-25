@@ -44,6 +44,37 @@ describe('Chip - Rendering', () => {
     expect(chip).toHaveStyle({ color: '#00ff00' })
   })
 
+  it('renders an outlined chip with a transparent background when borderColor is provided', () => {
+    const { container } = render(<Chip borderColor='#7c03ec'>Test</Chip>)
+    const chip = getChipContainer(container)
+    expect(chip).toHaveStyle({
+      border: '1px solid #7c03ec',
+      background: 'transparent'
+    })
+  })
+
+  it('keeps an explicit backgroundColor instead of defaulting to transparent when both are set', () => {
+    const { container } = render(
+      <Chip
+        backgroundColor='#101317'
+        borderColor='#7c03ec'
+      >
+        Test
+      </Chip>
+    )
+    const chip = getChipContainer(container)
+    expect(chip).toHaveStyle({
+      border: '1px solid #7c03ec',
+      backgroundColor: '#101317'
+    })
+  })
+
+  it('applies borderRadius style when provided, overriding the base pill/rectangle default', () => {
+    const { container } = render(<Chip borderRadius='99px'>Test</Chip>)
+    const chip = getChipContainer(container)
+    expect(chip).toHaveStyle({ borderRadius: '99px' })
+  })
+
   it('applies maxWidth style when provided', () => {
     const { container } = render(<Chip maxWidth='100px'>Test</Chip>)
     const chip = getChipContainer(container)

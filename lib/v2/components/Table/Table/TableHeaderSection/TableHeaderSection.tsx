@@ -22,6 +22,8 @@ export interface TableHeaderSectionProps<TData> {
   showFilterChips: boolean
   showSearch: boolean
   tableHeaderActions?: ReactNode
+  /** An always-visible facet-filter toolbar row, rendered below the title/header, above the column headers. */
+  filterBar?: ReactNode
   data: TData[]
   table: Table<TData>
   columns: ColumnDef<TData>[]
@@ -53,7 +55,7 @@ function renderTitleSection({
   actualFilteredCount,
   endless,
   maxCount
-}: TitleSectionParams): ReactNode {
+}: TitleSectionParams) {
   if (customTitle) {
     return <div className={styles.customTitle}>{customTitle}</div>
   }
@@ -69,7 +71,7 @@ function renderTitleSection({
   )
 }
 
-export function TableHeaderSection<TData>({
+function renderHeaderVariant<TData>({
   useTableHeader,
   title,
   customTitle,
@@ -94,8 +96,7 @@ export function TableHeaderSection<TData>({
   onRemoveFilter,
   onResetColumnSizing,
   endless = false
-}: Readonly<TableHeaderSectionProps<TData>>) {
-  const hasTitle = Boolean(title || customTitle)
+}: Omit<TableHeaderSectionProps<TData>, 'filterBar'>) {
   const hasActiveFilters = activeFilters.length > 0
 
   if (useTableHeader) {
@@ -128,10 +129,6 @@ export function TableHeaderSection<TData>({
     )
   }
 
-  if (!hasTitle) {
-    return null
-  }
-
   return (
     <div className={styles.tableHeader}>
       <div className={styles.titleRow}>
@@ -155,5 +152,22 @@ export function TableHeaderSection<TData>({
         ) : null}
       </div>
     </div>
+  )
+}
+
+export function TableHeaderSection<TData>({
+  filterBar,
+  ...rest
+}: Readonly<TableHeaderSectionProps<TData>>) {
+  const hasHeaderContent =
+    rest.useTableHeader || Boolean(rest.title || rest.customTitle)
+
+  return (
+    <>
+      {hasHeaderContent ? renderHeaderVariant(rest) : null}
+      {filterBar ? (
+        <div className={styles.filterBarRow}>{filterBar}</div>
+      ) : null}
+    </>
   )
 }
