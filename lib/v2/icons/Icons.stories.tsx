@@ -49,6 +49,7 @@ import { SettingsIcon } from './SettingsIcon'
 import { SortIcon } from './SortIcon'
 import { SortUpDownIcon } from './SortUpDownIcon'
 import { SwapIcon } from './SwapIcon'
+import { TableSettingsIcon } from './TableSettingsIcon'
 import { TenantIcon } from './TenantIcon'
 import { ThreeDotsMenuIcon } from './ThreeDotsMenuIcon'
 import { UnmuteIcon } from './UnmuteIcon'
@@ -202,6 +203,7 @@ const generalIcons: { name: string; node: ReactNode }[] = [
   { name: 'SortIcon', node: <SortIcon /> },
   { name: 'SortUpDownIcon', node: <SortUpDownIcon /> },
   { name: 'SwapIcon', node: <SwapIcon /> },
+  { name: 'TableSettingsIcon', node: <TableSettingsIcon /> },
   { name: 'TenantIcon', node: <TenantIcon /> },
   { name: 'ThreeDotsMenuIcon', node: <ThreeDotsMenuIcon /> },
   { name: 'UnmuteIcon', node: <UnmuteIcon /> },

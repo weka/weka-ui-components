@@ -40,6 +40,14 @@ export interface MenuPopoverProps {
    * `CENTER` centers the popover under the anchor.
    */
   align?: PopoverAlign
+  /**
+   * CSS selectors whose elements should not close the popover when clicked,
+   * even though they render outside its DOM tree — portal-mounted UI opened
+   * from inside the popover (e.g. MUI select menus `.MuiModal-root`, Popup
+   * dialogs `[data-weka-popup]`). Pass a module-level constant so the
+   * click-outside listener is not re-registered on every render.
+   */
+  ignoreClickSelectors?: string[]
 }
 
 export function MenuPopover({
@@ -49,12 +57,14 @@ export function MenuPopover({
   children,
   extraClass,
   compact = false,
-  align = POPOVER_ALIGN.RIGHT
+  align = POPOVER_ALIGN.RIGHT,
+  ignoreClickSelectors
 }: Readonly<MenuPopoverProps>) {
   const popRef = useRef<HTMLDivElement>(null)
 
   useClickOutside(popRef as unknown as RefObject<HTMLElement>, onClose, {
     additionalRefs: [anchorRef],
+    additionalSelectors: ignoreClickSelectors,
     enabled: open,
     capture: true
   })

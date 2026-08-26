@@ -39,6 +39,19 @@ describe('Popup - Rendering', () => {
     expect(screen.getByText('Content')).toBeInTheDocument()
   })
 
+  it('marks the portal overlay for portal-aware click-outside logic', () => {
+    render(
+      <Popup
+        onClose={vi.fn()}
+        open
+        title='Test Title'
+      >
+        Content
+      </Popup>
+    )
+    expect(document.querySelector('[data-weka-popup]')).toBeInTheDocument()
+  })
+
   it('renders close button with aria-label', () => {
     render(
       <Popup
