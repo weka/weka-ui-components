@@ -1,0 +1,127 @@
+@use '../../styles/colors' as *;
+
+.allocationBar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.label {
+  padding-left: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-1000-0);
+}
+
+.totalLabel {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.track {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  background: var(--gray-200-800);
+  border-radius: 20px;
+}
+
+.slice {
+  height: 100%;
+
+  &.used {
+    background: $fuchsia-500;
+  }
+
+  &.primary {
+    background: $cyan-600;
+  }
+
+  &.primaryLight {
+    background: $cyan-300;
+  }
+
+  &.error {
+    background: var(--error);
+  }
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding-left: 8px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendDot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.used {
+    background: $fuchsia-500;
+  }
+
+  &.primary {
+    background: $cyan-600;
+  }
+
+  &.primaryLight {
+    background: $cyan-300;
+  }
+
+  &.free {
+    background: var(--gray-300-700);
+  }
+
+  &.error {
+    background: var(--error);
+  }
+}
+
+.legendLabel {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-700-300);
+}
+
+.legendValue {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--gray-950-20);
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: $red-800;
+  background: $red-200;
+  border-radius: 4px;
+}
+
+.errorIcon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  color: $red-700;
+}

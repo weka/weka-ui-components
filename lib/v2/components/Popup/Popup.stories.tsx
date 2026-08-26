@@ -16,9 +16,13 @@ const meta: Meta<typeof Popup> = {
 export default meta
 type Story = StoryObj<typeof Popup>
 
+const COLLAPSED_WIDTH = 636
+const EXPANDED_WIDTH = 1140
+
 export const Interactive: Story = {
   render: function InteractivePopup() {
     const [open, setOpen] = useState(false)
+    const [expanded, setExpanded] = useState(false)
     return (
       <>
         <Button onClick={() => setOpen(true)}>Open Popup</Button>
@@ -26,16 +30,26 @@ export const Interactive: Story = {
           onClose={() => setOpen(false)}
           open={open}
           title='Interactive Popup'
+          width={expanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH}
           actions={
-            <Button
-              onClick={() => setOpen(false)}
-              variant='primary'
-            >
-              Close
-            </Button>
+            <>
+              <Button
+                onClick={() => setExpanded(!expanded)}
+                variant='secondary'
+              >
+                {expanded ? 'Collapse' : 'Expand'}
+              </Button>
+              <Button
+                onClick={() => setOpen(false)}
+                variant='primary'
+              >
+                Close
+              </Button>
+            </>
           }
         >
-          Click the close button or press Escape to close.
+          Click the close button or press Escape to close. Expand animates the
+          popup width.
         </Popup>
       </>
     )

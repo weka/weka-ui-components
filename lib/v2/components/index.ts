@@ -34,6 +34,12 @@ export {
   type AlertStatusChipProps,
   type AlertStatusChipVariant
 } from './AlertStatusChip'
+export type {
+  AllocationBarProps,
+  AllocationBarSegment,
+  AllocationSegmentTone
+} from './AllocationBar'
+export { ALLOCATION_SEGMENT_TONES, AllocationBar } from './AllocationBar'
 export type { ButtonProps, ButtonType, ButtonVariant } from './Button'
 export { Button, BUTTON_TYPES, BUTTON_VARIANTS } from './Button'
 export type {
@@ -470,6 +476,8 @@ export type {
 } from './TimeRangeSelector'
 export { TimeRangeSelector } from './TimeRangeSelector'
 export { Toaster } from './Toaster'
+export type { ToggleSectionProps } from './ToggleSection'
+export { ToggleSection } from './ToggleSection'
 export type { TooltipProps } from './Tooltip'
 export { Tooltip } from './Tooltip'
 export type { WidgetCardProps } from './WidgetCard'
