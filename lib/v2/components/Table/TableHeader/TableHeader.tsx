@@ -15,7 +15,7 @@ import {
 } from '#v2/utils/consts'
 import { formatCountWithMax } from '#v2/utils/textUtils'
 
-import { DownloadIcon, ResetIcon, SettingsIcon } from '../../../icons'
+import { DownloadIcon, ResetIcon, TableSettingsIcon } from '../../../icons'
 import { ExpandableSearch } from '../../ExpandableSearch'
 import { FilterChips } from '../FilterChips'
 import { FilterOptionRow } from '../FilterOptionRow'
@@ -29,7 +29,7 @@ const VISIBILITY_STATE_SYNC_DELAY = 50
 const MIN_VISIBLE_COLUMNS = 1
 const NAME_COLUMN_IDS = ['name', 'filename', 'clusterName']
 const MIN_SEARCH_LENGTH = 2
-const DOWNLOAD_ICON_SIZE = 28
+const DOWNLOAD_ICON_SIZE = 24
 const DEFAULT_CSV_FILENAME_SLUG = 'export'
 const TRAILING_CSV_EXTENSION = /\.csv$/i
 // eslint-disable-next-line no-control-regex -- control characters are invalid in filenames and must be stripped
@@ -598,7 +598,7 @@ export function TableHeader({
             onClick={toggleSettingsMenu}
             title='Table Settings'
           >
-            <SettingsIcon variant='outline' />
+            <TableSettingsIcon />
           </button>
           {showCsvDownload ? (
             <button

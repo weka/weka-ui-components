@@ -2,7 +2,7 @@ import { type ReactNode, type RefObject, useRef } from 'react'
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { usePopoverPosition } from '#v2/hooks'
+import { useClickOutside, usePopoverPosition } from '#v2/hooks'
 
 import { MenuPopover, POPOVER_ALIGN } from './MenuPopover'
 
@@ -246,5 +246,31 @@ describe('MenuPopover', () => {
 
       expect(screen.getByText('Popover Content')).toBeInTheDocument()
     })
+  })
+})
+
+describe('MenuPopover portal click passthrough', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('forwards ignoreClickSelectors to the click-outside hook', () => {
+    const anchorRef = createMockAnchorRef()
+    const selectors = ['.MuiModal-root', '[data-weka-popup]']
+    render(
+      <MenuPopover
+        anchorRef={anchorRef as unknown as RefObject<HTMLElement>}
+        ignoreClickSelectors={selectors}
+        onClose={vi.fn()}
+        open
+      >
+        <div>{MENU_CONTENT}</div>
+      </MenuPopover>
+    )
+    expect(useClickOutside).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      expect.objectContaining({ additionalSelectors: selectors })
+    )
   })
 })

@@ -70,6 +70,7 @@ export function Popup({
   return createPortal(
     <div
       className={styles.overlay}
+      data-weka-popup='true'
       onClick={closeOnOverlayClick ? onClose : undefined}
     >
       <div
