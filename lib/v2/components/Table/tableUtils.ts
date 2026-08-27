@@ -1,7 +1,7 @@
 import type { ColumnWithHeader } from './filterUtils'
-import type { ColumnDef, Header } from '@tanstack/react-table'
+import type { ColumnDef, FilterFn, Header, Row } from '@tanstack/react-table'
 
-import { FILTER_TYPES } from '#v2/utils/consts'
+import { EMPTY_STRING, FILTER_TYPES } from '#v2/utils/consts'
 
 import { getColumnId as getGenericColumnId } from './filterUtils'
 
@@ -28,8 +28,71 @@ export function extractColumnIds<TData>(columns: ColumnDef<TData>[]): string[] {
 }
 
 /**
+ * multiSelect filterFn — passes when the filter array is empty or includes the
+ * cell value (OR semantics across the selected options).
+ */
+export function multiSelectFilterFn<TData>(
+  row: Row<TData>,
+  columnId: string,
+  filterValue: unknown
+): boolean {
+  if (!Array.isArray(filterValue) || filterValue.length === 0) {
+    return true
+  }
+  return filterValue.includes(row.getValue<string>(columnId))
+}
+
+/**
+ * text filterFn — case-insensitive substring match on the stringified cell
+ * value, so numeric cells (e.g. IDs) stay searchable. Matches TanStack's
+ * `includesString` semantics for string cells (which `auto` would pick), and
+ * fixes numeric cells, where `auto` resolves to a range filter that a text
+ * value can't satisfy.
+ */
+export function textFilterFn<TData>(
+  row: Row<TData>,
+  columnId: string,
+  filterValue: unknown
+): boolean {
+  if (
+    filterValue === undefined ||
+    filterValue === null ||
+    filterValue === EMPTY_STRING
+  ) {
+    return true
+  }
+  return String(row.getValue<number | string>(columnId))
+    .toLowerCase()
+    .includes(String(filterValue).toLowerCase())
+}
+
+/**
+ * Default row predicate for a declared filter type. Only types with one
+ * correct generic behavior get a default (multiSelect, text); range and date
+ * types keep TanStack's resolution unless the column supplies its own.
+ */
+function defaultFilterFnForType<TData>(
+  filterType: string | undefined
+): FilterFn<TData> | undefined {
+  if (filterType === FILTER_TYPES.MULTISELECT) {
+    return multiSelectFilterFn as FilterFn<TData>
+  }
+  if (filterType === FILTER_TYPES.TEXT) {
+    return textFilterFn as FilterFn<TData>
+  }
+  return undefined
+}
+
+function declaredFilterType<TData>(col: ColumnDef<TData>): string | undefined {
+  const filterMeta = (col.meta as { filter?: FilterMeta } | undefined)?.filter
+  return filterMeta?.type
+}
+
+/**
  * Applies the table's default capabilities (sorting, resizing, filtering) to
- * each column, honoring any explicit per-column opt-outs.
+ * each column, honoring any explicit per-column opt-outs. Columns that declare
+ * a `meta.filter.type` get the matching row predicate by default; an explicit
+ * `filterFn` on the column always wins.
  */
 export function buildTableColumns<TData>(
   columns: ColumnDef<TData>[],
@@ -39,7 +102,8 @@ export function buildTableColumns<TData>(
     ...col,
     enableSorting: col.enableSorting !== false,
     enableResizing: hasResizableColumns && col.enableResizing !== false,
-    enableColumnFilter: col.enableColumnFilter !== false
+    enableColumnFilter: col.enableColumnFilter !== false,
+    filterFn: col.filterFn ?? defaultFilterFnForType(declaredFilterType(col))
   }))
 }
 

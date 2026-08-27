@@ -278,6 +278,11 @@ export type {
 } from './SearchAutocomplete'
 export { SearchAutocomplete } from './SearchAutocomplete'
 export type {
+  SectionMessageProps,
+  SectionMessageVariant
+} from './SectionMessage'
+export { SECTION_MESSAGE_VARIANTS, SectionMessage } from './SectionMessage'
+export type {
   SegmentedControlOption,
   SegmentedControlProps
 } from './SegmentedControl'
