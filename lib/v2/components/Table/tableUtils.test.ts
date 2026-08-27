@@ -1,14 +1,21 @@
-import type { ColumnDef, Header } from '@tanstack/react-table'
+import type {
+  ColumnDef,
+  Header,
+  Row as TanstackRow
+} from '@tanstack/react-table'
 
 import { describe, expect, it } from 'vitest'
 
+import { EMPTY_STRING } from '#consts'
 import { FILTER_TYPES } from '#v2/utils/consts'
 
 import {
   buildTableColumns,
   extractColumnIds,
   getCanShowFilter,
-  isSortableColumn
+  isSortableColumn,
+  multiSelectFilterFn,
+  textFilterFn
 } from './tableUtils'
 
 interface Row {
@@ -116,5 +123,100 @@ describe('getCanShowFilter', () => {
     expect(
       getCanShowFilter(makeHeader(true, { filter: { type: 'text' } }))
     ).toBe(true)
+  })
+})
+
+function rowWithValue(value: unknown): TanstackRow<Row> {
+  return { getValue: () => value } as unknown as TanstackRow<Row>
+}
+
+describe('multiSelectFilterFn', () => {
+  it('passes every row when the filter is empty or not an array', () => {
+    expect(multiSelectFilterFn(rowWithValue('a'), 'region', [])).toBe(true)
+    expect(multiSelectFilterFn(rowWithValue('a'), 'region', undefined)).toBe(
+      true
+    )
+  })
+
+  it('passes only rows whose value is among the selected options', () => {
+    expect(multiSelectFilterFn(rowWithValue('a'), 'region', ['a', 'b'])).toBe(
+      true
+    )
+    expect(multiSelectFilterFn(rowWithValue('c'), 'region', ['a', 'b'])).toBe(
+      false
+    )
+  })
+})
+
+describe('textFilterFn', () => {
+  it('passes every row when the filter is empty', () => {
+    expect(textFilterFn(rowWithValue('abc'), 'name', undefined)).toBe(true)
+    expect(textFilterFn(rowWithValue('abc'), 'name', null)).toBe(true)
+    expect(textFilterFn(rowWithValue('abc'), 'name', EMPTY_STRING)).toBe(true)
+  })
+
+  it('matches case-insensitively by substring', () => {
+    expect(textFilterFn(rowWithValue('Frontend'), 'name', 'front')).toBe(true)
+    expect(textFilterFn(rowWithValue('Frontend'), 'name', 'back')).toBe(false)
+  })
+
+  it('matches numeric cells by their stringified value', () => {
+    expect(textFilterFn(rowWithValue(1000), 'name', '100')).toBe(true)
+    expect(textFilterFn(rowWithValue(1000), 'name', '205')).toBe(false)
+  })
+})
+
+describe('buildTableColumns filterFn defaults', () => {
+  it('assigns the multiSelect predicate for multiSelect filter meta', () => {
+    const [column] = buildTableColumns<Row>(
+      [
+        {
+          accessorKey: 'region',
+          meta: { filter: { type: FILTER_TYPES.MULTISELECT } }
+        }
+      ],
+      true
+    )
+    expect(column.filterFn).toBe(multiSelectFilterFn)
+  })
+
+  it('assigns the text predicate for text filter meta', () => {
+    const [column] = buildTableColumns<Row>(
+      [{ accessorKey: 'name', meta: { filter: { type: FILTER_TYPES.TEXT } } }],
+      true
+    )
+    expect(column.filterFn).toBe(textFilterFn)
+  })
+
+  it('keeps an explicit column filterFn over the type default', () => {
+    const explicitFilterFn = () => true
+    const [column] = buildTableColumns<Row>(
+      [
+        {
+          accessorKey: 'region',
+          filterFn: explicitFilterFn,
+          meta: { filter: { type: FILTER_TYPES.MULTISELECT } }
+        }
+      ],
+      true
+    )
+    expect(column.filterFn).toBe(explicitFilterFn)
+  })
+
+  it('assigns no default for columns without filter meta or with range types', () => {
+    const [plainColumn, rangeColumn] = buildTableColumns<Row>(
+      [
+        { accessorKey: 'name' },
+        {
+          accessorKey: 'region',
+          meta: {
+            filter: { type: FILTER_TYPES.NUM_RANGE }
+          } as unknown as ColumnDef<Row>['meta']
+        }
+      ],
+      true
+    )
+    expect(plainColumn.filterFn).toBeUndefined()
+    expect(rangeColumn.filterFn).toBeUndefined()
   })
 })

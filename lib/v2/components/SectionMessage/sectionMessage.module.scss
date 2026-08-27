@@ -1,0 +1,57 @@
+.callout {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spread2);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius, 4px);
+  background: var(--gray-50-920);
+  padding: var(--spread2);
+  width: fit-content;
+  max-width: 720px;
+}
+
+.compact {
+  align-items: flex-start;
+  width: 100%;
+  max-width: none;
+
+  .message {
+    font-size: 12px;
+  }
+}
+
+.icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.warning .icon {
+  color: var(--warning);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.warning .label {
+  color: var(--warning);
+}
+
+.message {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+  white-space: pre-line;
+}
