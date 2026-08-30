@@ -14,10 +14,12 @@
   border: 1px solid var(--gray-450-550);
   min-width: 400px;
   width: 720px;
+  max-width: calc(100vw - 48px);
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 16px 4px var(--popup-shadow);
+  transition: width 0.25s ease;
 }
 
 .header {
@@ -36,6 +38,7 @@
 
 .content {
   flex: 1;
+  min-height: 0;
   overflow: auto;
   scrollbar-gutter: stable both-edges;
   color: var(--text-primary);
@@ -64,6 +67,11 @@
 
 .contentNoScrollbar {
   scrollbar-gutter: auto;
+}
+
+.contentFill {
+  display: flex;
+  flex-direction: column;
 }
 
 .actions {

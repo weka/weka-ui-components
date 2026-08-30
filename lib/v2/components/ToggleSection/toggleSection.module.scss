@@ -1,0 +1,54 @@
+.toggleSection {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 22px;
+}
+
+.divider {
+  border-bottom: 1px solid var(--gray-200-800);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--gray-650-350);
+}
+
+.labelDisabled {
+  color: var(--text-secondary);
+}
+
+.infoIconWrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.infoIcon {
+  width: 14px;
+  height: 14px;
+  color: var(--orange-500);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease;
+}
+
+.contentExpanded {
+  grid-template-rows: 1fr;
+}
+
+.contentClip {
+  overflow: hidden;
+}
+
+.content {
+  padding: 20px 0 8px 44px;
+}

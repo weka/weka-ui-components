@@ -30,6 +30,7 @@ export interface PopupProps {
   dataTestId?: string
   width?: number | string
   minWidth?: number | string
+  height?: number | string
 }
 
 export function Popup({
@@ -43,7 +44,8 @@ export function Popup({
   closeOnOverlayClick = true,
   dataTestId,
   width,
-  minWidth
+  minWidth,
+  height
 }: Readonly<PopupProps>) {
   useEffect(() => {
     if (!open) {
@@ -77,7 +79,7 @@ export function Popup({
         className={clsx(styles.modal, extraClass)}
         data-testid={dataTestId}
         onClick={(e) => e.stopPropagation()}
-        style={{ width, minWidth }}
+        style={{ width, minWidth, height }}
       >
         <div className={styles.header}>
           <h3 className={styles.title}>{title}</h3>
@@ -94,6 +96,7 @@ export function Popup({
           style={{ overflow: contentOverflow }}
           className={clsx(
             styles.content,
+            height != null && styles.contentFill,
             contentOverflow === CONTENT_OVERFLOWS.HIDDEN &&
               styles.contentNoScrollbar
           )}

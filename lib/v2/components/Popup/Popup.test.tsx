@@ -65,6 +65,24 @@ describe('Popup - Rendering', () => {
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
   })
 
+  it('applies a fixed height and fill-layout content when height is set', () => {
+    render(
+      <Popup
+        dataTestId='popup'
+        height={760}
+        onClose={vi.fn()}
+        open
+        title='Test Title'
+      >
+        Content
+      </Popup>
+    )
+
+    const modal = screen.getByTestId('popup')
+    expect(modal.style.height).toBe('760px')
+    expect(modal.querySelector('[class*="contentFill"]')).not.toBeNull()
+  })
+
   it('renders actions when provided', () => {
     render(
       <Popup
