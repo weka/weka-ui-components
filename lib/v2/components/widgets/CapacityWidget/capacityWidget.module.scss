@@ -367,9 +367,9 @@ $capsule-radius: 50px;
 }
 
 .provisionedSection .totalPill {
-  width: 280px;
+  width: 100%;
   margin-top: auto;
-  align-self: center;
+  align-self: stretch;
 }
 
 @container (width <= 700px) {
@@ -427,11 +427,6 @@ $capsule-radius: 50px;
     .unit {
       font-size: 14px;
     }
-  }
-
-  .provisionedSection .totalPill {
-    width: auto;
-    max-width: 100%;
   }
 
   .provisionedSection .totalLabel {
@@ -520,7 +515,7 @@ $capsule-radius: 50px;
   }
 
   .capsuleBar {
-    height: 160px;
+    height: 140px;
   }
 
   .provisionedBody {
@@ -529,5 +524,31 @@ $capsule-radius: 50px;
 
   .provisionedLegend {
     gap: 8px;
+  }
+}
+
+@container (width >= 760px) {
+  .usableSection {
+    max-width: none;
+    padding: 0 8px;
+  }
+
+  .provisionedSection {
+    padding: 0 8px;
+  }
+
+  .usableSection .totalPill {
+    width: 100%;
+  }
+
+  .usableBody {
+    justify-content: space-between;
+    padding-inline: 8px;
+  }
+
+  .provisionedBody {
+    align-self: stretch;
+    justify-content: space-between;
+    padding-inline: 8px;
   }
 }
