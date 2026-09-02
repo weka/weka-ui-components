@@ -491,6 +491,14 @@ thead.tableHeader {
   border-bottom-right-radius: 4px;
 }
 
+// With a single page the footer holds no pagination; collapse it to the
+// table's 1px bottom edge instead of reserving an empty 40px bar.
+.tableFooter:empty {
+  min-height: 0;
+  height: 0;
+  border-bottom: none;
+}
+
 .customTitle {
   display: flex;
   align-items: center;
