@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import { BUTTON_VARIANTS } from '../Button'
 import { Button } from '../Button'
 import { Popup } from '../Popup'
@@ -15,8 +17,11 @@ export type ConfirmButtonVariant =
 export interface ConfirmationDialogProps {
   open: boolean
   title: string
-  message: string
-  subMessage?: string
+  /** Inline content only — rendered inside a paragraph. */
+  message: ReactNode
+  subMessage?: ReactNode
+  /** Rich block content (summaries, warning panels) below the messages. */
+  children?: ReactNode
   onConfirm: () => void
   onCancel: () => void
   confirmText?: string
@@ -30,6 +35,7 @@ export function ConfirmationDialog({
   title,
   message,
   subMessage,
+  children,
   onConfirm,
   onCancel,
   confirmText = 'Confirm',
@@ -69,6 +75,7 @@ export function ConfirmationDialog({
       <div className={styles.content}>
         <p className={styles.message}>{message}</p>
         {subMessage ? <p className={styles.subMessage}>{subMessage}</p> : null}
+        {children}
       </div>
     </Popup>
   )

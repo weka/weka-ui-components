@@ -180,3 +180,26 @@ describe('ConfirmationDialog', () => {
     })
   })
 })
+
+describe('ConfirmationDialog rich content', () => {
+  it('renders ReactNode messages and block children below them', () => {
+    render(
+      <ConfirmationDialog
+        onCancel={vi.fn()}
+        onConfirm={vi.fn()}
+        open
+        title='Remove user'
+        message={
+          <>
+            Remove <strong>jane@acme.com</strong>?
+          </>
+        }
+      >
+        <div data-testid='rich-block'>warning panel</div>
+      </ConfirmationDialog>
+    )
+
+    expect(screen.getByText('jane@acme.com')).toBeInTheDocument()
+    expect(screen.getByTestId('rich-block')).toBeInTheDocument()
+  })
+})
