@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { EMPTY_STRING } from '#v2/utils/consts'
+
 import { SERIES_TYPES, type SeriesConfig } from '../chartTypes'
 import { CustomLegend } from './CustomLegend'
 
@@ -102,6 +104,16 @@ describe('CustomLegend', () => {
     render(<CustomLegend series={seriesWithTooltip} />)
 
     expect(screen.getByLabelText(explanation)).toBeInTheDocument()
+  })
+
+  it('falls back to the ellipsis name tooltip when the legend tooltip is empty', () => {
+    const seriesWithEmptyTooltip: SeriesConfig[] = [
+      { ...SERIES[0], legendTooltip: EMPTY_STRING }
+    ]
+
+    render(<CustomLegend series={seriesWithEmptyTooltip} />)
+
+    expect(screen.getAllByLabelText('Read')).toHaveLength(2)
   })
 
   it('keeps the series name as the item label when a tooltip explains it', () => {

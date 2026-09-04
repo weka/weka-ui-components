@@ -33,6 +33,7 @@ export function CustomLegend({
       {series.map((seriesItem) => {
         const isHidden = hiddenMetrics?.has(seriesItem.key)
         const isDisabled = Boolean(seriesItem.legendDisabled)
+        const legendTooltip = seriesItem.legendTooltip || undefined
         const isLine = seriesItem.type === SERIES_TYPES.LINE
         const swatchColor = resolveSeriesColor(seriesItem.color)
         const handleClick = () => {
@@ -61,8 +62,8 @@ export function CustomLegend({
               }}
             />
             <Tooltip
-              data={seriesItem.legendTooltip ?? seriesItem.name}
-              ellipsis={!seriesItem.legendTooltip}
+              data={legendTooltip ?? seriesItem.name}
+              ellipsis={!legendTooltip}
               extraClass={styles.legendTooltip}
             >
               <span className={styles.legendLabel}>{seriesItem.name}</span>
