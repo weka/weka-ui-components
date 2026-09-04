@@ -32,14 +32,27 @@ export function CustomLegend({
     <div className={styles.legendContainer}>
       {series.map((seriesItem) => {
         const isHidden = hiddenMetrics?.has(seriesItem.key)
+        const isDisabled = Boolean(seriesItem.legendDisabled)
+        const legendTooltip = seriesItem.legendTooltip || undefined
         const isLine = seriesItem.type === SERIES_TYPES.LINE
         const swatchColor = resolveSeriesColor(seriesItem.color)
+        const handleClick = () => {
+          if (isDisabled) {
+            return
+          }
+          toggleMetric?.(seriesItem.key)
+        }
         return (
           <button
             key={seriesItem.key}
-            className={clsx(styles.legendItem, { [styles.hidden]: isHidden })}
-            onClick={() => toggleMetric?.(seriesItem.key)}
+            aria-disabled={isDisabled}
+            aria-label={seriesItem.name}
+            onClick={handleClick}
             type='button'
+            className={clsx(styles.legendItem, {
+              [styles.hidden]: isHidden,
+              [styles.disabled]: isDisabled
+            })}
           >
             <div
               className={clsx(styles.legendDot, isLine && styles.line)}
@@ -49,8 +62,8 @@ export function CustomLegend({
               }}
             />
             <Tooltip
-              data={seriesItem.name}
-              ellipsis
+              data={legendTooltip ?? seriesItem.name}
+              ellipsis={!legendTooltip}
               extraClass={styles.legendTooltip}
             >
               <span className={styles.legendLabel}>{seriesItem.name}</span>
