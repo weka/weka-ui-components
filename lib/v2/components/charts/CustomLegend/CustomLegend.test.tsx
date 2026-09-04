@@ -58,6 +58,62 @@ describe('CustomLegend', () => {
     )
   })
 
+  it('marks a legend-disabled item as disabled and greys it out', () => {
+    const seriesWithDisabledItem: SeriesConfig[] = [
+      SERIES[0],
+      { ...SERIES[1], legendDisabled: true }
+    ]
+
+    render(<CustomLegend series={seriesWithDisabledItem} />)
+
+    const disabledItem = screen.getByRole('button', { name: 'Write' })
+    expect(disabledItem).toHaveAttribute('aria-disabled', 'true')
+    expect(disabledItem).toHaveClass('disabled')
+    expect(screen.getByRole('button', { name: 'Read' })).toHaveAttribute(
+      'aria-disabled',
+      'false'
+    )
+  })
+
+  it('does not toggle a metric when a legend-disabled item is clicked', () => {
+    const toggleMetric = vi.fn()
+    const seriesWithDisabledItem: SeriesConfig[] = [
+      SERIES[0],
+      { ...SERIES[1], legendDisabled: true }
+    ]
+
+    render(
+      <CustomLegend
+        series={seriesWithDisabledItem}
+        toggleMetric={toggleMetric}
+      />
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Write' }))
+
+    expect(toggleMetric).not.toHaveBeenCalled()
+  })
+
+  it('shows the legend tooltip in place of the series name', () => {
+    const explanation = 'Not enough data collected yet'
+    const seriesWithTooltip: SeriesConfig[] = [
+      { ...SERIES[0], legendDisabled: true, legendTooltip: explanation }
+    ]
+
+    render(<CustomLegend series={seriesWithTooltip} />)
+
+    expect(screen.getByLabelText(explanation)).toBeInTheDocument()
+  })
+
+  it('keeps the series name as the item label when a tooltip explains it', () => {
+    const seriesWithTooltip: SeriesConfig[] = [
+      { ...SERIES[0], legendTooltip: 'Not enough data collected yet' }
+    ]
+
+    render(<CustomLegend series={seriesWithTooltip} />)
+
+    expect(screen.getByRole('button', { name: 'Read' })).toBeInTheDocument()
+  })
+
   it('fills an area series swatch with its solid color', () => {
     render(<CustomLegend series={SERIES} />)
 

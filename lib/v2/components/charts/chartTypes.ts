@@ -51,6 +51,17 @@ export interface SeriesConfig {
   yAxisId?: string
   /** Renders a `<Line>` series with a dashed stroke instead of solid. */
   dashed?: boolean
+  /**
+   * Greys out this series' legend item and stops it from toggling the series.
+   * Plotting is unaffected: leave the series out of the chart's own `series`
+   * when there is nothing to draw.
+   */
+  legendDisabled?: boolean
+  /**
+   * Legend hover copy, replacing the series name — typically why the item is
+   * disabled. Unlike the name, it shows whether or not the label is truncated.
+   */
+  legendTooltip?: string
 }
 
 export interface ChartAxisConfig {
