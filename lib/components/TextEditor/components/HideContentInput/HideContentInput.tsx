@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import { useLocalStorage } from 'react-use'
 import clsx from 'clsx'
+
+import { useLocalStorage } from '#hooks'
 
 import { TagsBox } from '../../../inputs'
 import { useTextEditorContext } from '../../context'
