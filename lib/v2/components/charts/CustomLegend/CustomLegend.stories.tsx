@@ -94,3 +94,24 @@ function InteractiveLegendDemo() {
 export const Interactive: Story = {
   render: () => <InteractiveLegendDemo />
 }
+
+const SERIES_WITH_DISABLED_ITEM: SeriesConfig[] = [
+  ...SERIES,
+  {
+    key: 'forecast',
+    name: 'Forecast',
+    color: 'var(--orange-500)',
+    type: SERIES_TYPES.LINE,
+    dashed: true,
+    legendDisabled: true,
+    legendTooltip: 'The forecast requires at least 24 hours of collected data.'
+  }
+]
+
+export const WithDisabledItem: Story = {
+  render: () => (
+    <div style={wrapperStyle}>
+      <CustomLegend series={SERIES_WITH_DISABLED_ITEM} />
+    </div>
+  )
+}

@@ -68,6 +68,11 @@
     opacity: 0.4;
     background: transparent;
   }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 }
 
 .legendTooltip {
