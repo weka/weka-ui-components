@@ -1,12 +1,36 @@
-import { act, renderHook } from '@testing-library/react'
+import { StrictMode, useEffect } from 'react'
+import { act, render, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { NOP } from '#consts'
+
+import localStorageService from '../localStorageService'
 import useLocalStorage from './useLocalStorage'
 
 const STORAGE_KEY = 'weka-test-key'
+const FIRST_KEY = 'weka-first-key'
+const SECOND_KEY = 'weka-second-key'
+const FIRST_VALUE = 1
+const SECOND_VALUE = 2
 const PERSISTED_VALUE = 14
 const STORED_VALUE = 10
 const REJECTED_VALUE = 20
+
+function StorageConsumer({
+  storageKey,
+  onCommit = NOP
+}: {
+  storageKey: string
+  onCommit?: (value: number | undefined) => void
+}) {
+  const [value] = useLocalStorage<number>(storageKey)
+
+  useEffect(() => {
+    onCommit(value)
+  })
+
+  return null
+}
 
 describe('useLocalStorage', () => {
   afterEach(() => {
@@ -54,19 +78,19 @@ describe('useLocalStorage', () => {
   })
 
   it('re-reads the stored value when the key changes', () => {
-    localStorage.setItem('weka-first-key', JSON.stringify(1))
-    localStorage.setItem('weka-second-key', JSON.stringify(2))
+    localStorage.setItem(FIRST_KEY, JSON.stringify(FIRST_VALUE))
+    localStorage.setItem(SECOND_KEY, JSON.stringify(SECOND_VALUE))
 
     const { result, rerender } = renderHook(
       ({ key }) => useLocalStorage<number>(key),
-      { initialProps: { key: 'weka-first-key' } }
+      { initialProps: { key: FIRST_KEY } }
     )
 
-    expect(result.current[0]).toBe(1)
+    expect(result.current[0]).toBe(FIRST_VALUE)
 
-    rerender({ key: 'weka-second-key' })
+    rerender({ key: SECOND_KEY })
 
-    expect(result.current[0]).toBe(2)
+    expect(result.current[0]).toBe(SECOND_VALUE)
   })
 
   it('keeps the previous value when writing to storage fails', () => {
@@ -74,12 +98,50 @@ describe('useLocalStorage', () => {
 
     const { result } = renderHook(() => useLocalStorage<number>(STORAGE_KEY))
 
-    vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+    vi.spyOn(localStorageService, 'setItem').mockImplementation(() => {
       throw new Error('QuotaExceededError')
     })
 
     act(() => result.current[1](REJECTED_VALUE))
 
     expect(result.current[0]).toBe(STORED_VALUE)
+  })
+
+  it('never commits the previous key\'s value once the key changes', () => {
+    localStorage.setItem(FIRST_KEY, JSON.stringify(FIRST_VALUE))
+    localStorage.setItem(SECOND_KEY, JSON.stringify(SECOND_VALUE))
+
+    const committedValues: (number | undefined)[] = []
+    const recordCommit = (value: number | undefined) =>
+      committedValues.push(value)
+
+    const { rerender } = render(
+      <StorageConsumer onCommit={recordCommit} storageKey={FIRST_KEY} />
+    )
+    rerender(
+      <StorageConsumer onCommit={recordCommit} storageKey={SECOND_KEY} />
+    )
+
+    expect(committedValues).toEqual([FIRST_VALUE, SECOND_VALUE])
+  })
+
+  it('changes key under StrictMode without emitting React warnings', () => {
+    localStorage.setItem(FIRST_KEY, JSON.stringify(FIRST_VALUE))
+    localStorage.setItem(SECOND_KEY, JSON.stringify(SECOND_VALUE))
+
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(NOP)
+
+    const { rerender } = render(
+      <StrictMode>
+        <StorageConsumer storageKey={FIRST_KEY} />
+      </StrictMode>
+    )
+    rerender(
+      <StrictMode>
+        <StorageConsumer storageKey={SECOND_KEY} />
+      </StrictMode>
+    )
+
+    expect(consoleError).not.toHaveBeenCalled()
   })
 })
