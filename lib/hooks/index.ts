@@ -1,5 +1,6 @@
 export { default as useDebounce } from './useDebounce'
 export { default as useHighlightInput } from './useHighlightInput'
 export { default as useKeyEvent } from './useKeyEvent'
+export { default as useLocalStorage } from './useLocalStorage'
 export { default as useStaticProps } from './useStaticProps'
 export { default as useToggle } from './useToggle'

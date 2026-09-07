@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import { useLocalStorage } from 'react-use'
 import { IconButton } from '@mui/material'
+
+import { useLocalStorage } from '#hooks'
 import svgs from '#svgs'
 
 import Tooltip from '../../../Tooltip/Tooltip'
