@@ -96,6 +96,12 @@ export interface XAxisExtendedConfig extends ChartAxisConfig {
    * labels on a dense time axis.
    */
   ticks?: (number | string)[]
+  /**
+   * Horizontal padding inside the plot area. The charts default to 20px on
+   * each side so edge samples are not clipped; pass zeros to start the series
+   * at the axis origin.
+   */
+  padding?: { left?: number; right?: number }
 }
 
 export interface YAxisExtendedConfig extends ChartAxisConfig {

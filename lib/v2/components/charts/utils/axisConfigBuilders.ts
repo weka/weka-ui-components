@@ -34,42 +34,43 @@ export function buildYAxisStyleProps(yAxis: YAxisExtendedConfig | undefined) {
   }
 }
 
+/*
+ * Keys copied only when truthy, and keys copied whenever defined (so zero
+ * values like `tickMargin: 0` and `interval: 0` survive).
+ */
+const X_AXIS_TRUTHY_KEYS = [
+  'dataKey',
+  'height',
+  'tick',
+  'tickFormatter',
+  'type',
+  'padding'
+] as const
+const X_AXIS_DEFINED_KEYS = ['ticks', 'tickMargin', 'interval', 'hide'] as const
+
 /**
  * Builds X-axis configuration object by extracting relevant properties
- * from extended config. Only includes properties that are defined.
+ * from extended config. Only includes properties that are defined. Spread
+ * after the chart's own XAxis props, so anything here (e.g. `padding`)
+ * overrides the chart default.
  */
 export function buildXAxisConfig(
   xAxis: XAxisExtendedConfig | undefined
 ): AxisConfig {
   const config: AxisConfig = {}
-
-  if (xAxis?.dataKey) {
-    config.dataKey = xAxis.dataKey
+  if (!xAxis) {
+    return config
   }
-  if (xAxis?.height) {
-    config.height = xAxis.height
-  }
-  if (xAxis?.tick) {
-    config.tick = xAxis.tick
-  }
-  if (xAxis?.ticks !== undefined) {
-    config.ticks = xAxis.ticks
-  }
-  if (xAxis?.tickMargin !== undefined) {
-    config.tickMargin = xAxis.tickMargin
-  }
-  if (xAxis?.tickFormatter) {
-    config.tickFormatter = xAxis.tickFormatter
-  }
-  if (xAxis?.interval !== undefined) {
-    config.interval = xAxis.interval
-  }
-  if (xAxis?.type) {
-    config.type = xAxis.type
-  }
-  if (xAxis?.hide !== undefined) {
-    config.hide = xAxis.hide
-  }
+  X_AXIS_TRUTHY_KEYS.forEach((key) => {
+    if (xAxis[key]) {
+      config[key] = xAxis[key]
+    }
+  })
+  X_AXIS_DEFINED_KEYS.forEach((key) => {
+    if (xAxis[key] !== undefined) {
+      config[key] = xAxis[key]
+    }
+  })
 
   return config
 }

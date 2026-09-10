@@ -37,6 +37,12 @@ describe('axisConfigBuilders', () => {
 
       expect(buildXAxisConfig({ ticks })).toEqual({ ticks })
     })
+
+    it('passes through padding so a consumer can drop the default gap', () => {
+      const padding = { left: 0, right: 0 }
+
+      expect(buildXAxisConfig({ padding })).toEqual({ padding })
+    })
   })
 
   describe('buildXAxisConfig hide passthrough', () => {
