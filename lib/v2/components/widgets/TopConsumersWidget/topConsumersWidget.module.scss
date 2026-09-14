@@ -89,7 +89,7 @@
   padding: 0 16px 12px;
   background: var(--ld-container-bg);
   border: 1px solid var(--gray-300-700);
-  border-radius: 4px;
+  box-shadow: 0 0 16px 4px var(--ld-shadow-v2);
 }
 
 .cardHeader {
