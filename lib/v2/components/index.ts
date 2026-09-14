@@ -533,3 +533,17 @@ export type {
 export { CompactPerformanceChart } from './widgets/CompactPerformanceChart'
 export type { InventoryCardProps, InventoryItem } from './widgets/InventoryCard'
 export { InventoryCard } from './widgets/InventoryCard'
+export type {
+  TopConsumersColumn,
+  TopConsumersGradient,
+  TopConsumersItem,
+  TopConsumersWidgetProps
+} from './widgets/TopConsumersWidget'
+export {
+  TOP_CONSUMERS_DEFAULT_GRADIENTS,
+  TOP_CONSUMERS_METRIC_NAMES,
+  TOP_CONSUMERS_METRIC_OPTIONS,
+  TOP_CONSUMERS_METRICS,
+  type TopConsumersMetric,
+  TopConsumersWidget
+} from './widgets/TopConsumersWidget'

@@ -43,6 +43,20 @@ export const GRADIENT_COLORS = {
     end: '#3A185A' // $aubergine-400
   },
 
+  // Wide gradients (300 → 700), light to deep
+  blueWide: {
+    start: '#6179F2', // $blue-300
+    end: '#15298C' // $blue-700
+  },
+  peachWide: {
+    start: '#FFC1B2', // $peach-300
+    end: '#B24D36' // $peach-700
+  },
+  purpleWide: {
+    start: '#B671F4', // $purple-300
+    end: '#4A028E' // $purple-700
+  },
+
   // Light gradients (400 → 200)
   redLight: {
     start: '#F24949', // $red-400
