@@ -21,8 +21,19 @@ const topItems = (items: TopConsumersItem[], maxItems: number) =>
     .sort((first, second) => second.value - first.value)
     .slice(0, maxItems)
 
-const barWidth = (value: number, max: number) =>
-  max > 0 ? `${Math.max(0, (value / max) * PERCENT)}%` : '0%'
+/**
+ * The gradient is laid out across the whole track and revealed by the bar's
+ * width, so a half-full bar shows the first half of the gradient rather than
+ * the whole gradient squeezed into half the track.
+ */
+const barStyle = (value: number, max: number, fill: string) => {
+  const ratio = max > 0 ? Math.max(0, value / max) : 0
+  return {
+    width: `${ratio * PERCENT}%`,
+    background: fill,
+    backgroundSize: ratio > 0 ? `${PERCENT / ratio}% 100%` : undefined
+  }
+}
 
 /** The footer describes the listed rows, so it only accompanies a rendered list. */
 const hasShareFooter = (column: TopConsumersColumn, rowCount: number) =>
@@ -104,7 +115,7 @@ export function TopConsumersColumnCard({
               <div
                 className={styles.bar}
                 data-testid={dataTestId ? `${dataTestId}-bar` : undefined}
-                style={{ width: barWidth(item.value, max), background: fill }}
+                style={barStyle(item.value, max, fill)}
               />
             </div>
           </li>
