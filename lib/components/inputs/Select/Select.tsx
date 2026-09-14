@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react'
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import ReactSelect from 'react-select'
+import ReactSelect, { createFilter } from 'react-select'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
 import { EMPTY_STRING, NOP } from '#consts'
@@ -21,6 +21,11 @@ import VirtualMenuList from './VirtualMenuList'
 import './select.scss'
 
 const { Info } = svgs
+
+const filterOption = createFilter<Option>({
+  stringify: ({ label, value, data }) =>
+    `${label} ${value} ${data.subLabel ?? EMPTY_STRING}`
+})
 
 export const getStyle = (hasError, hasLabel) => ({
   menuPortal: (provided, state) => ({
@@ -299,6 +304,7 @@ function Select({
           )}
         </span>
         <ReactSelect
+          filterOption={filterOption}
           {...rest}
           autoFocus={autoFocus}
           autosize
