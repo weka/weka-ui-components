@@ -74,17 +74,20 @@ describe('TopConsumersWidget', () => {
     ])
   })
 
-  it('scales each bar to the largest value', () => {
+  it('scales each bar to the largest value and reveals the gradient to that point', () => {
     renderWidget()
 
-    const widths = screen
-      .getAllByTestId(`${WIDGET_TEST_ID}-filesystems-bar`)
-      .map((bar) => bar.style.width)
+    const bars = screen.getAllByTestId(`${WIDGET_TEST_ID}-filesystems-bar`)
 
-    expect(widths).toEqual([
+    expect(bars.map((bar) => bar.style.width)).toEqual([
       `${PERCENT}%`,
       `${(MEDIUM / LARGE) * PERCENT}%`,
       `${(SMALL / LARGE) * PERCENT}%`
+    ])
+    expect(bars.map((bar) => bar.style.backgroundSize)).toEqual([
+      `${PERCENT}% 100%`,
+      `${(LARGE / MEDIUM) * PERCENT}% 100%`,
+      `${(LARGE / SMALL) * PERCENT}% 100%`
     ])
   })
 
