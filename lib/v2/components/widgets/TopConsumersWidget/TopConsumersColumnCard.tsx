@@ -24,6 +24,14 @@ const topItems = (items: TopConsumersItem[], maxItems: number) =>
 const barWidth = (value: number, max: number) =>
   max > 0 ? `${Math.max(0, (value / max) * PERCENT)}%` : '0%'
 
+/** The footer describes the listed rows, so it only accompanies a rendered list. */
+const hasShareFooter = (column: TopConsumersColumn, rowCount: number) =>
+  rowCount > 0 &&
+  !column.isLoading &&
+  !column.isError &&
+  column.shareOfTotal !== undefined &&
+  column.shareLabel !== undefined
+
 export interface TopConsumersColumnCardProps {
   column: TopConsumersColumn
   gradient: NonNullable<TopConsumersColumn['gradient']>
@@ -48,8 +56,7 @@ export function TopConsumersColumnCard({
   )
   const max = rows[0]?.value ?? 0
   const fill = `linear-gradient(90deg, ${gradient.start} 0%, ${gradient.end} 100%)`
-  const showFooter =
-    column.shareOfTotal !== undefined && column.shareLabel !== undefined
+  const showFooter = hasShareFooter(column, rows.length)
 
   const renderBody = () => {
     if (column.isLoading) {

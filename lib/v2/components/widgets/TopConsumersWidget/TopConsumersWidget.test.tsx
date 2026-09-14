@@ -166,12 +166,20 @@ describe('TopConsumersWidget', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('renders loading, error and empty states per column', () => {
+  it('renders loading, error and empty states per column without a share footer', () => {
+    const share = { shareOfTotal: SHARE, shareLabel: 'tenant throughput' }
     renderWidget([
-      column({ key: 'loading', isLoading: true }),
-      column({ key: 'error', isError: true }),
-      column({ key: 'empty', items: [], emptyMessage: 'Not available yet' })
+      column({ key: 'loading', isLoading: true, ...share }),
+      column({ key: 'error', isError: true, ...share }),
+      column({
+        key: 'empty',
+        items: [],
+        emptyMessage: 'Not available yet',
+        ...share
+      })
     ])
+
+    expect(screen.queryByText(/of tenant throughput/)).not.toBeInTheDocument()
 
     expect(
       within(screen.getByTestId(`${WIDGET_TEST_ID}-loading`)).queryByRole(
