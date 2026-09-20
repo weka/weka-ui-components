@@ -16,6 +16,7 @@ import { CloseWithBgIcon } from './CloseWithBgIcon'
 import { ConfigureIcon } from './ConfigureIcon'
 import { CopyIcon } from './CopyIcon'
 import { DarkModeIcon } from './DarkModeIcon'
+import { DataReductionIcon } from './DataReductionIcon'
 import { DateTimeIcon } from './DateTimeIcon'
 import { DownloadIcon } from './DownloadIcon'
 import { DriversIcon } from './DriversIcon'
@@ -40,12 +41,15 @@ import { NotFoundIcon } from './NotFoundIcon'
 import { NotificationsIcon } from './NotificationsIcon'
 import { PauseIcon } from './PauseIcon'
 import { PlusIcon } from './PlusIcon'
+import { ProvisioningIcon } from './ProvisioningIcon'
 import { ResetIcon } from './ResetIcon'
 import { RestoreIcon } from './RestoreIcon'
 import { S3BucketsIcon } from './S3BucketsIcon'
+import { SavingIcon } from './SavingIcon'
 import { SearchIcon } from './SearchIcon'
 import { ServersIcon } from './ServersIcon'
 import { SettingsIcon } from './SettingsIcon'
+import { SnapshotsIcon } from './SnapshotsIcon'
 import { SortIcon } from './SortIcon'
 import { SortUpDownIcon } from './SortUpDownIcon'
 import { SwapIcon } from './SwapIcon'
@@ -269,6 +273,32 @@ export const InventoryIcons: Story = {
   render: () => (
     <div style={rowStyle}>
       {inventoryIcons.map(({ name, Icon }) => (
+        <div
+          key={name}
+          style={iconCellStyle}
+        >
+          <Icon
+            height={INVENTORY_ICON_SIZE}
+            width={INVENTORY_ICON_SIZE}
+          />
+          <span>{name}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const fsMetricIcons = [
+  { name: 'ProvisioningIcon', Icon: ProvisioningIcon },
+  { name: 'SnapshotsIcon', Icon: SnapshotsIcon },
+  { name: 'DataReductionIcon', Icon: DataReductionIcon },
+  { name: 'SavingIcon', Icon: SavingIcon }
+]
+
+export const FileSystemMetricIcons: Story = {
+  render: () => (
+    <div style={rowStyle}>
+      {fsMetricIcons.map(({ name, Icon }) => (
         <div
           key={name}
           style={iconCellStyle}

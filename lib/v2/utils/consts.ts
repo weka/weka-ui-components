@@ -20,6 +20,8 @@ export const ICON_SIZES = {
   XL: 24
 } as const
 
+export const CURRENT_COLOR = 'currentColor'
+
 export const ICON_VARIANTS = {
   CONTAINER: 'container',
   SVG_ONLY: 'svg-only'
