@@ -207,6 +207,16 @@ export {
   ALERT_ICON_SHAPES,
   GradientAlertIcon
 } from './GradientAlertIcon'
+export type {
+  GradientIconColor,
+  GradientIconContainerProps
+} from './GradientIconContainer'
+export {
+  GRADIENT_ICON_COLORS,
+  GRADIENT_ICON_CONTAINER_SIZE,
+  GradientIconContainer,
+  scaleGlyphToContainer
+} from './GradientIconContainer'
 export type { HeaderProps } from './Header'
 export { Header } from './Header'
 export type { HeaderMetaBannerProps, HeaderMetaItem } from './HeaderMetaBanner'

@@ -1,0 +1,41 @@
+@use '../../styles/colors' as *;
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 1px solid;
+  flex-shrink: 0;
+  position: relative;
+
+  svg path {
+    fill: currentColor;
+  }
+}
+
+.purple {
+  border-color: $purple-700;
+  color: $purple-700;
+  background: linear-gradient(0deg, $purple-200 0%, $purple-50 100%);
+}
+
+.fuchsia {
+  border-color: $fuchsia-700;
+  color: $fuchsia-700;
+  background: linear-gradient(0deg, $fuchsia-200 0%, $fuchsia-50 100%);
+}
+
+.peach {
+  border-color: $peach-700;
+  color: $peach-700;
+  background: linear-gradient(0deg, $peach-200 0%, $peach-50 100%);
+}
+
+.yellow {
+  border-color: $yellow-800;
+  color: $yellow-800;
+  background: linear-gradient(0deg, $yellow-200 0%, $yellow-50 100%);
+}
