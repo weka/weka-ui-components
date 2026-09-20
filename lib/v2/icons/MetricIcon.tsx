@@ -6,8 +6,11 @@ import {
   type IconVariant
 } from '#v2/utils/consts'
 
-import { type GradientIconColor, GradientIconContainer } from '../components'
-import { scaleGlyphToContainer } from '../components'
+import {
+  type GradientIconColor,
+  GradientIconContainer
+} from '../components/GradientIconContainer/GradientIconContainer'
+import { scaleGlyphToContainer } from '../components/GradientIconContainer/scaleGlyphToContainer'
 
 export interface MetricIconProps {
   width?: number

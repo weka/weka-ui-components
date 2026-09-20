@@ -1,4 +1,4 @@
-import { GRADIENT_ICON_COLORS } from '../components'
+import { GRADIENT_ICON_COLORS } from '../components/GradientIconContainer/GradientIconContainer'
 import {
   MetricIcon,
   type MetricIconGlyph,

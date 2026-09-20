@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { ICON_VARIANTS } from '#v2/utils/consts'
 
-import { GRADIENT_ICON_COLORS } from '../components'
+import { GRADIENT_ICON_COLORS } from '../components/GradientIconContainer'
 import { DataReductionIcon } from './DataReductionIcon'
 import { ProvisioningIcon } from './ProvisioningIcon'
 import { SavingIcon } from './SavingIcon'
