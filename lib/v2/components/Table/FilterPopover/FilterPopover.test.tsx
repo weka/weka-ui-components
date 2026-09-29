@@ -1,14 +1,29 @@
 import type { FilterConfig } from '../filterUtils'
 import type { CustomFilters } from './filterRegistry'
 
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING, FILTER_TYPES } from '#v2/utils/consts'
+import {
+  EMPTY_STRING,
+  FILTER_TYPES,
+  KEYBOARD_KEYS,
+  SEARCH_PLACEHOLDER
+} from '#v2/utils/consts'
 
 import { FilterPopover } from './FilterPopover'
 
 const APPLY_BUTTON = 'filter-apply-button'
+const DROPDOWN_SELECT = 'filter-dropdown-select'
+const CLEAR_SELECTION = 'Clear selection'
+const SEARCHABLE_OPTION_COUNT = 12
+const THRESHOLD_OPTION_COUNT = 8
 const REGIONS = [
   { value: 'us-east-1', label: 'us-east-1' },
   { value: 'eu-west-1', label: 'eu-west-1' }
@@ -68,16 +83,106 @@ describe('FilterPopover - multiselect', () => {
 })
 
 describe('FilterPopover - dropdown', () => {
+  const DROPDOWN_CONFIG = { type: FILTER_TYPES.DROPDOWN, options: REGIONS }
+
+  function openDropdown() {
+    fireEvent.mouseDown(screen.getByRole('combobox'))
+  }
+
+  it('renders the shared Select instead of a native select', () => {
+    renderPopover(DROPDOWN_CONFIG)
+    expect(screen.getByTestId(DROPDOWN_SELECT)).toBeInTheDocument()
+    expect(document.querySelector('select')).toBeNull()
+  })
+
   it('applies the chosen option', () => {
-    const { onValueChange } = renderPopover({
-      type: FILTER_TYPES.DROPDOWN,
-      options: REGIONS
+    const { onValueChange } = renderPopover(DROPDOWN_CONFIG)
+    openDropdown()
+    fireEvent.click(screen.getByTestId('select-option-eu-west-1'))
+    fireEvent.click(screen.getByTestId(APPLY_BUTTON))
+    expect(onValueChange).toHaveBeenCalledWith('eu-west-1')
+  })
+
+  it('always offers "Clear selection" without marking it selected', () => {
+    renderPopover(DROPDOWN_CONFIG)
+    openDropdown()
+    const clearOption = screen.getByRole('option', { name: CLEAR_SELECTION })
+    expect(clearOption).not.toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('keeps search visibility independent of the selection state', () => {
+    const regions = Array.from({ length: THRESHOLD_OPTION_COUNT }, (_, i) => ({
+      value: `region-${i}`,
+      label: `region-${i}`
+    }))
+    renderPopover({ type: FILTER_TYPES.DROPDOWN, options: regions })
+    openDropdown()
+    const searchBefore = screen.queryByPlaceholderText(SEARCH_PLACEHOLDER)
+    fireEvent.click(screen.getByTestId('select-option-region-0'))
+    openDropdown()
+    const searchAfter = screen.queryByPlaceholderText(SEARCH_PLACEHOLDER)
+    expect(Boolean(searchAfter)).toBe(Boolean(searchBefore))
+  })
+
+  it('clears the filter (undefined) via "Clear selection"', () => {
+    const { onValueChange } = renderPopover(DROPDOWN_CONFIG, {
+      value: 'us-east-1'
     })
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: { value: 'eu-west-1' }
+    openDropdown()
+    fireEvent.click(screen.getByText(CLEAR_SELECTION))
+    fireEvent.click(screen.getByTestId(APPLY_BUTTON))
+    expect(onValueChange).toHaveBeenCalledWith(undefined)
+  })
+
+  it('opens the menu on Enter from the trigger without applying or closing', () => {
+    const { onValueChange, onClose } = renderPopover(DROPDOWN_CONFIG)
+    fireEvent.keyDown(screen.getByRole('combobox'), {
+      key: KEYBOARD_KEYS.ENTER
+    })
+    expect(screen.getByRole('listbox')).toBeInTheDocument()
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('applies the option chosen with Enter inside the menu', () => {
+    const { onValueChange } = renderPopover(DROPDOWN_CONFIG)
+    openDropdown()
+    fireEvent.keyDown(screen.getByTestId('select-option-eu-west-1'), {
+      key: KEYBOARD_KEYS.ENTER
     })
     fireEvent.click(screen.getByTestId(APPLY_BUTTON))
     expect(onValueChange).toHaveBeenCalledWith('eu-west-1')
+  })
+
+  it('lets Escape in an empty search close a searchable menu but not the popover', async () => {
+    const manyRegions = Array.from(
+      { length: SEARCHABLE_OPTION_COUNT },
+      (_, i) => ({
+        value: `region-${i}`,
+        label: `region-${i}`
+      })
+    )
+    const { onClose } = renderPopover({
+      type: FILTER_TYPES.DROPDOWN,
+      options: manyRegions
+    })
+    openDropdown()
+    const searchInput = await screen.findByPlaceholderText(SEARCH_PLACEHOLDER)
+
+    fireEvent.keyDown(searchInput, { key: KEYBOARD_KEYS.ESCAPE })
+
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    })
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('still closes the popover on Escape from the trigger', () => {
+    const { onClose } = renderPopover(DROPDOWN_CONFIG)
+    fireEvent.keyDown(screen.getByRole('combobox'), {
+      key: KEYBOARD_KEYS.ESCAPE
+    })
+    expect(onClose).toHaveBeenCalled()
   })
 })
 

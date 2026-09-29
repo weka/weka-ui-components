@@ -120,6 +120,11 @@ describe('Select - Rendering', () => {
     render(<Select {...createProps({ value: 'option1', disabled: true })} />)
     expect(screen.getByText(OPTION_1)).toBeInTheDocument()
   })
+
+  it('focuses the trigger on mount when autoFocus is set', () => {
+    render(<Select {...createProps({ autoFocus: true })} />)
+    expect(screen.getByRole('combobox')).toHaveFocus()
+  })
 })
 
 describe('Select - Single Select', () => {
@@ -414,6 +419,30 @@ describe('Select - Search functionality', () => {
       expect(
         screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
       ).toBeInTheDocument()
+    })
+  })
+
+  it('clears a nonempty query on Escape and keeps the menu open', async () => {
+    render(<Select {...createProps({ options: fruitOptions })} />)
+    openSelect()
+    const searchInput = await screen.findByPlaceholderText(SEARCH_PLACEHOLDER)
+    fireEvent.change(searchInput, { target: { value: 'app' } })
+
+    fireEvent.keyDown(searchInput, { key: KEYBOARD_KEYS.ESCAPE })
+
+    expect(searchInput).toHaveValue(EMPTY_STRING)
+    expect(screen.getByRole('listbox')).toBeInTheDocument()
+  })
+
+  it('closes the menu on Escape when the query is empty', async () => {
+    render(<Select {...createProps({ options: fruitOptions })} />)
+    openSelect()
+    const searchInput = await screen.findByPlaceholderText(SEARCH_PLACEHOLDER)
+
+    fireEvent.keyDown(searchInput, { key: KEYBOARD_KEYS.ESCAPE })
+
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
     })
   })
 

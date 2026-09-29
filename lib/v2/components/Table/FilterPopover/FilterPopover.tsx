@@ -14,6 +14,7 @@ import { ChevronDownSmallIcon, FilterIcon } from '../../../icons'
 import { Button } from '../../Button'
 import { Checkbox } from '../../CheckBox'
 import { DateTimePicker } from '../../DateTimePicker'
+import { Select } from '../../inputs/Select'
 import { FilterOptionRow } from '../FilterOptionRow'
 import { FilterSearch } from '../FilterSearch'
 import { isFilterValueEmpty } from '../filterUtils'
@@ -42,6 +43,10 @@ const SELECT_ALL_LABEL = 'Select All'
 const CLEAR_SELECTION_LABEL = 'Clear selection'
 const APPLY_LABEL = 'Apply'
 const NUM_RANGE_INVALID_TOOLTIP = 'Max. cannot be smaller than Min.'
+const DROPDOWN_SELECT_TEST_ID = 'filter-dropdown-select'
+const CLEAR_SELECTION_VALUE = '__filter_clear_selection__'
+const LISTBOX_ROLE_SELECTOR = '[role="listbox"]'
+const COMBOBOX_ROLE_SELECTOR = '[role="combobox"]'
 
 function FilterPopover({
   config,
@@ -162,7 +167,31 @@ function FilterPopover({
   })
 
   useEffect(() => {
+    /*
+     * The dropdown filter's Select owns its own keyboard handling: every key
+     * inside its portaled menu, and every key but Escape on its trigger
+     * (Enter there opens the menu; letting it reach the popover would apply
+     * the previous value and close). Escape on the trigger still closes the
+     * popover.
+     */
+    const isSelectOwnedKey = (e: KeyboardEvent) => {
+      if (config.type !== FILTER_TYPES.DROPDOWN) {
+        return false
+      }
+      const target = e.target as Element | null
+      if (target?.closest(LISTBOX_ROLE_SELECTOR)) {
+        return true
+      }
+      return (
+        e.key !== KEYBOARD_KEYS.ESCAPE &&
+        !!target?.closest(COMBOBOX_ROLE_SELECTOR)
+      )
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isSelectOwnedKey(e)) {
+        return
+      }
       handleGlobalKeyDown(e)
     }
 
@@ -185,7 +214,7 @@ function FilterPopover({
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('click', handleClickOutside)
     }
-  }, [handleGlobalKeyDown, showOptionsList])
+  }, [config.type, handleGlobalKeyDown, showOptionsList])
 
   const renderDropdownFilter = () => {
     const selectChips = config.selectChips as Record<string, ReactNode>
@@ -242,28 +271,30 @@ function FilterPopover({
       )
     }
 
+    /*
+     * The clear row is always present under a sentinel value: a constant row
+     * count keeps the Select's search threshold independent of selection
+     * state, and the sentinel keeps the row unselected while nothing is chosen.
+     */
     return (
       <div className={styles.dropdownContainer}>
-        <select
+        <Select
           autoFocus
-          className={styles.dropdown}
+          dataTestId={DROPDOWN_SELECT_TEST_ID}
+          placeholder={config.placeholder || ALL_OPTIONS_PLACEHOLDER}
           value={tempValue as string}
-          onChange={(e) => {
-            setTempValue(e.target.value)
-          }}
-        >
-          <option value={EMPTY_STRING}>
-            {config.placeholder || ALL_OPTIONS_PLACEHOLDER}
-          </option>
-          {config.options?.map((option) => (
-            <option
-              key={option.value}
-              value={option.value}
-            >
-              {option.label}
-            </option>
-          ))}
-        </select>
+          onChange={(selected) =>
+            setTempValue(
+              selected === CLEAR_SELECTION_VALUE
+                ? EMPTY_STRING
+                : String(selected)
+            )
+          }
+          options={[
+            { value: CLEAR_SELECTION_VALUE, label: CLEAR_SELECTION_LABEL },
+            ...(config.options ?? [])
+          ]}
+        />
       </div>
     )
   }

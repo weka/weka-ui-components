@@ -58,6 +58,23 @@ describe('TableFilter', () => {
     expect(screen.getByTestId('filter-option-us-east-1')).toBeInTheDocument()
   })
 
+  it('moves focus into the dropdown select when the popover opens', () => {
+    const dropdownColumns = [
+      {
+        accessorKey: COLUMN_ID,
+        header: 'Region',
+        meta: {
+          filter: { type: FILTER_TYPES.DROPDOWN, options: ['us-east-1'] }
+        }
+      }
+    ]
+    renderTableFilter({ columns: dropdownColumns })
+    const filterButton = screen.getByTestId(`column-filter-button-${COLUMN_ID}`)
+    filterButton.focus()
+    fireEvent.click(filterButton)
+    expect(screen.getByRole('combobox')).toHaveFocus()
+  })
+
   it('calls onSortClick when the sort button is clicked', () => {
     const { onSortClick } = renderTableFilter()
     fireEvent.click(screen.getByTestId(`column-sort-button-${COLUMN_ID}`))

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import { useState } from 'react'
 
-import { EMPTY_ARRAY, FILTER_TYPES, NOOP } from '#v2/utils/consts'
+import { FILTER_TYPES, NOOP } from '#v2/utils/consts'
 
 import { FilterPopover } from './FilterPopover'
 
@@ -32,8 +32,15 @@ const REGIONS = [
   { value: 'eu-central-1', label: 'eu-central-1' }
 ]
 
-function FilterPopoverDemo() {
-  const [applied, setApplied] = useState<FilterValue>(EMPTY_ARRAY)
+const DEMO_FILTER_TYPES = {
+  MULTISELECT: FILTER_TYPES.MULTISELECT,
+  DROPDOWN: FILTER_TYPES.DROPDOWN
+} as const
+
+type DemoFilterType = (typeof DEMO_FILTER_TYPES)[keyof typeof DEMO_FILTER_TYPES]
+
+function FilterPopoverDemo({ type }: Readonly<{ type: DemoFilterType }>) {
+  const [applied, setApplied] = useState<FilterValue>()
 
   return (
     <div style={CONTAINER_STYLE}>
@@ -42,19 +49,23 @@ function FilterPopoverDemo() {
         columnId='region'
         columnName='Region'
         onClose={NOOP}
-        onValueChange={(value) => setApplied(value ?? EMPTY_ARRAY)}
+        onValueChange={setApplied}
         value={applied}
         config={{
-          type: FILTER_TYPES.MULTISELECT,
+          type,
           title: 'Region',
           options: REGIONS
         }}
       />
-      <div style={VALUE_STYLE}>Applied: {JSON.stringify(applied)}</div>
+      <div style={VALUE_STYLE}>Applied: {JSON.stringify(applied ?? null)}</div>
     </div>
   )
 }
 
 export const Interactive: Story = {
-  render: () => <FilterPopoverDemo />
+  render: () => <FilterPopoverDemo type={DEMO_FILTER_TYPES.MULTISELECT} />
+}
+
+export const Dropdown: Story = {
+  render: () => <FilterPopoverDemo type={DEMO_FILTER_TYPES.DROPDOWN} />
 }

@@ -5,7 +5,9 @@
   width: 250px;
   background: var(--gray-50-920);
   box-shadow: 0 0 0 1px var(--gray-450-550), 0 8px 24px rgb(0 0 0 / 25%);
-  z-index: 10001;
+
+  /* Below the portaled Select/MenuPopover layer (2100) so a dropdown filter's menu stacks above the popover. */
+  z-index: 1500;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -92,39 +94,6 @@
 .dropdownContainer {
   display: flex;
   flex-direction: column;
-}
-
-.dropdown {
-  padding: 8px 12px;
-  border: 1px solid var(--gray-300-700);
-  border-radius: 4px;
-  font-size: 14px;
-  background: var(--gray-50-950);
-  color: var(--text-color-primary);
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-  position: relative;
-  z-index: 10002;
-  width: 100%;
-
-  &:focus {
-    border-color: var(--cyan-500);
-    box-shadow: 0 0 0 2px rgb(51 138 204 / 10%);
-    z-index: 10003;
-    background: var(--gray-50-950);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--cyan-500);
-    outline-offset: 1px;
-  }
-
-  option {
-    background: var(--gray-50-950);
-    color: var(--text-color-primary);
-    padding: 8px 12px;
-  }
 }
 
 .customDropdownContainer {
