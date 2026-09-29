@@ -1,16 +1,28 @@
 import type { FilterConfig } from '../filterUtils'
 import type { CustomFilters } from './filterRegistry'
 
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING, FILTER_TYPES, KEYBOARD_KEYS } from '#v2/utils/consts'
+import {
+  EMPTY_STRING,
+  FILTER_TYPES,
+  KEYBOARD_KEYS,
+  SEARCH_PLACEHOLDER
+} from '#v2/utils/consts'
 
 import { FilterPopover } from './FilterPopover'
 
 const APPLY_BUTTON = 'filter-apply-button'
 const DROPDOWN_SELECT = 'filter-dropdown-select'
 const CLEAR_SELECTION = 'Clear selection'
+const SEARCHABLE_OPTION_COUNT = 12
 const REGIONS = [
   { value: 'us-east-1', label: 'us-east-1' },
   { value: 'eu-west-1', label: 'eu-west-1' }
@@ -127,6 +139,29 @@ describe('FilterPopover - dropdown', () => {
     })
     fireEvent.click(screen.getByTestId(APPLY_BUTTON))
     expect(onValueChange).toHaveBeenCalledWith('eu-west-1')
+  })
+
+  it('lets Escape in an empty search close a searchable menu but not the popover', async () => {
+    const manyRegions = Array.from(
+      { length: SEARCHABLE_OPTION_COUNT },
+      (_, i) => ({
+        value: `region-${i}`,
+        label: `region-${i}`
+      })
+    )
+    const { onClose } = renderPopover({
+      type: FILTER_TYPES.DROPDOWN,
+      options: manyRegions
+    })
+    openDropdown()
+    const searchInput = await screen.findByPlaceholderText(SEARCH_PLACEHOLDER)
+
+    fireEvent.keyDown(searchInput, { key: KEYBOARD_KEYS.ESCAPE })
+
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    })
+    expect(onClose).not.toHaveBeenCalled()
   })
 
   it('still closes the popover on Escape from the trigger', () => {

@@ -613,8 +613,14 @@ export function Select({
                   value={searchQuery}
                   onKeyDown={(e) => {
                     if (e.key === KEYBOARD_KEYS.ESCAPE) {
-                      e.stopPropagation()
-                      setSearchQuery(EMPTY_STRING)
+                      /*
+                       * First Escape clears a query; with nothing to clear it
+                       * must reach MUI so the menu closes.
+                       */
+                      if (searchQuery) {
+                        e.stopPropagation()
+                        setSearchQuery(EMPTY_STRING)
+                      }
                       return
                     }
                     if (
