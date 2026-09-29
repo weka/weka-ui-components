@@ -12,6 +12,7 @@ export interface FileUploadProps {
   accept?: string
   disabled?: boolean
   label?: string
+  required?: boolean
   buttonText?: string
   dataTestId?: string
 }
@@ -22,6 +23,7 @@ export function FileUpload({
   accept,
   disabled = false,
   label,
+  required = false,
   buttonText = 'Choose File',
   dataTestId
 }: Readonly<FileUploadProps>) {
@@ -35,7 +37,12 @@ export function FileUpload({
 
   return (
     <div className={styles.wrapper}>
-      {label ? <span className={styles.label}>{label}</span> : null}
+      {label ? (
+        <span className={styles.label}>
+          {label}
+          {required ? <span className={styles.required}> *</span> : null}
+        </span>
+      ) : null}
       <input
         accept={accept}
         aria-label={label ?? buttonText}

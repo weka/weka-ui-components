@@ -28,6 +28,7 @@ function FileUploadDemo() {
         onChange={(file) => {
           setCertFileName(file?.name ?? EMPTY_STRING)
         }}
+        required
       />
       <FileUpload
         accept='.pem,.key'

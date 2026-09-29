@@ -12,6 +12,10 @@
   letter-spacing: 0.5px;
 }
 
+.required {
+  color: var(--red-500);
+}
+
 .hiddenInput {
   position: absolute;
   width: 1px;

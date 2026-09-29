@@ -9,6 +9,8 @@ const DEFAULT_BUTTON_TEXT = 'Choose File'
 const CUSTOM_BUTTON_TEXT = 'Upload Certificate'
 const SAMPLE_FILE_NAME = 'my-cert.pem'
 const DATA_TEST_ID = 'file-upload-input'
+const SAMPLE_LABEL = 'TLS CA Certificate'
+const REQUIRED_INDICATOR = '*'
 
 const createProps = (overrides = {}) => ({
   onChange: vi.fn(),
@@ -44,6 +46,30 @@ describe('FileUpload - Rendering', () => {
   it('renders hidden file input with data-testid', () => {
     render(<FileUpload {...createProps({ dataTestId: DATA_TEST_ID })} />)
     expect(screen.getByTestId(DATA_TEST_ID)).toBeInTheDocument()
+  })
+
+  it('renders label when provided', () => {
+    render(<FileUpload {...createProps({ label: SAMPLE_LABEL })} />)
+    expect(screen.getByText(SAMPLE_LABEL)).toBeInTheDocument()
+  })
+
+  it('renders required indicator when required is true', () => {
+    render(
+      <FileUpload {...createProps({ label: SAMPLE_LABEL, required: true })} />
+    )
+    expect(screen.getByText(REQUIRED_INDICATOR)).toBeInTheDocument()
+  })
+
+  it('does not render required indicator when required is false', () => {
+    render(
+      <FileUpload {...createProps({ label: SAMPLE_LABEL, required: false })} />
+    )
+    expect(screen.queryByText(REQUIRED_INDICATOR)).not.toBeInTheDocument()
+  })
+
+  it('does not render required indicator without a label', () => {
+    render(<FileUpload {...createProps({ required: true })} />)
+    expect(screen.queryByText(REQUIRED_INDICATOR)).not.toBeInTheDocument()
   })
 })
 
