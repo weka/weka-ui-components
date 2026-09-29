@@ -14,6 +14,7 @@ import { ChevronDownSmallIcon, FilterIcon } from '../../../icons'
 import { Button } from '../../Button'
 import { Checkbox } from '../../CheckBox'
 import { DateTimePicker } from '../../DateTimePicker'
+import { Select } from '../../inputs/Select'
 import { FilterOptionRow } from '../FilterOptionRow'
 import { FilterSearch } from '../FilterSearch'
 import { isFilterValueEmpty } from '../filterUtils'
@@ -42,6 +43,7 @@ const SELECT_ALL_LABEL = 'Select All'
 const CLEAR_SELECTION_LABEL = 'Clear selection'
 const APPLY_LABEL = 'Apply'
 const NUM_RANGE_INVALID_TOOLTIP = 'Max. cannot be smaller than Min.'
+const DROPDOWN_SELECT_TEST_ID = 'filter-dropdown-select'
 
 function FilterPopover({
   config,
@@ -163,6 +165,14 @@ function FilterPopover({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as Element | null
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(target) &&
+        target?.closest('[role="listbox"]')
+      ) {
+        return
+      }
       handleGlobalKeyDown(e)
     }
 
@@ -242,28 +252,20 @@ function FilterPopover({
       )
     }
 
+    const selectedValue = tempValue as string
+    const clearOption = selectedValue
+      ? [{ value: EMPTY_STRING, label: CLEAR_SELECTION_LABEL }]
+      : []
+
     return (
       <div className={styles.dropdownContainer}>
-        <select
-          autoFocus
-          className={styles.dropdown}
-          value={tempValue as string}
-          onChange={(e) => {
-            setTempValue(e.target.value)
-          }}
-        >
-          <option value={EMPTY_STRING}>
-            {config.placeholder || ALL_OPTIONS_PLACEHOLDER}
-          </option>
-          {config.options?.map((option) => (
-            <option
-              key={option.value}
-              value={option.value}
-            >
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <Select
+          dataTestId={DROPDOWN_SELECT_TEST_ID}
+          onChange={(selected) => setTempValue(String(selected))}
+          options={[...clearOption, ...(config.options ?? [])]}
+          placeholder={config.placeholder || ALL_OPTIONS_PLACEHOLDER}
+          value={selectedValue}
+        />
       </div>
     )
   }

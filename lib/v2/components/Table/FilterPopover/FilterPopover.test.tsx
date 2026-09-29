@@ -9,6 +9,8 @@ import { EMPTY_STRING, FILTER_TYPES } from '#v2/utils/consts'
 import { FilterPopover } from './FilterPopover'
 
 const APPLY_BUTTON = 'filter-apply-button'
+const DROPDOWN_SELECT = 'filter-dropdown-select'
+const CLEAR_SELECTION = 'Clear selection'
 const REGIONS = [
   { value: 'us-east-1', label: 'us-east-1' },
   { value: 'eu-west-1', label: 'eu-west-1' }
@@ -68,16 +70,43 @@ describe('FilterPopover - multiselect', () => {
 })
 
 describe('FilterPopover - dropdown', () => {
+  const DROPDOWN_CONFIG = { type: FILTER_TYPES.DROPDOWN, options: REGIONS }
+
+  function openDropdown() {
+    fireEvent.mouseDown(screen.getByRole('combobox'))
+  }
+
+  it('renders the shared Select instead of a native select', () => {
+    renderPopover(DROPDOWN_CONFIG)
+    expect(screen.getByTestId(DROPDOWN_SELECT)).toBeInTheDocument()
+    expect(document.querySelector('select')).toBeNull()
+  })
+
   it('applies the chosen option', () => {
-    const { onValueChange } = renderPopover({
-      type: FILTER_TYPES.DROPDOWN,
-      options: REGIONS
-    })
-    fireEvent.change(screen.getByRole('combobox'), {
-      target: { value: 'eu-west-1' }
-    })
+    const { onValueChange } = renderPopover(DROPDOWN_CONFIG)
+    openDropdown()
+    fireEvent.click(screen.getByTestId('select-option-eu-west-1'))
     fireEvent.click(screen.getByTestId(APPLY_BUTTON))
     expect(onValueChange).toHaveBeenCalledWith('eu-west-1')
+  })
+
+  it('offers "Clear selection" only once a value is chosen', () => {
+    renderPopover(DROPDOWN_CONFIG)
+    openDropdown()
+    expect(screen.queryByText(CLEAR_SELECTION)).not.toBeInTheDocument()
+    fireEvent.click(screen.getByTestId('select-option-us-east-1'))
+    openDropdown()
+    expect(screen.getByText(CLEAR_SELECTION)).toBeInTheDocument()
+  })
+
+  it('clears the filter (undefined) via "Clear selection"', () => {
+    const { onValueChange } = renderPopover(DROPDOWN_CONFIG, {
+      value: 'us-east-1'
+    })
+    openDropdown()
+    fireEvent.click(screen.getByText(CLEAR_SELECTION))
+    fireEvent.click(screen.getByTestId(APPLY_BUTTON))
+    expect(onValueChange).toHaveBeenCalledWith(undefined)
   })
 })
 

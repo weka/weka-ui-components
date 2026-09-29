@@ -36,20 +36,24 @@ const VALUE_STYLE = {
   fontSize: 13
 }
 
-const COLUMNS = [
+type DemoFilterType =
+  | typeof FILTER_TYPES.MULTISELECT
+  | typeof FILTER_TYPES.DROPDOWN
+
+const buildColumns = (type: DemoFilterType) => [
   {
     accessorKey: 'region',
     header: 'Region',
     meta: {
       filter: {
-        type: FILTER_TYPES.MULTISELECT,
+        type,
         options: ['us-east-1', 'us-west-2', 'eu-central-1']
       }
     }
   }
 ]
 
-function TableFilterDemo() {
+function TableFilterDemo({ type }: Readonly<{ type: DemoFilterType }>) {
   const [filters, setFilters] = useState<ActiveFilter[]>([])
 
   return (
@@ -64,7 +68,7 @@ function TableFilterDemo() {
                 canFilter
                 canSort
                 columnId='region'
-                columns={COLUMNS}
+                columns={buildColumns(type)}
                 onFilterChange={setFilters}
                 onSortClick={NOOP}
               />
@@ -88,5 +92,9 @@ function TableFilterDemo() {
 }
 
 export const Interactive: Story = {
-  render: () => <TableFilterDemo />
+  render: () => <TableFilterDemo type={FILTER_TYPES.MULTISELECT} />
+}
+
+export const Dropdown: Story = {
+  render: () => <TableFilterDemo type={FILTER_TYPES.DROPDOWN} />
 }
