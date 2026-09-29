@@ -40,12 +40,20 @@ export function FileUpload({
       {label ? (
         <span className={styles.label}>
           {label}
-          {required ? <span className={styles.required}> *</span> : null}
+          {required ? (
+            <span
+              aria-hidden='true'
+              className={styles.required}
+            >
+              {' *'}
+            </span>
+          ) : null}
         </span>
       ) : null}
       <input
         accept={accept}
         aria-label={label ?? buttonText}
+        aria-required={required}
         className={styles.hiddenInput}
         data-testid={dataTestId}
         disabled={disabled}

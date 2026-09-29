@@ -25,10 +25,10 @@ function FileUploadDemo() {
         accept='.pem,.crt,.cer'
         fileName={certFileName}
         label='Certificate'
+        required
         onChange={(file) => {
           setCertFileName(file?.name ?? EMPTY_STRING)
         }}
-        required
       />
       <FileUpload
         accept='.pem,.key'

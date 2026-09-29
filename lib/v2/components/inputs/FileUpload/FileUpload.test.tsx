@@ -158,6 +158,44 @@ describe('FileUpload - Accessibility', () => {
     expect(button.getAttribute('for')).toBe(input.id)
   })
 
+  it('marks the hidden input required for assistive technology', () => {
+    render(
+      <FileUpload
+        {...createProps({
+          label: SAMPLE_LABEL,
+          required: true,
+          dataTestId: DATA_TEST_ID
+        })}
+      />
+    )
+    expect(screen.getByTestId(DATA_TEST_ID)).toHaveAttribute(
+      'aria-required',
+      'true'
+    )
+  })
+
+  it('reports the hidden input as not required by default', () => {
+    render(
+      <FileUpload
+        {...createProps({ label: SAMPLE_LABEL, dataTestId: DATA_TEST_ID })}
+      />
+    )
+    expect(screen.getByTestId(DATA_TEST_ID)).toHaveAttribute(
+      'aria-required',
+      'false'
+    )
+  })
+
+  it('hides the required marker from assistive technology', () => {
+    render(
+      <FileUpload {...createProps({ label: SAMPLE_LABEL, required: true })} />
+    )
+    expect(screen.getByText(REQUIRED_INDICATOR)).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    )
+  })
+
   it('passes accept attribute to hidden input', () => {
     render(
       <FileUpload
