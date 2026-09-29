@@ -9,7 +9,6 @@ import {
 } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING } from '#consts'
 import {
   EMPTY_STRING,
   KEYBOARD_KEYS,
