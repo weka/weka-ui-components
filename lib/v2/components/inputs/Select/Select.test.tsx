@@ -120,6 +120,11 @@ describe('Select - Rendering', () => {
     render(<Select {...createProps({ value: 'option1', disabled: true })} />)
     expect(screen.getByText(OPTION_1)).toBeInTheDocument()
   })
+
+  it('focuses the trigger on mount when autoFocus is set', () => {
+    render(<Select {...createProps({ autoFocus: true })} />)
+    expect(screen.getByRole('combobox')).toHaveFocus()
+  })
 })
 
 describe('Select - Single Select', () => {

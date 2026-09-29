@@ -278,6 +278,7 @@ function FilterPopover({
     return (
       <div className={styles.dropdownContainer}>
         <Select
+          autoFocus
           dataTestId={DROPDOWN_SELECT_TEST_ID}
           onChange={(selected) => setTempValue(String(selected))}
           options={[...clearOption, ...(config.options ?? [])]}

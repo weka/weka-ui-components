@@ -84,6 +84,8 @@ export interface SelectProps {
   minSearchLength?: number
   searchThreshold?: number
   dataTestId?: string
+  /** Focus the trigger on mount, e.g. when the Select is the first control of a freshly opened popover. */
+  autoFocus?: boolean
 }
 
 export function Select({
@@ -105,7 +107,8 @@ export function Select({
   searchDebounceMs = DEFAULT_SEARCH_DEBOUNCE_MS,
   minSearchLength = DEFAULT_MIN_SEARCH_LENGTH,
   searchThreshold = DEFAULT_SEARCH_THRESHOLD,
-  dataTestId
+  dataTestId,
+  autoFocus = false
 }: Readonly<SelectProps>) {
   const value = normalizeSelectValue(valueProp, multiple)
   const [searchQuery, setSearchQuery] = useState(EMPTY_STRING)
@@ -257,13 +260,6 @@ export function Select({
         optionsWithSelected.find((option) => option.value === selectedValue)
       )
       .filter(Boolean) as SelectOption[]
-  }
-
-  const getDisplayValue = () => {
-    if (multiple) {
-      return value as SelectOptionValue[]
-    }
-    return value as SelectOptionValue
   }
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -544,6 +540,7 @@ export function Select({
       ) : null}
       <MuiSelect
         ref={selectFieldRef}
+        autoFocus={autoFocus}
         className={clsx(styles.select, multiple && styles.selectMultiple)}
         data-testid={dataTestId}
         displayEmpty
@@ -553,7 +550,7 @@ export function Select({
         onClose={handleMenuClose}
         onOpen={handleMenuOpen}
         open={isOpen}
-        value={getDisplayValue()}
+        value={value}
         IconComponent={() => (
           <ChevronDownSmallIcon
             color='var(--gray-920-50)'
