@@ -23,6 +23,7 @@ const APPLY_BUTTON = 'filter-apply-button'
 const DROPDOWN_SELECT = 'filter-dropdown-select'
 const CLEAR_SELECTION = 'Clear selection'
 const SEARCHABLE_OPTION_COUNT = 12
+const THRESHOLD_OPTION_COUNT = 8
 const REGIONS = [
   { value: 'us-east-1', label: 'us-east-1' },
   { value: 'eu-west-1', label: 'eu-west-1' }
@@ -102,13 +103,25 @@ describe('FilterPopover - dropdown', () => {
     expect(onValueChange).toHaveBeenCalledWith('eu-west-1')
   })
 
-  it('offers "Clear selection" only once a value is chosen', () => {
+  it('always offers "Clear selection" without marking it selected', () => {
     renderPopover(DROPDOWN_CONFIG)
     openDropdown()
-    expect(screen.queryByText(CLEAR_SELECTION)).not.toBeInTheDocument()
-    fireEvent.click(screen.getByTestId('select-option-us-east-1'))
+    const clearOption = screen.getByRole('option', { name: CLEAR_SELECTION })
+    expect(clearOption).not.toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('keeps search visibility independent of the selection state', () => {
+    const regions = Array.from({ length: THRESHOLD_OPTION_COUNT }, (_, i) => ({
+      value: `region-${i}`,
+      label: `region-${i}`
+    }))
+    renderPopover({ type: FILTER_TYPES.DROPDOWN, options: regions })
     openDropdown()
-    expect(screen.getByText(CLEAR_SELECTION)).toBeInTheDocument()
+    const searchBefore = screen.queryByPlaceholderText(SEARCH_PLACEHOLDER)
+    fireEvent.click(screen.getByTestId('select-option-region-0'))
+    openDropdown()
+    const searchAfter = screen.queryByPlaceholderText(SEARCH_PLACEHOLDER)
+    expect(Boolean(searchAfter)).toBe(Boolean(searchBefore))
   })
 
   it('clears the filter (undefined) via "Clear selection"', () => {

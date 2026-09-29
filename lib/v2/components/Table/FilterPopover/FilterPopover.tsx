@@ -44,6 +44,7 @@ const CLEAR_SELECTION_LABEL = 'Clear selection'
 const APPLY_LABEL = 'Apply'
 const NUM_RANGE_INVALID_TOOLTIP = 'Max. cannot be smaller than Min.'
 const DROPDOWN_SELECT_TEST_ID = 'filter-dropdown-select'
+const CLEAR_SELECTION_VALUE = '__filter_clear_selection__'
 const LISTBOX_ROLE_SELECTOR = '[role="listbox"]'
 const COMBOBOX_ROLE_SELECTOR = '[role="combobox"]'
 
@@ -270,20 +271,29 @@ function FilterPopover({
       )
     }
 
-    const selectedValue = tempValue as string
-    const clearOption = selectedValue
-      ? [{ value: EMPTY_STRING, label: CLEAR_SELECTION_LABEL }]
-      : []
-
+    /*
+     * The clear row is always present under a sentinel value: a constant row
+     * count keeps the Select's search threshold independent of selection
+     * state, and the sentinel keeps the row unselected while nothing is chosen.
+     */
     return (
       <div className={styles.dropdownContainer}>
         <Select
           autoFocus
           dataTestId={DROPDOWN_SELECT_TEST_ID}
-          onChange={(selected) => setTempValue(String(selected))}
-          options={[...clearOption, ...(config.options ?? [])]}
           placeholder={config.placeholder || ALL_OPTIONS_PLACEHOLDER}
-          value={selectedValue}
+          value={tempValue as string}
+          onChange={(selected) =>
+            setTempValue(
+              selected === CLEAR_SELECTION_VALUE
+                ? EMPTY_STRING
+                : String(selected)
+            )
+          }
+          options={[
+            { value: CLEAR_SELECTION_VALUE, label: CLEAR_SELECTION_LABEL },
+            ...(config.options ?? [])
+          ]}
         />
       </div>
     )
