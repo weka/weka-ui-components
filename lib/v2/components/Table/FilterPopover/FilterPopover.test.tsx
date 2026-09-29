@@ -4,7 +4,7 @@ import type { CustomFilters } from './filterRegistry'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING, FILTER_TYPES } from '#v2/utils/consts'
+import { EMPTY_STRING, FILTER_TYPES, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { FilterPopover } from './FilterPopover'
 
@@ -107,6 +107,34 @@ describe('FilterPopover - dropdown', () => {
     fireEvent.click(screen.getByText(CLEAR_SELECTION))
     fireEvent.click(screen.getByTestId(APPLY_BUTTON))
     expect(onValueChange).toHaveBeenCalledWith(undefined)
+  })
+
+  it('opens the menu on Enter from the trigger without applying or closing', () => {
+    const { onValueChange, onClose } = renderPopover(DROPDOWN_CONFIG)
+    fireEvent.keyDown(screen.getByRole('combobox'), {
+      key: KEYBOARD_KEYS.ENTER
+    })
+    expect(screen.getByRole('listbox')).toBeInTheDocument()
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('applies the option chosen with Enter inside the menu', () => {
+    const { onValueChange } = renderPopover(DROPDOWN_CONFIG)
+    openDropdown()
+    fireEvent.keyDown(screen.getByTestId('select-option-eu-west-1'), {
+      key: KEYBOARD_KEYS.ENTER
+    })
+    fireEvent.click(screen.getByTestId(APPLY_BUTTON))
+    expect(onValueChange).toHaveBeenCalledWith('eu-west-1')
+  })
+
+  it('still closes the popover on Escape from the trigger', () => {
+    const { onClose } = renderPopover(DROPDOWN_CONFIG)
+    fireEvent.keyDown(screen.getByRole('combobox'), {
+      key: KEYBOARD_KEYS.ESCAPE
+    })
+    expect(onClose).toHaveBeenCalled()
   })
 })
 

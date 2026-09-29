@@ -32,11 +32,14 @@ const REGIONS = [
   { value: 'eu-central-1', label: 'eu-central-1' }
 ]
 
-function FilterPopoverDemo({
-  type
-}: Readonly<{
-  type: typeof FILTER_TYPES.MULTISELECT | typeof FILTER_TYPES.DROPDOWN
-}>) {
+const DEMO_FILTER_TYPES = {
+  MULTISELECT: FILTER_TYPES.MULTISELECT,
+  DROPDOWN: FILTER_TYPES.DROPDOWN
+} as const
+
+type DemoFilterType = (typeof DEMO_FILTER_TYPES)[keyof typeof DEMO_FILTER_TYPES]
+
+function FilterPopoverDemo({ type }: Readonly<{ type: DemoFilterType }>) {
   const [applied, setApplied] = useState<FilterValue>()
 
   return (
@@ -60,9 +63,9 @@ function FilterPopoverDemo({
 }
 
 export const Interactive: Story = {
-  render: () => <FilterPopoverDemo type={FILTER_TYPES.MULTISELECT} />
+  render: () => <FilterPopoverDemo type={DEMO_FILTER_TYPES.MULTISELECT} />
 }
 
 export const Dropdown: Story = {
-  render: () => <FilterPopoverDemo type={FILTER_TYPES.DROPDOWN} />
+  render: () => <FilterPopoverDemo type={DEMO_FILTER_TYPES.DROPDOWN} />
 }

@@ -36,9 +36,12 @@ const VALUE_STYLE = {
   fontSize: 13
 }
 
-type DemoFilterType =
-  | typeof FILTER_TYPES.MULTISELECT
-  | typeof FILTER_TYPES.DROPDOWN
+const DEMO_FILTER_TYPES = {
+  MULTISELECT: FILTER_TYPES.MULTISELECT,
+  DROPDOWN: FILTER_TYPES.DROPDOWN
+} as const
+
+type DemoFilterType = (typeof DEMO_FILTER_TYPES)[keyof typeof DEMO_FILTER_TYPES]
 
 const buildColumns = (type: DemoFilterType) => [
   {
@@ -92,9 +95,9 @@ function TableFilterDemo({ type }: Readonly<{ type: DemoFilterType }>) {
 }
 
 export const Interactive: Story = {
-  render: () => <TableFilterDemo type={FILTER_TYPES.MULTISELECT} />
+  render: () => <TableFilterDemo type={DEMO_FILTER_TYPES.MULTISELECT} />
 }
 
 export const Dropdown: Story = {
-  render: () => <TableFilterDemo type={FILTER_TYPES.DROPDOWN} />
+  render: () => <TableFilterDemo type={DEMO_FILTER_TYPES.DROPDOWN} />
 }

@@ -44,6 +44,8 @@ const CLEAR_SELECTION_LABEL = 'Clear selection'
 const APPLY_LABEL = 'Apply'
 const NUM_RANGE_INVALID_TOOLTIP = 'Max. cannot be smaller than Min.'
 const DROPDOWN_SELECT_TEST_ID = 'filter-dropdown-select'
+const LISTBOX_ROLE_SELECTOR = '[role="listbox"]'
+const COMBOBOX_ROLE_SELECTOR = '[role="combobox"]'
 
 function FilterPopover({
   config,
@@ -164,13 +166,29 @@ function FilterPopover({
   })
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    /*
+     * The dropdown filter's Select owns its own keyboard handling: every key
+     * inside its portaled menu, and every key but Escape on its trigger
+     * (Enter there opens the menu; letting it reach the popover would apply
+     * the previous value and close). Escape on the trigger still closes the
+     * popover.
+     */
+    const isSelectOwnedKey = (e: KeyboardEvent) => {
+      if (config.type !== FILTER_TYPES.DROPDOWN) {
+        return false
+      }
       const target = e.target as Element | null
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(target) &&
-        target?.closest('[role="listbox"]')
-      ) {
+      if (target?.closest(LISTBOX_ROLE_SELECTOR)) {
+        return true
+      }
+      return (
+        e.key !== KEYBOARD_KEYS.ESCAPE &&
+        !!target?.closest(COMBOBOX_ROLE_SELECTOR)
+      )
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isSelectOwnedKey(e)) {
         return
       }
       handleGlobalKeyDown(e)
@@ -195,7 +213,7 @@ function FilterPopover({
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('click', handleClickOutside)
     }
-  }, [handleGlobalKeyDown, showOptionsList])
+  }, [config.type, handleGlobalKeyDown, showOptionsList])
 
   const renderDropdownFilter = () => {
     const selectChips = config.selectChips as Record<string, ReactNode>
