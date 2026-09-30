@@ -1,7 +1,7 @@
 import type { menuItem } from '../MenuPopper/MenuPopper'
 import type { ReactNode } from 'react'
 
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
 import { EMPTY_STRING } from '#consts'
@@ -20,7 +20,7 @@ export interface SideBlockProps {
   name: string
   onSelect: () => void
   isSelected?: boolean
-  actions?: (menuItem & { Icon: React.ReactNode })[]
+  actions?: (menuItem & { Icon: ReactNode })[]
   description?: string
   extraClass?: string
   children: ReactNode
