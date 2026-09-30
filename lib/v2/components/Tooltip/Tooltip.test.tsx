@@ -197,3 +197,47 @@ describe('Tooltip - DataTestId', () => {
     expect(screen.getByTestId('tooltip-trigger')).toBeInTheDocument()
   })
 })
+
+describe('Tooltip fullWidth', () => {
+  it('keeps the inline-flex child wrapper by default', () => {
+    const { container } = render(
+      <Tooltip data='status'>
+        <span>child</span>
+      </Tooltip>
+    )
+
+    const wrapper = container.querySelector('[class*="tooltipChildWrapper"]')
+    expect(wrapper).toBeInTheDocument()
+    expect(wrapper?.className).not.toContain('FullWidth')
+  })
+
+  it('stretches the child wrapper when fullWidth is set', () => {
+    const { container } = render(
+      <Tooltip
+        data='status'
+        fullWidth
+      >
+        <span>child</span>
+      </Tooltip>
+    )
+
+    expect(
+      container.querySelector('[class*="tooltipChildWrapperFullWidth"]')
+    ).toBeInTheDocument()
+  })
+
+  it('stretches the ellipsis wrapper when combined with ellipsis', () => {
+    const { container } = render(
+      <Tooltip
+        ellipsis
+        fullWidth
+      >
+        long text
+      </Tooltip>
+    )
+
+    expect(
+      container.querySelector('[class*="ellipsisWrapperFullWidth"]')
+    ).toBeInTheDocument()
+  })
+})

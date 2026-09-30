@@ -25,6 +25,8 @@ export interface TooltipProps {
   placement?: TooltipPlacement
   ellipsis?: boolean
   ellipsisClass?: string
+  /** Stretch the child wrapper to the parent's width. The wrapper is inline-flex, which shrink-wraps block-like children (a progress bar's `width: 100%` collapses to its content). */
+  fullWidth?: boolean
   dataTestId?: string
   PopperProps?: Partial<PopperProps>
 }
@@ -41,6 +43,7 @@ export function Tooltip({
   followCursor = false,
   ellipsis = false,
   ellipsisClass,
+  fullWidth = false,
   dataTestId,
   PopperProps: popperProps,
   ...rest
@@ -125,8 +128,11 @@ export function Tooltip({
         {...rest}
       >
         <span
-          className={styles.tooltipChildWrapper}
           data-testid={dataTestId}
+          className={clsx(
+            styles.tooltipChildWrapper,
+            fullWidth && styles.tooltipChildWrapperFullWidth
+          )}
         >
           {children}
         </span>
@@ -155,10 +161,14 @@ export function Tooltip({
     >
       <span
         ref={spanRef}
-        className={clsx(styles.ellipsisWrapper, ellipsisClass)}
         data-testid={dataTestId}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        className={clsx(
+          styles.ellipsisWrapper,
+          fullWidth && styles.ellipsisWrapperFullWidth,
+          ellipsisClass
+        )}
       >
         {children}
       </span>

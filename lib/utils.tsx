@@ -159,6 +159,13 @@ const utils = {
       typeof err.message === 'string'
     ) {
       message = err.message
+    } else if (
+      err &&
+      typeof err === 'object' &&
+      'detail' in err &&
+      typeof err.detail === 'string'
+    ) {
+      message = err.detail
     } else if (err && typeof err === 'object' && 'data' in err) {
       if (typeof err.data === 'string') {
         message = err.data

@@ -3,7 +3,9 @@ export const STATUS_VARIANTS = {
   WORKING: 'working',
   DEGRADED: 'degraded',
   DOWN: 'down',
-  INFO: 'info'
+  INFO: 'info',
+  /** Brand-purple in-progress state (sync/replication flows). Distinct from the orange WORKING, which reads as a warning next to a DEGRADED chip. */
+  SYNCING: 'syncing'
 } as const
 
 export type StatusVariant =
@@ -24,6 +26,7 @@ export const WORKING_STATUSES = new Set([
 ])
 export const DEGRADED_STATUSES = new Set(['DEGRADED'])
 export const INFO_STATUSES = new Set(['INFO'])
+export const SYNCING_STATUSES = new Set(['SYNCING'])
 
 export function getStatusVariant(
   status: StatusCellValue,
@@ -32,6 +35,7 @@ export function getStatusVariant(
     working?: Set<string>
     degraded?: Set<string>
     info?: Set<string>
+    syncing?: Set<string>
   }
 ): StatusVariant {
   if (!status) {
@@ -51,6 +55,9 @@ export function getStatusVariant(
   }
   if ((sets?.info ?? INFO_STATUSES).has(normalized)) {
     return STATUS_VARIANTS.INFO
+  }
+  if ((sets?.syncing ?? SYNCING_STATUSES).has(normalized)) {
+    return STATUS_VARIANTS.SYNCING
   }
 
   return STATUS_VARIANTS.DOWN

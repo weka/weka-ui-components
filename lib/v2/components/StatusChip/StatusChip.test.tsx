@@ -6,6 +6,7 @@ import { StatusChip } from './StatusChip'
 
 const REPLICATING_LABEL = 'Replicating'
 const CHIP_INFO_SELECTOR = '[class*="chipInfo"]'
+const DOT_SELECTOR = '[class*="dot"]'
 
 describe('StatusChip', () => {
   it('renders the label', () => {
@@ -25,10 +26,25 @@ describe('StatusChip', () => {
     expect(container.querySelector('[class*="dotInfo"]')).toBeInTheDocument()
   })
 
+  it('renders the syncing variant as a purple tinted pill', () => {
+    const { container } = render(
+      <StatusChip
+        label='Syncing'
+        tinted
+        variant={STATUS_VARIANTS.SYNCING}
+      />
+    )
+
+    expect(container.querySelector('[class*="dotSyncing"]')).toBeInTheDocument()
+    expect(
+      container.querySelector('[class*="chipSyncing"]')
+    ).toBeInTheDocument()
+  })
+
   it('renders no dot when neither variant nor color is given', () => {
     const { container } = render(<StatusChip label='eu-west-1' />)
 
-    expect(container.querySelector('[class*="dot"]')).not.toBeInTheDocument()
+    expect(container.querySelector(DOT_SELECTOR)).not.toBeInTheDocument()
   })
 
   it('tints the pill background to match the variant', () => {
@@ -90,7 +106,7 @@ describe('StatusChip', () => {
       />
     )
 
-    const dot = container.querySelector('[class*="dot"]') as HTMLElement
+    const dot = container.querySelector(DOT_SELECTOR) as HTMLElement
     expect(dot).toHaveStyle({ backgroundColor: '#123456' })
     expect(dot.className).not.toContain('dotUp')
   })
@@ -132,6 +148,20 @@ describe('StatusChip', () => {
     )
 
     expect(container.querySelector('[class*="selected"]')).toBeInTheDocument()
+  })
+
+  it('renders the icon in place of the dot', () => {
+    const { container } = render(
+      <StatusChip
+        icon={<svg data-testid='status-icon' />}
+        label={REPLICATING_LABEL}
+        variant={STATUS_VARIANTS.INFO}
+      />
+    )
+
+    expect(screen.getByTestId('status-icon')).toBeInTheDocument()
+    expect(container.querySelector(DOT_SELECTOR)).not.toBeInTheDocument()
+    expect(container.querySelector(CHIP_INFO_SELECTOR)).toBeInTheDocument()
   })
 
   it('calls onClick when clicked', () => {

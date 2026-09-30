@@ -28,8 +28,18 @@
   text-overflow: ellipsis;
 }
 
+.ellipsisWrapperFullWidth {
+  display: block;
+  width: 100%;
+}
+
 .tooltipChildWrapper {
   display: inline-flex;
+}
+
+.tooltipChildWrapperFullWidth {
+  display: flex;
+  width: 100%;
 }
 
 .popper {

@@ -39,6 +39,10 @@ export const Variants: Story = {
         label='Down'
         variant={STATUS_VARIANTS.DOWN}
       />
+      <StatusChip
+        label='Syncing'
+        variant={STATUS_VARIANTS.SYNCING}
+      />
     </div>
   )
 }
@@ -119,6 +123,37 @@ export const Tinted: Story = {
         label='Working'
         tinted
         variant={STATUS_VARIANTS.WORKING}
+      />
+      <StatusChip
+        label='Syncing'
+        tinted
+        variant={STATUS_VARIANTS.SYNCING}
+      />
+    </div>
+  )
+}
+
+const iconStyle = {
+  width: 14,
+  height: 14,
+  borderRadius: '50%',
+  background: 'currentColor'
+}
+
+export const TintedWithIcon: Story = {
+  render: () => (
+    <div style={rowStyle}>
+      <StatusChip
+        icon={<span style={iconStyle} />}
+        label='Syncing'
+        tinted
+        variant={STATUS_VARIANTS.SYNCING}
+      />
+      <StatusChip
+        icon={<span style={iconStyle} />}
+        label='Paused'
+        tinted
+        variant={STATUS_VARIANTS.DEGRADED}
       />
     </div>
   )

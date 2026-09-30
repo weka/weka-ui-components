@@ -49,6 +49,10 @@
   background-color: var(--cyan-500);
 }
 
+.dotSyncing {
+  background-color: var(--purple-500);
+}
+
 .chipUp {
   background: var(--green-100-900);
 }
@@ -67,6 +71,10 @@
 
 .chipInfo {
   background: var(--cyan-100-400);
+}
+
+.chipSyncing {
+  background: var(--purple-100-900);
 }
 
 /*
@@ -105,6 +113,11 @@
   color: var(--cyan-800-200);
 }
 
+.tinted.chipSyncing {
+  background: var(--purple-200-800);
+  color: var(--purple-800-200);
+}
+
 .tinted .dot {
   border-radius: 4px;
 }
@@ -126,8 +139,24 @@
   background-color: var(--cyan-800-200);
 }
 
+.tinted .dotSyncing {
+  background-color: var(--purple-800-200);
+}
+
 .tinted .label {
   font-weight: 600;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.icon > svg {
+  width: 100%;
+  height: 100%;
 }
 
 .label {

@@ -36,6 +36,10 @@
   background-color: var(--cyan-500);
 }
 
+.statusDotSyncing {
+  background-color: var(--purple-500);
+}
+
 .statusCheckIcon {
   color: var(--green-500);
   flex-shrink: 0;

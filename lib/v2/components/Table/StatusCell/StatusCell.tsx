@@ -17,7 +17,8 @@ const STATUS_DOT_CLASS: Record<StatusVariant, string> = {
   [STATUS_VARIANTS.WORKING]: styles.statusDotWorking,
   [STATUS_VARIANTS.DEGRADED]: styles.statusDotDegraded,
   [STATUS_VARIANTS.DOWN]: styles.statusDotDown,
-  [STATUS_VARIANTS.INFO]: styles.statusDotInfo
+  [STATUS_VARIANTS.INFO]: styles.statusDotInfo,
+  [STATUS_VARIANTS.SYNCING]: styles.statusDotSyncing
 }
 
 export interface StatusCellOptions<TRow = unknown> {
