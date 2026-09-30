@@ -53,6 +53,13 @@ function MenuPopper({
     return EMPTY_STRING
   }
 
+  /** Popper stays mounted through its exit transition; a click-away then must not re-trigger the consumer's handler. */
+  const handleClickAway = () => {
+    if (open) {
+      onClickAway()
+    }
+  }
+
   return (
     <Popper
       anchorEl={anchorEl}
@@ -70,7 +77,7 @@ function MenuPopper({
           style={{ transformOrigin: 'center top' }}
         >
           <Paper className={clsx('menu-popper', extraPopperClass)}>
-            <ClickAwayListener onClickAway={onClickAway}>
+            <ClickAwayListener onClickAway={handleClickAway}>
               <MenuList disablePadding>
                 {items.map((item) => {
                   if (item.hideMenu) {

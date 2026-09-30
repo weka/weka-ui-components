@@ -1,11 +1,10 @@
 import type { menuItem } from '../MenuPopper/MenuPopper'
 import type { ReactNode } from 'react'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
 import { EMPTY_STRING } from '#consts'
-import { useToggle } from '#hooks'
 import svgs from '#svgs'
 
 import Info from '../Info'
@@ -38,7 +37,7 @@ function SideBlock({
   children,
   info
 }: SideBlockProps) {
-  const [isPopperOpen, togglePopper] = useToggle(false)
+  const [isPopperOpen, setIsPopperOpen] = useState(false)
   const anchorRef = useRef<HTMLDivElement | null>(null)
 
   const shownActions = actions.filter((action) => !action.hideMenu)
@@ -106,7 +105,7 @@ function SideBlock({
           <IconButton
             onClick={(e) => {
               e.stopPropagation()
-              togglePopper()
+              setIsPopperOpen((prev) => !prev)
             }}
           >
             <MenuDots />
@@ -117,7 +116,7 @@ function SideBlock({
         <MenuPopper
           anchorEl={anchorRef.current}
           items={actions as menuItem[]}
-          onClickAway={togglePopper}
+          onClickAway={() => setIsPopperOpen(false)}
           open={isPopperOpen}
         />
       ) : null}
