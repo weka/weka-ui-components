@@ -186,7 +186,7 @@
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "ace-builds": "^1.43.6",
-    "brace-expansion": "^2.1.4",
+    "brace-expansion": "^2.1.7",
     "browserslist": "^4.28.7",
     "fast-uri": "^3.1.6",
     "globals": "^14.0.0",
