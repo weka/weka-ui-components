@@ -12,6 +12,7 @@ import {
   DEGRADED_STATUSES,
   getStatusVariant,
   STATUS_VARIANTS,
+  SYNCING_STATUSES,
   UP_STATUSES,
   WORKING_STATUSES
 } from './statusUtils'
@@ -68,6 +69,12 @@ describe('getStatusVariant - direct unit tests', () => {
   it('returns DEGRADED for known degraded statuses', () => {
     for (const status of DEGRADED_STATUSES) {
       expect(getStatusVariant(status)).toBe(STATUS_VARIANTS.DEGRADED)
+    }
+  })
+
+  it('returns SYNCING for known syncing statuses', () => {
+    for (const status of SYNCING_STATUSES) {
+      expect(getStatusVariant(status)).toBe(STATUS_VARIANTS.SYNCING)
     }
   })
 
@@ -131,6 +138,13 @@ describe('StatusCell - renders correct visual per variant', () => {
     )
     const svg = container.querySelector('svg')
     expect(svg).toBeInTheDocument()
+  })
+
+  it('renders syncing dot for SYNCING status', () => {
+    const { container } = render(
+      <StatusCell {...buildCellContext({ value: 'SYNCING' })} />
+    )
+    expect(container.querySelector('.statusDotSyncing')).toBeInTheDocument()
   })
 
   it('passes the full row to a custom classify function', () => {

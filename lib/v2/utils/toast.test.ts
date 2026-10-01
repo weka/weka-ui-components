@@ -88,6 +88,27 @@ describe('toast helpers', () => {
       })
     })
 
+    it('extracts a string detail from an API error', () => {
+      toastError({ detail: 'Quota exceeded' })
+      expect(toastMock.error).toHaveBeenCalledWith('Quota exceeded', {
+        id: undefined
+      })
+    })
+
+    it('prefers detail over a data payload without a usable message', () => {
+      toastError({ data: null, detail: 'Quota exceeded' })
+      expect(toastMock.error).toHaveBeenCalledWith('Quota exceeded', {
+        id: undefined
+      })
+    })
+
+    it('prefers the top-level message over detail', () => {
+      toastError({ message: 'Request failed', detail: 'Quota exceeded' })
+      expect(toastMock.error).toHaveBeenCalledWith('Request failed', {
+        id: undefined
+      })
+    })
+
     it('falls back to a generic message for unknown shapes', () => {
       toastError({})
       expect(toastMock.error).toHaveBeenCalledWith('An error occurred', {

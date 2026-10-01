@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import type { CSSProperties } from 'react'
 
 import { useEffect, useState } from 'react'
 
-import { SyncProgressBar } from './SyncProgressBar'
+import { SYNC_FILL_COLORS, SyncProgressBar } from './SyncProgressBar'
 
 const ANIMATION_TICK_MS = 500
+const fillColorsColumnStyle: CSSProperties = { display: 'grid', gap: 16, width: 240 }
 const ANIMATION_STEP_PERCENT = 5
 
 /** Advances `percent` on an interval so the bar's `width` transition animates, looping back to 0 once full. */
@@ -51,6 +53,34 @@ export const WithThroughputCaption: Story = {
     percent: 42,
     caption: '42% · 366 MiB/s'
   }
+}
+
+/** One bar per fill color, matching the status-chip palette they sit beside. */
+export const FillColors: Story = {
+  render: () => (
+    <div style={fillColorsColumnStyle}>
+      <SyncProgressBar
+        caption='Syncing'
+        fillColor={SYNC_FILL_COLORS.PURPLE}
+        percent={42}
+      />
+      <SyncProgressBar
+        caption='Paused'
+        fillColor={SYNC_FILL_COLORS.ORANGE}
+        percent={42}
+      />
+      <SyncProgressBar
+        caption='Error'
+        fillColor={SYNC_FILL_COLORS.RED}
+        percent={42}
+      />
+      <SyncProgressBar
+        caption='Idle'
+        fillColor={SYNC_FILL_COLORS.GRAY}
+        percent={0}
+      />
+    </div>
+  )
 }
 
 export const Animated: Story = {

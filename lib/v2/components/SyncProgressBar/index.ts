@@ -1,2 +1,2 @@
-export type { SyncProgressBarProps } from './SyncProgressBar'
-export { SyncProgressBar } from './SyncProgressBar'
+export type { SyncFillColor, SyncProgressBarProps } from './SyncProgressBar'
+export { SYNC_FILL_COLORS, SyncProgressBar } from './SyncProgressBar'

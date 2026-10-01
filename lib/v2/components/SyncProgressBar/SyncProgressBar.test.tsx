@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { SyncProgressBar } from './SyncProgressBar'
+import { SYNC_FILL_COLORS, SyncProgressBar } from './SyncProgressBar'
 
 const getFill = (container: HTMLElement) =>
   container.querySelector('[class*="fill"]') as HTMLElement
@@ -25,10 +25,31 @@ describe('SyncProgressBar', () => {
     expect(getFill(container)).toHaveStyle({ width: '0%' })
   })
 
-  it('renders no caption when omitted', () => {
+  it('fills purple by default', () => {
+    const { container } = render(<SyncProgressBar percent={42} />)
+
+    expect(getFill(container).className).toContain('fillPurple')
+  })
+
+  it('applies the requested fill color', () => {
+    const { container } = render(
+      <SyncProgressBar
+        fillColor={SYNC_FILL_COLORS.RED}
+        percent={42}
+      />
+    )
+
+    expect(getFill(container).className).toContain('fillRed')
+    expect(getFill(container).className).not.toContain('fillPurple')
+  })
+
+  it('keeps an empty caption slot when caption is omitted', () => {
     render(<SyncProgressBar percent={42} />)
 
-    expect(screen.queryByText(/%/)).not.toBeInTheDocument()
+    const caption = screen.getByTestId('sync-progress-bar-caption')
+
+    expect(caption).toBeInTheDocument()
+    expect(caption).toBeEmptyDOMElement()
   })
 
   it('renders a plain string caption', () => {

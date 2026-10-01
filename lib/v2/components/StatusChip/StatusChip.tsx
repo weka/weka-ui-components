@@ -1,4 +1,5 @@
 import type { StatusVariant } from '../Table/StatusCell'
+import type { ReactNode } from 'react'
 
 import clsx from 'clsx'
 
@@ -12,7 +13,8 @@ const DOT_CLASS_BY_VARIANT: Record<StatusVariant, string> = {
   [STATUS_VARIANTS.WORKING]: styles.dotWorking,
   [STATUS_VARIANTS.DEGRADED]: styles.dotDegraded,
   [STATUS_VARIANTS.DOWN]: styles.dotDown,
-  [STATUS_VARIANTS.INFO]: styles.dotInfo
+  [STATUS_VARIANTS.INFO]: styles.dotInfo,
+  [STATUS_VARIANTS.SYNCING]: styles.dotSyncing
 }
 
 const CHIP_BACKGROUND_CLASS_BY_VARIANT: Record<StatusVariant, string> = {
@@ -20,7 +22,8 @@ const CHIP_BACKGROUND_CLASS_BY_VARIANT: Record<StatusVariant, string> = {
   [STATUS_VARIANTS.WORKING]: styles.chipWorking,
   [STATUS_VARIANTS.DEGRADED]: styles.chipDegraded,
   [STATUS_VARIANTS.DOWN]: styles.chipDown,
-  [STATUS_VARIANTS.INFO]: styles.chipInfo
+  [STATUS_VARIANTS.INFO]: styles.chipInfo,
+  [STATUS_VARIANTS.SYNCING]: styles.chipSyncing
 }
 
 interface BuildChipClassNameArgs {
@@ -56,6 +59,8 @@ export interface StatusChipProps {
   variant?: StatusVariant
   /** Overrides the dot color with an arbitrary CSS color, bypassing `variant`. */
   color?: string
+  /** Replaces the dot; drawn in the label's color, so an SVG should fill with `currentColor`. */
+  icon?: ReactNode
   /** Trailing count badge, for filter-bar usage. */
   count?: number
   /** Highlights the chip as the active filter selection. */
@@ -76,13 +81,14 @@ export function StatusChip({
   label,
   variant,
   color,
+  icon,
   count,
   selected = false,
   tinted = false,
   onClick,
   extraClass
 }: Readonly<StatusChipProps>) {
-  const showDot = Boolean(variant) || Boolean(color)
+  const showDot = !icon && (Boolean(variant) || Boolean(color))
 
   return (
     <Chip
@@ -105,6 +111,7 @@ export function StatusChip({
           )}
         />
       ) : null}
+      {icon ? <span className={styles.icon}>{icon}</span> : null}
       <span className={styles.label}>{label}</span>
       {count !== undefined ? (
         <span className={styles.count}>{count}</span>

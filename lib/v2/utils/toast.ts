@@ -32,8 +32,8 @@ const getDataPayloadMessage = (data: unknown): string | null => {
 
 /**
  * Extracts a display message from the error shapes the legacy
- * `Utils.toastError` supported: a plain string, `{ message }`, an API payload
- * `{ data: string }`, or a nested `{ data: { error: string } }`.
+ * `Utils.toastError` supported: a plain string, `{ message }`, `{ detail }`,
+ * an API payload `{ data: string }`, or a nested `{ data: { error: string } }`.
  */
 const getToastErrorMessage = (error: unknown): string => {
   if (typeof error === 'string') {
@@ -44,6 +44,9 @@ const getToastErrorMessage = (error: unknown): string => {
   }
   if ('message' in error && typeof error.message === 'string') {
     return error.message
+  }
+  if ('detail' in error && typeof error.detail === 'string') {
+    return error.detail
   }
   if ('data' in error) {
     return getDataPayloadMessage(error.data) ?? DEFAULT_ERROR_MESSAGE
