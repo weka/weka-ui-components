@@ -1,0 +1,18 @@
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: vertical;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

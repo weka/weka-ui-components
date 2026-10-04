@@ -52,6 +52,7 @@ export {
   SEVERITY_TYPES,
   TOOLTIP_PLACEMENTS
 } from '#v2/utils/consts'
+export { getFormErrorMessage } from '#v2/utils/formErrorUtils'
 export type {
   ClusterStatusData,
   HealthIconType,
@@ -100,3 +101,9 @@ export {
   toastSuccess,
   toastWarning
 } from '#v2/utils/toast'
+export {
+  DEFAULT_CAPACITY_UNIT_LABELS,
+  resolveAdoptedUnit,
+  resolveDefaultUnit,
+  toShortUnitOptions
+} from '#v2/utils/unitOptionUtils'

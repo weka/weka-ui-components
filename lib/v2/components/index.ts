@@ -198,6 +198,7 @@ export {
   FLEX_JUSTIFIES,
   FlexBox
 } from './FlexBox'
+export * from './form'
 export type {
   AlertIconShape,
   GradientAlertIconProps
@@ -225,6 +226,12 @@ export type { HealthStatusProps } from './HealthStatus'
 export { HealthStatus } from './HealthStatus'
 export type { IconButtonProps } from './IconButton'
 export { IconButton } from './IconButton'
+export type {
+  CapacityAmountInputProps,
+  CapacityAmountUnitOption,
+  CapacityAmountValue
+} from './inputs/CapacityAmountInput'
+export { CapacityAmountInput } from './inputs/CapacityAmountInput'
 export type { FileUploadProps } from './inputs/FileUpload'
 export { FileUpload } from './inputs/FileUpload'
 export type { IpInputProps } from './inputs/IpInput'

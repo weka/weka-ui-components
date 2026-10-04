@@ -1,0 +1,43 @@
+.fieldWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.errorText {
+  font-size: 12px;
+  color: var(--error);
+  line-height: 1.4;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding-left: 8px;
+}
+
+.labelText {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.required {
+  color: var(--error);
+}
+
+.infoIcon {
+  display: flex;
+  align-items: center;
+  color: var(--orange-500);
+  cursor: default;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
