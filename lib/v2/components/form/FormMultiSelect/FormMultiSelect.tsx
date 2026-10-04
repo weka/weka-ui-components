@@ -10,6 +10,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { MultiSelectAutocomplete } from '../../inputs/MultiSelectAutocomplete'
 import { FieldWrapper } from '../FieldWrapper'
+import { buildFreeEntrySuggestions } from './formMultiSelect.utils'
 
 const FREE_ENTRY_MIN_SEARCH_LENGTH = 1
 
@@ -49,8 +50,8 @@ export function FormMultiSelect<
 
   const handleSearch = useCallback(
     (query: string): Promise<string[]> =>
-      Promise.resolve(query.trim() ? [query.trim()] : []),
-    []
+      Promise.resolve(buildFreeEntrySuggestions(options, query)),
+    [options]
   )
 
   return (

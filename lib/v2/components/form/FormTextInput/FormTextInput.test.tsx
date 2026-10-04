@@ -56,6 +56,17 @@ describe('FormTextInput', () => {
     expect(screen.getByText(REQUIRED_MESSAGE)).toBeInTheDocument()
   })
 
+  it('renders an empty value when the form has none yet', () => {
+    renderWithForm<HostValues>(
+      <FormTextInput<HostValues>
+        label={HOSTNAME_LABEL}
+        name='hostname'
+      />
+    )
+
+    expect(screen.getByRole('textbox')).toHaveValue(EMPTY_STRING)
+  })
+
   it('disables the input when disabled', () => {
     renderInput({ disabled: true })
 

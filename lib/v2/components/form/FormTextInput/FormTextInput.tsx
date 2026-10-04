@@ -9,6 +9,8 @@ import type {
 import { useId } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { EMPTY_STRING } from '#v2/utils/consts'
+
 import { TextInput } from '../../inputs/TextInput'
 import { FieldWrapper } from '../FieldWrapper'
 
@@ -76,7 +78,7 @@ export function FormTextInput<
             placeholder={placeholder}
             required={required}
             type={type}
-            value={field.value as string}
+            value={(field.value as string | undefined) ?? EMPTY_STRING}
           />
         </FieldWrapper>
       )}

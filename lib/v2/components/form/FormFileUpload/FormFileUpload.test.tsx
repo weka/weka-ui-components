@@ -42,6 +42,14 @@ describe('FormFileUpload', () => {
     expect(await screen.findByLabelText(UPLOAD_LABEL)).toBeInTheDocument()
   })
 
+  it('marks the input required with an asterisk and aria-required', async () => {
+    render(<Host />)
+
+    const input = await screen.findByLabelText(UPLOAD_LABEL)
+    expect(input).toHaveAttribute('aria-required', 'true')
+    expect(screen.getByText(UPLOAD_LABEL).parentElement).toHaveTextContent('*')
+  })
+
   it('shows the selected filename after a file is chosen', async () => {
     render(<Host />)
 

@@ -35,6 +35,7 @@ export function FormFileUpload<
   rules,
   label,
   disabled,
+  required,
   accept
 }: Readonly<FormFileUploadProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
@@ -53,6 +54,7 @@ export function FormFileUpload<
             disabled={disabled}
             fileName={fileName}
             label={label}
+            required={required}
             onChange={(file) => {
               if (!file) {
                 setFileName(EMPTY_STRING)
