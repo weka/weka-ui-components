@@ -85,6 +85,7 @@ export function FormNumberInput<
               id={fieldId}
               max={max}
               min={min}
+              name={field.name}
               onChange={handleChange}
               placeholder={placeholder}
               required={required}

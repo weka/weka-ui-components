@@ -9,6 +9,7 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
+import { useId } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import clsx from 'clsx'
 
@@ -72,6 +73,7 @@ export function FormCapacityInput<
 }: Readonly<FormCapacityInputProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
+  const fieldId = useId()
 
   const shortUnitOptions = toShortUnitOptions(unitOptions)
   const effectiveDefaultUnit =
@@ -93,6 +95,7 @@ export function FormCapacityInput<
         return (
           <FieldWrapper
             error={fieldState.error?.message}
+            htmlFor={fieldId}
             info={info}
             label={label}
             required={required}
@@ -107,6 +110,7 @@ export function FormCapacityInput<
                 allowDecimal={allowDecimal}
                 disabled={disabled}
                 hideUnitSelect={hideUnitSelect}
+                id={fieldId}
                 numberFieldClassName={styles.numberPart}
                 onChange={field.onChange}
                 placeholder={placeholder}

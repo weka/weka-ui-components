@@ -5,6 +5,8 @@ import { useCallback } from 'react'
 import { FormProvider } from 'react-hook-form'
 import clsx from 'clsx'
 
+import { NOOP } from '#v2/utils/consts'
+
 import { WarningCircleIcon } from '../../../icons'
 import { Button } from '../../Button'
 import { Popup } from '../../Popup'
@@ -69,7 +71,7 @@ export function FormPopup<TFieldValues extends FieldValues = FieldValues>({
       closeOnOverlayClick={false}
       contentOverflow='visible'
       height={height}
-      onClose={onClose}
+      onClose={isSubmitting ? NOOP : onClose}
       open={open}
       title={title}
       width={width}

@@ -19,15 +19,6 @@ const SHORT_UNIT_LABELS: Record<string, string> = {
 
 export const DEFAULT_CAPACITY_UNIT_LABELS = ['GB', 'GiB']
 
-export function toShortUnitOptions(
-  options: readonly CapacityAmountUnitOption[]
-): CapacityAmountUnitOption[] {
-  return options.map((option) => ({
-    ...option,
-    label: SHORT_UNIT_LABELS[option.label] ?? option.label
-  }))
-}
-
 const RATE_SUFFIX = '/s'
 
 /**
@@ -39,6 +30,19 @@ function baseUnitLabel(label: string): string {
   return label.endsWith(RATE_SUFFIX)
     ? label.slice(0, -RATE_SUFFIX.length)
     : label
+}
+
+export function toShortUnitOptions(
+  options: readonly CapacityAmountUnitOption[]
+): CapacityAmountUnitOption[] {
+  return options.map((option) => {
+    const base = baseUnitLabel(option.label)
+    const shortBase = SHORT_UNIT_LABELS[base] ?? base
+    return {
+      ...option,
+      label: base === option.label ? shortBase : `${shortBase}${RATE_SUFFIX}`
+    }
+  })
 }
 
 export function resolveDefaultUnit(

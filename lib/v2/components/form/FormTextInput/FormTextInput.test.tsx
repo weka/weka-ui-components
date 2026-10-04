@@ -78,4 +78,10 @@ describe('FormTextInput', () => {
 
     expect(screen.getByRole('textbox')).toHaveAttribute('type', 'email')
   })
+
+  it('forwards the field name to the input', () => {
+    renderInput()
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('name', 'hostname')
+  })
 })

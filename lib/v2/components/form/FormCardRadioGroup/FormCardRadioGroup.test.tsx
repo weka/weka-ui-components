@@ -42,4 +42,19 @@ describe('FormCardRadioGroup', () => {
 
     expect(form.getValues('plan')).toBe('pro')
   })
+
+  it('names the radiogroup after the visible label', () => {
+    renderWithForm<HostValues>(
+      <FormCardRadioGroup<HostValues>
+        label={PLAN_LABEL}
+        name='plan'
+        options={OPTIONS}
+      />,
+      { defaultValues: { plan: 'basic' } }
+    )
+
+    expect(
+      screen.getByRole('radiogroup', { name: PLAN_LABEL })
+    ).toBeInTheDocument()
+  })
 })

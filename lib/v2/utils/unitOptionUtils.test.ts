@@ -59,6 +59,15 @@ describe('toShortUnitOptions', () => {
       TIME_UNIT_OPTIONS.map((o) => o.value)
     )
   })
+
+  it('shortens rate labels while keeping the /s suffix', () => {
+    const shortened = toShortUnitOptions([
+      { label: 'Bytes/s', value: 1 },
+      { label: 'GB/s', value: GB }
+    ])
+
+    expect(shortened.map((o) => o.label)).toEqual(['B/s', 'GB/s'])
+  })
 })
 
 describe('resolveDefaultUnit', () => {

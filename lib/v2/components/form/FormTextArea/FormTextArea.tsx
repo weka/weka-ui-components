@@ -61,11 +61,15 @@ export function FormTextArea<
           required={required}
         >
           <textarea
+            ref={field.ref}
             autoFocus={autoFocus}
             className={styles.textarea}
             disabled={disabled}
             id={fieldId}
+            name={field.name}
+            onBlur={field.onBlur}
             placeholder={placeholder}
+            required={required}
             value={(field.value as string) ?? EMPTY_STRING}
             onChange={(e) => {
               field.onChange(e.target.value)

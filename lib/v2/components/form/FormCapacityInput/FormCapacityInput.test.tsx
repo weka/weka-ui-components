@@ -155,4 +155,12 @@ describe('FormCapacityInput', () => {
     ).toHaveTextContent(/^B$/)
     expect(screen.queryByText('Bytes')).not.toBeInTheDocument()
   })
+
+  it('binds the label to the number input', async () => {
+    render(<Host />)
+
+    expect(await screen.findByLabelText('Capacity')).toBe(
+      screen.getByRole('spinbutton')
+    )
+  })
 })

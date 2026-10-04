@@ -85,4 +85,12 @@ describe('FormDurationInput', () => {
 
     expect(screen.getByText('D')).toBeInTheDocument()
   })
+
+  it('binds the label to the number input', () => {
+    renderDuration()
+
+    expect(screen.getByLabelText(RETENTION_LABEL)).toBe(
+      screen.getByRole('spinbutton')
+    )
+  })
 })

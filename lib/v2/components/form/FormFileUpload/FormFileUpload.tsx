@@ -5,7 +5,7 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -41,6 +41,7 @@ export function FormFileUpload<
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
   const [fileName, setFileName] = useState(EMPTY_STRING)
+  const activeReaderRef = useRef<FileReader | null>(null)
 
   return (
     <Controller
@@ -56,15 +57,28 @@ export function FormFileUpload<
             label={label}
             required={required}
             onChange={(file) => {
+              activeReaderRef.current?.abort()
+              activeReaderRef.current = null
               if (!file) {
                 setFileName(EMPTY_STRING)
                 field.onChange(EMPTY_STRING)
                 return
               }
-              setFileName(file.name)
               const reader = new FileReader()
+              activeReaderRef.current = reader
               reader.onload = () => {
+                if (activeReaderRef.current !== reader) {
+                  return
+                }
+                setFileName(file.name)
                 field.onChange(String(reader.result))
+              }
+              reader.onerror = () => {
+                if (activeReaderRef.current !== reader) {
+                  return
+                }
+                setFileName(EMPTY_STRING)
+                field.onChange(EMPTY_STRING)
               }
               reader.readAsText(file)
             }}

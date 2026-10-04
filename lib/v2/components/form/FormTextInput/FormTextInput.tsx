@@ -74,6 +74,7 @@ export function FormTextInput<
             disabled={disabled}
             extraClass={extraClass}
             id={fieldId}
+            name={field.name}
             onChange={field.onChange}
             placeholder={placeholder}
             required={required}

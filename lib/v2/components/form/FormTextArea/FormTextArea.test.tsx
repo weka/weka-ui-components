@@ -50,4 +50,20 @@ describe('FormTextArea', () => {
 
     expect(screen.getByRole('textbox')).toBeDisabled()
   })
+
+  it('marks the field touched on blur', () => {
+    const { form } = renderTextArea()
+
+    fireEvent.blur(screen.getByRole('textbox'))
+
+    expect(form.getFieldState('pem').isTouched).toBe(true)
+  })
+
+  it('forwards name and required to the textarea', () => {
+    renderTextArea()
+
+    const textarea = screen.getByRole('textbox')
+    expect(textarea).toHaveAttribute('name', 'pem')
+    expect(textarea).toBeRequired()
+  })
 })

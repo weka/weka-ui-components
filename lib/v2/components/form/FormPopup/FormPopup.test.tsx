@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { EMPTY_STRING } from '#v2/utils/consts'
+import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { FORM_POPUP_DEFAULT_LABELS, FormPopup } from './FormPopup'
 
@@ -176,5 +176,44 @@ describe('FormPopup', () => {
       expect(onSubmit).toHaveBeenCalledTimes(1)
     })
     expect(onSubmit.mock.calls[0][0]).toEqual({ name: EMPTY_STRING })
+  })
+
+  it('ignores Escape while submitting', async () => {
+    const onClose = vi.fn()
+    render(
+      <FormPopupHost
+        isSubmitting
+        onClose={onClose}
+      />
+    )
+    await screen.findByText(DIALOG_TITLE)
+
+    fireEvent.keyDown(document, { key: KEYBOARD_KEYS.ESCAPE })
+
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('ignores the header close button while submitting', async () => {
+    const onClose = vi.fn()
+    render(
+      <FormPopupHost
+        isSubmitting
+        onClose={onClose}
+      />
+    )
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Close' }))
+
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('closes on Escape and on the header close button when idle', async () => {
+    const onClose = vi.fn()
+    render(<FormPopupHost onClose={onClose} />)
+
+    fireEvent.keyDown(document, { key: KEYBOARD_KEYS.ESCAPE })
+    fireEvent.click(await screen.findByRole('button', { name: 'Close' }))
+
+    expect(onClose).toHaveBeenCalledTimes(2)
   })
 })

@@ -63,7 +63,7 @@ export function FormCardRadioGroup<
             <span className={labelClassName ?? styles.fieldLabel}>{label}</span>
           ) : null}
           <CardRadioGroup
-            ariaLabel={ariaLabel}
+            ariaLabel={ariaLabel ?? label}
             disabled={disabled}
             onChange={field.onChange}
             options={options}

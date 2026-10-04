@@ -50,4 +50,10 @@ describe('FormNumberInput', () => {
 
     expect(form.getValues('count')).toBeUndefined()
   })
+
+  it('forwards the field name to the input', () => {
+    renderNumber()
+
+    expect(screen.getByRole('spinbutton')).toHaveAttribute('name', 'count')
+  })
 })
