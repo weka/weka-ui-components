@@ -2,7 +2,7 @@ import type { CapacityValue } from './FormCapacityInput'
 
 import { useForm } from 'react-hook-form'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { FormPopup } from '../FormPopup'
 import { FormCapacityInput } from './FormCapacityInput'
@@ -18,6 +18,7 @@ const FIVE = 5
 const SAVE_BUTTON = 'Save'
 const GB_LABEL = 'GB'
 const MB_LABEL = 'MB'
+const REQUIRED_MESSAGE = 'Capacity is required'
 
 const UNIT_OPTIONS = [
   { label: 'TB', value: TB_VALUE },
@@ -46,7 +47,8 @@ function Host({
   unitOptions = UNIT_OPTIONS,
   label = 'Capacity',
   info,
-  required
+  required,
+  rules
 }: Readonly<{
   onValues?: (values: HostValues) => void
   defaultValue?: CapacityValue
@@ -54,6 +56,7 @@ function Host({
   label?: string
   info?: string
   required?: boolean
+  rules?: Parameters<typeof FormCapacityInput<HostValues>>[0]['rules']
 }>) {
   const form = useForm<HostValues>({
     defaultValues: { capacity: defaultValue }
@@ -73,6 +76,7 @@ function Host({
         label={label}
         name='capacity'
         required={required}
+        rules={rules}
         unitOptions={unitOptions}
       />
     </FormPopup>
@@ -154,6 +158,38 @@ describe('FormCapacityInput', () => {
       await screen.findByTestId(`select-option-${BYTES_VALUE}`)
     ).toHaveTextContent(/^B$/)
     expect(screen.queryByText('Bytes')).not.toBeInTheDocument()
+  })
+
+  it('fails a required rule while the number is empty', async () => {
+    const onValues = vi.fn()
+    render(
+      <Host
+        onValues={onValues}
+        rules={{ required: REQUIRED_MESSAGE }}
+      />
+    )
+
+    fireEvent.click(await screen.findByRole('button', { name: SAVE_BUTTON }))
+
+    expect(await screen.findByText(REQUIRED_MESSAGE)).toBeInTheDocument()
+    expect(onValues).not.toHaveBeenCalled()
+  })
+
+  it('passes a required rule once a number is typed', async () => {
+    const onValues = vi.fn()
+    render(
+      <Host
+        onValues={onValues}
+        rules={{ required: REQUIRED_MESSAGE }}
+      />
+    )
+
+    await submitAfterTyping(TYPED_FIVE)
+
+    await waitFor(() => {
+      expect(onValues).toHaveBeenCalled()
+    })
+    expect(screen.queryByText(REQUIRED_MESSAGE)).not.toBeInTheDocument()
   })
 
   it('binds the label to the number input', async () => {

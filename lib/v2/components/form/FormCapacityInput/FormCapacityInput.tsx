@@ -9,7 +9,7 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
-import { useId } from 'react'
+import { useId, useMemo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import clsx from 'clsx'
 
@@ -22,6 +22,7 @@ import {
 
 import { CapacityAmountInput } from '../../inputs/CapacityAmountInput'
 import { FieldWrapper } from '../FieldWrapper'
+import { withCapacityRequired } from './formCapacityInput.utils'
 
 import styles from './formCapacityInput.module.scss'
 
@@ -74,6 +75,7 @@ export function FormCapacityInput<
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
   const fieldId = useId()
+  const resolvedRules = useMemo(() => withCapacityRequired(rules), [rules])
 
   const shortUnitOptions = toShortUnitOptions(unitOptions)
   const effectiveDefaultUnit =
@@ -84,7 +86,7 @@ export function FormCapacityInput<
     <Controller
       control={ctrl}
       name={name}
-      rules={rules}
+      rules={resolvedRules}
       render={({ field, fieldState }) => {
         const currentValue = field.value as CapacityValue | undefined
         const displayValue: CapacityValue = {
