@@ -1,0 +1,76 @@
+.numberOnlyRow {
+  .numberPart input {
+    border-radius: 4px !important;
+  }
+}
+
+.capacityRow {
+  display: flex;
+  align-items: flex-end;
+
+  .numberPart {
+    flex: 1 1 0;
+    min-width: 0;
+
+    input {
+      background: var(--gray-20-950) !important;
+      background-color: var(--gray-20-950) !important;
+      color: var(--gray-920-50) !important;
+      border-color: var(--gray-400-600) !important;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    input:hover {
+      background: var(--gray-20-950) !important;
+      background-color: var(--gray-20-950) !important;
+    }
+
+    input:focus {
+      background: var(--gray-20-950) !important;
+      background-color: var(--gray-20-950) !important;
+      border-color: var(--purple-500) !important;
+    }
+  }
+
+  .unitPart {
+    flex: 0 0 56px;
+    width: 56px;
+    margin-left: -1px;
+
+    :global(.MuiInputBase-root.MuiOutlinedInput-root),
+    :global(.MuiInputBase-root.MuiOutlinedInput-root):hover,
+    :global(.MuiInputBase-root.MuiOutlinedInput-root.Mui-focused) {
+      background: var(--gray-100-900) !important;
+      background-color: var(--gray-100-900) !important;
+      color: var(--gray-700-300) !important;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+
+      :global(.MuiSelect-select) {
+        padding: 6px 26px 6px 8px !important;
+        background: transparent !important;
+        color: var(--gray-700-300) !important;
+      }
+
+      :global(.MuiSelect-icon) {
+        right: 0 !important;
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 22px !important;
+      }
+
+      :global(.MuiOutlinedInput-notchedOutline) {
+        border-color: var(--gray-400-600) !important;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+      }
+    }
+
+    :global(.MuiInputBase-root.MuiOutlinedInput-root.Mui-focused) {
+      :global(.MuiOutlinedInput-notchedOutline) {
+        border-color: var(--purple-500) !important;
+      }
+    }
+  }
+}

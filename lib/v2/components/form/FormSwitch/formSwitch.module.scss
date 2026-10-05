@@ -1,0 +1,19 @@
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.switchRowLabelFirst {
+  flex-direction: row-reverse;
+}
+
+.switchLabel {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--gray-700-300);
+}
+
+.required {
+  color: var(--error);
+}

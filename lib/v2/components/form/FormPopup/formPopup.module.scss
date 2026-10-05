@@ -1,0 +1,98 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: min(80vh, 720px);
+  min-height: 0;
+}
+
+.formFullHeight {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+
+  .body {
+    overflow: hidden;
+  }
+
+  .bodyInner {
+    padding: 2px 2px 0;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.bodyInner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  gap: 16px;
+  padding: 2px 16px 0 2px;
+}
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: var(--red-200);
+  color: var(--red-800);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.errorBannerIcon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  color: var(--red-700);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-shrink: 0;
+  padding: 24px;
+  margin: 16px -24px -24px;
+  border-top: 1px solid var(--gray-400-600);
+
+  button {
+    flex: 0 0 auto;
+    padding: 4px 6px;
+    min-width: 64px;
+  }
+}
+
+.actionsLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-right: auto;
+}
+
+.actionsRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+:global(.MuiTooltip-popper) {
+  z-index: 2200 !important;
+}
+
+:global(.popper-wrapper) {
+  z-index: 2000 !important;
+}
