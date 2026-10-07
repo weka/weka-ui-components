@@ -1,4 +1,5 @@
 import {
+  type CSSProperties,
   type MouseEvent,
   type ReactNode,
   useEffect,
@@ -25,27 +26,32 @@ export interface ChipProps {
   borderColor?: string
   /** Overrides the chip's corner radius (e.g. `'99px'` for a pill) — set via inline style so it always wins over `extraClass`, regardless of CSS module load order. */
   borderRadius?: string
+  /** Rendered before the text at 14px, coloured with the chip's text colour. */
+  icon?: ReactNode
+  /** Renders the text bold instead of the default regular weight. */
+  bold?: boolean
   closable?: boolean
   closeIconFill?: string
+  /** Accessible name for the delete button — it shows only an icon, so give it one whenever `closable` is set. */
+  closeAriaLabel?: string
   onClose?: (event: MouseEvent<HTMLButtonElement>) => void
   onClick?: (event: MouseEvent<HTMLDivElement>) => void
   maxWidth?: string
 }
 
-export function Chip({
-  children,
-  extraClass,
+type ChipStyleProps = Pick<
+  ChipProps,
+  'backgroundColor' | 'textColor' | 'borderColor' | 'borderRadius' | 'maxWidth'
+>
+
+function buildChipStyle({
   backgroundColor,
   textColor,
   borderColor,
   borderRadius,
-  closable = false,
-  closeIconFill = CSS_VARS.GRAY_900_100,
-  onClose,
-  onClick,
   maxWidth
-}: Readonly<ChipProps>) {
-  const chipStyle = {
+}: ChipStyleProps): CSSProperties {
+  return {
     ...(backgroundColor && { backgroundColor }),
     ...(borderColor && {
       border: `1px solid ${borderColor}`,
@@ -55,6 +61,31 @@ export function Chip({
     ...(borderRadius && { borderRadius }),
     ...(maxWidth && { maxWidth })
   }
+}
+
+export function Chip({
+  children,
+  extraClass,
+  backgroundColor,
+  textColor,
+  borderColor,
+  borderRadius,
+  icon,
+  bold = false,
+  closable = false,
+  closeIconFill = CSS_VARS.GRAY_900_100,
+  closeAriaLabel,
+  onClose,
+  onClick,
+  maxWidth
+}: Readonly<ChipProps>) {
+  const chipStyle = buildChipStyle({
+    backgroundColor,
+    textColor,
+    borderColor,
+    borderRadius,
+    maxWidth
+  })
 
   const chipContentRef = useRef<HTMLSpanElement>(null)
   const [isTruncated, setIsTruncated] = useState(false)
@@ -111,11 +142,12 @@ export function Chip({
 
   const chipElement = (
     <div
-      className={clsx(styles.chip, extraClass)}
+      className={clsx(styles.chip, bold && styles.bold, extraClass)}
       onClick={onClick}
       style={chipStyle}
     >
       <span className={styles.chipContent}>
+        {icon ? <span className={styles.chipIcon}>{icon}</span> : null}
         <span
           ref={chipContentRef}
           className={styles.chipText}
@@ -125,6 +157,7 @@ export function Chip({
       </span>
       {closable ? (
         <button
+          aria-label={closeAriaLabel}
           className={styles.chipClose}
           onClick={handleClose}
           onMouseDown={handleMouseDown}

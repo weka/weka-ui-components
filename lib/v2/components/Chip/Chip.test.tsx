@@ -144,3 +144,36 @@ describe('Chip - User Interactions', () => {
     }).not.toThrow()
   })
 })
+
+describe('Chip - Icon, weight and delete label', () => {
+  it('renders the icon before the text', () => {
+    render(<Chip icon={<svg data-testid='chip-icon' />}>Test</Chip>)
+    const icon = screen.getByTestId('chip-icon')
+    const text = screen.getByText('Test')
+    expect(
+      icon.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy()
+  })
+
+  it('renders regular text by default and bold text when bold is set', () => {
+    const { container, rerender } = render(<Chip>Test</Chip>)
+    expect(getChipContainer(container).className).not.toContain('bold')
+
+    rerender(<Chip bold>Test</Chip>)
+    expect(getChipContainer(container).className).toContain('bold')
+  })
+
+  it('gives the delete button the closeAriaLabel as its accessible name', () => {
+    render(
+      <Chip
+        closable
+        closeAriaLabel='Remove /data'
+      >
+        /data
+      </Chip>
+    )
+    expect(
+      screen.getByRole('button', { name: 'Remove /data' })
+    ).toBeInTheDocument()
+  })
+})

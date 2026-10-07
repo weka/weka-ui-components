@@ -1,7 +1,7 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   padding: 4px 8px;
   background: var(--gray-200-800);
   color: var(--gray-900-100);
@@ -22,6 +22,25 @@
     height: 14px !important;
     display: inline-flex;
     flex-shrink: 0;
+  }
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.chipIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    color: currentColor;
+
+    path {
+      fill: currentColor;
+    }
   }
 }
 
@@ -54,7 +73,7 @@
 .chipText {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;

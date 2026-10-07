@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import { NOOP } from '#v2/utils/consts'
 
+import { CopyIcon } from '../../icons'
 import { Chip } from './Chip'
 
 const meta: Meta<typeof Chip> = {
@@ -39,5 +40,30 @@ export const WithMaxWidth: Story = {
   args: {
     children: 'This is a very long chip label that should be truncated',
     maxWidth: '150px'
+  }
+}
+
+export const WithIcon: Story = {
+  args: {
+    children: 'Chip with icon',
+    icon: <CopyIcon />
+  }
+}
+
+export const Bold: Story = {
+  args: {
+    children: 'Bold Chip',
+    bold: true
+  }
+}
+
+export const WithIconBoldClosable: Story = {
+  args: {
+    children: '/data/projects',
+    icon: <CopyIcon />,
+    bold: true,
+    closable: true,
+    closeAriaLabel: 'Remove /data/projects',
+    onClose: NOOP
   }
 }

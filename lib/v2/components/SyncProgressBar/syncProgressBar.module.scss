@@ -1,10 +1,10 @@
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   gap: 4px;
   width: 100%;
   height: 42px;
+  margin: 8px;
 }
 
 .track {
