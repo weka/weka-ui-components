@@ -1,5 +1,5 @@
-import { fireEvent, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { act, fireEvent, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
 
@@ -55,5 +55,28 @@ describe('FormNumberInput', () => {
     renderNumber()
 
     expect(screen.getByRole('spinbutton')).toHaveAttribute('name', 'count')
+  })
+
+  it('marks the field touched on blur', () => {
+    const { form } = renderNumber()
+
+    fireEvent.blur(screen.getByRole('spinbutton'))
+
+    expect(form.getFieldState('count').isTouched).toBe(true)
+  })
+
+  it('focuses the input through setFocus', () => {
+    const { form } = renderNumber()
+
+    vi.useFakeTimers()
+    act(() => {
+      form.setFocus('count')
+    })
+    act(() => {
+      vi.runAllTimers()
+    })
+    vi.useRealTimers()
+
+    expect(screen.getByRole('spinbutton')).toHaveFocus()
   })
 })

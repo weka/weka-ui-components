@@ -55,4 +55,19 @@ describe('FormRadioGroup', () => {
 
     expect(screen.getByRole('radio', { name: 'Automatic' })).toBeDisabled()
   })
+
+  it('names the radiogroup after the field label', () => {
+    renderWithForm<HostValues>(
+      <FormRadioGroup<HostValues>
+        label={MODE_LABEL}
+        name='mode'
+        options={OPTIONS}
+      />,
+      { defaultValues: { mode: 'manual' } }
+    )
+
+    expect(
+      screen.getByRole('radiogroup', { name: MODE_LABEL })
+    ).toBeInTheDocument()
+  })
 })

@@ -3,6 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Switch } from './Switch'
 
+const SWITCH_ID = 'switch-id'
+const SWITCH_LABEL = 'Enabled'
+const EXTERNAL_LABEL_ID = 'external-label'
+
 const createProps = (overrides = {}) => ({
   checked: false,
   onChange: vi.fn(),
@@ -72,5 +76,34 @@ describe('Switch - User Interactions', () => {
   it('does not allow interaction when disabled', () => {
     render(<Switch {...createProps({ disabled: true })} />)
     expect(screen.getByRole('checkbox')).toBeDisabled()
+  })
+})
+
+describe('Switch - Accessible name', () => {
+  it('applies id to the checkbox input', () => {
+    render(<Switch {...createProps({ id: SWITCH_ID })} />)
+
+    expect(screen.getByRole('checkbox')).toHaveAttribute('id', SWITCH_ID)
+  })
+
+  it('names the checkbox through ariaLabel', () => {
+    render(<Switch {...createProps({ ariaLabel: SWITCH_LABEL })} />)
+
+    expect(
+      screen.getByRole('checkbox', { name: SWITCH_LABEL })
+    ).toBeInTheDocument()
+  })
+
+  it('names the checkbox from an external label through ariaLabelledBy', () => {
+    render(
+      <>
+        <span id={EXTERNAL_LABEL_ID}>{SWITCH_LABEL}</span>
+        <Switch {...createProps({ ariaLabelledBy: EXTERNAL_LABEL_ID })} />
+      </>
+    )
+
+    expect(
+      screen.getByRole('checkbox', { name: SWITCH_LABEL })
+    ).toBeInTheDocument()
   })
 })

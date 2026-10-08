@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { Children } from 'react'
+import { Children, useId } from 'react'
 import clsx from 'clsx'
 
 import { InfoIcon } from '../../icons'
@@ -43,6 +43,7 @@ export function ToggleSection({
   showDivider = true,
   dataTestId
 }: Readonly<ToggleSectionProps>) {
+  const switchId = useId()
   const hasContent = Children.toArray(children).length > 0
 
   return (
@@ -55,12 +56,16 @@ export function ToggleSection({
           checked={checked}
           dataTestId={dataTestId ? `${dataTestId}-switch` : undefined}
           disabled={disabled}
+          id={switchId}
           onChange={(_event, isChecked) => onChange(isChecked)}
           tooltip={switchTooltip}
         />
-        <span className={clsx(styles.label, disabled && styles.labelDisabled)}>
+        <label
+          className={clsx(styles.label, disabled && styles.labelDisabled)}
+          htmlFor={switchId}
+        >
           {label}
-        </span>
+        </label>
         {labelTooltip ? (
           <Tooltip
             data={labelTooltip}

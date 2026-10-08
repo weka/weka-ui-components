@@ -6,7 +6,10 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
+import { useId } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+
+import { useFieldLabelId } from '#v2/hooks'
 
 import { Select } from '../../inputs/Select'
 import { FieldWrapper } from '../FieldWrapper'
@@ -44,6 +47,8 @@ export function FormSelect<
 }: Readonly<FormSelectProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
+  const fieldId = useId()
+  const labelId = useFieldLabelId(label)
 
   return (
     <Controller
@@ -55,10 +60,13 @@ export function FormSelect<
           error={fieldState.error?.message}
           info={info}
           label={label}
+          labelId={labelId}
           required={required}
         >
           <Select
+            ariaLabelledBy={labelId}
             disabled={disabled}
+            id={fieldId}
             multiple={multiple}
             onChange={field.onChange}
             options={options}

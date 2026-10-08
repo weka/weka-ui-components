@@ -31,6 +31,10 @@ export const WithInfo: Story = {
   }
 }
 
+export const WithEndpointLabels: Story = {
+  args: { name: 'range', label: 'Label', startLabel: 'From', endLabel: 'To' }
+}
+
 export const Disabled: Story = {
   args: { name: 'range', label: 'Label', disabled: true }
 }

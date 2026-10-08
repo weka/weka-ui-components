@@ -70,11 +70,13 @@ export function FormTextInput<
           required={required}
         >
           <TextInput
+            ref={field.ref}
             autoFocus={autoFocus}
             disabled={disabled}
             extraClass={extraClass}
             id={fieldId}
             name={field.name}
+            onBlur={field.onBlur}
             onChange={field.onChange}
             placeholder={placeholder}
             required={required}

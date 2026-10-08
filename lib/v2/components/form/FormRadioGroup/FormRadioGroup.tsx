@@ -12,6 +12,8 @@ import type {
 
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { useFieldLabelId } from '#v2/hooks'
+
 import { RadioGroup } from '../../inputs/RadioGroup'
 import { FieldWrapper } from '../FieldWrapper'
 
@@ -46,6 +48,7 @@ export function FormRadioGroup<
 }: Readonly<FormRadioGroupProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
+  const labelId = useFieldLabelId(label)
 
   return (
     <Controller
@@ -54,8 +57,16 @@ export function FormRadioGroup<
       rules={rules}
       render={({ field, fieldState }) => (
         <FieldWrapper error={fieldState.error?.message}>
-          {label ? <span className={styles.fieldLabel}>{label}</span> : null}
+          {label ? (
+            <span
+              className={styles.fieldLabel}
+              id={labelId}
+            >
+              {label}
+            </span>
+          ) : null}
           <RadioGroup
+            ariaLabelledBy={labelId}
             direction={direction}
             disabled={disabled}
             onChange={field.onChange}

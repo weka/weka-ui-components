@@ -6,6 +6,8 @@ import { EMPTY_STRING } from '#v2/utils/consts'
 import { IpInput } from './IpInput'
 
 const OCTET_INPUT_COUNT = 4
+const GROUP_LABEL = 'Gateway'
+const EXTERNAL_LABEL_ID = 'external-label'
 
 // Test IPs — safe to hardcode in test files (sonarjs/no-hardcoded-ip)
 // eslint-disable-next-line sonarjs/no-hardcoded-ip
@@ -190,5 +192,60 @@ describe('IpInput', () => {
     const inputs = screen.getAllByRole('spinbutton')
     fireEvent.change(inputs[0], { target: { value: String(OCTET_255) } })
     expect(onChange).toHaveBeenCalledWith(`${OCTET_255}.${0}.${0}.${OCTET_1}`)
+  })
+
+  it('names each octet input by its position', () => {
+    render(
+      <IpInput
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    expect(screen.getByRole('spinbutton', { name: 'Octet 1' })).toHaveValue(
+      OCTET_192
+    )
+    expect(screen.getByRole('spinbutton', { name: 'Octet 4' })).toHaveValue(
+      OCTET_1
+    )
+  })
+
+  it('exposes a group named after its visible label', () => {
+    render(
+      <IpInput
+        label={GROUP_LABEL}
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    expect(screen.getByRole('group', { name: GROUP_LABEL })).toBeInTheDocument()
+  })
+
+  it('names the group through ariaLabel when there is no visible label', () => {
+    render(
+      <IpInput
+        ariaLabel={GROUP_LABEL}
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    expect(screen.getByRole('group', { name: GROUP_LABEL })).toBeInTheDocument()
+  })
+
+  it('names the group from an external label through ariaLabelledBy', () => {
+    render(
+      <>
+        <span id={EXTERNAL_LABEL_ID}>{GROUP_LABEL}</span>
+        <IpInput
+          ariaLabelledBy={EXTERNAL_LABEL_ID}
+          onChange={vi.fn()}
+          value={IP_BASIC}
+        />
+      </>
+    )
+
+    expect(screen.getByRole('group', { name: GROUP_LABEL })).toBeInTheDocument()
   })
 })

@@ -5,6 +5,7 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
+import { useId } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import clsx from 'clsx'
 
@@ -42,6 +43,7 @@ export function FormSwitch<
 }: Readonly<FormSwitchProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
+  const switchId = useId()
 
   return (
     <Controller
@@ -59,18 +61,22 @@ export function FormSwitch<
             <Switch
               checked={Boolean(field.value)}
               disabled={disabled}
+              id={switchId}
               tooltip={tooltip}
               onChange={(_e, checked) => {
                 field.onChange(checked)
               }}
             />
             {label ? (
-              <span className={styles.switchLabel}>
+              <label
+                className={styles.switchLabel}
+                htmlFor={switchId}
+              >
                 {label}
                 {required ? (
                   <span className={styles.required}>&thinsp;*</span>
                 ) : null}
-              </span>
+              </label>
             ) : null}
           </div>
         </FieldWrapper>

@@ -28,6 +28,10 @@ export interface RadioGroupProps<TValue extends RadioValue = string> {
   disabled?: boolean
   /** Shared radio `name`; auto-generated (stable) when omitted. */
   name?: string
+  /** Accessible name of the radiogroup when there is no visible label to reference. */
+  ariaLabel?: string
+  /** Id of a visible label element that names the radiogroup. */
+  ariaLabelledBy?: string
   wrapperClass?: string
 }
 
@@ -38,6 +42,8 @@ export function RadioGroup<TValue extends RadioValue = string>({
   direction = RADIO_GROUP_DIRECTIONS.COLUMN,
   disabled = false,
   name,
+  ariaLabel,
+  ariaLabelledBy,
   wrapperClass
 }: Readonly<RadioGroupProps<TValue>>) {
   const generatedName = useId()
@@ -45,6 +51,8 @@ export function RadioGroup<TValue extends RadioValue = string>({
 
   return (
     <div
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       className={clsx(styles.group, styles[direction], wrapperClass)}
       role='radiogroup'
     >

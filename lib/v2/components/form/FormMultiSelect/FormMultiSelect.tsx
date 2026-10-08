@@ -5,7 +5,7 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
-import { useCallback } from 'react'
+import { useCallback, useId } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { MultiSelectAutocomplete } from '../../inputs/MultiSelectAutocomplete'
@@ -47,6 +47,7 @@ export function FormMultiSelect<
 }: Readonly<FormMultiSelectProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
+  const fieldId = useId()
 
   const handleSearch = useCallback(
     (query: string): Promise<string[]> =>
@@ -62,11 +63,13 @@ export function FormMultiSelect<
       render={({ field, fieldState }) => (
         <FieldWrapper
           error={fieldState.error?.message}
+          htmlFor={fieldId}
           info={info}
           label={label}
           required={required}
         >
           <MultiSelectAutocomplete
+            id={fieldId}
             onChange={field.onChange}
             onSearch={allowNewValues ? handleSearch : undefined}
             options={options}

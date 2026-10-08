@@ -59,4 +59,32 @@ describe('FormSwitch', () => {
 
     expect(screen.getByRole('checkbox')).toBeDisabled()
   })
+
+  it('names the switch after the label', () => {
+    renderWithForm<HostValues>(
+      <FormSwitch<HostValues>
+        label={SWITCH_LABEL}
+        name='enabled'
+      />,
+      { defaultValues: { enabled: false } }
+    )
+
+    expect(screen.getByLabelText(SWITCH_LABEL)).toBe(
+      screen.getByRole('checkbox')
+    )
+  })
+
+  it('toggles the form value when the label is clicked', () => {
+    const { form } = renderWithForm<HostValues>(
+      <FormSwitch<HostValues>
+        label={SWITCH_LABEL}
+        name='enabled'
+      />,
+      { defaultValues: { enabled: false } }
+    )
+
+    fireEvent.click(screen.getByText(SWITCH_LABEL))
+
+    expect(form.getValues('enabled')).toBe(true)
+  })
 })

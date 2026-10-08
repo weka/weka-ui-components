@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -368,5 +369,28 @@ describe('NumberInput - Accessibility', () => {
       'autocomplete',
       'off'
     )
+  })
+})
+
+describe('NumberInput - Form bindings', () => {
+  it('calls onBlur when the input loses focus', () => {
+    const onBlur = vi.fn()
+    render(<NumberInput {...createProps({ onBlur })} />)
+
+    fireEvent.blur(screen.getByRole('spinbutton'))
+
+    expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('forwards the ref to the input element', () => {
+    const ref = createRef<HTMLInputElement>()
+    render(
+      <NumberInput
+        {...createProps()}
+        ref={ref}
+      />
+    )
+
+    expect(ref.current).toBe(screen.getByRole('spinbutton'))
   })
 })

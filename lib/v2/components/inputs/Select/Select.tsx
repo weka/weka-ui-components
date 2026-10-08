@@ -21,14 +21,13 @@ import { useCloseOnScroll } from '#v2/hooks'
 import {
   COMMA_SEPARATOR,
   EMPTY_STRING,
-  KEYBOARD_KEYS,
-  SEARCH_PLACEHOLDER
+  KEYBOARD_KEYS
 } from '#v2/utils/consts'
 import { highlightText } from '#v2/utils/textUtils'
 
-import { ChevronDownSmallIcon, CloseIcon, SearchIcon } from '../../../icons'
+import { ChevronDownSmallIcon } from '../../../icons'
 import { Chip } from '../../Chip'
-import { SearchLoadingSpinner } from './SearchLoadingSpinner'
+import { SelectSearchBox } from './SelectSearchBox'
 import {
   applyAnyValueRules,
   getNextEnabledIndex,
@@ -46,8 +45,6 @@ const MENU_MAX_HEIGHT = 300
 const SEARCH_FOCUS_DELAY_MS = 100
 const NO_HIGHLIGHT = -1
 const CHEVRON_ICON_SIZE = 16
-const CLOSE_ICON_SIZE = 14
-const SEARCH_ICON_SIZE = 16
 const DEFAULT_PLACEHOLDER = 'Select...'
 const DEFAULT_CHIP_TEXT_COLOR = 'var(--gray-900-100)'
 const DEFAULT_CHIP_BACKGROUND_COLOR = 'var(--purple-100-900)'
@@ -65,6 +62,10 @@ export interface SelectOption {
 }
 
 export interface SelectProps {
+  /** Id of the combobox trigger, so an external `<label htmlFor>` or test can target it. */
+  id?: string
+  /** Id of an external label element that names the combobox. */
+  ariaLabelledBy?: string
   label?: string
   placeholder?: string
   options: SelectOption[]
@@ -89,6 +90,8 @@ export interface SelectProps {
 }
 
 export function Select({
+  id,
+  ariaLabelledBy,
   label,
   placeholder = DEFAULT_PLACEHOLDER,
   options,
@@ -544,6 +547,8 @@ export function Select({
         className={clsx(styles.select, multiple && styles.selectMultiple)}
         data-testid={dataTestId}
         displayEmpty
+        id={id}
+        labelId={ariaLabelledBy}
         multiple={multiple}
         native={false}
         onChange={handleChange}
@@ -595,61 +600,14 @@ export function Select({
             data-search-menu-item
             disabled
           >
-            <div className={styles.searchContainer}>
-              <div className={styles.searchInputWrapper}>
-                <SearchIcon
-                  extraClass={styles.searchIcon}
-                  height={SEARCH_ICON_SIZE}
-                  width={SEARCH_ICON_SIZE}
-                />
-                <input
-                  ref={searchInputRef}
-                  autoFocus
-                  className={styles.searchInput}
-                  onChange={handleSearchChange}
-                  onClick={(e) => e.stopPropagation()}
-                  placeholder={SEARCH_PLACEHOLDER}
-                  type='text'
-                  value={searchQuery}
-                  onKeyDown={(e) => {
-                    if (e.key === KEYBOARD_KEYS.ESCAPE) {
-                      /*
-                       * First Escape clears a query; with nothing to clear it
-                       * must reach MUI so the menu closes.
-                       */
-                      if (searchQuery) {
-                        e.stopPropagation()
-                        setSearchQuery(EMPTY_STRING)
-                      }
-                      return
-                    }
-                    if (
-                      e.key === KEYBOARD_KEYS.ARROW_DOWN ||
-                      e.key === KEYBOARD_KEYS.ARROW_UP ||
-                      e.key === KEYBOARD_KEYS.ENTER
-                    ) {
-                      handleKeyDown(e)
-                    }
-                  }}
-                />
-                <SearchLoadingSpinner visible={isLoading} />
-                {searchQuery ? (
-                  <button
-                    className={styles.searchClearButton}
-                    type='button'
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleSearchClear()
-                    }}
-                  >
-                    <CloseIcon
-                      height={CLOSE_ICON_SIZE}
-                      width={CLOSE_ICON_SIZE}
-                    />
-                  </button>
-                ) : null}
-              </div>
-            </div>
+            <SelectSearchBox
+              inputRef={searchInputRef}
+              isLoading={isLoading}
+              onClear={handleSearchClear}
+              onNavigateKeyDown={handleKeyDown}
+              onQueryChange={handleSearchChange}
+              query={searchQuery}
+            />
           </MenuItem>
         ) : null}
         {renderMenuContent()}

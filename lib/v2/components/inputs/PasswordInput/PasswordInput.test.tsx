@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -229,5 +230,28 @@ describe('PasswordInput - Password rules', () => {
       />
     )
     expect(screen.getByText(RULE_LENGTH).className).not.toMatch(/met/)
+  })
+})
+
+describe('PasswordInput - Form bindings', () => {
+  it('calls onBlur when the input loses focus', () => {
+    const onBlur = vi.fn()
+    render(<PasswordInput {...createProps({ onBlur, dataTestId: TEST_ID })} />)
+
+    fireEvent.blur(screen.getByTestId(TEST_ID))
+
+    expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('forwards the ref to the input element', () => {
+    const ref = createRef<HTMLInputElement>()
+    render(
+      <PasswordInput
+        {...createProps({ dataTestId: TEST_ID })}
+        ref={ref}
+      />
+    )
+
+    expect(ref.current).toBe(screen.getByTestId(TEST_ID))
   })
 })

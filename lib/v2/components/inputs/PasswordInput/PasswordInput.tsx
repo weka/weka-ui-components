@@ -1,6 +1,6 @@
 import type { ChangeEvent } from 'react'
 
-import { useState } from 'react'
+import { forwardRef, useState } from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -21,6 +21,8 @@ export interface PasswordInputProps {
   name?: string
   value: string
   onChange: (value: string) => void
+  /** Fired when the input loses focus, e.g. react-hook-form's `field.onBlur`. */
+  onBlur?: () => void
   placeholder?: string
   disabled?: boolean
   readOnly?: boolean
@@ -32,21 +34,28 @@ export interface PasswordInputProps {
   showRules?: boolean
 }
 
-export function PasswordInput({
-  id,
-  name,
-  value,
-  onChange,
-  placeholder = EMPTY_STRING,
-  disabled = false,
-  readOnly = false,
-  extraClass = EMPTY_STRING,
-  label,
-  required = false,
-  autoFocus = false,
-  dataTestId,
-  showRules = false
-}: Readonly<PasswordInputProps>) {
+export const PasswordInput = forwardRef<
+  HTMLInputElement,
+  Readonly<PasswordInputProps>
+>(function PasswordInput(
+  {
+    id,
+    name,
+    value,
+    onChange,
+    onBlur,
+    placeholder = EMPTY_STRING,
+    disabled = false,
+    readOnly = false,
+    extraClass = EMPTY_STRING,
+    label,
+    required = false,
+    autoFocus = false,
+    dataTestId,
+    showRules = false
+  },
+  ref
+) {
   const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +79,7 @@ export function PasswordInput({
       ) : null}
       <div className={styles.inputContainer}>
         <input
+          ref={ref}
           autoComplete='new-password'
           autoFocus={autoFocus}
           className={clsx(styles.input, extraClass)}
@@ -77,6 +87,7 @@ export function PasswordInput({
           disabled={disabled}
           id={id}
           name={name}
+          onBlur={onBlur}
           onChange={handleChange}
           placeholder={placeholder}
           readOnly={readOnly}
@@ -99,4 +110,4 @@ export function PasswordInput({
       {showRules ? <PasswordRequirements value={value} /> : null}
     </div>
   )
-}
+})

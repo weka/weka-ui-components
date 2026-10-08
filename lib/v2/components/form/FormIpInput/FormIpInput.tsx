@@ -7,6 +7,7 @@ import type {
 
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { useFieldLabelId } from '#v2/hooks'
 import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { IpInput } from '../../inputs/IpInput'
@@ -39,6 +40,7 @@ export function FormIpInput<
 }: Readonly<FormIpInputProps<TFieldValues, TName>>) {
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
+  const labelId = useFieldLabelId(label)
 
   return (
     <Controller
@@ -50,9 +52,11 @@ export function FormIpInput<
           error={fieldState.error?.message}
           info={info}
           label={label}
+          labelId={labelId}
           required={required}
         >
           <IpInput
+            ariaLabelledBy={labelId}
             disabled={disabled}
             onChange={field.onChange}
             required={required}

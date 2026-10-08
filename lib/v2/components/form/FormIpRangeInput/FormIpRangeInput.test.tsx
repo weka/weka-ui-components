@@ -11,6 +11,8 @@ interface HostValues {
 }
 
 const FIELD_LABEL = 'IP range'
+const START_LABEL = 'From'
+const END_LABEL = 'To'
 
 function renderField(disabled?: boolean) {
   return renderWithForm<HostValues>(
@@ -44,5 +46,27 @@ describe('FormIpRangeInput', () => {
     screen.getAllByRole('spinbutton').forEach((input) => {
       expect(input).toBeDisabled()
     })
+  })
+
+  it('names the input group after the field label', () => {
+    renderField()
+
+    expect(
+      screen.getByRole('group', { name: new RegExp(FIELD_LABEL) })
+    ).toBeInTheDocument()
+  })
+
+  it('forwards startLabel and endLabel to the endpoints', () => {
+    renderWithForm<HostValues>(
+      <FormIpRangeInput<HostValues>
+        endLabel={END_LABEL}
+        name='range'
+        startLabel={START_LABEL}
+      />,
+      { defaultValues: { range: EMPTY_STRING } }
+    )
+
+    expect(screen.getByRole('group', { name: START_LABEL })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: END_LABEL })).toBeInTheDocument()
   })
 })

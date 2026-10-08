@@ -3,6 +3,7 @@ import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react'
 import { useRef, useState } from 'react'
 import clsx from 'clsx'
 
+import { type GroupLabelProps, useGroupAriaProps } from '#v2/hooks'
 import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import styles from './ipInput.module.scss'
@@ -13,6 +14,7 @@ const MIN_OCTET = 0
 const AUTO_ADVANCE_THRESHOLD = 100
 const IP_PATTERN = /^(\d{1,3}\.){3}\d{1,3}$/
 const BLANK_OCTETS = [EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING]
+const OCTET_ARIA_LABEL = 'Octet'
 
 function parseOctets(value: string): string[] {
   if (!value) {
@@ -36,10 +38,9 @@ function clampOctet(raw: string): string {
   return String(Math.min(MAX_OCTET, Math.max(MIN_OCTET, num)))
 }
 
-export interface IpInputProps {
+export interface IpInputProps extends GroupLabelProps {
   value: string
   onChange: (value: string) => void
-  label?: string
   disabled?: boolean
   required?: boolean
   error?: string
@@ -51,6 +52,8 @@ export function IpInput({
   value,
   onChange,
   label,
+  ariaLabel,
+  ariaLabelledBy,
   disabled = false,
   required = false,
   error,
@@ -59,6 +62,11 @@ export function IpInput({
   const [octets, setOctets] = useState<string[]>(() => parseOctets(value))
   const [lastValue, setLastValue] = useState(value)
   const containerRef = useRef<HTMLDivElement>(null)
+  const { labelId, groupProps } = useGroupAriaProps({
+    label,
+    ariaLabel,
+    ariaLabelledBy
+  })
 
   if (value !== lastValue) {
     setLastValue(value)
@@ -140,10 +148,14 @@ export function IpInput({
         error && styles.error,
         disabled && styles.disabled
       )}
+      {...groupProps}
       {...(dataTestId && { 'data-testid': dataTestId })}
     >
       {label ? (
-        <span className={styles.label}>
+        <span
+          className={styles.label}
+          id={labelId}
+        >
           {label}
           {required ? <span className={styles.requiredStar}> *</span> : null}
         </span>
@@ -155,6 +167,7 @@ export function IpInput({
             className={styles.octetWrapper}
           >
             <input
+              aria-label={`${OCTET_ARIA_LABEL} ${index + 1}`}
               className={styles.octetInput}
               disabled={disabled}
               max={MAX_OCTET}

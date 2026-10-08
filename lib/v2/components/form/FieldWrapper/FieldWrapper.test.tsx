@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { FieldWrapper } from './FieldWrapper'
 
 const FIELD_ID = 'field-id'
+const LABEL_ID = 'label-id'
 const LABEL_TEXT = 'Name'
 const CHILD_TEXT = 'child'
 
@@ -65,5 +66,18 @@ describe('FieldWrapper', () => {
     render(<FieldWrapper error='Invalid value'>{CHILD_TEXT}</FieldWrapper>)
 
     expect(screen.getByText('Invalid value')).toBeInTheDocument()
+  })
+
+  it('sets labelId on the label element', () => {
+    render(
+      <FieldWrapper
+        label={LABEL_TEXT}
+        labelId={LABEL_ID}
+      >
+        {CHILD_TEXT}
+      </FieldWrapper>
+    )
+
+    expect(screen.getByText(LABEL_TEXT)).toHaveAttribute('id', LABEL_ID)
   })
 })

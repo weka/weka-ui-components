@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -192,5 +193,28 @@ describe('TextInput - Accessibility', () => {
   it('has autocomplete off by default', () => {
     render(<TextInput {...createProps()} />)
     expect(screen.getByRole('textbox')).toHaveAttribute('autocomplete', 'off')
+  })
+})
+
+describe('TextInput - Form bindings', () => {
+  it('calls onBlur when the input loses focus', () => {
+    const onBlur = vi.fn()
+    render(<TextInput {...createProps({ onBlur })} />)
+
+    fireEvent.blur(screen.getByRole('textbox'))
+
+    expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('forwards the ref to the input element', () => {
+    const ref = createRef<HTMLInputElement>()
+    render(
+      <TextInput
+        {...createProps()}
+        ref={ref}
+      />
+    )
+
+    expect(ref.current).toBe(screen.getByRole('textbox'))
   })
 })
