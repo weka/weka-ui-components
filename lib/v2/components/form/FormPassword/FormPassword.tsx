@@ -62,9 +62,12 @@ export function FormPassword<
           required={required}
         >
           <PasswordInput
+            ref={field.ref}
             autoFocus={autoFocus}
             disabled={disabled}
             id={fieldId}
+            name={field.name}
+            onBlur={field.onBlur}
             onChange={field.onChange}
             placeholder={placeholder}
             required={required}

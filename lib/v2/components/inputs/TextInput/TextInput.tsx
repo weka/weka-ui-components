@@ -1,5 +1,6 @@
 import type { ChangeEvent, FocusEvent, ReactNode } from 'react'
 
+import { forwardRef } from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -22,6 +23,8 @@ export interface TextInputProps {
   name?: string
   value: string
   onChange: (value: string) => void
+  /** Fired when the input loses focus, e.g. react-hook-form's `field.onBlur`. */
+  onBlur?: () => void
   placeholder?: string
   disabled?: boolean
   readOnly?: boolean
@@ -35,68 +38,76 @@ export interface TextInputProps {
   icon?: ReactNode
 }
 
-export function TextInput({
-  id,
-  name,
-  value,
-  onChange,
-  placeholder = EMPTY_STRING,
-  disabled = false,
-  readOnly = false,
-  extraClass = EMPTY_STRING,
-  label,
-  required = false,
-  type = TEXT_INPUT_TYPES.TEXT,
-  autoFocus = false,
-  selectOnFocus = false,
-  dataTestId,
-  icon
-}: Readonly<TextInputProps>) {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value)
-  }
-
-  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-    if (selectOnFocus) {
-      e.target.select()
+export const TextInput = forwardRef<HTMLInputElement, Readonly<TextInputProps>>(
+  function TextInput(
+    {
+      id,
+      name,
+      value,
+      onChange,
+      onBlur,
+      placeholder = EMPTY_STRING,
+      disabled = false,
+      readOnly = false,
+      extraClass = EMPTY_STRING,
+      label,
+      required = false,
+      type = TEXT_INPUT_TYPES.TEXT,
+      autoFocus = false,
+      selectOnFocus = false,
+      dataTestId,
+      icon
+    },
+    ref
+  ) {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value)
     }
-  }
 
-  const inputClassName = clsx(
-    styles.input,
-    { [styles.hasIcon]: Boolean(icon) },
-    extraClass
-  )
+    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+      if (selectOnFocus) {
+        e.target.select()
+      }
+    }
 
-  return (
-    <div className={styles.inputWrapper}>
-      {label ? (
-        <label
-          className={styles.label}
-          htmlFor={id}
-        >
-          {label}
-          {required ? <span className={styles.required}> *</span> : null}
-        </label>
-      ) : null}
-      <div className={styles.inputControl}>
-        {icon ? <span className={styles.icon}>{icon}</span> : null}
-        <input
-          autoComplete='off'
-          autoFocus={autoFocus}
-          className={inputClassName}
-          data-testid={dataTestId}
-          disabled={disabled}
-          id={id}
-          name={name}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          type={type}
-          value={value}
-        />
+    const inputClassName = clsx(
+      styles.input,
+      { [styles.hasIcon]: Boolean(icon) },
+      extraClass
+    )
+
+    return (
+      <div className={styles.inputWrapper}>
+        {label ? (
+          <label
+            className={styles.label}
+            htmlFor={id}
+          >
+            {label}
+            {required ? <span className={styles.required}> *</span> : null}
+          </label>
+        ) : null}
+        <div className={styles.inputControl}>
+          {icon ? <span className={styles.icon}>{icon}</span> : null}
+          <input
+            ref={ref}
+            autoComplete='off'
+            autoFocus={autoFocus}
+            className={inputClassName}
+            data-testid={dataTestId}
+            disabled={disabled}
+            id={id}
+            name={name}
+            onBlur={onBlur}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            placeholder={placeholder}
+            readOnly={readOnly}
+            type={type}
+            value={value}
+          />
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)

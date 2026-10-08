@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react'
 
+import { forwardRef } from 'react'
 import clsx from 'clsx'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -16,6 +17,8 @@ export interface NumberInputProps {
   name?: string
   value: string | number
   onChange: (value: string) => void
+  /** Fired when the input loses focus, e.g. react-hook-form's `field.onBlur`. */
+  onBlur?: () => void
   placeholder?: string
   disabled?: boolean
   min?: number
@@ -28,22 +31,29 @@ export interface NumberInputProps {
   dataTestId?: string
 }
 
-export function NumberInput({
-  id,
-  name,
-  value,
-  onChange,
-  placeholder = EMPTY_STRING,
-  disabled = false,
-  min,
-  max,
-  step,
-  extraClass = EMPTY_STRING,
-  label,
-  required = false,
-  showArrows = false,
-  dataTestId
-}: Readonly<NumberInputProps>) {
+export const NumberInput = forwardRef<
+  HTMLInputElement,
+  Readonly<NumberInputProps>
+>(function NumberInput(
+  {
+    id,
+    name,
+    value,
+    onChange,
+    onBlur,
+    placeholder = EMPTY_STRING,
+    disabled = false,
+    min,
+    max,
+    step,
+    extraClass = EMPTY_STRING,
+    label,
+    required = false,
+    showArrows = false,
+    dataTestId
+  },
+  ref
+) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value)
   }
@@ -83,6 +93,7 @@ export function NumberInput({
       ) : null}
       <div className={clsx(showArrows && styles.inputWithArrows)}>
         <input
+          ref={ref}
           autoComplete='off'
           {...(dataTestId && { 'data-testid': dataTestId })}
           disabled={disabled}
@@ -90,6 +101,7 @@ export function NumberInput({
           max={max}
           min={min}
           name={name}
+          onBlur={onBlur}
           onChange={handleChange}
           placeholder={placeholder}
           step={step}
@@ -111,4 +123,4 @@ export function NumberInput({
       </div>
     </div>
   )
-}
+})

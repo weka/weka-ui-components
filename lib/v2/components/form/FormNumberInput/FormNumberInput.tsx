@@ -80,12 +80,14 @@ export function FormNumberInput<
             required={required}
           >
             <NumberInput
+              ref={field.ref}
               disabled={disabled}
               extraClass={extraClass}
               id={fieldId}
               max={max}
               min={min}
               name={field.name}
+              onBlur={field.onBlur}
               onChange={handleChange}
               placeholder={placeholder}
               required={required}
