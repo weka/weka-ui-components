@@ -6,8 +6,10 @@
   background: var(--gray-50-920);
   box-shadow: 0 0 0 1px var(--gray-450-550), 0 8px 24px rgb(0 0 0 / 25%);
 
-  /* Below the portaled Select/MenuPopover layer (2100) so a dropdown filter's menu stacks above the popover. */
-  z-index: 1500;
+  /* Above the Popup overlay (2000) so a column filter opened from a table inside
+     a modal stays visible, and below the portaled Select/MenuPopover layer (2100)
+     so a dropdown filter's menu still stacks above the popover. */
+  z-index: 2050;
   display: flex;
   flex-direction: column;
   gap: 16px;
