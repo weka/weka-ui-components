@@ -7,6 +7,8 @@ export type {
   UseFormPopupSubmitResult
 } from './useFormPopupSubmit'
 export { useFormPopupSubmit } from './useFormPopupSubmit'
+export type { GroupAriaProps, GroupLabelProps } from './useGroupAriaProps'
+export { useGroupAriaProps } from './useGroupAriaProps'
 export { useHiddenMetrics } from './useHiddenMetrics'
 export type { PopoverAlign } from './usePopoverPosition'
 export { POPOVER_ALIGN, usePopoverPosition } from './usePopoverPosition'

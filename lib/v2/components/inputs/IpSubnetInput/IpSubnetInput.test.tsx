@@ -6,6 +6,7 @@ import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 import { IpSubnetInput } from './IpSubnetInput'
 
 const TOTAL_NUMBER_INPUTS = 5
+const SUBNET_LABEL = 'Subnet'
 const BITS_INPUT_INDEX = 4
 const LAST_OCTET_INDEX = 3
 
@@ -236,5 +237,37 @@ describe('IpSubnetInput', () => {
     screen.getAllByRole('spinbutton').forEach((input) => {
       expect(input).toBeDisabled()
     })
+  })
+})
+
+describe('IpSubnetInput - Accessible names', () => {
+  it('exposes an outer group named after its visible label', () => {
+    render(
+      <IpSubnetInput
+        label={SUBNET_LABEL}
+        onChange={vi.fn()}
+        value={SUBNET_DETAILED}
+      />
+    )
+
+    expect(
+      screen.getByRole('group', { name: SUBNET_LABEL })
+    ).toBeInTheDocument()
+  })
+
+  it('names the address group and the prefix input', () => {
+    render(
+      <IpSubnetInput
+        onChange={vi.fn()}
+        value={SUBNET_DETAILED}
+      />
+    )
+
+    expect(
+      screen.getByRole('group', { name: 'IP address' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('spinbutton', { name: 'Prefix length' })
+    ).toHaveValue(BITS_24)
   })
 })

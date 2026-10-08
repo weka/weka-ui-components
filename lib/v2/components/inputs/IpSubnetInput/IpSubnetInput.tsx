@@ -3,6 +3,7 @@ import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react'
 import { useRef, useState } from 'react'
 import clsx from 'clsx'
 
+import { type GroupLabelProps, useGroupAriaProps } from '#v2/hooks'
 import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { IpInput } from '../IpInput'
@@ -13,6 +14,8 @@ const MIN_PART = 0
 const MAX_OCTET = 255
 const MAX_BITS = 32
 const CIDR_PATTERN = /^(\d{1,3}\.){3}\d{1,3}\/\d{1,2}$/
+const ADDRESS_ARIA_LABEL = 'IP address'
+const PREFIX_ARIA_LABEL = 'Prefix length'
 
 function clampPart(raw: string, max: number): string {
   if (raw === EMPTY_STRING) {
@@ -36,10 +39,9 @@ function parseSubnet(value: string): { ip: string; bits: string } {
   return { ip: value.slice(0, idx), bits: value.slice(idx + 1) }
 }
 
-export interface IpSubnetInputProps {
+export interface IpSubnetInputProps extends GroupLabelProps {
   value: string
   onChange: (value: string) => void
-  label?: string
   disabled?: boolean
   required?: boolean
   error?: string
@@ -51,11 +53,18 @@ export function IpSubnetInput({
   value,
   onChange,
   label,
+  ariaLabel,
+  ariaLabelledBy,
   disabled = false,
   required = false,
   error,
   dataTestId
 }: Readonly<IpSubnetInputProps>) {
+  const { labelId, groupProps } = useGroupAriaProps({
+    label,
+    ariaLabel,
+    ariaLabelledBy
+  })
   const [ip, setIp] = useState(() => parseSubnet(value).ip)
   const [bits, setBits] = useState(() => parseSubnet(value).bits)
   const [lastValue, setLastValue] = useState(value)
@@ -151,10 +160,14 @@ export function IpSubnetInput({
       ref={containerRef}
       className={styles.wrapper}
       onPaste={handlePaste}
+      {...groupProps}
       {...(dataTestId && { 'data-testid': dataTestId })}
     >
       {label ? (
-        <span className={styles.label}>
+        <span
+          className={styles.label}
+          id={labelId}
+        >
           {label}
           {required ? <span className={styles.requiredStar}> *</span> : null}
         </span>
@@ -165,6 +178,7 @@ export function IpSubnetInput({
           onKeyDown={handleOctetsKeyDown}
         >
           <IpInput
+            ariaLabel={ADDRESS_ARIA_LABEL}
             disabled={disabled}
             onChange={handleIpChange}
             required={required}
@@ -174,6 +188,7 @@ export function IpSubnetInput({
         <span className={styles.subnetSeparator}>/</span>
         <div className={clsx(styles.bitsBox, disabled && styles.disabled)}>
           <input
+            aria-label={PREFIX_ARIA_LABEL}
             className={styles.bitsInput}
             disabled={disabled}
             max={MAX_BITS}

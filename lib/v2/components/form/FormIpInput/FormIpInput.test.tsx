@@ -45,4 +45,12 @@ describe('FormIpInput', () => {
       expect(input).toBeDisabled()
     })
   })
+
+  it('names the input group after the field label', () => {
+    renderField()
+
+    expect(
+      screen.getByRole('group', { name: new RegExp(FIELD_LABEL) })
+    ).toBeInTheDocument()
+  })
 })

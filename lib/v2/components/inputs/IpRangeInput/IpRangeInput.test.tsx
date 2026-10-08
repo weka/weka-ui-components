@@ -6,6 +6,9 @@ import { EMPTY_STRING } from '#v2/utils/consts'
 import { IpRangeInput } from './IpRangeInput'
 
 const TOTAL_OCTET_INPUTS = 8
+const RANGE_LABEL = 'IP range'
+const START_LABEL = 'From'
+const END_LABEL = 'To'
 
 const RANGE_BASIC = '10.0.0.1-10.0.0.50'
 const RANGE_DETAILED = '192.168.1.1-192.168.1.100'
@@ -107,5 +110,43 @@ describe('IpRangeInput', () => {
       />
     )
     expect(screen.getByText('*')).toBeInTheDocument()
+  })
+
+  it('names the endpoints Start IP and End IP when no endpoint labels are given', () => {
+    render(
+      <IpRangeInput
+        onChange={vi.fn()}
+        value={RANGE_DETAILED}
+      />
+    )
+
+    expect(screen.getByRole('group', { name: 'Start IP' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'End IP' })).toBeInTheDocument()
+  })
+
+  it('names the endpoints after startLabel and endLabel', () => {
+    render(
+      <IpRangeInput
+        endLabel={END_LABEL}
+        onChange={vi.fn()}
+        startLabel={START_LABEL}
+        value={RANGE_DETAILED}
+      />
+    )
+
+    expect(screen.getByRole('group', { name: START_LABEL })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: END_LABEL })).toBeInTheDocument()
+  })
+
+  it('exposes an outer group named after its visible label', () => {
+    render(
+      <IpRangeInput
+        label={RANGE_LABEL}
+        onChange={vi.fn()}
+        value={RANGE_DETAILED}
+      />
+    )
+
+    expect(screen.getByRole('group', { name: RANGE_LABEL })).toBeInTheDocument()
   })
 })

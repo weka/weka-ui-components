@@ -1,17 +1,22 @@
 import { useState } from 'react'
 import clsx from 'clsx'
 
+import { type GroupLabelProps, useGroupAriaProps } from '#v2/hooks'
 import { EMPTY_STRING } from '#v2/utils/consts'
 
 import { IpInput } from '../IpInput'
 
 import styles from './ipRangeInput.module.scss'
 
-export interface IpRangeInputProps {
+const START_ARIA_LABEL = 'Start IP'
+const END_ARIA_LABEL = 'End IP'
+
+export interface IpRangeInputProps extends GroupLabelProps {
   value: string
   onChange: (value: string) => void
-  label?: string
+  /** Visible label above the start address; the endpoint is still named for assistive technology when omitted. */
   startLabel?: string
+  /** Visible label above the end address; the endpoint is still named for assistive technology when omitted. */
   endLabel?: string
   disabled?: boolean
   required?: boolean
@@ -34,12 +39,19 @@ export function IpRangeInput({
   value,
   onChange,
   label,
+  ariaLabel,
+  ariaLabelledBy,
   startLabel,
   endLabel,
   disabled = false,
   required = false,
   error
 }: Readonly<IpRangeInputProps>) {
+  const { labelId, groupProps } = useGroupAriaProps({
+    label,
+    ariaLabel,
+    ariaLabelledBy
+  })
   const [start, setStart] = useState(() => parseRange(value).start)
   const [end, setEnd] = useState(() => parseRange(value).end)
   const [lastValue, setLastValue] = useState(value)
@@ -69,9 +81,15 @@ export function IpRangeInput({
   }
 
   return (
-    <div className={clsx(styles.wrapper, error && styles.hasError)}>
+    <div
+      className={clsx(styles.wrapper, error && styles.hasError)}
+      {...groupProps}
+    >
       {label ? (
-        <span className={styles.label}>
+        <span
+          className={styles.label}
+          id={labelId}
+        >
           {label}
           {required ? <span className={styles.requiredStar}> *</span> : null}
         </span>
@@ -79,6 +97,7 @@ export function IpRangeInput({
       <div className={styles.rangeRow}>
         <div className={styles.ipBox}>
           <IpInput
+            ariaLabel={START_ARIA_LABEL}
             disabled={disabled}
             label={startLabel}
             onChange={handleStartChange}
@@ -89,6 +108,7 @@ export function IpRangeInput({
         <span className={styles.rangeSeparator}>–</span>
         <div className={styles.ipBox}>
           <IpInput
+            ariaLabel={END_ARIA_LABEL}
             disabled={disabled}
             label={endLabel}
             onChange={handleEndChange}
