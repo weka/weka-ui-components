@@ -10,6 +10,12 @@ import styles from './switch.module.scss'
 const TOOLTIP_ENTER_DELAY = 200
 
 export interface SwitchProps {
+  /** Id of the underlying checkbox input, so an external `<label htmlFor>` can name it. */
+  id?: string
+  /** Accessible name of the checkbox when there is no visible label to bind. */
+  ariaLabel?: string
+  /** Id of a visible label element that names the checkbox. */
+  ariaLabelledBy?: string
   checked: boolean
   onChange: (e: ChangeEvent<HTMLInputElement>, checked: boolean) => void
   disabled?: boolean
@@ -18,6 +24,9 @@ export interface SwitchProps {
 }
 
 export function Switch({
+  id,
+  ariaLabel,
+  ariaLabelledBy,
   checked,
   onChange,
   disabled = false,
@@ -31,7 +40,14 @@ export function Switch({
         className={styles.switch}
         data-testid={dataTestId}
         disabled={disabled}
+        id={id}
         onChange={onChange}
+        slotProps={{
+          input: {
+            'aria-label': ariaLabel,
+            'aria-labelledby': ariaLabelledBy
+          }
+        }}
       />
       {tooltip ? (
         <Tooltip

@@ -136,4 +136,31 @@ describe('ToggleSection', () => {
 
     expect(screen.getByTestId(TEST_ID).className).not.toMatch(/divider/)
   })
+
+  it('names the switch after the label', () => {
+    render(
+      <ToggleSection
+        checked={false}
+        label={LABEL}
+        onChange={vi.fn()}
+      />
+    )
+
+    expect(screen.getByLabelText(LABEL)).toBe(screen.getByRole('checkbox'))
+  })
+
+  it('toggles when the label is clicked', () => {
+    const onChange = vi.fn()
+    render(
+      <ToggleSection
+        checked={false}
+        label={LABEL}
+        onChange={onChange}
+      />
+    )
+
+    fireEvent.click(screen.getByText(LABEL))
+
+    expect(onChange).toHaveBeenCalledWith(true)
+  })
 })

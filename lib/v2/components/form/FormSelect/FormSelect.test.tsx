@@ -43,4 +43,17 @@ describe('FormSelect', () => {
 
     expect(form.getValues('tier')).toBe('cold')
   })
+
+  it('names the combobox after the field label', () => {
+    renderWithForm<HostValues>(
+      <FormSelect<HostValues>
+        label={TIER_LABEL}
+        name='tier'
+        options={OPTIONS}
+      />,
+      { defaultValues: { tier: 'hot' } }
+    )
+
+    expect(screen.getByLabelText(TIER_LABEL)).toBe(screen.getByRole('combobox'))
+  })
 })

@@ -15,6 +15,9 @@ const SEARCH_QUERY = 'Option'
 const PARTIAL_QUERY = 'Single'
 const SHORT_QUERY = 'Opt'
 const OPTION_INDEX_SELECTOR = '[data-option-index]'
+const INPUT_ID = 'tags-input'
+const FIELD_LABEL = 'Tags'
+const EXTERNAL_LABEL_ID = 'external-label'
 
 const mockOptions = [OPTION_1, OPTION_2, OPTION_3, OPTION_4]
 
@@ -563,5 +566,37 @@ describe('MultiSelectAutocomplete - Remote search prompt', () => {
 
     expect(screen.getByText(PROMPT_BELOW_MIN)).toBeInTheDocument()
     expect(screen.queryByText(NO_MATCHES_MESSAGE)).not.toBeInTheDocument()
+  })
+})
+
+describe('MultiSelectAutocomplete - Accessible name', () => {
+  it('binds its own label to the input when id is given', () => {
+    render(
+      <MultiSelectAutocomplete
+        id={INPUT_ID}
+        label={FIELD_LABEL}
+        onChange={vi.fn()}
+        options={mockOptions}
+        value={[]}
+      />
+    )
+
+    expect(screen.getByLabelText(FIELD_LABEL)).toBe(screen.getByRole('textbox'))
+  })
+
+  it('names the input from an external label through ariaLabelledBy', () => {
+    render(
+      <>
+        <span id={EXTERNAL_LABEL_ID}>{FIELD_LABEL}</span>
+        <MultiSelectAutocomplete
+          ariaLabelledBy={EXTERNAL_LABEL_ID}
+          onChange={vi.fn()}
+          options={mockOptions}
+          value={[]}
+        />
+      </>
+    )
+
+    expect(screen.getByLabelText(FIELD_LABEL)).toBe(screen.getByRole('textbox'))
   })
 })

@@ -58,6 +58,10 @@ const CHIP_MAX_WIDTH_PX = 320
 const CHIP_ICON_WIDTH_PX = 14
 
 export interface MultiSelectAutocompleteProps {
+  /** Id of the text input, so an external `<label htmlFor>` can name it. */
+  id?: string
+  /** Id of an external label element that names the text input. */
+  ariaLabelledBy?: string
   label?: string
   placeholder?: string
   options?: string[]
@@ -82,6 +86,8 @@ export interface MultiSelectAutocompleteProps {
 }
 
 export function MultiSelectAutocomplete({
+  id,
+  ariaLabelledBy,
   label,
   placeholder = DEFAULT_PLACEHOLDER,
   options = EMPTY_STRING_ARRAY as string[],
@@ -514,7 +520,10 @@ export function MultiSelectAutocomplete({
       data-testid={dataTestId}
     >
       {label ? (
-        <label className={styles.label}>
+        <label
+          className={styles.label}
+          htmlFor={id}
+        >
           {label} {required ? <span className={styles.required}>*</span> : null}
         </label>
       ) : null}
@@ -532,7 +541,9 @@ export function MultiSelectAutocomplete({
           {renderChips()}
           <input
             ref={inputRef}
+            aria-labelledby={ariaLabelledBy}
             className={styles.input}
+            id={id}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             onKeyDown={handleKeyDown}

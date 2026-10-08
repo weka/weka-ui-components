@@ -36,4 +36,17 @@ describe('FormMultiSelect', () => {
 
     expect(screen.getByText('alpha')).toBeInTheDocument()
   })
+
+  it('names the text input after the field label', () => {
+    renderWithForm<HostValues>(
+      <FormMultiSelect<HostValues>
+        label={TAGS_LABEL}
+        name='tags'
+        options={['a', 'b']}
+      />,
+      { defaultValues: { tags: [] } }
+    )
+
+    expect(screen.getByLabelText(TAGS_LABEL)).toBe(screen.getByRole('textbox'))
+  })
 })

@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { RadioGroup } from './RadioGroup'
 
+const GROUP_LABEL = 'Mode'
+const EXTERNAL_LABEL_ID = 'external-label'
+
 const OPTIONS = [
   { label: 'Alpha', value: 'a' },
   { label: 'Beta', value: 'b' },
@@ -76,5 +79,38 @@ describe('RadioGroup', () => {
     OPTIONS.forEach((option) =>
       expect(screen.getByTestId(`radio-option-${option.value}`)).toBeDisabled()
     )
+  })
+
+  it('names the radiogroup through ariaLabel', () => {
+    render(
+      <RadioGroup
+        ariaLabel={GROUP_LABEL}
+        onChange={vi.fn()}
+        options={OPTIONS}
+        value='a'
+      />
+    )
+
+    expect(
+      screen.getByRole('radiogroup', { name: GROUP_LABEL })
+    ).toBeInTheDocument()
+  })
+
+  it('names the radiogroup from an external label through ariaLabelledBy', () => {
+    render(
+      <>
+        <span id={EXTERNAL_LABEL_ID}>{GROUP_LABEL}</span>
+        <RadioGroup
+          ariaLabelledBy={EXTERNAL_LABEL_ID}
+          onChange={vi.fn()}
+          options={OPTIONS}
+          value='a'
+        />
+      </>
+    )
+
+    expect(
+      screen.getByRole('radiogroup', { name: GROUP_LABEL })
+    ).toBeInTheDocument()
   })
 })

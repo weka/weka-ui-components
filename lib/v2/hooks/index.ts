@@ -1,5 +1,6 @@
 export { useClickOutside } from './useClickOutside'
 export { useCloseOnScroll } from './useCloseOnScroll'
+export { useFieldLabelId } from './useFieldLabelId'
 export { useFilterKeyboardNavigation } from './useFilterKeyboardNavigation'
 export type {
   UseFormPopupSubmitOptions,
