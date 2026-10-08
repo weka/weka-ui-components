@@ -97,17 +97,11 @@ describe('FormTextInput', () => {
   })
 
   it('validates on blur when the form mode is onBlur', async () => {
-    const { form } = renderInput(
-      { rules: { required: REQUIRED_MESSAGE } },
-      'onBlur'
-    )
+    renderInput({ rules: { required: REQUIRED_MESSAGE } }, 'onBlur')
 
-    await act(async () => {
-      fireEvent.blur(screen.getByRole('textbox'))
-      await form.trigger('hostname')
-    })
+    fireEvent.blur(screen.getByRole('textbox'))
 
-    expect(screen.getByText(REQUIRED_MESSAGE)).toBeInTheDocument()
+    expect(await screen.findByText(REQUIRED_MESSAGE)).toBeInTheDocument()
   })
 
   it('focuses the input through setFocus', () => {

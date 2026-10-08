@@ -42,11 +42,10 @@ export function Switch({
         disabled={disabled}
         id={id}
         onChange={onChange}
-        slotProps={{
-          input: {
-            'aria-label': ariaLabel,
-            'aria-labelledby': ariaLabelledBy
-          }
+        /* eslint-disable-next-line sonarjs/deprecation -- `slotProps.input` only exists in MUI 6; `inputProps` reaches the checkbox on both supported majors. */
+        inputProps={{
+          'aria-label': ariaLabel,
+          'aria-labelledby': ariaLabelledBy
         }}
       />
       {tooltip ? (
