@@ -36,6 +36,14 @@ export const Horizontal: Story = {
   }
 }
 
+export const WithoutNumbers: Story = {
+  args: {
+    steps: STEPS,
+    currentIndex: 1,
+    showStepNumbers: false
+  }
+}
+
 export const AllDone: Story = {
   args: {
     steps: STEPS,

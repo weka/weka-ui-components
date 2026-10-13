@@ -31,6 +31,20 @@ describe('Stepper', () => {
     expect(screen.getByText('3')).toBeInTheDocument()
   })
 
+  it('omits step numbers when showStepNumbers is false', () => {
+    render(
+      <Stepper
+        currentIndex={0}
+        showStepNumbers={false}
+        steps={STEPS}
+      />
+    )
+
+    expect(screen.queryByText('1')).not.toBeInTheDocument()
+    expect(screen.queryByText('2')).not.toBeInTheDocument()
+    expect(screen.queryByText('3')).not.toBeInTheDocument()
+  })
+
   it('renders a checkmark for completed steps', () => {
     const { container } = render(
       <Stepper

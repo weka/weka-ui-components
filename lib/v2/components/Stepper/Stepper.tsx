@@ -33,19 +33,23 @@ export interface StepperProps {
   steps: StepperStep[]
   currentIndex: number
   orientation?: StepperOrientation
+  /** When false, steps that aren't done or failed show an empty indicator instead of their number. */
+  showStepNumbers?: boolean
   extraClass?: string
 }
 
 /**
- * A non-interactive numbered step rail: a checkmark for completed steps, a
- * highlighted indicator for the current step, plain numbers for the rest,
- * and a red X for a step flagged with `hasError`. Purely a progress
- * indicator — steps aren't clickable.
+ * A non-interactive step rail: a checkmark for completed steps, a
+ * highlighted indicator for the current step, plain numbers for the rest
+ * (or nothing, with `showStepNumbers={false}`), and a red X for a step
+ * flagged with `hasError`. Purely a progress indicator — steps aren't
+ * clickable.
  */
 export function Stepper({
   steps,
   currentIndex,
   orientation = STEPPER_ORIENTATIONS.VERTICAL,
+  showStepNumbers = true,
   extraClass
 }: Readonly<StepperProps>) {
   return (
@@ -68,7 +72,7 @@ export function Stepper({
                 !hasError && isCurrent && styles.indicatorCurrent
               )}
             >
-              {renderIndicatorContent(hasError, isDone, index)}
+              {renderIndicatorContent(hasError, isDone, showStepNumbers, index)}
             </span>
             <span className={styles.label}>{step.label}</span>
           </li>
@@ -81,6 +85,7 @@ export function Stepper({
 function renderIndicatorContent(
   hasError: boolean,
   isDone: boolean,
+  showStepNumbers: boolean,
   index: number
 ) {
   if (hasError) {
@@ -102,5 +107,5 @@ function renderIndicatorContent(
       />
     )
   }
-  return <>{index + 1}</>
+  return showStepNumbers ? <>{index + 1}</> : null
 }
