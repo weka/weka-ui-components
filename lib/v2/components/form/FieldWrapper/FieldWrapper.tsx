@@ -15,6 +15,8 @@ export interface FieldWrapperProps {
   htmlFor?: string
   /** Id of the label element, for controls that are named through `aria-labelledby` instead of `htmlFor`. */
   labelId?: string
+  /** Id put on the error element so the control can reference it via `aria-describedby`. */
+  errorId?: string
   /** Replaces the default label styling entirely instead of merging with it. */
   labelClassName?: string
 }
@@ -31,6 +33,7 @@ export function FieldWrapper({
   required,
   htmlFor,
   labelId,
+  errorId,
   labelClassName
 }: Readonly<FieldWrapperProps>) {
   const LabelTag = htmlFor ? 'label' : 'span'
@@ -61,7 +64,14 @@ export function FieldWrapper({
         </span>
       ) : null}
       {children}
-      {error ? <span className={styles.errorText}>{error}</span> : null}
+      {error ? (
+        <span
+          className={styles.errorText}
+          id={errorId}
+        >
+          {error}
+        </span>
+      ) : null}
     </div>
   )
 }

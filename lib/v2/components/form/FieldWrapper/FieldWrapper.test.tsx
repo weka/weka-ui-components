@@ -7,6 +7,8 @@ const FIELD_ID = 'field-id'
 const LABEL_ID = 'label-id'
 const LABEL_TEXT = 'Name'
 const CHILD_TEXT = 'child'
+const ERROR_TEXT = 'Required'
+const ERROR_ID = 'error-id'
 
 describe('FieldWrapper', () => {
   it('renders children without a label row when no label or info is given', () => {
@@ -79,5 +81,29 @@ describe('FieldWrapper', () => {
     )
 
     expect(screen.getByText(LABEL_TEXT)).toHaveAttribute('id', LABEL_ID)
+  })
+
+  it('puts errorId on the error element so a control can be described by it', () => {
+    render(
+      <FieldWrapper
+        error={ERROR_TEXT}
+        errorId={ERROR_ID}
+      >
+        <input
+          aria-describedby={ERROR_ID}
+          aria-label={LABEL_TEXT}
+        />
+      </FieldWrapper>
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription(ERROR_TEXT)
+  })
+
+  it('renders no element with errorId when there is no error', () => {
+    const { container } = render(
+      <FieldWrapper errorId={ERROR_ID}>{CHILD_TEXT}</FieldWrapper>
+    )
+
+    expect(container.querySelector(`[id="${ERROR_ID}"]`)).toBeNull()
   })
 })

@@ -5,6 +5,7 @@ import type {
   RegisterOptions
 } from 'react-hook-form'
 
+import { useId } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
 import { useFieldLabelId } from '#v2/hooks'
@@ -41,6 +42,7 @@ export function FormIpInput<
   const ctx = useFormContext<TFieldValues>()
   const ctrl = control ?? ctx.control
   const labelId = useFieldLabelId(label)
+  const errorId = useId()
 
   return (
     <Controller
@@ -50,12 +52,14 @@ export function FormIpInput<
       render={({ field, fieldState }) => (
         <FieldWrapper
           error={fieldState.error?.message}
+          errorId={errorId}
           info={info}
           label={label}
           labelId={labelId}
           required={required}
         >
           <IpInput
+            ariaDescribedBy={fieldState.error?.message ? errorId : undefined}
             ariaLabelledBy={labelId}
             disabled={disabled}
             invalid={Boolean(fieldState.error)}

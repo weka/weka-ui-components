@@ -11,6 +11,7 @@ interface HostValues {
 }
 
 const FIELD_LABEL = 'IP range'
+const FIELD_ERROR = 'Field error'
 const START_LABEL = 'From'
 const END_LABEL = 'To'
 
@@ -74,12 +75,28 @@ describe('FormIpRangeInput', () => {
     const { form } = renderField()
 
     act(() => {
-      form.setError('range', { message: 'Field error' })
+      form.setError('range', { message: FIELD_ERROR })
     })
 
-    expect(screen.getByText('Field error')).toBeInTheDocument()
+    expect(screen.getByText(FIELD_ERROR)).toBeInTheDocument()
     screen.getAllByRole('spinbutton').forEach((input) => {
       expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+  })
+
+  it('describes the inputs by the field error message', () => {
+    const { form } = renderField()
+
+    expect(screen.getAllByRole('spinbutton')[0]).not.toHaveAttribute(
+      'aria-describedby'
+    )
+
+    act(() => {
+      form.setError('range', { message: FIELD_ERROR })
+    })
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(FIELD_ERROR)
     })
   })
 })

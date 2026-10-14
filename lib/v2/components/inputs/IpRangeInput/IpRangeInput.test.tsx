@@ -11,6 +11,7 @@ const START_LABEL = 'From'
 const END_LABEL = 'To'
 const ERROR_TEXT = 'Bad range'
 const ARIA_INVALID = 'aria-invalid'
+const ARIA_DESCRIBED_BY = 'aria-describedby'
 
 const RANGE_BASIC = '10.0.0.1-10.0.0.50'
 const RANGE_DETAILED = '192.168.1.1-192.168.1.100'
@@ -192,6 +193,33 @@ describe('IpRangeInput', () => {
 
     screen.getAllByRole('spinbutton').forEach((input) => {
       expect(input).not.toHaveAttribute(ARIA_INVALID)
+    })
+  })
+
+  it('describes every input by the rendered error text', () => {
+    render(
+      <IpRangeInput
+        error={ERROR_TEXT}
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(ERROR_TEXT)
+    })
+  })
+
+  it('has no aria-describedby without an error', () => {
+    render(
+      <IpRangeInput
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_DESCRIBED_BY)
     })
   })
 })

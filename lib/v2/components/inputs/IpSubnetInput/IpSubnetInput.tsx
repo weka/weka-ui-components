@@ -3,7 +3,11 @@ import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react'
 import { useRef, useState } from 'react'
 import clsx from 'clsx'
 
-import { type GroupLabelProps, useGroupAriaProps } from '#v2/hooks'
+import {
+  type GroupLabelProps,
+  useErrorDescription,
+  useGroupAriaProps
+} from '#v2/hooks'
 import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import { IpInput } from '../IpInput'
@@ -45,6 +49,8 @@ export interface IpSubnetInputProps extends GroupLabelProps {
   disabled?: boolean
   required?: boolean
   error?: string
+  /** Id of an element describing the control, e.g. an error message rendered by a parent. */
+  ariaDescribedBy?: string
   /** Shows the error styling without rendering text, for consumers that render the message themselves. */
   invalid?: boolean
   info?: string
@@ -60,6 +66,7 @@ export function IpSubnetInput({
   disabled = false,
   required = false,
   error,
+  ariaDescribedBy,
   invalid = false,
   dataTestId
 }: Readonly<IpSubnetInputProps>) {
@@ -72,6 +79,7 @@ export function IpSubnetInput({
   const [bits, setBits] = useState(() => parseSubnet(value).bits)
   const [lastValue, setLastValue] = useState(value)
   const isInvalid = invalid || Boolean(error)
+  const { errorId, describedBy } = useErrorDescription(error, ariaDescribedBy)
   const containerRef = useRef<HTMLDivElement>(null)
 
   if (value !== lastValue) {
@@ -182,6 +190,7 @@ export function IpSubnetInput({
           onKeyDown={handleOctetsKeyDown}
         >
           <IpInput
+            ariaDescribedBy={describedBy}
             ariaLabel={ADDRESS_ARIA_LABEL}
             disabled={disabled}
             invalid={isInvalid}
@@ -199,6 +208,7 @@ export function IpSubnetInput({
           )}
         >
           <input
+            aria-describedby={describedBy}
             aria-invalid={isInvalid || undefined}
             aria-label={PREFIX_ARIA_LABEL}
             className={styles.bitsInput}
@@ -212,7 +222,14 @@ export function IpSubnetInput({
           />
         </div>
       </div>
-      {error ? <span className={styles.errorText}>{error}</span> : null}
+      {error ? (
+        <span
+          className={styles.errorText}
+          id={errorId}
+        >
+          {error}
+        </span>
+      ) : null}
     </div>
   )
 }

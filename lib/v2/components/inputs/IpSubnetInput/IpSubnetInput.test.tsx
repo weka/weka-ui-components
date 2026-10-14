@@ -9,6 +9,7 @@ const TOTAL_NUMBER_INPUTS = 5
 const SUBNET_LABEL = 'Subnet'
 const ERROR_TEXT = 'Bad subnet'
 const ARIA_INVALID = 'aria-invalid'
+const ARIA_DESCRIBED_BY = 'aria-describedby'
 const BITS_INPUT_INDEX = 4
 const LAST_OCTET_INDEX = 3
 
@@ -313,6 +314,33 @@ describe('IpSubnetInput - Accessible names', () => {
 
     screen.getAllByRole('spinbutton').forEach((input) => {
       expect(input).not.toHaveAttribute(ARIA_INVALID)
+    })
+  })
+
+  it('describes every input by the rendered error text', () => {
+    render(
+      <IpSubnetInput
+        error={ERROR_TEXT}
+        onChange={vi.fn()}
+        value={SUBNET_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(ERROR_TEXT)
+    })
+  })
+
+  it('has no aria-describedby without an error', () => {
+    render(
+      <IpSubnetInput
+        onChange={vi.fn()}
+        value={SUBNET_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_DESCRIBED_BY)
     })
   })
 })

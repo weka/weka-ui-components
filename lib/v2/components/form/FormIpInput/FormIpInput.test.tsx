@@ -11,6 +11,7 @@ interface HostValues {
 }
 
 const FIELD_LABEL = 'IP address'
+const FIELD_ERROR = 'Field error'
 
 function renderField(disabled?: boolean) {
   return renderWithForm<HostValues>(
@@ -58,12 +59,28 @@ describe('FormIpInput', () => {
     const { form } = renderField()
 
     act(() => {
-      form.setError('ip', { message: 'Field error' })
+      form.setError('ip', { message: FIELD_ERROR })
     })
 
-    expect(screen.getByText('Field error')).toBeInTheDocument()
+    expect(screen.getByText(FIELD_ERROR)).toBeInTheDocument()
     screen.getAllByRole('spinbutton').forEach((input) => {
       expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+  })
+
+  it('describes the inputs by the field error message', () => {
+    const { form } = renderField()
+
+    expect(screen.getAllByRole('spinbutton')[0]).not.toHaveAttribute(
+      'aria-describedby'
+    )
+
+    act(() => {
+      form.setError('ip', { message: FIELD_ERROR })
+    })
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(FIELD_ERROR)
     })
   })
 })
