@@ -45,6 +45,8 @@ export interface IpSubnetInputProps extends GroupLabelProps {
   disabled?: boolean
   required?: boolean
   error?: string
+  /** Shows the error styling without rendering text, for consumers that render the message themselves. */
+  invalid?: boolean
   info?: string
   dataTestId?: string
 }
@@ -58,6 +60,7 @@ export function IpSubnetInput({
   disabled = false,
   required = false,
   error,
+  invalid = false,
   dataTestId
 }: Readonly<IpSubnetInputProps>) {
   const { labelId, groupProps } = useGroupAriaProps({
@@ -68,6 +71,7 @@ export function IpSubnetInput({
   const [ip, setIp] = useState(() => parseSubnet(value).ip)
   const [bits, setBits] = useState(() => parseSubnet(value).bits)
   const [lastValue, setLastValue] = useState(value)
+  const isInvalid = invalid || Boolean(error)
   const containerRef = useRef<HTMLDivElement>(null)
 
   if (value !== lastValue) {
@@ -180,14 +184,22 @@ export function IpSubnetInput({
           <IpInput
             ariaLabel={ADDRESS_ARIA_LABEL}
             disabled={disabled}
+            invalid={isInvalid}
             onChange={handleIpChange}
             required={required}
             value={ip}
           />
         </div>
         <span className={styles.subnetSeparator}>/</span>
-        <div className={clsx(styles.bitsBox, disabled && styles.disabled)}>
+        <div
+          className={clsx(
+            styles.bitsBox,
+            disabled && styles.disabled,
+            isInvalid && styles.error
+          )}
+        >
           <input
+            aria-invalid={isInvalid || undefined}
             aria-label={PREFIX_ARIA_LABEL}
             className={styles.bitsInput}
             disabled={disabled}

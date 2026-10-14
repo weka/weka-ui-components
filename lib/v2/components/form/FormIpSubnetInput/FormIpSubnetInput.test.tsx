@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -52,5 +52,18 @@ describe('FormIpSubnetInput', () => {
     expect(
       screen.getByRole('group', { name: new RegExp(FIELD_LABEL) })
     ).toBeInTheDocument()
+  })
+
+  it('shows the error styling and message when the field has an error', () => {
+    const { form } = renderField()
+
+    act(() => {
+      form.setError('subnet', { message: 'Field error' })
+    })
+
+    expect(screen.getByText('Field error')).toBeInTheDocument()
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
   })
 })

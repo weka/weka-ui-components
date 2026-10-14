@@ -56,6 +56,15 @@
     box-shadow: 0 0 0 1px var(--purple-500);
   }
 
+  &.error {
+    border-color: var(--red-500);
+
+    &:focus-within {
+      border-color: var(--red-500);
+      box-shadow: 0 0 0 1px var(--red-500);
+    }
+  }
+
   &.disabled {
     opacity: 0.6;
     pointer-events: none;

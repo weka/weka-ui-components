@@ -60,6 +60,20 @@ export const WithError: Story = {
   )
 }
 
+export const Invalid: Story = {
+  render: () => (
+    <div className={storiesStyles.container}>
+      <IpSubnetInput
+        invalid
+        label='IP/BitMask'
+        onChange={NOOP}
+        required
+        value={EMPTY_STRING}
+      />
+    </div>
+  )
+}
+
 export const Disabled: Story = {
   render: () => (
     <div className={storiesStyles.container}>

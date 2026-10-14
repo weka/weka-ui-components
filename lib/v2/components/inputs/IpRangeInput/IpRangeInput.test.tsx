@@ -9,6 +9,8 @@ const TOTAL_OCTET_INPUTS = 8
 const RANGE_LABEL = 'IP range'
 const START_LABEL = 'From'
 const END_LABEL = 'To'
+const ERROR_TEXT = 'Bad range'
+const ARIA_INVALID = 'aria-invalid'
 
 const RANGE_BASIC = '10.0.0.1-10.0.0.50'
 const RANGE_DETAILED = '192.168.1.1-192.168.1.100'
@@ -150,24 +152,23 @@ describe('IpRangeInput', () => {
     expect(screen.getByRole('group', { name: RANGE_LABEL })).toBeInTheDocument()
   })
 
-  it('shows the error styling on both inner inputs and renders the error text once', () => {
-    const { container } = render(
+  it('marks both inner inputs invalid and renders the error text once', () => {
+    render(
       <IpRangeInput
-        error='Bad range'
+        error={ERROR_TEXT}
         onChange={vi.fn()}
         value={RANGE_BASIC}
       />
     )
 
-    expect(container.querySelectorAll('.container.error')).toHaveLength(2)
     screen.getAllByRole('spinbutton').forEach((input) => {
-      expect(input).toHaveAttribute('aria-invalid', 'true')
+      expect(input).toHaveAttribute(ARIA_INVALID, 'true')
     })
-    expect(screen.getAllByText('Bad range')).toHaveLength(1)
+    expect(screen.getAllByText(ERROR_TEXT)).toHaveLength(1)
   })
 
-  it('shows the error styling without error text when invalid', () => {
-    const { container } = render(
+  it('marks the inputs invalid without error text when invalid', () => {
+    render(
       <IpRangeInput
         invalid
         onChange={vi.fn()}
@@ -175,22 +176,22 @@ describe('IpRangeInput', () => {
       />
     )
 
-    expect(container.querySelectorAll('.container.error')).toHaveLength(2)
     screen.getAllByRole('spinbutton').forEach((input) => {
-      expect(input).toHaveAttribute('aria-invalid', 'true')
+      expect(input).toHaveAttribute(ARIA_INVALID, 'true')
     })
-    expect(container.querySelector('.errorText')).toBeNull()
+    expect(screen.queryByText(ERROR_TEXT)).not.toBeInTheDocument()
   })
 
-  it('has no error styling by default', () => {
-    const { container } = render(
+  it('is not marked invalid by default', () => {
+    render(
       <IpRangeInput
         onChange={vi.fn()}
         value={RANGE_BASIC}
       />
     )
 
-    expect(container.querySelectorAll('.error')).toHaveLength(0)
-    expect(container.querySelectorAll('[aria-invalid]')).toHaveLength(0)
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_INVALID)
+    })
   })
 })
