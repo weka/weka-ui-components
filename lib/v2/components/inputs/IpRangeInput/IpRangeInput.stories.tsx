@@ -57,6 +57,20 @@ export const WithError: Story = {
   )
 }
 
+export const Invalid: Story = {
+  render: () => (
+    <div className={storiesStyles.container}>
+      <IpRangeInput
+        invalid
+        label='IP Range'
+        onChange={NOOP}
+        required
+        value={EMPTY_STRING}
+      />
+    </div>
+  )
+}
+
 export const Disabled: Story = {
   render: () => (
     <div className={storiesStyles.container}>

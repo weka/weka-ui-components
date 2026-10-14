@@ -65,6 +65,7 @@ export function FormIpRangeInput<
             ariaLabelledBy={labelId}
             disabled={disabled}
             endLabel={endLabel}
+            invalid={Boolean(fieldState.error)}
             onChange={field.onChange}
             required={required}
             startLabel={startLabel}

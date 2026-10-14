@@ -44,6 +44,8 @@ export interface IpInputProps extends GroupLabelProps {
   disabled?: boolean
   required?: boolean
   error?: string
+  /** Shows the error styling without rendering text, for consumers that render the message themselves. */
+  invalid?: boolean
   info?: string
   dataTestId?: string
 }
@@ -57,10 +59,12 @@ export function IpInput({
   disabled = false,
   required = false,
   error,
+  invalid = false,
   dataTestId
 }: Readonly<IpInputProps>) {
   const [octets, setOctets] = useState<string[]>(() => parseOctets(value))
   const [lastValue, setLastValue] = useState(value)
+  const isInvalid = invalid || Boolean(error)
   const containerRef = useRef<HTMLDivElement>(null)
   const { labelId, groupProps } = useGroupAriaProps({
     label,
@@ -145,7 +149,7 @@ export function IpInput({
       ref={containerRef}
       className={clsx(
         styles.container,
-        error && styles.error,
+        isInvalid && styles.error,
         disabled && styles.disabled
       )}
       {...groupProps}
@@ -167,6 +171,7 @@ export function IpInput({
             className={styles.octetWrapper}
           >
             <input
+              aria-invalid={isInvalid || undefined}
               aria-label={`${OCTET_ARIA_LABEL} ${index + 1}`}
               className={styles.octetInput}
               disabled={disabled}

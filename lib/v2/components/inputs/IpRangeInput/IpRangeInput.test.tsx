@@ -149,4 +149,48 @@ describe('IpRangeInput', () => {
 
     expect(screen.getByRole('group', { name: RANGE_LABEL })).toBeInTheDocument()
   })
+
+  it('shows the error styling on both inner inputs and renders the error text once', () => {
+    const { container } = render(
+      <IpRangeInput
+        error='Bad range'
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    expect(container.querySelectorAll('.container.error')).toHaveLength(2)
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+    expect(screen.getAllByText('Bad range')).toHaveLength(1)
+  })
+
+  it('shows the error styling without error text when invalid', () => {
+    const { container } = render(
+      <IpRangeInput
+        invalid
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    expect(container.querySelectorAll('.container.error')).toHaveLength(2)
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+    expect(container.querySelector('.errorText')).toBeNull()
+  })
+
+  it('has no error styling by default', () => {
+    const { container } = render(
+      <IpRangeInput
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    expect(container.querySelectorAll('.error')).toHaveLength(0)
+    expect(container.querySelectorAll('[aria-invalid]')).toHaveLength(0)
+  })
 })

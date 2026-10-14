@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import clsx from 'clsx'
 
 import { type GroupLabelProps, useGroupAriaProps } from '#v2/hooks'
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -21,6 +20,8 @@ export interface IpRangeInputProps extends GroupLabelProps {
   disabled?: boolean
   required?: boolean
   error?: string
+  /** Shows the error styling without rendering text, for consumers that render the message themselves. */
+  invalid?: boolean
   info?: string
 }
 
@@ -45,13 +46,15 @@ export function IpRangeInput({
   endLabel,
   disabled = false,
   required = false,
-  error
+  error,
+  invalid = false
 }: Readonly<IpRangeInputProps>) {
   const { labelId, groupProps } = useGroupAriaProps({
     label,
     ariaLabel,
     ariaLabelledBy
   })
+  const isInvalid = invalid || Boolean(error)
   const [start, setStart] = useState(() => parseRange(value).start)
   const [end, setEnd] = useState(() => parseRange(value).end)
   const [lastValue, setLastValue] = useState(value)
@@ -82,7 +85,7 @@ export function IpRangeInput({
 
   return (
     <div
-      className={clsx(styles.wrapper, error && styles.hasError)}
+      className={styles.wrapper}
       {...groupProps}
     >
       {label ? (
@@ -99,6 +102,7 @@ export function IpRangeInput({
           <IpInput
             ariaLabel={START_ARIA_LABEL}
             disabled={disabled}
+            invalid={isInvalid}
             label={startLabel}
             onChange={handleStartChange}
             required={required}
@@ -110,6 +114,7 @@ export function IpRangeInput({
           <IpInput
             ariaLabel={END_ARIA_LABEL}
             disabled={disabled}
+            invalid={isInvalid}
             label={endLabel}
             onChange={handleEndChange}
             required={required}

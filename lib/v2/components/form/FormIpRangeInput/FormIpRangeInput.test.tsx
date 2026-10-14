@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -68,5 +68,18 @@ describe('FormIpRangeInput', () => {
 
     expect(screen.getByRole('group', { name: START_LABEL })).toBeInTheDocument()
     expect(screen.getByRole('group', { name: END_LABEL })).toBeInTheDocument()
+  })
+
+  it('shows the error styling and message when the field has an error', () => {
+    const { form } = renderField()
+
+    act(() => {
+      form.setError('range', { message: 'Field error' })
+    })
+
+    expect(screen.getByText('Field error')).toBeInTheDocument()
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
   })
 })

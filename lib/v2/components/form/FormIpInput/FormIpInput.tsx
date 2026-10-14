@@ -58,6 +58,7 @@ export function FormIpInput<
           <IpInput
             ariaLabelledBy={labelId}
             disabled={disabled}
+            invalid={Boolean(fieldState.error)}
             onChange={field.onChange}
             required={required}
             value={(field.value as string) ?? EMPTY_STRING}
