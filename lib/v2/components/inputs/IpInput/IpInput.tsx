@@ -3,7 +3,11 @@ import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react'
 import { useRef, useState } from 'react'
 import clsx from 'clsx'
 
-import { type GroupLabelProps, useGroupAriaProps } from '#v2/hooks'
+import {
+  type GroupLabelProps,
+  useErrorDescription,
+  useGroupAriaProps
+} from '#v2/hooks'
 import { EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 
 import styles from './ipInput.module.scss'
@@ -44,6 +48,10 @@ export interface IpInputProps extends GroupLabelProps {
   disabled?: boolean
   required?: boolean
   error?: string
+  /** Id of an element describing the control, e.g. an error message rendered by a parent. */
+  ariaDescribedBy?: string
+  /** Shows the error styling without rendering text, for consumers that render the message themselves. */
+  invalid?: boolean
   info?: string
   dataTestId?: string
 }
@@ -57,10 +65,14 @@ export function IpInput({
   disabled = false,
   required = false,
   error,
+  ariaDescribedBy,
+  invalid = false,
   dataTestId
 }: Readonly<IpInputProps>) {
   const [octets, setOctets] = useState<string[]>(() => parseOctets(value))
   const [lastValue, setLastValue] = useState(value)
+  const isInvalid = invalid || Boolean(error)
+  const { errorId, describedBy } = useErrorDescription(error, ariaDescribedBy)
   const containerRef = useRef<HTMLDivElement>(null)
   const { labelId, groupProps } = useGroupAriaProps({
     label,
@@ -145,7 +157,7 @@ export function IpInput({
       ref={containerRef}
       className={clsx(
         styles.container,
-        error && styles.error,
+        isInvalid && styles.error,
         disabled && styles.disabled
       )}
       {...groupProps}
@@ -167,6 +179,8 @@ export function IpInput({
             className={styles.octetWrapper}
           >
             <input
+              aria-describedby={describedBy}
+              aria-invalid={isInvalid || undefined}
               aria-label={`${OCTET_ARIA_LABEL} ${index + 1}`}
               className={styles.octetInput}
               disabled={disabled}
@@ -184,7 +198,14 @@ export function IpInput({
           </span>
         ))}
       </div>
-      {error ? <span className={styles.errorText}>{error}</span> : null}
+      {error ? (
+        <span
+          className={styles.errorText}
+          id={errorId}
+        >
+          {error}
+        </span>
+      ) : null}
     </div>
   )
 }

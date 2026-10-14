@@ -9,6 +9,9 @@ const TOTAL_OCTET_INPUTS = 8
 const RANGE_LABEL = 'IP range'
 const START_LABEL = 'From'
 const END_LABEL = 'To'
+const ERROR_TEXT = 'Bad range'
+const ARIA_INVALID = 'aria-invalid'
+const ARIA_DESCRIBED_BY = 'aria-describedby'
 
 const RANGE_BASIC = '10.0.0.1-10.0.0.50'
 const RANGE_DETAILED = '192.168.1.1-192.168.1.100'
@@ -148,5 +151,75 @@ describe('IpRangeInput', () => {
     )
 
     expect(screen.getByRole('group', { name: RANGE_LABEL })).toBeInTheDocument()
+  })
+
+  it('marks both inner inputs invalid and renders the error text once', () => {
+    render(
+      <IpRangeInput
+        error={ERROR_TEXT}
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute(ARIA_INVALID, 'true')
+    })
+    expect(screen.getAllByText(ERROR_TEXT)).toHaveLength(1)
+  })
+
+  it('marks the inputs invalid without error text when invalid', () => {
+    render(
+      <IpRangeInput
+        invalid
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute(ARIA_INVALID, 'true')
+    })
+    expect(screen.queryByText(ERROR_TEXT)).not.toBeInTheDocument()
+  })
+
+  it('is not marked invalid by default', () => {
+    render(
+      <IpRangeInput
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_INVALID)
+    })
+  })
+
+  it('describes every input by the rendered error text', () => {
+    render(
+      <IpRangeInput
+        error={ERROR_TEXT}
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(ERROR_TEXT)
+    })
+  })
+
+  it('has no aria-describedby without an error', () => {
+    render(
+      <IpRangeInput
+        onChange={vi.fn()}
+        value={RANGE_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_DESCRIBED_BY)
+    })
   })
 })

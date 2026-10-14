@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -11,6 +11,7 @@ interface HostValues {
 }
 
 const FIELD_LABEL = 'IP range'
+const FIELD_ERROR = 'Field error'
 const START_LABEL = 'From'
 const END_LABEL = 'To'
 
@@ -68,5 +69,34 @@ describe('FormIpRangeInput', () => {
 
     expect(screen.getByRole('group', { name: START_LABEL })).toBeInTheDocument()
     expect(screen.getByRole('group', { name: END_LABEL })).toBeInTheDocument()
+  })
+
+  it('shows the error styling and message when the field has an error', () => {
+    const { form } = renderField()
+
+    act(() => {
+      form.setError('range', { message: FIELD_ERROR })
+    })
+
+    expect(screen.getByText(FIELD_ERROR)).toBeInTheDocument()
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute('aria-invalid', 'true')
+    })
+  })
+
+  it('describes the inputs by the field error message', () => {
+    const { form } = renderField()
+
+    expect(screen.getAllByRole('spinbutton')[0]).not.toHaveAttribute(
+      'aria-describedby'
+    )
+
+    act(() => {
+      form.setError('range', { message: FIELD_ERROR })
+    })
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(FIELD_ERROR)
+    })
   })
 })

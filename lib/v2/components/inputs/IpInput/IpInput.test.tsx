@@ -7,6 +7,12 @@ import { IpInput } from './IpInput'
 
 const OCTET_INPUT_COUNT = 4
 const GROUP_LABEL = 'Gateway'
+const ERROR_TEXT = 'Bad IP'
+const ERROR_CLASS = 'error'
+const ARIA_INVALID = 'aria-invalid'
+const ARIA_DESCRIBED_BY = 'aria-describedby'
+const EXTERNAL_ERROR_ID = 'external-error'
+const EXTERNAL_ERROR_TEXT = 'Outside message'
 const EXTERNAL_LABEL_ID = 'external-label'
 
 // Test IPs — safe to hardcode in test files (sonarjs/no-hardcoded-ip)
@@ -247,5 +253,129 @@ describe('IpInput', () => {
     )
 
     expect(screen.getByRole('group', { name: GROUP_LABEL })).toBeInTheDocument()
+  })
+})
+
+describe('IpInput error state', () => {
+  it('marks the group and octets invalid when error is set', () => {
+    render(
+      <IpInput
+        ariaLabel={GROUP_LABEL}
+        error={ERROR_TEXT}
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    expect(screen.getByRole('group')).toHaveClass(ERROR_CLASS)
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute(ARIA_INVALID, 'true')
+    })
+    expect(screen.getByText(ERROR_TEXT)).toBeInTheDocument()
+  })
+
+  it('shows the error styling without error text when invalid', () => {
+    render(
+      <IpInput
+        ariaLabel={GROUP_LABEL}
+        invalid
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    expect(screen.getByRole('group')).toHaveClass(ERROR_CLASS)
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAttribute(ARIA_INVALID, 'true')
+    })
+    expect(screen.queryByText(ERROR_TEXT)).not.toBeInTheDocument()
+  })
+
+  it('has no error styling or aria-invalid by default', () => {
+    render(
+      <IpInput
+        ariaLabel={GROUP_LABEL}
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    expect(screen.getByRole('group')).not.toHaveClass(ERROR_CLASS)
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_INVALID)
+    })
+  })
+})
+
+describe('IpInput error description', () => {
+  it('describes every octet by the rendered error text', () => {
+    render(
+      <IpInput
+        ariaLabel={GROUP_LABEL}
+        error={ERROR_TEXT}
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    const octets = screen.getAllByRole('spinbutton')
+    expect(octets).toHaveLength(OCTET_INPUT_COUNT)
+    octets.forEach((input) => {
+      expect(input).toHaveAccessibleDescription(ERROR_TEXT)
+    })
+  })
+
+  it('has no aria-describedby without an error', () => {
+    render(
+      <IpInput
+        ariaLabel={GROUP_LABEL}
+        onChange={vi.fn()}
+        value={IP_BASIC}
+      />
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).not.toHaveAttribute(ARIA_DESCRIBED_BY)
+    })
+  })
+
+  it('links a parent-rendered message through ariaDescribedBy', () => {
+    render(
+      <>
+        <span id={EXTERNAL_ERROR_ID}>{EXTERNAL_ERROR_TEXT}</span>
+        <IpInput
+          ariaDescribedBy={EXTERNAL_ERROR_ID}
+          ariaLabel={GROUP_LABEL}
+          invalid
+          onChange={vi.fn()}
+          value={IP_BASIC}
+        />
+      </>
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(EXTERNAL_ERROR_TEXT)
+    })
+  })
+
+  it('merges its own error text with a parent-provided description', () => {
+    render(
+      <>
+        <span id={EXTERNAL_ERROR_ID}>{EXTERNAL_ERROR_TEXT}</span>
+        <IpInput
+          ariaDescribedBy={EXTERNAL_ERROR_ID}
+          ariaLabel={GROUP_LABEL}
+          error={ERROR_TEXT}
+          onChange={vi.fn()}
+          value={IP_BASIC}
+        />
+      </>
+    )
+
+    screen.getAllByRole('spinbutton').forEach((input) => {
+      expect(input).toHaveAccessibleDescription(
+        `${ERROR_TEXT} ${EXTERNAL_ERROR_TEXT}`
+      )
+    })
   })
 })
