@@ -80,7 +80,8 @@ export const DOM_EVENTS = {
 } as const
 
 export const CSS_VARS = {
-  GRAY_900_100: 'var(--gray-900-100)'
+  GRAY_900_100: 'var(--gray-900-100)',
+  CHIP_CLOSE_ICON_FILL: 'var(--chip-close-icon-fill)'
 } as const
 
 export const TOOLTIP_PLACEMENTS = {

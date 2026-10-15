@@ -73,7 +73,7 @@ export function Chip({
   icon,
   bold = false,
   closable = false,
-  closeIconFill = CSS_VARS.GRAY_900_100,
+  closeIconFill = CSS_VARS.CHIP_CLOSE_ICON_FILL,
   closeAriaLabel,
   onClose,
   onClick,

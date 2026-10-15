@@ -176,4 +176,25 @@ describe('Chip - Icon, weight and delete label', () => {
       screen.getByRole('button', { name: 'Remove /data' })
     ).toBeInTheDocument()
   })
+
+  it('colours the close icon with the theme-aware default unless closeIconFill is given', () => {
+    const { container, rerender } = render(<Chip closable>Test</Chip>)
+    expect(container.querySelector('button path')).toHaveAttribute(
+      'fill',
+      'var(--chip-close-icon-fill)'
+    )
+
+    rerender(
+      <Chip
+        closable
+        closeIconFill='red'
+      >
+        Test
+      </Chip>
+    )
+    expect(container.querySelector('button path')).toHaveAttribute(
+      'fill',
+      'red'
+    )
+  })
 })

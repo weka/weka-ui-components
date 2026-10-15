@@ -29,6 +29,7 @@
   --gray-opacity-black-10: #{rgba(#000, 0.1)};
   --gray-opacity-black-60: #{rgba(#000, 0.6)};
   --gray-blue-opacity-10: #{rgba(#fff, 0.1)};
+  --chip-close-icon-fill: #{$gray-0};
   --gray-400-600: #{$gray-400};
   --gray-450-550: #{$gray-450};
   --gray-550-450: #{$gray-550};
@@ -305,6 +306,7 @@
   --gray-opacity-black-10: #{rgba(#fff, 0.1)};
   --gray-opacity-black-60: #{rgba(#fff, 0.6)};
   --gray-blue-opacity-10: #{rgba(#000, 0.1)};
+  --chip-close-icon-fill: #{$gray-100};
   --gray-400-600: #{$gray-600};
   --gray-450-550: #{$gray-550};
   --gray-550-450: #{$gray-450};
