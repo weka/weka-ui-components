@@ -66,6 +66,8 @@ export interface TextEditorHandle {
   getEditor: () => IAceEditor | undefined
 }
 
+const ACE_FIND_COMMAND = 'find'
+
 const CUSTOM_SEARCH_COMMANDS = {
   openSearch: {
     name: 'openCustomSearch',
@@ -220,13 +222,13 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
     const showSearchBox =
       options.allowSearch && !hasExternalSearch && !internalSearch.dismissed
 
-    const latestOpenSearchRef = useRef(NOP)
+    const latestOpenSearchRef = useRef<() => boolean>(() => false)
     const latestFindDirectionRef = useRef<(backwards: boolean) => void>(NOP)
 
     useEffect(() => {
       latestOpenSearchRef.current = () => {
         if (hasExternalSearch || !options.allowSearch) {
-          return
+          return false
         }
         setDismissed(false)
         const selectedText = aceEditor?.getSelectedText() ?? EMPTY_STRING
@@ -237,6 +239,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
           searchInputRef.current?.focus()
           searchInputRef.current?.select()
         })
+        return true
       }
       latestFindDirectionRef.current = (backwards: boolean) => {
         if (!showSearchBox || !internalSearch.searchTerm) {
@@ -268,6 +271,9 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       if (!aceEditor) {
         return
       }
+      // unbind (but keep, useSearch runs it by name) Ace's own `find`, otherwise it
+      // catches Cmd/Ctrl-F after ours returns false and swallows the browser's find
+      aceEditor.commands.removeCommand(ACE_FIND_COMMAND, true)
       aceEditor.commands.addCommand({
         ...CUSTOM_SEARCH_COMMANDS.openSearch,
         exec: () => latestOpenSearchRef.current()
