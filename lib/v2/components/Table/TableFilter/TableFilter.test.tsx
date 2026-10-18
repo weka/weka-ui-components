@@ -75,6 +75,17 @@ describe('TableFilter', () => {
     expect(screen.getByRole('combobox')).toHaveFocus()
   })
 
+  it('removes the popover from the DOM as soon as it closes', () => {
+    renderTableFilter()
+    fireEvent.click(screen.getByTestId(`column-filter-button-${COLUMN_ID}`))
+    expect(document.querySelector('.MuiPopover-root')).toBeInTheDocument()
+
+    fireEvent.click(document.querySelector('.MuiBackdrop-root') as HTMLElement)
+
+    expect(document.querySelector('.MuiPopover-root')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('filter-popover')).not.toBeInTheDocument()
+  })
+
   it('calls onSortClick when the sort button is clicked', () => {
     const { onSortClick } = renderTableFilter()
     fireEvent.click(screen.getByTestId(`column-sort-button-${COLUMN_ID}`))

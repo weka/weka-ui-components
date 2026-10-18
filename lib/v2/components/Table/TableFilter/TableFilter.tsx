@@ -317,90 +317,98 @@ export function TableFilter({
         {renderSortIcon()}
         {renderFilterIcon()}
       </div>
-      <Popover
-        anchorEl={filterButtonRef}
-        anchorOrigin={popoverAnchorOrigin}
-        disableAutoFocus
-        disableEnforceFocus
-        disableRestoreFocus
-        open={isPopoverOpen}
-        onClose={(event: object | undefined) => {
-          if (event && 'stopPropagation' in event) {
-            const eventWithStop = event as { stopPropagation: () => void }
-            eventWithStop.stopPropagation()
-          }
-          setActiveFilterColumn(null)
-          setFilterButtonRef(null)
-          setPopoverAnchorOrigin((prev) => ({ ...prev, dynamicMargin: 0 }))
-        }}
-        slotProps={{
-          paper: {
-            style: {
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-              marginTop: POPOVER_TOP_MARGIN,
-              overflow: 'visible',
-              ...(popoverAnchorOrigin.horizontal === 'right' && {
-                marginLeft: `${
-                  popoverAnchorOrigin.dynamicMargin || DEFAULT_RIGHT_MARGIN
-                }px`
-              }),
-              ...(popoverAnchorOrigin.horizontal === 'center' && {
-                marginLeft: CENTER_POPOVER_MARGIN
-              }),
-              ...(popoverAnchorOrigin.horizontal === 'left' && {
-                marginLeft: LEFT_POPOVER_MARGIN
-              })
+      {/*
+       * Mounted only while open: the MUI Popover otherwise stays in the DOM until its exit
+       * transition reports completion, and under load that report can be lost (an async
+       * options reload re-renders the header mid-exit), leaving an invisible full-page root
+       * that swallows every later click (WH-4467). Dropping the exit animation is the cost.
+       */}
+      {isPopoverOpen ? (
+        <Popover
+          anchorEl={filterButtonRef}
+          anchorOrigin={popoverAnchorOrigin}
+          disableAutoFocus
+          disableEnforceFocus
+          disableRestoreFocus
+          open
+          onClose={(event: object | undefined) => {
+            if (event && 'stopPropagation' in event) {
+              const eventWithStop = event as { stopPropagation: () => void }
+              eventWithStop.stopPropagation()
             }
-          }
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: popoverAnchorOrigin.horizontal
-        }}
-      >
-        {activeFilterColumn
-          ? (() => {
-              const filterConfig = getFilterConfig(activeFilterColumn)
-              if (!filterConfig) {
-                return null
+            setActiveFilterColumn(null)
+            setFilterButtonRef(null)
+            setPopoverAnchorOrigin((prev) => ({ ...prev, dynamicMargin: 0 }))
+          }}
+          slotProps={{
+            paper: {
+              style: {
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                marginTop: POPOVER_TOP_MARGIN,
+                overflow: 'visible',
+                ...(popoverAnchorOrigin.horizontal === 'right' && {
+                  marginLeft: `${
+                    popoverAnchorOrigin.dynamicMargin || DEFAULT_RIGHT_MARGIN
+                  }px`
+                }),
+                ...(popoverAnchorOrigin.horizontal === 'center' && {
+                  marginLeft: CENTER_POPOVER_MARGIN
+                }),
+                ...(popoverAnchorOrigin.horizontal === 'left' && {
+                  marginLeft: LEFT_POPOVER_MARGIN
+                })
               }
+            }
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: popoverAnchorOrigin.horizontal
+          }}
+        >
+          {activeFilterColumn
+            ? (() => {
+                const filterConfig = getFilterConfig(activeFilterColumn)
+                if (!filterConfig) {
+                  return null
+                }
 
-              const currentFilter = activeFilters.find(
-                (filter) => filter.columnId === activeFilterColumn
-              )
-              const columnDef = findColumn(columns, activeFilterColumn)
-              const columnName =
-                typeof columnDef?.header === 'string'
-                  ? columnDef.header
-                  : activeFilterColumn
+                const currentFilter = activeFilters.find(
+                  (filter) => filter.columnId === activeFilterColumn
+                )
+                const columnDef = findColumn(columns, activeFilterColumn)
+                const columnName =
+                  typeof columnDef?.header === 'string'
+                    ? columnDef.header
+                    : activeFilterColumn
 
-              return (
-                <div className={styles.filterPopoverContainer}>
-                  <FilterPopover
-                    anchorElement={filterButtonRef}
-                    columnId={activeFilterColumn}
-                    columnName={columnName}
-                    config={filterConfig}
-                    customFilters={customFilters}
-                    value={currentFilter?.value || EMPTY_STRING}
-                    onClose={() => {
-                      setActiveFilterColumn(null)
-                      setFilterButtonRef(null)
-                    }}
-                    onValueChange={(value) =>
-                      handleFilterChange(
-                        activeFilterColumn,
-                        value,
-                        filterConfig.type
-                      )
-                    }
-                  />
-                </div>
-              )
-            })()
-          : null}
-      </Popover>
+                return (
+                  <div className={styles.filterPopoverContainer}>
+                    <FilterPopover
+                      anchorElement={filterButtonRef}
+                      columnId={activeFilterColumn}
+                      columnName={columnName}
+                      config={filterConfig}
+                      customFilters={customFilters}
+                      value={currentFilter?.value || EMPTY_STRING}
+                      onClose={() => {
+                        setActiveFilterColumn(null)
+                        setFilterButtonRef(null)
+                      }}
+                      onValueChange={(value) =>
+                        handleFilterChange(
+                          activeFilterColumn,
+                          value,
+                          filterConfig.type
+                        )
+                      }
+                    />
+                  </div>
+                )
+              })()
+            : null}
+        </Popover>
+      ) : null}
     </>
   )
 }
