@@ -71,6 +71,35 @@ describe('RowActionsCell', () => {
     expect(screen.getByTestId('row-action-delete')).toBeInTheDocument()
   })
 
+  it('right-aligns the menu to the kebab button, not the whole cell', async () => {
+    const { container } = renderCell([
+      { key: 'edit', text: EDIT_TEXT, action: vi.fn() }
+    ])
+    const button = screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID)
+    const rowTop = 10
+    const rowHeight = 24
+    const buttonLeft = 276
+    const buttonRight = 300
+    const cellLeft = 100
+    const cellRight = 500
+    vi.spyOn(button.parentElement!, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(buttonLeft, rowTop, buttonRight - buttonLeft, rowHeight)
+    )
+    vi.spyOn(
+      container.firstElementChild!,
+      'getBoundingClientRect'
+    ).mockReturnValue(
+      new DOMRect(cellLeft, rowTop, cellRight - cellLeft, rowHeight)
+    )
+
+    fireEvent.click(button)
+
+    const popover = screen.getByTestId(EDIT_ACTION_TESTID).parentElement!
+    await waitFor(() => {
+      expect(popover.style.right).toBe(`${window.innerWidth - buttonRight}px`)
+    })
+  })
+
   it('closes the menu when the kebab button is clicked again', () => {
     renderCell([{ key: 'edit', text: EDIT_TEXT, action: vi.fn() }])
     const button = screen.getByTestId(ROW_ACTIONS_BUTTON_TESTID)

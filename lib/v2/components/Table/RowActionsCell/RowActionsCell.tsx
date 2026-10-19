@@ -29,7 +29,7 @@ export function RowActionsCell<TData>({
   row
 }: Readonly<CellContext<TData, unknown>>) {
   const [open, setOpen] = useState(false)
-  const anchorRef = useRef<HTMLDivElement>(null)
+  const anchorRef = useRef<HTMLSpanElement>(null)
 
   const meta = column.columnDef.meta as RowActionsCellMeta<TData> | undefined
   const rowActions = meta?.rowActions ?? []
@@ -61,19 +61,23 @@ export function RowActionsCell<TData>({
 
   return (
     <div
-      ref={anchorRef}
       className={styles.cellWrapper}
       onClick={stopRowActivation}
     >
-      <IconButton
-        ariaLabel='Row actions'
-        dataTestId='row-actions-button'
-        extraClass={open ? styles.kebabActive : undefined}
-        onClick={handleToggle}
-        small
+      <span
+        ref={anchorRef}
+        className={styles.anchor}
       >
-        <ThreeDotsMenuIcon size={14} />
-      </IconButton>
+        <IconButton
+          ariaLabel='Row actions'
+          dataTestId='row-actions-button'
+          extraClass={open ? styles.kebabActive : undefined}
+          onClick={handleToggle}
+          small
+        >
+          <ThreeDotsMenuIcon size={14} />
+        </IconButton>
+      </span>
       <MenuPopover
         anchorRef={anchorRef as RefObject<HTMLElement>}
         extraClass={styles.menu}
