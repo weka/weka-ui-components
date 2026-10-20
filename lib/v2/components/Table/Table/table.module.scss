@@ -259,6 +259,13 @@ thead.tableHeader {
 .tableBody {
   font-size: 14px;
   background-color: var(--gray-50-920);
+
+  // A single rendered row keeps a blank second row, so a table never collapses to one line.
+  &:has(> tr:only-child)::after {
+    content: '';
+    display: table-row;
+    height: 48px;
+  }
 }
 
 .tableRow {
