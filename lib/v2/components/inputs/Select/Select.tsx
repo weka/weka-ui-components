@@ -81,9 +81,20 @@ export interface SelectProps {
   minSearchLength?: number
   searchThreshold?: number
   dataTestId?: string
+  /**
+   * 'control' sizes the menu to the control, so long labels ellipsise instead
+   * of widening it; the default lets the menu grow to its longest option.
+   */
+  menuWidth?: 'auto' | 'control'
   /** Focus the trigger on mount, e.g. when the Select is the first control of a freshly opened popover. */
   autoFocus?: boolean
 }
+
+const menuPaperStyle = (
+  menuWidth: 'auto' | 'control',
+  controlWidth: number | undefined
+) =>
+  menuWidth === 'control' && controlWidth ? { width: controlWidth } : undefined
 
 export function Select({
   id,
@@ -107,14 +118,14 @@ export function Select({
   minSearchLength = DEFAULT_MIN_SEARCH_LENGTH,
   searchThreshold = DEFAULT_SEARCH_THRESHOLD,
   dataTestId,
+  menuWidth = 'auto',
   autoFocus = false
 }: Readonly<SelectProps>) {
   const value = normalizeSelectValue(valueProp, multiple)
   const [searchQuery, setSearchQuery] = useState(EMPTY_STRING)
   const [isOpen, setIsOpen] = useState(false)
   const [openUpward, setOpenUpward] = useState(false)
-  // The menu takes the control's width; long labels ellipsise instead of widening it.
-  const [menuWidth, setMenuWidth] = useState<number>()
+  const [controlWidth, setControlWidth] = useState<number>()
   const [highlightedIndex, setHighlightedIndex] = useState(NO_HIGHLIGHT)
   const formControlRef = useRef<HTMLDivElement | null>(null)
   const selectFieldRef = useRef<HTMLDivElement | null>(null)
@@ -284,7 +295,7 @@ export function Select({
     const spaceBelow = rect ? window.innerHeight - rect.bottom : Infinity
     const spaceAbove = rect ? rect.top : 0
     setOpenUpward(spaceBelow < MENU_MAX_HEIGHT && spaceAbove > spaceBelow)
-    setMenuWidth(rect?.width)
+    setControlWidth(rect?.width)
     setIsOpen(true)
     setSearchQuery(EMPTY_STRING)
   }
@@ -566,7 +577,7 @@ export function Select({
           PaperProps: {
             ref: menuPaperRef,
             className: clsx(styles.menuPaper, openUpward && styles.menuPaperUp),
-            style: menuWidth ? { width: menuWidth } : undefined,
+            style: menuPaperStyle(menuWidth, controlWidth),
             onKeyDown: handleKeyDown
           },
           MenuListProps: {
