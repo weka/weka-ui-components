@@ -18,11 +18,7 @@ import {
 import clsx from 'clsx'
 
 import { useCloseOnScroll } from '#v2/hooks'
-import {
-  COMMA_SEPARATOR,
-  EMPTY_STRING,
-  KEYBOARD_KEYS
-} from '#v2/utils/consts'
+import { COMMA_SEPARATOR, EMPTY_STRING, KEYBOARD_KEYS } from '#v2/utils/consts'
 import { highlightText } from '#v2/utils/textUtils'
 
 import { ChevronDownSmallIcon } from '../../../icons'
@@ -117,6 +113,8 @@ export function Select({
   const [searchQuery, setSearchQuery] = useState(EMPTY_STRING)
   const [isOpen, setIsOpen] = useState(false)
   const [openUpward, setOpenUpward] = useState(false)
+  // The menu takes the control's width; long labels ellipsise instead of widening it.
+  const [menuWidth, setMenuWidth] = useState<number>()
   const [highlightedIndex, setHighlightedIndex] = useState(NO_HIGHLIGHT)
   const formControlRef = useRef<HTMLDivElement | null>(null)
   const selectFieldRef = useRef<HTMLDivElement | null>(null)
@@ -286,6 +284,7 @@ export function Select({
     const spaceBelow = rect ? window.innerHeight - rect.bottom : Infinity
     const spaceAbove = rect ? rect.top : 0
     setOpenUpward(spaceBelow < MENU_MAX_HEIGHT && spaceAbove > spaceBelow)
+    setMenuWidth(rect?.width)
     setIsOpen(true)
     setSearchQuery(EMPTY_STRING)
   }
@@ -567,6 +566,7 @@ export function Select({
           PaperProps: {
             ref: menuPaperRef,
             className: clsx(styles.menuPaper, openUpward && styles.menuPaperUp),
+            style: menuWidth ? { width: menuWidth } : undefined,
             onKeyDown: handleKeyDown
           },
           MenuListProps: {
