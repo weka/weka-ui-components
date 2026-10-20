@@ -2,6 +2,7 @@ import type {
   ColumnDef,
   ColumnFiltersState,
   ColumnResizeMode,
+  ColumnSizingState,
   ExpandedState,
   GroupingState,
   OnChangeFn,
@@ -48,6 +49,7 @@ interface UseTableOptionsParams<TData> {
   expanded: ExpandedState
   setExpanded: OnChangeFn<ExpandedState>
   endless: boolean
+  initialColumnSizing?: ColumnSizingState
 }
 
 /**
@@ -74,7 +76,8 @@ export function useTableOptions<TData>({
   grouping,
   expanded,
   setExpanded,
-  endless
+  endless,
+  initialColumnSizing
 }: UseTableOptionsParams<TData>) {
   return useMemo(() => {
     const isGrouped = grouping.length > 0
@@ -83,6 +86,9 @@ export function useTableOptions<TData>({
       data: displayData,
       columns: tableColumns,
       enableColumnResizing: hasResizableColumns,
+      ...(initialColumnSizing && {
+        initialState: { columnSizing: initialColumnSizing }
+      }),
       state: {
         sorting,
         columnFilters,
@@ -150,6 +156,7 @@ export function useTableOptions<TData>({
     grouping,
     expanded,
     setExpanded,
-    endless
+    endless,
+    initialColumnSizing
   ])
 }

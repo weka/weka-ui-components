@@ -145,6 +145,21 @@
   }
 }
 
+.resetButton {
+  width: 100%;
+  margin-bottom: 0;
+  border: 0;
+  border-bottom: 1px solid var(--gray-200-800);
+  background: none;
+  font-family: inherit;
+  text-align: left;
+
+  &:focus-visible {
+    outline: 2px solid var(--purple-500);
+    outline-offset: -2px;
+  }
+}
+
 .divider {
   height: 1px;
   background: var(--border-color);
@@ -157,6 +172,19 @@
   max-height: 226px;
   gap: 8px;
   overflow-y: auto;
+}
+
+.menuGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menuGroupTitle {
+  color: var(--gray-600-400);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 6px;
 }
 
 .menuOverlay {

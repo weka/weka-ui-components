@@ -479,7 +479,7 @@ export type {
 export { Table } from './Table/Table'
 export type { TableFilterProps } from './Table/TableFilter'
 export { TableFilter } from './Table/TableFilter'
-export type { TableHeaderProps } from './Table/TableHeader'
+export type { TableHeaderLabels, TableHeaderProps } from './Table/TableHeader'
 export { TableHeader } from './Table/TableHeader'
 export {
   buildTableColumns,

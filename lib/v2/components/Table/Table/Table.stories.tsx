@@ -9,6 +9,7 @@ import { FILTER_TYPES } from '#v2/utils/consts'
 
 import { Button } from '../../Button'
 import { EndlessScrollDemo } from './EndlessScrollDemo'
+import { PersistedCustomizationsDemo } from './PersistedCustomizationsDemo'
 import { Table } from './Table'
 import { TableWithDrawerDemo } from './TableWithDrawerDemo'
 import { TableWithFilterBarDemo } from './TableWithFilterBarDemo'
@@ -79,6 +80,17 @@ function TableDemo() {
         onFiltersChange={setActiveFilters}
         showSearch
         title='Clusters'
+      />
+    </div>
+  )
+}
+
+export const PersistedCustomizations: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <PersistedCustomizationsDemo
+        columns={COLUMNS}
+        data={DATA}
       />
     </div>
   )

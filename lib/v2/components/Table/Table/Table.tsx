@@ -1,10 +1,12 @@
 import type { CustomFilters } from '../FilterPopover'
 import type { ActiveFilter } from '../filterUtils'
+import type { TableHeaderLabels } from '../TableHeader'
 import type { RowAction } from './rowActions'
 import type {
   ColumnDef,
   ColumnFiltersState,
   ColumnResizeMode,
+  ColumnSizingState,
   SortingState,
   Table as TanstackTable,
   TableOptions,
@@ -23,12 +25,14 @@ import { Spinner } from '../../Spinner'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
 import { buildTableColumns } from '../tableUtils'
+import { useColumnSizingPersistence } from './hooks/useColumnSizingPersistence'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useEndlessScroll } from './hooks/useEndlessScroll'
 import { useGlobalSearch } from './hooks/useGlobalSearch'
 import { useGroupExpansion } from './hooks/useGroupExpansion'
 import { useInitialSorting } from './hooks/useInitialSorting'
 import { usePaginationState } from './hooks/usePaginationState'
+import { useResetToDefaults } from './hooks/useResetToDefaults'
 import { useScrollToRow } from './hooks/useScrollToRow'
 import { useTableCounts } from './hooks/useTableCounts'
 import { useTableOptions } from './hooks/useTableOptions'
@@ -73,8 +77,29 @@ export interface TableProps<TData = unknown> {
   searchExcludedFields?: string[]
   customFilters?: CustomFilters
 
+  /** Visibility to start from; typically `defaultColumnVisibility` plus the user's saved changes. */
   initialColumnVisibility?: VisibilityState
   onColumnVisibilityChange?: (visibility: VisibilityState) => void
+  /**
+   * The page's default visibility, distinct from `initialColumnVisibility`.
+   * Groups the settings menu into default and extra columns and is the target
+   * of "Reset to defaults". Columns absent from the map count as visible.
+   */
+  defaultColumnVisibility?: VisibilityState
+  /** Widths (by column id) to render on first paint, e.g. restored from storage. */
+  initialColumnSizing?: ColumnSizingState
+  /** Called once when a column resize gesture ends, with the resulting widths. */
+  onColumnSizingChange?: (sizing: ColumnSizingState) => void
+  /**
+   * Turns the settings menu's reset item into "Reset to defaults": widths go
+   * back to the column definitions' sizes, visibility to `defaultColumnVisibility`
+   * (or the `meta.defaultHidden` derivation) and sorting to the default sort,
+   * firing `onColumnVisibilityChange` and `onExternalSortingChange` as usual,
+   * then this callback runs.
+   */
+  onResetToDefaults?: () => void
+  /** Overrides for the settings menu texts. */
+  labels?: Partial<TableHeaderLabels>
 
   hasResizableColumns?: boolean
   emptyMessage?: string
@@ -181,6 +206,11 @@ export function Table<TData = unknown>({
   defaultSortDirection = 'asc',
   manualSorting,
   onResetColumnSizing,
+  onResetToDefaults,
+  defaultColumnVisibility,
+  initialColumnSizing,
+  onColumnSizingChange,
+  labels,
   onGlobalSearch,
   searchExcludedFields = EMPTY_EXCLUDED_FIELDS,
   activeRowId,
@@ -344,10 +374,13 @@ export function Table<TData = unknown>({
     grouping,
     expanded,
     setExpanded,
-    endless
+    endless,
+    initialColumnSizing
   })
 
   const table = useReactTable(tableOptions as TableOptions<TData>)
+
+  useColumnSizingPersistence(table, onColumnSizingChange)
 
   const filteredRowCount = table.getFilteredRowModel().rows.length
 
@@ -430,6 +463,15 @@ export function Table<TData = unknown>({
     onExternalSortingChange?.(sorting)
   }, [onExternalSortingChange, sorting])
 
+  const handleResetToDefaults = useResetToDefaults({
+    table,
+    columns,
+    defaultColumnVisibility,
+    defaultSortColumn,
+    defaultSortDirection,
+    onResetToDefaults
+  })
+
   useEffect(() => {
     setCurrentPage(FIRST_PAGE)
   }, [activeFilters, globalSearchTerm, setCurrentPage])
@@ -486,9 +528,11 @@ export function Table<TData = unknown>({
         customFilters={customFilters}
         customTitle={customTitle}
         data={data}
+        defaultColumnVisibility={defaultColumnVisibility}
         endless={endless}
         filterBar={filterBar}
         getCsvData={getCsvData}
+        labels={labels}
         maxCount={maxCount}
         onClearAllFilters={handleClearAllFilters}
         onCsvError={onCsvError}
@@ -496,6 +540,7 @@ export function Table<TData = unknown>({
         onGlobalSearch={handleGlobalSearchWithEffects}
         onRemoveFilter={handleRemoveFilter}
         onResetColumnSizing={handleResetColumnSizing}
+        onResetToDefaults={handleResetToDefaults}
         showCsvDownload={showCsvDownload}
         showFilterChips={showFilterChips}
         showSearch={showSearch}
