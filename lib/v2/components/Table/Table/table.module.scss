@@ -259,6 +259,22 @@ thead.tableHeader {
 .tableBody {
   font-size: 14px;
   background-color: var(--gray-50-920);
+
+  // A single data row keeps a blank second row, so a table never collapses to
+  // one line; the empty-state row is not a data row and gets none.
+  &:has(> .tableRow:only-child) {
+    &::after {
+      content: '';
+      display: table-row;
+      height: 48px;
+    }
+
+    // The blank row is the last one now, so the data row loses the corners.
+    > .tableRow .tableCell {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
 }
 
 .tableRow {
