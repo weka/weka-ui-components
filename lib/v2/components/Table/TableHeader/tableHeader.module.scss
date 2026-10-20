@@ -159,6 +159,19 @@
   overflow-y: auto;
 }
 
+.menuGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menuGroupTitle {
+  color: var(--gray-600-400);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 6px;
+}
+
 .menuOverlay {
   position: fixed;
   inset: 0;

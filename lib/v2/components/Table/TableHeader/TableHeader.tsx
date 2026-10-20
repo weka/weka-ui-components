@@ -1,6 +1,6 @@
 import type { CustomFilters } from '../FilterPopover'
 import type { ActiveFilter } from '../filterUtils'
-import type { Table } from '@tanstack/react-table'
+import type { Table, VisibilityState } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
@@ -18,15 +18,14 @@ import { formatCountWithMax } from '#v2/utils/textUtils'
 import { DownloadIcon, ResetIcon, TableSettingsIcon } from '../../../icons'
 import { ExpandableSearch } from '../../ExpandableSearch'
 import { FilterChips } from '../FilterChips'
-import { FilterOptionRow } from '../FilterOptionRow'
 import { getColumnId, getColumnLabel } from '../filterUtils'
+import { TableSettingsColumns } from './TableSettingsColumns'
 
 import styles from './tableHeader.module.scss'
 
 const SETTINGS_MENU_HEIGHT = 250
 const SETTINGS_MENU_MARGIN = 4
 const VISIBILITY_STATE_SYNC_DELAY = 50
-const MIN_VISIBLE_COLUMNS = 1
 const NAME_COLUMN_IDS = ['name', 'filename', 'clusterName']
 const MIN_SEARCH_LENGTH = 2
 const DOWNLOAD_ICON_SIZE = 24
@@ -60,6 +59,18 @@ interface TableColumn {
   meta?: TableColumnMeta
 }
 
+export interface TableHeaderLabels {
+  resetToDefaults: string
+  defaultColumns: string
+  moreColumns: string
+}
+
+const DEFAULT_LABELS: TableHeaderLabels = {
+  resetToDefaults: 'Reset to defaults',
+  defaultColumns: 'Default columns',
+  moreColumns: 'More columns'
+}
+
 export interface TableHeaderProps<TData = unknown> {
   csvFileTitle?: string
   title: string
@@ -79,6 +90,11 @@ export interface TableHeaderProps<TData = unknown> {
   data?: readonly TData[]
   columns?: readonly TableColumn[]
   onResetColumnSizing?: () => void
+  /** When set, the reset item reads "Reset to defaults" and runs this instead of `onResetColumnSizing`. */
+  onResetToDefaults?: () => void
+  /** When set, the settings menu splits columns into default-visible and extra sections. */
+  defaultColumnVisibility?: VisibilityState
+  labels?: Partial<TableHeaderLabels>
   onGlobalSearch?: (searchTerm: string) => void
   customFilters?: CustomFilters
   getCsvData?: () => Promise<readonly TData[]>
@@ -217,12 +233,16 @@ export function TableHeader({
   data = EMPTY_ARRAY,
   columns = EMPTY_ARRAY,
   onResetColumnSizing,
+  onResetToDefaults,
+  defaultColumnVisibility,
+  labels,
   onGlobalSearch,
   customFilters,
   getCsvData,
   onCsvError,
   showCsvDownload = true
 }: Readonly<TableHeaderProps>) {
+  const text = { ...DEFAULT_LABELS, ...labels }
   const [showSettingsMenu, setShowSettingsMenu] = useState(false)
   const [menuPositionAbove, setMenuPositionAbove] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -520,11 +540,6 @@ export function TableHeader({
         }
       : undefined
 
-    const visibleColumnCount = columns.filter((col) => {
-      const columnId = getColumnId(col)
-      return columnId !== undefined && columnVisibility[columnId] !== false
-    }).length
-
     return createPortal(
       <div
         ref={settingsMenuRef}
@@ -537,38 +552,33 @@ export function TableHeader({
         )}
       >
         <div className={styles.menuSection}>
-          {columns.map((col) => {
-            const columnId = getColumnId(col)
-            if (!columnId) {
-              return null
-            }
-            const header =
-              typeof col.header === 'string' ? col.header : columnId
-            const isSelected = columnVisibility[columnId] !== false
-
-            const isLastVisibleColumn =
-              isSelected && visibleColumnCount <= MIN_VISIBLE_COLUMNS
-
-            return (
-              <FilterOptionRow
-                key={columnId}
-                dataTestId={`table-settings-column-option-${columnId}`}
-                disabled={isLastVisibleColumn}
-                isSelected={isSelected}
-                label={header}
-                onChange={() => handleColumnVisibilityToggle(columnId)}
-              />
-            )
-          })}
+          <TableSettingsColumns
+            columnVisibility={columnVisibility}
+            columns={columns}
+            defaultColumnVisibility={defaultColumnVisibility}
+            labels={text}
+            onToggle={handleColumnVisibilityToggle}
+          />
         </div>
         <div className={styles.divider} />
-        <div
-          className={styles.resetColumnResizing}
-          onClick={onResetColumnSizing}
-        >
-          <ResetIcon />
-          Reset Column Resizing
-        </div>
+        {onResetToDefaults ? (
+          <div
+            className={styles.resetColumnResizing}
+            data-testid='table-settings-reset-defaults'
+            onClick={onResetToDefaults}
+          >
+            <ResetIcon />
+            {text.resetToDefaults}
+          </div>
+        ) : (
+          <div
+            className={styles.resetColumnResizing}
+            onClick={onResetColumnSizing}
+          >
+            <ResetIcon />
+            Reset Column Resizing
+          </div>
+        )}
       </div>,
       document.body
     )

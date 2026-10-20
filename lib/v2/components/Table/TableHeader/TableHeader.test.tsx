@@ -234,3 +234,60 @@ describe('TableHeader', () => {
     expect(screen.getByTestId('filter-chip-region')).toBeInTheDocument()
   })
 })
+
+describe('TableHeader settings menu defaults', () => {
+  it('keeps the min-one-visible rule inside the grouped sections', () => {
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        defaultColumnVisibility={{ region: false }}
+        table={createTableMock({ region: false })}
+        title={TABLE_TITLE}
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+
+    const nameOption = screen.getByTestId(NAME_OPTION_TESTID)
+    expect(within(nameOption).getByTestId(CHECKBOX_TESTID)).toHaveAttribute(
+      ARIA_DISABLED,
+      'true'
+    )
+  })
+
+  it('omits a group heading when that group has no columns', () => {
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        defaultColumnVisibility={{}}
+        title={TABLE_TITLE}
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+    expect(
+      screen.getByTestId('table-settings-default-columns')
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByTestId('table-settings-more-columns')
+    ).not.toBeInTheDocument()
+  })
+
+  it('runs onResetToDefaults and not onResetColumnSizing from the defaults item', () => {
+    const onResetToDefaults = vi.fn()
+    const onResetColumnSizing = vi.fn()
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        onResetColumnSizing={onResetColumnSizing}
+        onResetToDefaults={onResetToDefaults}
+        title={TABLE_TITLE}
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+    fireEvent.click(screen.getByTestId('table-settings-reset-defaults'))
+    expect(onResetToDefaults).toHaveBeenCalledTimes(1)
+    expect(onResetColumnSizing).not.toHaveBeenCalled()
+  })
+})

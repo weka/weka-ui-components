@@ -1,7 +1,7 @@
 import type { CustomFilters } from '../../FilterPopover'
 import type { ActiveFilter } from '../../filterUtils'
-import type { TableHeaderProps } from '../../TableHeader'
-import type { ColumnDef, Table } from '@tanstack/react-table'
+import type { TableHeaderLabels, TableHeaderProps } from '../../TableHeader'
+import type { ColumnDef, Table, VisibilityState } from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 
 import { EMPTY_STRING } from '#v2/utils/consts'
@@ -38,6 +38,9 @@ export interface TableHeaderSectionProps<TData> {
   onGlobalSearch: (searchTerm: string) => void
   onRemoveFilter: (columnId: string) => void
   onResetColumnSizing: () => void
+  onResetToDefaults?: () => void
+  defaultColumnVisibility?: VisibilityState
+  labels?: Partial<TableHeaderLabels>
   endless?: boolean
 }
 
@@ -95,6 +98,9 @@ function renderHeaderVariant<TData>({
   onGlobalSearch,
   onRemoveFilter,
   onResetColumnSizing,
+  onResetToDefaults,
+  defaultColumnVisibility,
+  labels,
   endless = false
 }: Omit<TableHeaderSectionProps<TData>, 'filterBar'>) {
   const hasActiveFilters = activeFilters.length > 0
@@ -110,8 +116,10 @@ function renderHeaderVariant<TData>({
         customFilters={customFilters}
         customTitle={customTitle}
         data={data}
+        defaultColumnVisibility={defaultColumnVisibility}
         endless={endless}
         getCsvData={getCsvData}
+        labels={labels}
         maxCount={maxCount}
         onClearAllFilters={onClearAllFilters}
         onCsvError={onCsvError}
@@ -119,6 +127,7 @@ function renderHeaderVariant<TData>({
         onGlobalSearch={onGlobalSearch}
         onRemoveFilter={onRemoveFilter}
         onResetColumnSizing={onResetColumnSizing}
+        onResetToDefaults={onResetToDefaults}
         showCsvDownload={showCsvDownload}
         showFilterChips={showFilterChips}
         showSearch={showSearch}
