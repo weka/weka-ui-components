@@ -222,7 +222,9 @@ describe('Table settings menu persistence', () => {
       )
     })
   })
+})
 
+describe('Table onResetToDefaults', () => {
   describe('onResetToDefaults', () => {
     it('shows "Reset to defaults" instead of the legacy item', () => {
       render(
@@ -293,6 +295,54 @@ describe('Table settings menu persistence', () => {
         { id: 'id', desc: false }
       ])
       expect(onResetToDefaults).toHaveBeenCalledTimes(1)
+    })
+
+    it('calls onResetToDefaults once, after the reset notifications', () => {
+      const calls: string[] = []
+      const onResetToDefaults = vi.fn(() => calls.push('reset'))
+      const onColumnVisibilityChange = vi.fn(() => calls.push('visibility'))
+      const onExternalSortingChange = vi.fn(() => calls.push('sorting'))
+      render(
+        <Table
+          columns={COLUMNS}
+          data={DATA}
+          defaultColumnVisibility={{ region: false }}
+          defaultSortColumn='id'
+          defaultSortDirection='asc'
+          initialColumnVisibility={{ region: true }}
+          onColumnVisibilityChange={onColumnVisibilityChange}
+          onExternalSortingChange={onExternalSortingChange}
+          onResetToDefaults={onResetToDefaults}
+        />
+      )
+      act(() => {
+        findHeaderCell('Name')?.querySelector('button')?.click()
+      })
+      calls.length = 0
+      openSettingsMenu()
+      fireEvent.click(screen.getByTestId(RESET_DEFAULTS_TESTID))
+
+      expect(calls).toEqual(['visibility', 'sorting', 'reset'])
+    })
+
+    it('still calls onResetToDefaults once when nothing was changed', () => {
+      const onResetToDefaults = vi.fn()
+      const onColumnVisibilityChange = vi.fn()
+      render(
+        <Table
+          columns={COLUMNS}
+          data={DATA}
+          onColumnVisibilityChange={onColumnVisibilityChange}
+          onResetToDefaults={onResetToDefaults}
+        />
+      )
+      openSettingsMenu()
+      fireEvent.click(screen.getByTestId(RESET_DEFAULTS_TESTID))
+
+      expect(onResetToDefaults).toHaveBeenCalledTimes(1)
+      expect(onColumnVisibilityChange.mock.invocationCallOrder[0]).toBeLessThan(
+        onResetToDefaults.mock.invocationCallOrder[0]
+      )
     })
 
     it('derives default visibility from meta.defaultHidden when defaultColumnVisibility is absent', () => {

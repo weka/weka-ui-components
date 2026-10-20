@@ -290,4 +290,27 @@ describe('TableHeader settings menu defaults', () => {
     expect(onResetToDefaults).toHaveBeenCalledTimes(1)
     expect(onResetColumnSizing).not.toHaveBeenCalled()
   })
+
+  it('exposes the defaults item as a focusable button', () => {
+    const onResetToDefaults = vi.fn()
+    render(
+      <TableHeader
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        onResetToDefaults={onResetToDefaults}
+        title={TABLE_TITLE}
+      />
+    )
+    fireEvent.click(screen.getByTestId(SETTINGS_BUTTON_TESTID))
+    const resetButton = screen.getByRole('button', {
+      name: 'Reset to defaults'
+    })
+    expect(resetButton).toHaveAttribute('type', 'button')
+    expect(resetButton).toHaveAttribute(
+      'data-testid',
+      'table-settings-reset-defaults'
+    )
+    resetButton.focus()
+    expect(resetButton).toHaveFocus()
+  })
 })

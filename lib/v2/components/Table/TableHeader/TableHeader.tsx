@@ -562,14 +562,15 @@ export function TableHeader({
         </div>
         <div className={styles.divider} />
         {onResetToDefaults ? (
-          <div
-            className={styles.resetColumnResizing}
+          <button
+            className={clsx(styles.resetColumnResizing, styles.resetButton)}
             data-testid='table-settings-reset-defaults'
             onClick={onResetToDefaults}
+            type='button'
           >
             <ResetIcon />
             {text.resetToDefaults}
-          </div>
+          </button>
         ) : (
           <div
             className={styles.resetColumnResizing}

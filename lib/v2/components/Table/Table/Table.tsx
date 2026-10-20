@@ -25,7 +25,6 @@ import { Spinner } from '../../Spinner'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
 import { buildTableColumns } from '../tableUtils'
-import { createResetToDefaultsHandler } from './hooks/createResetToDefaultsHandler'
 import { useColumnSizingPersistence } from './hooks/useColumnSizingPersistence'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useEndlessScroll } from './hooks/useEndlessScroll'
@@ -33,6 +32,7 @@ import { useGlobalSearch } from './hooks/useGlobalSearch'
 import { useGroupExpansion } from './hooks/useGroupExpansion'
 import { useInitialSorting } from './hooks/useInitialSorting'
 import { usePaginationState } from './hooks/usePaginationState'
+import { useResetToDefaults } from './hooks/useResetToDefaults'
 import { useScrollToRow } from './hooks/useScrollToRow'
 import { useTableCounts } from './hooks/useTableCounts'
 import { useTableOptions } from './hooks/useTableOptions'
@@ -382,15 +382,6 @@ export function Table<TData = unknown>({
 
   useColumnSizingPersistence(table, onColumnSizingChange)
 
-  const handleResetToDefaults = createResetToDefaultsHandler({
-    table,
-    columns,
-    defaultColumnVisibility,
-    defaultSortColumn,
-    defaultSortDirection,
-    onResetToDefaults
-  })
-
   const filteredRowCount = table.getFilteredRowModel().rows.length
 
   const { totalItems, filteredCount } = useTableCounts({
@@ -471,6 +462,15 @@ export function Table<TData = unknown>({
   useEffect(() => {
     onExternalSortingChange?.(sorting)
   }, [onExternalSortingChange, sorting])
+
+  const handleResetToDefaults = useResetToDefaults({
+    table,
+    columns,
+    defaultColumnVisibility,
+    defaultSortColumn,
+    defaultSortDirection,
+    onResetToDefaults
+  })
 
   useEffect(() => {
     setCurrentPage(FIRST_PAGE)
