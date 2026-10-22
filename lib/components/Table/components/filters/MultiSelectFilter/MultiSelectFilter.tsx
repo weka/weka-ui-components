@@ -79,7 +79,9 @@ function MultiSelectFilter<Data, Value>({
   const visibleItems = table.getRowModel().rows.length
 
   const options = useMemo(() => {
-    if (visibleItems === 0) {
+    // Fixed options describe the whole data set, so a page the current filter
+    // emptied must still offer them; otherwise that filter can never be changed.
+    if (visibleItems === 0 && !fixedOptions) {
       return []
     }
 
