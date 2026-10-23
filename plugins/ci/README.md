@@ -47,9 +47,10 @@ The local-fix hints in the PR summary name these `package.json` scripts, so a co
     "ts:diff": "BASE_REF=${BASE_REF:-origin/dev} bash node_modules/@weka/weka-ui-components/plugins/ci/tsc-changed.sh",
     "format": "prettier --write .",
     "formatcheck": "prettier --check .",
-    "format:diff": "BASE_REF=${BASE_REF:-origin/dev} bash node_modules/@weka/weka-ui-components/plugins/ci/prettier-changed.sh --fix"
+    "format:diff": "BASE_REF=${BASE_REF:-origin/dev} bash node_modules/@weka/weka-ui-components/plugins/ci/prettier-changed.sh",
+    "format:diff:fix": "BASE_REF=${BASE_REF:-origin/dev} bash node_modules/@weka/weka-ui-components/plugins/ci/prettier-changed.sh --fix"
   }
 }
 ```
 
-`formatcheck` is used when `full_tree_checks` is true; `format:diff` is the hint when it is false. The project also needs `eslint.diff.config.mjs` (`export default withDiff(baseConfig)` with `withDiff` from `@weka/weka-ui-components/eslint-diff`), a stylelint config re-exporting `@weka/weka-ui-components/stylelint`, and its own `stylelint`, `stylelint-config-standard-scss` and `eslint-plugin-diff` devDependencies.
+`formatcheck` is used when `full_tree_checks` is true; `format:diff` reproduces the CI check and `format:diff:fix` is the hint when it is false. The project also needs `eslint.diff.config.mjs` (`export default withDiff(baseConfig)` with `withDiff` from `@weka/weka-ui-components/eslint-diff`), a stylelint config re-exporting `@weka/weka-ui-components/stylelint`, and its own `stylelint`, `stylelint-config-standard-scss` and `eslint-plugin-diff` devDependencies.
