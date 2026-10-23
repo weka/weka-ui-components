@@ -1,9 +1,9 @@
 name: Find PRs by Ticket
-description: Search open PRs in one or more target repos for matching ticket IDs (WH-xxx)
+description: Search open PRs in one or more target repos for matching ticket IDs (WH-xxx or WEKAPP-xxx)
 
 inputs:
   tickets:
-    description: Comma-separated ticket IDs (e.g. WH-123,WH-456)
+    description: Comma-separated ticket IDs (e.g. WH-123,WEKAPP-456)
     required: true
   repo:
     description: Single target repo to search (e.g. weka/gohome). Use this OR repos.
@@ -40,7 +40,7 @@ runs:
 
           const tickets = process.env.TICKETS.split(',')
             .map(t => t.trim())
-            .filter(t => /^WH-\d+$/i.test(t));
+            .filter(t => /^(WH|WEKAPP)-\d+$/i.test(t));
 
           const repos = process.env.TARGET_REPOS
             ? JSON.parse(process.env.TARGET_REPOS)

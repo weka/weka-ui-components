@@ -27,6 +27,20 @@ runs:
     # Check out the consumer repo into a subdirectory so it does not clobber the
     # weka-ui-components checkout at the workspace root — that root checkout holds
     # this composite's action.yml, which GitHub re-reads during post-cleanup.
+    - name: List paths for sparse checkout
+      id: sparse
+      shell: bash
+      env:
+        PATHS_JSON: ${{ inputs.paths }}
+      run: |
+        {
+          echo "paths<<EOF"
+          echo "$PATHS_JSON" | jq -r '.[]'
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+
+    # Sparse (cone mode) because some consumers (weka/wekapp) are huge monorepos
+    # and only the listed paths are touched; root-level files are always included.
     - name: Checkout consumer PR branch
       uses: actions/checkout@v4
       with:
@@ -34,6 +48,9 @@ runs:
         ref: ${{ inputs.branch }}
         token: ${{ inputs.token }}
         path: consumer
+        fetch-depth: 1
+        sparse-checkout: ${{ steps.sparse.outputs.paths }}
+        sparse-checkout-cone-mode: true
 
     - name: Configure git auth for private git deps
       shell: bash
