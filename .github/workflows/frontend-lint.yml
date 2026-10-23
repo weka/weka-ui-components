@@ -458,6 +458,9 @@ jobs:
           yarn install --immutable
 
       - name: Download rdjsonl artifacts
+        # Nothing matches when setup failed and every check was skipped; the
+        # aggregator must still run to post that warning.
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           path: artifacts

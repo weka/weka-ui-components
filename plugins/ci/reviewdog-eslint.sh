@@ -19,6 +19,10 @@ JSON=$(mktemp); ERR_LOG=$(mktemp); trap 'rm -f "$JSON" "$ERR_LOG"' EXIT
 
 PROJECT="$GITHUB_WORKSPACE/$WORKING_DIR"
 
+# eslint-plugin-diff runs `git fetch origin <commit>`, which rejects revision
+# expressions like HEAD^1, so hand it a SHA.
+BASE_SHA=$(git -C "$GITHUB_WORKSPACE" rev-parse --verify "$BASE_REF^{commit}")
+
 CONFIG=""
 for f in eslint.diff.config.mjs eslint.diff.config.js; do
   [ -f "$PROJECT/$f" ] && CONFIG="$f" && break
@@ -31,7 +35,7 @@ echo "Using ESLint config: $CONFIG"
 
 status=0
 (cd "$PROJECT" && \
-  ESLINT_PLUGIN_DIFF_COMMIT="$BASE_REF" \
+  ESLINT_PLUGIN_DIFF_COMMIT="$BASE_SHA" \
     npx eslint . --config "$CONFIG" --format json --ignore-pattern "tests/") \
   > "$JSON" 2>"$ERR_LOG" || status=$?
 
