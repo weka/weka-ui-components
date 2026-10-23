@@ -22,7 +22,9 @@ echo "Running TypeScript on changed files (compared to $BASE_REF)..."
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 CURRENT_DIR=$(pwd)
-RELATIVE_PATH=${CURRENT_DIR#$REPO_ROOT/}
+# Empty at the repo root, where CURRENT_DIR has no "$REPO_ROOT/" prefix to strip.
+PROJECT_PREFIX=""
+[ "$CURRENT_DIR" != "$REPO_ROOT" ] && PROJECT_PREFIX="${CURRENT_DIR#$REPO_ROOT/}/"
 
 CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -45,8 +47,8 @@ ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
 CHANGED_FILES=""
 while IFS= read -r file; do
   [ -z "$file" ] && continue
-  if { [[ "$file" == *.ts ]] || [[ "$file" == *.tsx ]]; } && [[ "$file" == "$RELATIVE_PATH/"* ]]; then
-    relative_file=${file#$RELATIVE_PATH/}
+  if { [[ "$file" == *.ts ]] || [[ "$file" == *.tsx ]]; } && [[ "$file" == "$PROJECT_PREFIX"* ]]; then
+    relative_file=${file#"$PROJECT_PREFIX"}
     if [[ "$relative_file" != *"node_modules"* ]] && [ -f "$relative_file" ]; then
       CHANGED_FILES="${CHANGED_FILES:+$CHANGED_FILES$'\n'}$relative_file"
     fi
@@ -80,8 +82,8 @@ GLOBAL_ERRORS=$(grep -E '^error TS[0-9]+:' "$TSC_LOG" || true)
 # Changed lines of the changed .ts/.tsx files, as project-relative "<file>:<line>"
 # keys (the shared helper emits repo-relative paths; strip our project prefix and
 # keep the same .ts/.tsx, non-node_modules filter used for CHANGED_FILES above).
-CHANGED_LINE_KEYS=$(print_changed_line_keys | awk -v pfx="$RELATIVE_PATH/" '
-  index($0, pfx) == 1 {
+CHANGED_LINE_KEYS=$(print_changed_line_keys | awk -v pfx="$PROJECT_PREFIX" '
+  pfx == "" || index($0, pfx) == 1 {
     k = substr($0, length(pfx) + 1)        # "<relative_file>:<line>"
     f = k; sub(/:[0-9]+$/, "", f)
     if (f ~ /\.tsx?$/ && f !~ /node_modules/) print k

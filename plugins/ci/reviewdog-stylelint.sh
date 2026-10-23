@@ -21,7 +21,7 @@ emit_outputs() {
   fi
 }
 
-JSON=$(mktemp); trap 'rm -f "$JSON"' EXIT
+JSON=$(mktemp); ERR_LOG=$(mktemp); trap 'rm -f "$JSON" "$ERR_LOG"' EXIT
 
 # Resolved before the cd below, since BASH_SOURCE may be a relative path.
 CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -55,8 +55,19 @@ for f in "${REPO_FILES[@]}"; do
   PROJECT_FILES+=("${f#"$WORKING_DIR"/}")
 done
 
+status=0
 (cd "$PROJECT" && npx stylelint "${PROJECT_FILES[@]}" --formatter json --allow-empty-input) \
-  > "$JSON" 2>/dev/null || true
+  > "$JSON" 2>"$ERR_LOG" || status=$?
+
+# stylelint exits 0 (clean) or 2 (lint problems); anything else, or non-array
+# JSON, means it crashed or was misconfigured.
+if { [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; } || ! jq -e 'type == "array"' "$JSON" >/dev/null 2>&1; then
+  echo "::error::Stylelint failed to run (exit $status)"
+  cat "$ERR_LOG"
+  : > "$GITHUB_WORKSPACE/$OUT_RDJSONL"
+  emit_outputs 0 0
+  exit 1
+fi
 
 # Errors are counted across the whole changed files (all of them) — they fail
 # the job and are surfaced as a count in the summary, never posted inline.
@@ -66,7 +77,7 @@ errors=$(jq '[.[] | .warnings[]? | select(.severity == "error")] | length' "$JSO
 # changed files, while reviewdog posts with -filter-mode=added). Build the
 # warning rdjsonl, then keep only entries on a changed line so the count and the
 # capped/posted set agree. Paths are repo-relative on both sides.
-CHANGED_KEYS=$(mktemp); trap 'rm -f "$JSON" "$CHANGED_KEYS"' EXIT
+CHANGED_KEYS=$(mktemp); trap 'rm -f "$JSON" "$ERR_LOG" "$CHANGED_KEYS"' EXIT
 print_changed_line_keys > "$CHANGED_KEYS"
 
 jq -c --arg ws "$GITHUB_WORKSPACE/" '
@@ -84,7 +95,10 @@ jq -c --arg ws "$GITHUB_WORKSPACE/" '
     }
 ' "$JSON" \
   | jq -rc '"\(.location.path):\(.location.range.start.line)\t\(.)"' \
-  | awk -F'\t' 'NR==FNR{keep[$0]=1;next} ($1 in keep){print $2}' "$CHANGED_KEYS" - \
+  | awk -F'\t' -v keys="$CHANGED_KEYS" '
+      # Explicit load: an empty keys file must not swallow the first record.
+      BEGIN { while ((getline k < keys) > 0) keep[k] = 1 }
+      $1 in keep { print $2 }' \
   > "$GITHUB_WORKSPACE/$OUT_RDJSONL"
 
 total=$(wc -l < "$GITHUB_WORKSPACE/$OUT_RDJSONL" | tr -d ' ')

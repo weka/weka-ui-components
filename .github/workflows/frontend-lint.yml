@@ -5,6 +5,9 @@ name: Frontend Lint (Reusable)
 # Nothing here reads files from this repo's checkout: every script comes from the
 # consumer's installed @weka/weka-ui-components package (plugins/ci/), so the
 # consumer must have it in node_modules (yarn node-modules linker).
+# PR jobs check out GitHub's merge commit, whose first parent is the base tip, so
+# HEAD^1 with fetch-depth 2 is the PR's diff without fetching the base history
+# (a full fetch of a large consumer repo costs minutes per job).
 
 on:
   workflow_call:
@@ -53,10 +56,19 @@ jobs:
     env:
       WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
       CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    outputs:
+      artifact_key: ${{ steps.key.outputs.key }}
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}
     steps:
+      - name: Compute artifact key
+        id: key
+        # Keeps artifact names unique when one caller run invokes this workflow per project.
+        env:
+          WORKING_DIR: ${{ inputs.working_directory }}
+        run: echo "key=${WORKING_DIR//\//-}" >> "$GITHUB_OUTPUT"
+
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -104,13 +116,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
-
-      - name: Fetch base branch
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
-        # Base branches may contain slashes (e.g. trunk/dev), so map the ref explicitly.
-        run: git fetch --no-tags origin "+refs/heads/${BASE_BRANCH}:refs/remotes/origin/${BASE_BRANCH}"
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -136,7 +142,7 @@ jobs:
       - id: run
         name: Run ESLint
         env:
-          BASE_REF: origin/${{ github.base_ref }}
+          BASE_REF: HEAD^1
           WORKING_DIR: ${{ inputs.working_directory }}
           RDJSONL_OUT: rdjsonl-eslint.jsonl
         run: bash "$CI_DIR/reviewdog-eslint.sh"
@@ -145,7 +151,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reviewdog-eslint
+          name: reviewdog-eslint-${{ needs.setup.outputs.artifact_key }}
           path: rdjsonl-eslint.jsonl
           if-no-files-found: ignore
 
@@ -265,13 +271,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
-
-      - name: Fetch base branch
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
-        # Base branches may contain slashes (e.g. trunk/dev), so map the ref explicitly.
-        run: git fetch --no-tags origin "+refs/heads/${BASE_BRANCH}:refs/remotes/origin/${BASE_BRANCH}"
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -297,7 +297,7 @@ jobs:
       - id: run
         name: Run Stylelint
         env:
-          BASE_REF: origin/${{ github.base_ref }}
+          BASE_REF: HEAD^1
           WORKING_DIR: ${{ inputs.working_directory }}
           RDJSONL_OUT: rdjsonl-stylelint.jsonl
         run: bash "$CI_DIR/reviewdog-stylelint.sh"
@@ -306,7 +306,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reviewdog-stylelint
+          name: reviewdog-stylelint-${{ needs.setup.outputs.artifact_key }}
           path: rdjsonl-stylelint.jsonl
           if-no-files-found: ignore
 
@@ -326,13 +326,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: ${{ inputs.full_tree_checks && 1 || 0 }}
-
-      - name: Fetch base branch
-        if: ${{ !inputs.full_tree_checks }}
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
-        run: git fetch --no-tags origin "+refs/heads/${BASE_BRANCH}:refs/remotes/origin/${BASE_BRANCH}"
+          fetch-depth: ${{ inputs.full_tree_checks && 1 || 2 }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -366,7 +360,7 @@ jobs:
       - name: Run Prettier check (changed files)
         if: ${{ !inputs.full_tree_checks }}
         env:
-          BASE_REF: origin/${{ github.base_ref }}
+          BASE_REF: HEAD^1
         run: bash "$CI_DIR/prettier-changed.sh"
 
   typescript:
@@ -383,13 +377,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
-
-      - name: Fetch base branch
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
-        # Base branches may contain slashes (e.g. trunk/dev), so map the ref explicitly.
-        run: git fetch --no-tags origin "+refs/heads/${BASE_BRANCH}:refs/remotes/origin/${BASE_BRANCH}"
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -415,7 +403,7 @@ jobs:
       - id: run
         name: Run TypeScript
         env:
-          BASE_REF: origin/${{ github.base_ref }}
+          BASE_REF: HEAD^1
           WORKING_DIR: ${{ inputs.working_directory }}
           RDJSONL_OUT: rdjsonl-tsc.jsonl
           TSC_FLAGS: ${{ inputs.tsc_flags }}
@@ -425,13 +413,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reviewdog-tsc
+          name: reviewdog-tsc-${{ needs.setup.outputs.artifact_key }}
           path: rdjsonl-tsc.jsonl
           if-no-files-found: ignore
 
   summary:
     name: Reviewdog summary
-    needs: [eslint, stylelint-changed, typescript, prettier]
+    needs: [setup, eslint, stylelint-changed, typescript, prettier]
     if: always() && github.event.pull_request.number
     runs-on: ubuntu-latest
     permissions:
@@ -444,13 +432,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
-
-      - name: Fetch base branch
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
-        # Base branches may contain slashes (e.g. trunk/dev), so map the ref explicitly.
-        run: git fetch --no-tags origin "+refs/heads/${BASE_BRANCH}:refs/remotes/origin/${BASE_BRANCH}"
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -477,6 +459,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          pattern: reviewdog-*-${{ needs.setup.outputs.artifact_key }}
 
       - name: Setup reviewdog
         uses: reviewdog/action-setup@v1
@@ -490,6 +473,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PROJECT_TITLE: ${{ inputs.project_title }}
+          ARTIFACT_SUFFIX: -${{ needs.setup.outputs.artifact_key }}
           TOTAL_CAP: "15"
           PRETTIER_FIX_CMD: ${{ inputs.full_tree_checks && 'yarn format' || 'yarn format:diff:fix' }}
           ESLINT_TOTAL: ${{ needs.eslint.outputs.total }}

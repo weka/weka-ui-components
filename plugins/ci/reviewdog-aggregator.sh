@@ -23,6 +23,7 @@
 #   GH_TOKEN             gh auth
 #   REVIEWDOG_GITHUB_API_TOKEN  reviewdog auth
 #   ARTIFACTS_DIR        directory containing downloaded artifacts (default ./artifacts)
+#   ARTIFACT_SUFFIX      suffix of the artifact names, e.g. "-frontend" for reviewdog-eslint-frontend (default empty)
 
 set -euo pipefail
 
@@ -42,6 +43,7 @@ TSC_RESULT="${TSC_RESULT:-success}"
 PRETTIER_RESULT="${PRETTIER_RESULT:-success}"
 PRETTIER_FIX_CMD="${PRETTIER_FIX_CMD:-yarn format}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-artifacts}"
+ARTIFACT_SUFFIX="${ARTIFACT_SUFFIX:-}"
 
 prettier_failed=0
 [ "$PRETTIER_RESULT" = "success" ] || [ "$PRETTIER_RESULT" = "skipped" ] || prettier_failed=1
@@ -67,9 +69,9 @@ for var in TOTAL_CAP ESLINT_TOTAL ESLINT_ERRORS STYLELINT_TOTAL STYLELINT_ERRORS
   fi
 done
 
-ESLINT_RDJSONL="$ARTIFACTS_DIR/reviewdog-eslint/rdjsonl-eslint.jsonl"
-STYLELINT_RDJSONL="$ARTIFACTS_DIR/reviewdog-stylelint/rdjsonl-stylelint.jsonl"
-TSC_RDJSONL="$ARTIFACTS_DIR/reviewdog-tsc/rdjsonl-tsc.jsonl"
+ESLINT_RDJSONL="$ARTIFACTS_DIR/reviewdog-eslint${ARTIFACT_SUFFIX}/rdjsonl-eslint.jsonl"
+STYLELINT_RDJSONL="$ARTIFACTS_DIR/reviewdog-stylelint${ARTIFACT_SUFFIX}/rdjsonl-stylelint.jsonl"
+TSC_RDJSONL="$ARTIFACTS_DIR/reviewdog-tsc${ARTIFACT_SUFFIX}/rdjsonl-tsc.jsonl"
 
 count_lines() {
   local f="$1"

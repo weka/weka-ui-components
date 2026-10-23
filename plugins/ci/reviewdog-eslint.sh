@@ -13,7 +13,9 @@ set -euo pipefail
 : "${WORKING_DIR:?WORKING_DIR must be set}"
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE must be set}"
 
-JSON=$(mktemp); trap 'rm -f "$JSON"' EXIT
+OUT_RDJSONL="${RDJSONL_OUT:-rdjsonl-eslint.jsonl}"
+
+JSON=$(mktemp); ERR_LOG=$(mktemp); trap 'rm -f "$JSON" "$ERR_LOG"' EXIT
 
 PROJECT="$GITHUB_WORKSPACE/$WORKING_DIR"
 
@@ -27,10 +29,23 @@ if [ -z "$CONFIG" ]; then
 fi
 echo "Using ESLint config: $CONFIG"
 
+status=0
 (cd "$PROJECT" && \
   ESLINT_PLUGIN_DIFF_COMMIT="$BASE_REF" \
     npx eslint . --config "$CONFIG" --format json --ignore-pattern "tests/") \
-  > "$JSON" 2>/dev/null || true
+  > "$JSON" 2>"$ERR_LOG" || status=$?
+
+# ESLint exits 0 (clean) or 1 (lint errors); anything else, or non-array JSON,
+# means it crashed or was misconfigured. Fail loudly instead of reporting 0 findings.
+if { [ "$status" -ne 0 ] && [ "$status" -ne 1 ]; } || ! jq -e 'type == "array"' "$JSON" >/dev/null 2>&1; then
+  echo "::error::ESLint failed to run (exit $status)"
+  cat "$ERR_LOG"
+  : > "$GITHUB_WORKSPACE/$OUT_RDJSONL"
+  if [ -n "${GITHUB_OUTPUT:-}" ]; then
+    { echo "total=0"; echo "errors=0"; } >> "$GITHUB_OUTPUT"
+  fi
+  exit 1
+fi
 
 errors=$(jq   '[.[].messages[] | select(.severity == 2)] | length' "$JSON")
 warnings=$(jq '[.[].messages[] | select(.severity == 1)] | length' "$JSON")
@@ -50,7 +65,6 @@ if [ "$errors" -gt 0 ]; then
   ' "$JSON"
 fi
 
-OUT_RDJSONL="${RDJSONL_OUT:-rdjsonl-eslint.jsonl}"
 jq -c --arg ws "$GITHUB_WORKSPACE/" '
   .[] as $f | $f.messages[]
   | select(.severity == 1)

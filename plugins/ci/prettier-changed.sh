@@ -26,7 +26,9 @@ fi
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 CURRENT_DIR=$(pwd)
-RELATIVE_PATH=${CURRENT_DIR#$REPO_ROOT/}
+# Empty at the repo root, where CURRENT_DIR has no "$REPO_ROOT/" prefix to strip.
+PROJECT_PREFIX=""
+[ "$CURRENT_DIR" != "$REPO_ROOT" ] && PROJECT_PREFIX="${CURRENT_DIR#$REPO_ROOT/}/"
 
 # Get changed files: committed changes + staged changes + unstaged changes
 COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
@@ -42,8 +44,8 @@ ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
 CHANGED_FILES=()
 while IFS= read -r file; do
   [ -z "$file" ] && continue
-  if [[ "$file" == "$RELATIVE_PATH/"* ]]; then
-    relative_file=${file#$RELATIVE_PATH/}
+  if [[ "$file" == "$PROJECT_PREFIX"* ]]; then
+    relative_file=${file#"$PROJECT_PREFIX"}
     if [[ "$relative_file" != *"node_modules"* ]] && [ -f "$relative_file" ]; then
       CHANGED_FILES+=("$relative_file")
     fi

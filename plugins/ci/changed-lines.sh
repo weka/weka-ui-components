@@ -5,21 +5,18 @@
 # and CI (reviewdog's -filter-mode=added) agree on which findings are reportable.
 #
 # print_changed_line_keys emits "<repo-relative-path>:<line>" for every line ADDED
-# relative to BASE_REF across committed (BASE_REF...HEAD), staged, and unstaged
-# changes — the same three diff sources the *-changed.sh scripts use to detect
-# changed files. On CI (no staged/unstaged work) this reduces to BASE_REF...HEAD,
-# which is what reviewdog also considers "added".
+# relative to the merge base of BASE_REF and HEAD, as seen in the working tree
+# (committed + staged + unstaged in ONE diff, so line numbers are never mixed
+# across trees). On CI (clean tree) this equals BASE_REF...HEAD, which is what
+# reviewdog also considers "added".
 #
 # Requires BASE_REF in the environment. Paths are git's repo-root-relative b/
 # paths; callers strip their own project prefix as needed. Run inside the repo.
 
 print_changed_line_keys() {
-  {
-    git diff --unified=0 --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null \
-      || git diff --unified=0 --diff-filter=ACMRT "$BASE_REF" 2>/dev/null
-    git diff --unified=0 --cached --diff-filter=ACMRT 2>/dev/null
-    git diff --unified=0          --diff-filter=ACMRT 2>/dev/null
-  } | awk '
+  local base
+  base=$(git merge-base "$BASE_REF" HEAD 2>/dev/null) || base="$BASE_REF"
+  git diff --unified=0 --diff-filter=ACMRT "$base" 2>/dev/null | awk '
       # New-file header: keep everything after "+++ b/" so paths with spaces survive.
       /^\+\+\+ / { path = $0; sub(/^\+\+\+ b\//, "", path); next }
       # Hunk header "@@ -a,b +c,d @@": $3 is "+c,d" (git omits ",d" when d==1 and

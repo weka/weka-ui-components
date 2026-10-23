@@ -26,7 +26,9 @@ fi
 # Get the repo root and current directory
 REPO_ROOT=$(git rev-parse --show-toplevel)
 CURRENT_DIR=$(pwd)
-RELATIVE_PATH=${CURRENT_DIR#$REPO_ROOT/}
+# Empty at the repo root, where CURRENT_DIR has no "$REPO_ROOT/" prefix to strip.
+PROJECT_PREFIX=""
+[ "$CURRENT_DIR" != "$REPO_ROOT" ] && PROJECT_PREFIX="${CURRENT_DIR#$REPO_ROOT/}/"
 
 CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -46,9 +48,9 @@ ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
 CHANGED_FILES=""
 for file in $ALL_CHANGED; do
   # Check if file is SCSS and in our directory
-  if [[ "$file" == *.scss ]] && [[ "$file" == "$RELATIVE_PATH/"* ]]; then
+  if [[ "$file" == *.scss ]] && [[ "$file" == "$PROJECT_PREFIX"* ]]; then
     # Convert to path relative to current directory
-    relative_file=${file#$RELATIVE_PATH/}
+    relative_file=${file#"$PROJECT_PREFIX"}
     if [[ "$relative_file" != *"node_modules"* ]] && [[ "$relative_file" != *"__tests__"* ]] && [ -f "$relative_file" ]; then
       CHANGED_FILES="$CHANGED_FILES $relative_file"
     fi
@@ -105,11 +107,13 @@ FILTERED=$(jq -r --arg root "$REPO_ROOT/" '
     | [ .severity, $rel, (.line|tostring), ((.column // 1)|tostring), (.rule // ""), .text ]
     | @tsv
   ' "$JSON" \
-  | awk -F'\t' '
-      NR==FNR { keep[$0]=1; next }
+  | awk -F'\t' -v keys="$CHANGED_KEYS" '
+      # Load keys explicitly: an empty keys file (deletion-only change) must not
+      # make the first stdin record look like a key.
+      BEGIN { while ((getline k < keys) > 0) keep[k] = 1 }
       $1=="error"                          { print; next }
       $1=="warning" && (($2 ":" $3) in keep) { print }
-    ' "$CHANGED_KEYS" -)
+    ')
 
 if [ -z "$FILTERED" ]; then
   echo "✓ No Stylelint errors, or warnings on changed lines"

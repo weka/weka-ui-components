@@ -32,7 +32,6 @@
   "scripts": {
     "prepare": "husky",
     "build": "vite build",
-    "prepack": "vite build",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",

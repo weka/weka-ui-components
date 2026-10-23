@@ -31,7 +31,7 @@ Common env: `BASE_REF` (e.g. `origin/dev`), `WORKING_DIR` (project dir relative 
 | `reviewdog-eslint.sh` | Needs `eslint.diff.config.{mjs,js}` in the project. Exit 1 on ESLint errors; warnings are posted. |
 | `reviewdog-stylelint.sh` | Changed `.scss` files; errors fail, warnings are posted on changed lines. |
 | `reviewdog-tsc.sh` | Wraps `tsc-changed.sh`; `TSC_FLAGS` passes through. Type errors are advisory; exit 1 only if tsc could not run. |
-| `reviewdog-aggregator.sh` | Applies `TOTAL_CAP` across tools, posts inline comments and one PR summary. Also takes `PRETTIER_FIX_CMD` (default `yarn format`), `PROJECT_TITLE`, `PR_NUMBER`, `*_TOTAL`, `*_ERRORS`, `*_RESULT`. |
+| `reviewdog-aggregator.sh` | Applies `TOTAL_CAP` across tools, posts inline comments and one PR summary. Also takes `PRETTIER_FIX_CMD` (default `yarn format`), `PROJECT_TITLE`, `ARTIFACT_SUFFIX` (suffix of the `reviewdog-<tool>` artifact names, default empty), `PR_NUMBER`, `*_TOTAL`, `*_ERRORS`, `*_RESULT`. |
 
 ## What the consumer defines
 
