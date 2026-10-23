@@ -451,7 +451,10 @@ jobs:
       # The cache setup saved can still miss (eviction, failed save); the scripts
       # live in node_modules, so install rather than fail every check.
       - name: Install dependencies on cache miss
+        id: install
         if: steps.restore.outputs.cache-hit != 'true'
+        # Usually fails too when setup did; the fallback below still reports it.
+        continue-on-error: true
         working-directory: ${{ inputs.working_directory }}
         run: |
           corepack enable
@@ -491,4 +494,28 @@ jobs:
           TSC_RESULT: ${{ needs.typescript.result }}
           PRETTIER_RESULT: ${{ needs.prettier.result }}
           SETUP_RESULT: ${{ needs.setup.result }}
+        if: steps.install.outcome != 'failure'
         run: bash "$CI_DIR/reviewdog-aggregator.sh"
+
+      # Without node_modules there is no aggregator, so post the warning inline,
+      # under the aggregator's marker so the next good run replaces it.
+      - name: Report missing dependencies
+        if: steps.install.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PROJECT_TITLE: ${{ inputs.project_title }}
+        run: |
+          key=$(printf '%s' "$PROJECT_TITLE" | tr '[:upper:] /' '[:lower:]--')
+          marker="<!-- reviewdog-summary:$key -->"
+          body="$marker"$'\n\n'"### $PROJECT_TITLE review"$'\n\n'"⚠️ Dependencies could not be installed, so no checks ran. See the [workflow run]($RUN_URL)."
+          id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+                 --jq ".[] | select(.body | contains(\"$marker\")) | .id" | head -n1)
+          if [ -n "$id" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body" >/dev/null
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -f body="$body" >/dev/null
+          fi
+          echo "::error::Dependencies could not be installed; no lint checks ran."
+          exit 1
