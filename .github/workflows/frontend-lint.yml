@@ -5,8 +5,6 @@ name: Frontend Lint (Reusable)
 # Nothing here reads files from this repo's checkout: every script comes from the
 # consumer's installed @weka/weka-ui-components package (plugins/ci/), so the
 # consumer must have it in node_modules (yarn node-modules linker).
-# Cross-repo calls on a private repo need Settings -> Actions -> General ->
-# Access -> "Accessible from repositories in the 'weka' organization".
 
 on:
   workflow_call:
@@ -120,10 +118,20 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - id: run
         name: Run ESLint
@@ -162,10 +170,20 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - name: Run ESLint (all code)
         run: bash "$CI_DIR/eslint-ci.sh"
@@ -214,10 +232,20 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - name: Run Stylelint (autofix check)
         run: bash "$CI_DIR/stylelint-ci.sh"
@@ -251,10 +279,20 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - id: run
         name: Run Stylelint
@@ -306,10 +344,20 @@ jobs:
         run: corepack enable
 
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - name: Run Prettier check (full tree)
         if: ${{ inputs.full_tree_checks }}
@@ -349,10 +397,20 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - id: run
         name: Run TypeScript
@@ -380,6 +438,7 @@ jobs:
       pull-requests: write
       contents: read
     env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
       CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
     steps:
       - name: Checkout code
@@ -393,11 +452,26 @@ jobs:
         # Base branches may contain slashes (e.g. trunk/dev), so map the ref explicitly.
         run: git fetch --no-tags origin "+refs/heads/${BASE_BRANCH}:refs/remotes/origin/${BASE_BRANCH}"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
       - name: Restore node_modules
+        id: restore
         uses: actions/cache/restore@v5
         with:
           path: ${{ inputs.working_directory }}/node_modules
           key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - name: Download rdjsonl artifacts
         uses: actions/download-artifact@v4
