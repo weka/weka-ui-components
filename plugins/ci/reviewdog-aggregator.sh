@@ -15,6 +15,7 @@
 #   STYLELINT_RESULT     upstream Stylelint job result (default success)
 #   TSC_RESULT           upstream TypeScript job result (default success)
 #   PRETTIER_RESULT      upstream Prettier job result (default success; failure noted in summary)
+#   SETUP_RESULT         upstream setup job result (default success); when it fails every check is skipped
 #   PRETTIER_FIX_CMD     local command that fixes formatting, shown in the summary (default "yarn format")
 #   PROJECT_TITLE        display title in heading and marker key (default "Reviewdog")
 #   PR_NUMBER            required to manage the summary comment
@@ -41,6 +42,7 @@ ESLINT_RESULT="${ESLINT_RESULT:-success}"
 STYLELINT_RESULT="${STYLELINT_RESULT:-success}"
 TSC_RESULT="${TSC_RESULT:-success}"
 PRETTIER_RESULT="${PRETTIER_RESULT:-success}"
+SETUP_RESULT="${SETUP_RESULT:-success}"
 PRETTIER_FIX_CMD="${PRETTIER_FIX_CMD:-yarn format}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-artifacts}"
 ARTIFACT_SUFFIX="${ARTIFACT_SUFFIX:-}"
@@ -107,6 +109,8 @@ grand_total=$((ESLINT_TOTAL + ESLINT_ERRORS + STYLELINT_TOTAL + STYLELINT_ERRORS
 flag_if_crashed ESLint     "$ESLINT_RESULT"    $((ESLINT_TOTAL + ESLINT_ERRORS))
 flag_if_crashed Stylelint  "$STYLELINT_RESULT" $((STYLELINT_TOTAL + STYLELINT_ERRORS))
 flag_if_crashed TypeScript "$TSC_RESULT"       "$TSC_TOTAL"
+# A failed setup skips every check; skipped reads as clean, so flag it explicitly.
+flag_if_crashed Setup      "$SETUP_RESULT"     0
 
 echo "Cap=$TOTAL_CAP  found: eslint=$ESLINT_TOTAL stylelint=$STYLELINT_TOTAL tsc=$TSC_TOTAL"
 echo "Posting:        eslint=$keep_eslint  stylelint=$keep_stylelint  tsc=$keep_tsc"

@@ -65,6 +65,8 @@ jobs:
       - name: Compute artifact key
         id: key
         # Keeps artifact names unique when one caller run invokes this workflow per project.
+        # Runs before checkout, when the project directory doesn't exist yet.
+        working-directory: ${{ github.workspace }}
         env:
           WORKING_DIR: ${{ inputs.working_directory }}
         run: echo "key=${WORKING_DIR//\//-}" >> "$GITHUB_OUTPUT"
@@ -485,4 +487,5 @@ jobs:
           TSC_TOTAL: ${{ needs.typescript.outputs.total }}
           TSC_RESULT: ${{ needs.typescript.result }}
           PRETTIER_RESULT: ${{ needs.prettier.result }}
+          SETUP_RESULT: ${{ needs.setup.result }}
         run: bash "$CI_DIR/reviewdog-aggregator.sh"
