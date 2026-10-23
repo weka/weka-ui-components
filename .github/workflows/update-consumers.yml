@@ -2,7 +2,7 @@ name: Update Consumers
 
 # Called by v2-release.yml after a successful publish.
 # Finds open PRs in every repo listed in .github/consumer-targets.json that
-# share a release ticket (WH-xxx) and bumps their @weka/weka-ui-components
+# share a release ticket (WH-xxx or WEKAPP-xxx) and bumps their @weka/weka-ui-components
 # dependency to the released version. When a repo has multiple configured
 # paths, all of them are bumped in a single commit per consumer PR.
 
@@ -26,7 +26,7 @@ on:
         required: true
         type: string
       tickets:
-        description: Comma-separated tickets (e.g. WH-123,WH-456)
+        description: Comma-separated tickets (e.g. WH-123,WEKAPP-456)
         required: true
         type: string
 
@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       repo_paths: ${{ steps.cfg.outputs.repo_paths }}
+      repo_prefixes: ${{ steps.cfg.outputs.repo_prefixes }}
       prs: ${{ steps.find.outputs.prs || '[]' }}
     steps:
       - uses: actions/checkout@v4
@@ -51,8 +52,10 @@ jobs:
           set -euo pipefail
           REPOS=$(jq -c '[.[].repo] | unique' .github/consumer-targets.json)
           REPO_PATHS=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: map(.path)}) | from_entries' .github/consumer-targets.json)
+          REPO_PREFIXES=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: (.[0].commit_prefix // "chore:")}) | from_entries' .github/consumer-targets.json)
           echo "repos=$REPOS" >> "$GITHUB_OUTPUT"
           echo "repo_paths=$REPO_PATHS" >> "$GITHUB_OUTPUT"
+          echo "repo_prefixes=$REPO_PREFIXES" >> "$GITHUB_OUTPUT"
 
       - name: Find consumer PRs matching release tickets
         id: find
@@ -82,8 +85,10 @@ jobs:
         id: prep
         env:
           REPO_PATHS: ${{ needs.discover.outputs.repo_paths }}
+          REPO_PREFIXES: ${{ needs.discover.outputs.repo_prefixes }}
           REPO: ${{ matrix.pr.repo }}
           VERSION: ${{ inputs.version }}
+          TICKET: ${{ matrix.pr.ticket }}
         run: |
           set -euo pipefail
           PATHS=$(echo "$REPO_PATHS" | jq -c --arg r "$REPO" '.[$r]')
@@ -91,7 +96,9 @@ jobs:
             echo "::error::$REPO is not configured in .github/consumer-targets.json"
             exit 1
           fi
+          PREFIX=$(echo "$REPO_PREFIXES" | jq -r --arg r "$REPO" '.[$r] // "chore:"')
           echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
+          echo "commit_message=${PREFIX} update @weka/weka-ui-components to ${VERSION} (${TICKET})" >> "$GITHUB_OUTPUT"
           echo "spec=@weka/weka-ui-components@^${VERSION#v}" >> "$GITHUB_OUTPUT"
 
       - name: Update consumer paths
@@ -101,5 +108,5 @@ jobs:
           branch: ${{ matrix.pr.branch }}
           paths: ${{ steps.prep.outputs.paths }}
           spec: ${{ steps.prep.outputs.spec }}
-          commit_message: "chore: update @weka/weka-ui-components to ${{ inputs.version }} (${{ matrix.pr.ticket }})"
+          commit_message: ${{ steps.prep.outputs.commit_message }}
           token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}

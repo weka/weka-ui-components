@@ -65,6 +65,8 @@
       "default": "./plugins/index.js"
     },
     "./eslint": "./plugins/eslint/index.js",
+    "./eslint-diff": "./plugins/eslint/diff.js",
+    "./stylelint": "./plugins/stylelint/index.js",
     "./prettier-config": "./plugins/prettier/index.json",
     "./typescript-config": "./plugins/typescript/tsconfig.base.json",
     "./lib/*": "./lib/*"
