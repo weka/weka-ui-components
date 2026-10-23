@@ -235,7 +235,8 @@ tsc_bullet() {
 build_bullets() {
   local out="" part fn
   for fn in eslint_bullet stylelint_bullet tsc_bullet prettier_bullet; do
-    part="$("$fn")"
+    # The helpers can end on a false `[ ... ] &&`; don't let that trip set -e.
+    part="$("$fn")" || true
     [ -n "$part" ] && out+="$part"$'\n'
   done
   printf '%s' "${out%$'\n'}"
