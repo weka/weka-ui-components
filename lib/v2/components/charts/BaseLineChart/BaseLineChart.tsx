@@ -36,6 +36,52 @@ const MIN_TICK_GAP = 40
 const LINE_ANIMATION_DURATION = 200
 const X_AXIS_PADDING = { left: 20, right: 20 }
 
+const ISOLATED_DOT_RADIUS = 3
+
+const isMissing = (value: unknown) => value === null || value === undefined
+
+// Series keys may be nested paths such as "OPS.value".
+const getValue = (point: ChartDataPoint | undefined, path: string) =>
+  path
+    .split('.')
+    .reduce<unknown>(
+      (acc, part) => (acc as Record<string, unknown> | null)?.[part],
+      point
+    )
+
+interface DotRenderProps {
+  key?: string
+  index: number
+  cx: number
+  cy: number
+}
+
+// A point surrounded by gaps (e.g. [null, 5, null]) has no line segment,
+// so it is drawn as a dot to stay visible.
+function renderIsolatedDot(
+  data: ChartDataPoint[],
+  dataKey: string,
+  color: string | undefined,
+  { key, index, cx, cy }: DotRenderProps
+) {
+  const isIsolated =
+    !isMissing(getValue(data[index], dataKey)) &&
+    isMissing(getValue(data[index - 1], dataKey)) &&
+    isMissing(getValue(data[index + 1], dataKey))
+
+  return isIsolated ? (
+    <circle
+      key={key}
+      cx={cx}
+      cy={cy}
+      fill={color}
+      r={ISOLATED_DOT_RADIUS}
+    />
+  ) : (
+    <g key={key} />
+  )
+}
+
 type TooltipCursor = boolean | ReactElement | SVGProps<SVGElement>
 
 export interface BaseLineChartProps {
@@ -137,12 +183,21 @@ export function BaseLineChart({
             key={seriesItem.key}
             animationDuration={LINE_ANIMATION_DURATION}
             dataKey={seriesItem.key}
-            dot={showDot}
             hide={hiddenMetrics.has(seriesItem.key)}
             name={seriesItem.name}
             stroke={seriesItem.color}
             strokeWidth={strokeWidth}
             type='monotone'
+            dot={
+              showDot ||
+              ((dotProps: DotRenderProps) =>
+                renderIsolatedDot(
+                  data,
+                  seriesItem.key,
+                  seriesItem.color,
+                  dotProps
+                ))
+            }
           />
         ))}
         {children}
