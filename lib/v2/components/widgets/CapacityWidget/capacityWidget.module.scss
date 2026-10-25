@@ -34,7 +34,8 @@ $capsule-radius: 50px;
 .usableSection {
   flex: 1 1 auto;
   max-width: 412px;
-  padding: 0 12px 0 6px;
+  gap: 0;
+  padding: 0 9px;
 }
 
 .provisionedSection {
@@ -51,7 +52,6 @@ $capsule-radius: 50px;
 }
 
 .usableBody {
-  flex: 0 0 auto;
   gap: 24px;
   align-items: center;
   justify-content: center;
@@ -137,7 +137,7 @@ $capsule-radius: 50px;
 .usableLegend {
   align-self: stretch;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 24px 0;
 }
 
 .usableLegend.usableLegendNoDr {
@@ -508,6 +508,10 @@ $capsule-radius: 50px;
 @container (height <= 240px) {
   .donut {
     height: 160px;
+  }
+
+  .usableLegend {
+    padding: 12px 0;
   }
 
   .donutPercent {
