@@ -166,7 +166,7 @@
     "recharts": "^2.15.4",
     "sass": "^1.98.0",
     "sass-loader": "^14.2.1",
-    "storybook": "^8.6.17",
+    "storybook": "^8.6.19",
     "storybook-solidjs": "^1.0.0-beta.2",
     "stylelint": "^17.0.0",
     "stylelint-config-standard-scss": "^17.0.0",
