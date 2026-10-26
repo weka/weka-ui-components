@@ -45,32 +45,32 @@ UNSTAGED=$(git diff --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
 ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
 
 # Filter to SCSS files in current directory, convert to relative paths
-CHANGED_FILES=""
-for file in $ALL_CHANGED; do
+# Line-by-line (not word-split) so paths containing spaces survive.
+FILES=()
+while IFS= read -r file; do
+  [ -z "$file" ] && continue
   # Check if file is SCSS and in our directory
   if [[ "$file" == *.scss ]] && [[ "$file" == "$PROJECT_PREFIX"* ]]; then
     # Convert to path relative to current directory
     relative_file=${file#"$PROJECT_PREFIX"}
     if [[ "$relative_file" != *"node_modules"* ]] && [[ "$relative_file" != *"__tests__"* ]] && [ -f "$relative_file" ]; then
-      CHANGED_FILES="$CHANGED_FILES $relative_file"
+      FILES+=("$relative_file")
     fi
   fi
-done
-CHANGED_FILES=$(echo "$CHANGED_FILES" | xargs)
+done <<< "$ALL_CHANGED"
 
-if [ -z "$CHANGED_FILES" ]; then
+if [ "${#FILES[@]}" -eq 0 ]; then
   echo "✓ No SCSS files changed"
   exit 0
 fi
 
 echo "Changed SCSS files:"
-echo "$CHANGED_FILES" | tr ' ' '\n' | sed 's/^/  /'
+printf '  %s\n' "${FILES[@]}"
 echo ""
 
 # --fix rewrites whole files; line scoping doesn't apply, so just fix and exit.
 if [ -n "$FIX_FLAG" ]; then
-  # shellcheck disable=SC2086
-  exec npx stylelint $CHANGED_FILES --allow-empty-input --fix
+  exec npx stylelint "${FILES[@]}" --allow-empty-input --fix
 fi
 
 JSON=$(mktemp)
@@ -81,8 +81,7 @@ trap 'rm -f "$JSON" "$ERR_LOG" "$CHANGED_KEYS"' EXIT
 # stylelint exits non-zero both when it finds lint errors and when it fails to
 # run (bad config, crash). Keep stderr and validate the JSON so a broken
 # toolchain can't masquerade as a clean "no errors" result.
-# shellcheck disable=SC2086
-npx stylelint $CHANGED_FILES --formatter json --allow-empty-input > "$JSON" 2>"$ERR_LOG" || true
+npx stylelint "${FILES[@]}" --formatter json --allow-empty-input > "$JSON" 2>"$ERR_LOG" || true
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "ERROR: jq is required to parse Stylelint JSON output (install jq and retry)."

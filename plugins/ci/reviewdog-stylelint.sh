@@ -12,6 +12,11 @@ set -euo pipefail
 : "${WORKING_DIR:?WORKING_DIR must be set}"
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE must be set}"
 
+# Accept "./frontend", "frontend/" and "." (repo root) alongside "frontend".
+WORKING_DIR="${WORKING_DIR#./}"
+WORKING_DIR="${WORKING_DIR%/}"
+[ "$WORKING_DIR" = "." ] && WORKING_DIR=""
+
 OUT_RDJSONL="${RDJSONL_OUT:-rdjsonl-stylelint.jsonl}"
 
 emit_outputs() {
@@ -26,7 +31,7 @@ JSON=$(mktemp); ERR_LOG=$(mktemp); trap 'rm -f "$JSON" "$ERR_LOG"' EXIT
 # Resolved before the cd below, since BASH_SOURCE may be a relative path.
 CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-PROJECT="$GITHUB_WORKSPACE/$WORKING_DIR"
+PROJECT="$GITHUB_WORKSPACE${WORKING_DIR:+/$WORKING_DIR}"
 # git diff pathspec is relative to cwd; this MUST run from the repo root.
 cd "$GITHUB_WORKSPACE"
 
@@ -35,7 +40,7 @@ cd "$GITHUB_WORKSPACE"
 . "$CI_DIR/changed-lines.sh"
 
 mapfile -t REPO_FILES < <(
-  git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD -- "$WORKING_DIR" 2>/dev/null \
+  git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD -- "${WORKING_DIR:-.}" 2>/dev/null \
     | grep -E '\.scss$' \
     | grep -vE 'node_modules|__tests__'
 )
@@ -52,7 +57,7 @@ printf '  %s\n' "${REPO_FILES[@]}"
 
 PROJECT_FILES=()
 for f in "${REPO_FILES[@]}"; do
-  PROJECT_FILES+=("${f#"$WORKING_DIR"/}")
+  if [ -n "$WORKING_DIR" ]; then PROJECT_FILES+=("${f#"$WORKING_DIR"/}"); else PROJECT_FILES+=("$f"); fi
 done
 
 status=0
@@ -100,6 +105,13 @@ jq -c --arg ws "$GITHUB_WORKSPACE/" '
       BEGIN { while ((getline k < keys) > 0) keep[k] = 1 }
       $1 in keep { print $2 }' \
   > "$GITHUB_WORKSPACE/$OUT_RDJSONL"
+
+if [ "$errors" -gt 0 ]; then
+  jq -r --arg ws "$GITHUB_WORKSPACE/" '
+    .[] as $f | $f.warnings[]? | select(.severity == "error")
+    | "\($f.source | sub("^"+$ws; "")):\(.line):\(.column // 1) \(.rule // "") \(.text)"
+  ' "$JSON"
+fi
 
 total=$(wc -l < "$GITHUB_WORKSPACE/$OUT_RDJSONL" | tr -d ' ')
 echo "Stylelint: $errors error(s); $total warning(s) on changed lines"

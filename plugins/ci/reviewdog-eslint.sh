@@ -13,11 +13,16 @@ set -euo pipefail
 : "${WORKING_DIR:?WORKING_DIR must be set}"
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE must be set}"
 
+# Accept "./frontend", "frontend/" and "." (repo root) alongside "frontend".
+WORKING_DIR="${WORKING_DIR#./}"
+WORKING_DIR="${WORKING_DIR%/}"
+[ "$WORKING_DIR" = "." ] && WORKING_DIR=""
+
 OUT_RDJSONL="${RDJSONL_OUT:-rdjsonl-eslint.jsonl}"
 
 JSON=$(mktemp); ERR_LOG=$(mktemp); trap 'rm -f "$JSON" "$ERR_LOG"' EXIT
 
-PROJECT="$GITHUB_WORKSPACE/$WORKING_DIR"
+PROJECT="$GITHUB_WORKSPACE${WORKING_DIR:+/$WORKING_DIR}"
 
 # Diff against a SHA, not a revision expression. With CI set, eslint-plugin-diff
 # treats the base as a branch to fetch and diffs against origin/<base>, which

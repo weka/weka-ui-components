@@ -78,6 +78,9 @@ LOCATED_TOTAL=$(grep -cE '\([0-9]+,[0-9]+\): error TS[0-9]+: ' "$TSC_LOG" || tru
 # Global diagnostics with no file location (bad config, missing deps, etc.) are
 # printed as "error TSxxxx:" at the start of a line.
 GLOBAL_ERRORS=$(grep -E '^error TS[0-9]+:' "$TSC_LOG" || true)
+# Errors located in a tsconfig*.json are config errors, not source errors. Only
+# .json counts: with checkJs, .js/.jsx diagnostics are ordinary source errors.
+CONFIG_ERRORS=$(grep -E '\.json\([0-9]+,[0-9]+\): error TS[0-9]+: ' "$TSC_LOG" || true)
 
 # Changed lines of the changed .ts/.tsx files, as project-relative "<file>:<line>"
 # keys (the shared helper emits repo-relative paths; strip our project prefix and
@@ -108,7 +111,7 @@ FILTERED=$(awk '
 # unchanged files still exit non-zero but carry located diagnostics, so they
 # remain ignored. Exit 2 (distinct from the exit 1 used for changed-file type
 # errors below) lets callers tell "tsc broke" apart from "tsc found errors".
-if [ -n "$GLOBAL_ERRORS" ] || { [ "$TSC_EXIT" -ne 0 ] && [ "$LOCATED_TOTAL" -eq 0 ]; }; then
+if [ -n "$GLOBAL_ERRORS" ] || [ -n "$CONFIG_ERRORS" ] || { [ "$TSC_EXIT" -ne 0 ] && [ "$LOCATED_TOTAL" -eq 0 ]; }; then
   echo "❌ TypeScript failed to run (exit $TSC_EXIT):"
   echo ""
   cat "$TSC_LOG"

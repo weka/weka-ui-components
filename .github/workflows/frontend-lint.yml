@@ -421,7 +421,7 @@ jobs:
 
   summary:
     name: Reviewdog summary
-    needs: [setup, eslint, stylelint-changed, typescript, prettier]
+    needs: [setup, eslint, stylelint-changed, stylelint-autofix, typescript, prettier]
     if: always() && github.event.pull_request.number
     runs-on: ubuntu-latest
     permissions:
@@ -493,6 +493,7 @@ jobs:
           TSC_TOTAL: ${{ needs.typescript.outputs.total }}
           TSC_RESULT: ${{ needs.typescript.result }}
           PRETTIER_RESULT: ${{ needs.prettier.result }}
+          STYLELINT_AUTOFIX_RESULT: ${{ needs['stylelint-autofix'].result }}
           SETUP_RESULT: ${{ needs.setup.result }}
         if: steps.install.outcome != 'failure'
         run: bash "$CI_DIR/reviewdog-aggregator.sh"

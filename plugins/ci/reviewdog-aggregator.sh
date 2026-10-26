@@ -15,6 +15,7 @@
 #   STYLELINT_RESULT     upstream Stylelint job result (default success)
 #   TSC_RESULT           upstream TypeScript job result (default success)
 #   PRETTIER_RESULT      upstream Prettier job result (default success; failure noted in summary)
+#   STYLELINT_AUTOFIX_RESULT  upstream Stylelint autofix-check job result (default success; failure noted in summary)
 #   SETUP_RESULT         upstream setup job result (default success); when it fails every check is skipped
 #   PRETTIER_FIX_CMD     local command that fixes formatting, shown in the summary (default "yarn format")
 #   PROJECT_TITLE        display title in heading and marker key (default "Reviewdog")
@@ -42,6 +43,7 @@ ESLINT_RESULT="${ESLINT_RESULT:-success}"
 STYLELINT_RESULT="${STYLELINT_RESULT:-success}"
 TSC_RESULT="${TSC_RESULT:-success}"
 PRETTIER_RESULT="${PRETTIER_RESULT:-success}"
+STYLELINT_AUTOFIX_RESULT="${STYLELINT_AUTOFIX_RESULT:-success}"
 SETUP_RESULT="${SETUP_RESULT:-success}"
 PRETTIER_FIX_CMD="${PRETTIER_FIX_CMD:-yarn format}"
 ARTIFACTS_DIR="${ARTIFACTS_DIR:-artifacts}"
@@ -49,6 +51,8 @@ ARTIFACT_SUFFIX="${ARTIFACT_SUFFIX:-}"
 
 prettier_failed=0
 [ "$PRETTIER_RESULT" = "success" ] || [ "$PRETTIER_RESULT" = "skipped" ] || prettier_failed=1
+stylefix_failed=0
+[ "$STYLELINT_AUTOFIX_RESULT" = "success" ] || [ "$STYLELINT_AUTOFIX_RESULT" = "skipped" ] || stylefix_failed=1
 
 # Flag a job as crashed only when it did NOT succeed AND reported no counts: such
 # a job likely died before writing its outputs (which then arrive as empty and
@@ -158,7 +162,7 @@ post_summary() {
     warn="⚠️ These checks failed before reporting results, so findings may be incomplete: $failed_jobs. See the [workflow run]($RUN_URL)."$'\n\n'
   fi
 
-  if [ "$grand_total" -le 0 ] && [ "$prettier_failed" -eq 0 ] && [ -z "$failed_jobs" ]; then
+  if [ "$grand_total" -le 0 ] && [ "$prettier_failed" -eq 0 ] && [ "$stylefix_failed" -eq 0 ] && [ -z "$failed_jobs" ]; then
     body=$(cat <<EOF
 $MARKER
 
@@ -229,6 +233,11 @@ prettier_bullet() {
   echo "  Run \`$PRETTIER_FIX_CMD\` locally to fix formatting."
 }
 
+stylefix_bullet() {
+  [ "$stylefix_failed" -eq 0 ] && return 0
+  echo "- **Stylelint** — autofix check failed: some SCSS file needs \`yarn stylefix\`"
+}
+
 tsc_bullet() {
   [ "$TSC_TOTAL" -le 0 ] && return 0
   echo "- **TypeScript** — $TSC_TOTAL diagnostics · $keep_tsc posted inline"
@@ -240,7 +249,7 @@ tsc_bullet() {
 
 build_bullets() {
   local out="" part fn
-  for fn in eslint_bullet stylelint_bullet tsc_bullet prettier_bullet; do
+  for fn in eslint_bullet stylelint_bullet tsc_bullet prettier_bullet stylefix_bullet; do
     # The helpers can end on a false `[ ... ] &&`; don't let that trip set -e.
     part="$("$fn")" || true
     [ -n "$part" ] && out+="$part"$'\n'

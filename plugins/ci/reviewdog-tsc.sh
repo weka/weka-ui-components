@@ -17,6 +17,11 @@ set -euo pipefail
 : "${WORKING_DIR:?WORKING_DIR must be set}"
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE must be set}"
 
+# Accept "./frontend", "frontend/" and "." (repo root) alongside "frontend".
+WORKING_DIR="${WORKING_DIR#./}"
+WORKING_DIR="${WORKING_DIR%/}"
+[ "$WORKING_DIR" = "." ] && WORKING_DIR=""
+
 OUT_RDJSONL="${RDJSONL_OUT:-rdjsonl-tsc.jsonl}"
 
 emit_outputs() {
@@ -26,7 +31,7 @@ emit_outputs() {
   fi
 }
 
-PROJECT="$GITHUB_WORKSPACE/$WORKING_DIR"
+PROJECT="$GITHUB_WORKSPACE${WORKING_DIR:+/$WORKING_DIR}"
 CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 TMPDIR_RD=$(mktemp -d)
@@ -34,7 +39,7 @@ trap 'rm -rf "$TMPDIR_RD"' EXIT
 TSC_LOG="$TMPDIR_RD/tsc.log"
 FILTERED="$TMPDIR_RD/filtered.txt"
 
-echo "Running tsc-changed.sh in $WORKING_DIR (BASE_REF=$BASE_REF)..."
+echo "Running tsc-changed.sh in ${WORKING_DIR:-.} (BASE_REF=$BASE_REF)..."
 # tsc-changed.sh exits 1 when it finds errors in changed files (advisory signal)
 # and 2 when tsc could not run at all. Capture its exit code via PIPESTATUS so
 # tee does not mask it.
@@ -61,7 +66,7 @@ grep -E '\([0-9]+,[0-9]+\): error TS[0-9]+: ' "$TSC_LOG" > "$FILTERED" || true
 total=$(wc -l < "$FILTERED" | tr -d ' ')
 echo "TypeScript diagnostics on changed lines: $total"
 
-jq -R -c --arg wd "$WORKING_DIR/" '
+jq -R -c --arg wd "${WORKING_DIR:+$WORKING_DIR/}" '
     capture("^(?<path>.+?)\\((?<line>\\d+),(?<col>\\d+)\\): error (?<code>TS\\d+): (?<msg>.+)$")
     | select(. != null)
     | {

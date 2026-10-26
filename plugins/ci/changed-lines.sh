@@ -17,8 +17,9 @@ print_changed_line_keys() {
   local base
   base=$(git merge-base "$BASE_REF" HEAD 2>/dev/null) || base="$BASE_REF"
   git diff --unified=0 --diff-filter=ACMRT "$base" 2>/dev/null | awk '
-      # New-file header: keep everything after "+++ b/" so paths with spaces survive.
-      /^\+\+\+ / { path = $0; sub(/^\+\+\+ b\//, "", path); next }
+      # New-file header: keep everything after "+++ b/" so paths with spaces survive;
+      # git appends a tab to the header when the path has spaces.
+      /^\+\+\+ / { path = $0; sub(/^\+\+\+ b\//, "", path); sub(/\t$/, "", path); next }
       # Hunk header "@@ -a,b +c,d @@": $3 is "+c,d" (git omits ",d" when d==1 and
       # writes ",0" for pure deletions). Emit c .. c+d-1.
       /^@@ / {
