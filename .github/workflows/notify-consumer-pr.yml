@@ -1,0 +1,59 @@
+name: Notify weka-ui-components (Reusable)
+
+# Called from a consumer repo's PR workflow. Extracts ticket IDs from the PR
+# title/branch and dispatches `consumer-pr-opened` to weka-ui-components so
+# pr-preview-consumers.yml can install the matching UIC PR branch for preview.
+#
+# Caller:
+#   on:
+#     pull_request:
+#       types: [opened, reopened, edited]
+#   jobs:
+#     notify:
+#       uses: weka/weka-ui-components/.github/workflows/notify-consumer-pr.yml@main
+#       secrets: { WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }} }
+
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      ticket_pattern:
+        description: 'Extended regex matching ticket IDs in the PR title/branch'
+        required: false
+        type: string
+        default: '(WH|WEKAPP)-[0-9]+'
+    secrets:
+      WEKA_COMPONENTS_NPM_TOKEN:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.action != 'edited' || github.event.changes.title != null
+    steps:
+      - name: Extract tickets from PR
+        id: tickets
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BRANCH: ${{ github.head_ref }}
+          TICKET_PATTERN: ${{ inputs.ticket_pattern }}
+        run: |
+          TICKETS=$(echo "$PR_TITLE $PR_BRANCH" | grep -oE "$TICKET_PATTERN" | sort -u | tr '\n' ',' || true)
+          echo "tickets=${TICKETS%,}" >> $GITHUB_OUTPUT
+
+      - name: Dispatch to weka-ui-components
+        if: steps.tickets.outputs.tickets != ''
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          repository: weka/weka-ui-components
+          event-type: consumer-pr-opened
+          client-payload: |-
+            {
+              "tickets": ${{ toJSON(steps.tickets.outputs.tickets) }},
+              "pr_branch": ${{ toJSON(github.head_ref) }},
+              "pr_number": ${{ github.event.pull_request.number }},
+              "consumer_repo": ${{ toJSON(github.repository) }}
+            }

@@ -6,5 +6,10 @@
   {
     "repo": "weka/gohome",
     "path": "frontend"
+  },
+  {
+    "repo": "weka/wekapp",
+    "path": "build/packages/dashboard/files",
+    "commit_prefix": "UI:"
   }
 ]

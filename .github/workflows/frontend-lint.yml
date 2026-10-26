@@ -1,0 +1,522 @@
+name: Frontend Lint (Reusable)
+
+# Shared frontend lint pipeline for weka-ui-components consumers. Call it as
+#   uses: weka/weka-ui-components/.github/workflows/frontend-lint.yml@main
+# Nothing here reads files from this repo's checkout: every script comes from the
+# consumer's installed @weka/weka-ui-components package (plugins/ci/), so the
+# consumer must have it in node_modules (yarn node-modules linker).
+# PR jobs check out GitHub's merge commit, whose first parent is the base tip, so
+# HEAD^1 with fetch-depth 2 is the PR's diff without fetching the base history
+# (a full fetch of a large consumer repo costs minutes per job).
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        description: 'Project directory relative to repo root (e.g. frontend or observe/frontend)'
+        required: true
+        type: string
+      project_title:
+        description: 'Display title used in the PR summary comment (e.g. WekaHome, Observe)'
+        required: true
+        type: string
+      node_version:
+        description: 'Node.js version'
+        required: false
+        type: string
+        default: '20'
+      tsc_flags:
+        description: 'Flags passed to tsc by the TypeScript job (projects using references pass "-b")'
+        required: false
+        type: string
+        default: '--noEmit'
+      full_tree_checks:
+        description: 'Run the full-tree checks (ESLint on push, Stylelint autofix, `yarn formatcheck`). When false, only changed-file checks run, for projects with existing lint/format debt.'
+        required: false
+        type: boolean
+        default: true
+      import_extensions_check:
+        description: 'Fail on imports that carry a file extension'
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      WEKA_COMPONENTS_NPM_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    outputs:
+      artifact_key: ${{ steps.key.outputs.key }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Compute artifact key
+        id: key
+        # Keeps artifact names unique when one caller run invokes this workflow per project.
+        # Runs before checkout, when the project directory doesn't exist yet.
+        working-directory: ${{ github.workspace }}
+        env:
+          WORKING_DIR: ${{ inputs.working_directory }}
+        run: echo "key=${WORKING_DIR//\//-}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Enable Corepack
+        # Yarn version comes from the project's packageManager field.
+        run: corepack enable
+
+      - name: Verify private-registry token is available
+        # A missing Actions secret resolves to an empty string; fail with a clear
+        # message instead of a cryptic 401 from yarn install.
+        run: |
+          if [ -z "${WEKA_COMPONENTS_NPM_TOKEN}" ]; then
+            echo "::error::WEKA_COMPONENTS_NPM_TOKEN Actions secret is not set — cannot install the private @weka/weka-ui-components dependency."
+            exit 1
+          fi
+
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+
+  eslint:
+    name: ESLint (changed files)
+    needs: setup
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    outputs:
+      total: ${{ steps.run.outputs.total }}
+      errors: ${{ steps.run.outputs.errors }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - id: run
+        name: Run ESLint
+        env:
+          BASE_REF: HEAD^1
+          WORKING_DIR: ${{ inputs.working_directory }}
+          RDJSONL_OUT: rdjsonl-eslint.jsonl
+        run: bash "$CI_DIR/reviewdog-eslint.sh"
+
+      - name: Upload rdjsonl
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewdog-eslint-${{ needs.setup.outputs.artifact_key }}
+          path: rdjsonl-eslint.jsonl
+          if-no-files-found: ignore
+
+  eslint-all:
+    name: ESLint (full tree)
+    needs: setup
+    if: github.event_name == 'push' && inputs.full_tree_checks
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Run ESLint (all code)
+        run: bash "$CI_DIR/eslint-ci.sh"
+
+  import-extensions:
+    name: Import Extensions Check
+    needs: setup
+    if: inputs.import_extensions_check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Check for file extensions in imports
+        run: |
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+             --exclude-dir="tests" \
+             -E "from ['\"].*\.(ts|tsx|js|jsx)['\"]" src/ 2>/dev/null; then
+            echo "❌ Error: Found imports with file extensions. Please remove extensions from imports."
+            exit 1
+          else
+            echo "✓ No file extensions found in imports"
+          fi
+
+  stylelint-autofix:
+    name: Stylelint (autofix check)
+    needs: setup
+    if: inputs.full_tree_checks
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Run Stylelint (autofix check)
+        run: bash "$CI_DIR/stylelint-ci.sh"
+
+  stylelint-changed:
+    name: Stylelint (changed files)
+    needs: setup
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    outputs:
+      total: ${{ steps.run.outputs.total }}
+      errors: ${{ steps.run.outputs.errors }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - id: run
+        name: Run Stylelint
+        env:
+          BASE_REF: HEAD^1
+          WORKING_DIR: ${{ inputs.working_directory }}
+          RDJSONL_OUT: rdjsonl-stylelint.jsonl
+        run: bash "$CI_DIR/reviewdog-stylelint.sh"
+
+      - name: Upload rdjsonl
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewdog-stylelint-${{ needs.setup.outputs.artifact_key }}
+          path: rdjsonl-stylelint.jsonl
+          if-no-files-found: ignore
+
+  prettier:
+    name: Prettier
+    needs: setup
+    # Without full-tree checks only the changed-files check runs, and only on PRs.
+    if: inputs.full_tree_checks || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: ${{ inputs.full_tree_checks && 1 || 2 }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Enable Corepack
+        if: ${{ inputs.full_tree_checks }}
+        run: corepack enable
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Run Prettier check (full tree)
+        if: ${{ inputs.full_tree_checks }}
+        run: yarn formatcheck
+
+      - name: Run Prettier check (changed files)
+        if: ${{ !inputs.full_tree_checks }}
+        env:
+          BASE_REF: HEAD^1
+        run: bash "$CI_DIR/prettier-changed.sh"
+
+  typescript:
+    name: TypeScript (changed files)
+    needs: setup
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    outputs:
+      total: ${{ steps.run.outputs.total }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - id: run
+        name: Run TypeScript
+        env:
+          BASE_REF: HEAD^1
+          WORKING_DIR: ${{ inputs.working_directory }}
+          RDJSONL_OUT: rdjsonl-tsc.jsonl
+          TSC_FLAGS: ${{ inputs.tsc_flags }}
+        run: bash "$CI_DIR/reviewdog-tsc.sh"
+
+      - name: Upload rdjsonl
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewdog-tsc-${{ needs.setup.outputs.artifact_key }}
+          path: rdjsonl-tsc.jsonl
+          if-no-files-found: ignore
+
+  summary:
+    name: Reviewdog summary
+    needs: [setup, eslint, stylelint-changed, stylelint-autofix, typescript, prettier]
+    if: always() && github.event.pull_request.number
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    env:
+      WEKA_COMPONENTS_NPM_TOKEN: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+      CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Restore node_modules
+        id: restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ inputs.working_directory }}/node_modules
+          key: node-modules-${{ inputs.working_directory }}-${{ hashFiles(format('{0}/yarn.lock', inputs.working_directory)) }}
+
+      # The cache setup saved can still miss (eviction, failed save); the scripts
+      # live in node_modules, so install rather than fail every check.
+      - name: Install dependencies on cache miss
+        id: install
+        if: steps.restore.outputs.cache-hit != 'true'
+        # Usually fails too when setup did; the fallback below still reports it.
+        continue-on-error: true
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Download rdjsonl artifacts
+        # Nothing matches when setup failed and every check was skipped; the
+        # aggregator must still run to post that warning.
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: reviewdog-*-${{ needs.setup.outputs.artifact_key }}
+
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: Run aggregator
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PROJECT_TITLE: ${{ inputs.project_title }}
+          ARTIFACT_SUFFIX: -${{ needs.setup.outputs.artifact_key }}
+          TOTAL_CAP: "15"
+          PRETTIER_FIX_CMD: ${{ inputs.full_tree_checks && 'yarn format' || 'yarn format:diff:fix' }}
+          ESLINT_TOTAL: ${{ needs.eslint.outputs.total }}
+          ESLINT_ERRORS: ${{ needs.eslint.outputs.errors }}
+          ESLINT_RESULT: ${{ needs.eslint.result }}
+          STYLELINT_TOTAL: ${{ needs['stylelint-changed'].outputs.total }}
+          STYLELINT_ERRORS: ${{ needs['stylelint-changed'].outputs.errors }}
+          STYLELINT_RESULT: ${{ needs['stylelint-changed'].result }}
+          TSC_TOTAL: ${{ needs.typescript.outputs.total }}
+          TSC_RESULT: ${{ needs.typescript.result }}
+          PRETTIER_RESULT: ${{ needs.prettier.result }}
+          STYLELINT_AUTOFIX_RESULT: ${{ needs['stylelint-autofix'].result }}
+          SETUP_RESULT: ${{ needs.setup.result }}
+        if: steps.install.outcome != 'failure'
+        run: bash "$CI_DIR/reviewdog-aggregator.sh"
+
+      # Without node_modules there is no aggregator, so post the warning inline,
+      # under the aggregator's marker so the next good run replaces it.
+      - name: Report missing dependencies
+        if: steps.install.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PROJECT_TITLE: ${{ inputs.project_title }}
+        run: |
+          key=$(printf '%s' "$PROJECT_TITLE" | tr '[:upper:] /' '[:lower:]--')
+          marker="<!-- reviewdog-summary:$key -->"
+          body="$marker"$'\n\n'"### $PROJECT_TITLE review"$'\n\n'"⚠️ Dependencies could not be installed, so no checks ran. See the [workflow run]($RUN_URL)."
+          id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+                 --jq ".[] | select(.body | contains(\"$marker\")) | .id" | head -n1)
+          if [ -n "$id" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body" >/dev/null
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -f body="$body" >/dev/null
+          fi
+          echo "::error::Dependencies could not be installed; no lint checks ran."
+          exit 1
