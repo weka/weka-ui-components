@@ -8,7 +8,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "4.66.2",
+  "version": "4.67.3",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
   "imports": {
@@ -157,7 +157,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "gh-pages": "^5.0.0",
     "globals": "^14.0.0",
-    "happy-dom": "^20.8.9",
+    "happy-dom": "^21.0.4",
     "husky": "^9.0.0",
     "jsdom": "^27.4.0",
     "lint-staged": "^15.0.0",
@@ -168,7 +168,7 @@
     "recharts": "^2.15.4",
     "sass": "^1.98.0",
     "sass-loader": "^14.2.1",
-    "storybook": "^8.6.17",
+    "storybook": "^8.6.19",
     "storybook-solidjs": "^1.0.0-beta.2",
     "stylelint": "^17.0.0",
     "stylelint-config-standard-scss": "^17.0.0",

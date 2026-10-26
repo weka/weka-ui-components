@@ -119,4 +119,46 @@ describe('BaseLineChart', () => {
       expect.objectContaining({ dataKey: 'write', hide: true })
     )
   })
+
+  describe('isolated points', () => {
+    const GAP_DATA = [
+      { timestamp: 1, read: { value: null } },
+      { timestamp: 2, read: { value: 5 } },
+      { timestamp: 3, read: { value: null } },
+      { timestamp: 4, read: { value: 6 } },
+      { timestamp: 5, read: { value: 7 } },
+      { timestamp: 6, read: { value: null } }
+    ] as unknown as ChartDataPoint[]
+    const GAP_INDEX = 0
+    const ISOLATED_INDEX = 1
+    const LINE_START_INDEX = 3
+    const LINE_END_INDEX = 4
+
+    const renderDot = (index: number) => {
+      render(
+        <BaseLineChart
+          data={GAP_DATA}
+          series={[{ ...SERIES[0], key: 'read.value' }]}
+        />
+      )
+      const { dot } = lineMock.mock.calls[0][0] as {
+        dot: (props: object) => ReactNode
+      }
+      const { container } = render(<svg>{dot({ index, cx: 10, cy: 20 })}</svg>)
+      return container.querySelector('circle')
+    }
+
+    it('draws a dot for a point surrounded by gaps', () => {
+      expect(renderDot(ISOLATED_INDEX)).toHaveAttribute('fill', READ_COLOR)
+    })
+
+    it('does not draw a dot for points connected by a line', () => {
+      expect(renderDot(LINE_START_INDEX)).toBeNull()
+      expect(renderDot(LINE_END_INDEX)).toBeNull()
+    })
+
+    it('does not draw a dot for a gap', () => {
+      expect(renderDot(GAP_INDEX)).toBeNull()
+    })
+  })
 })
