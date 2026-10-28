@@ -1,5 +1,4 @@
 import type { KeyboardEvent, MouseEvent, ReactElement } from 'react'
-import type Option from 'types'
 
 import React, { useEffect, useState } from 'react'
 import { type MenuPosition, type MultiValue } from 'react-select'
