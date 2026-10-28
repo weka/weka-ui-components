@@ -11,7 +11,6 @@ export const globalTypes = {
   theme: {
     name: 'Theme',
     description: 'Global theme for v2 components',
-    defaultValue: 'light',
     toolbar: {
       icon: 'circlehollow',
       items: [
@@ -47,6 +46,10 @@ const withTheme = (Story, context) => {
     },
     createElement(Story)
   )
+}
+
+export const initialGlobals = {
+  theme: 'light'
 }
 
 export const decorators = [withTheme]

@@ -4,7 +4,7 @@ import type { Decorator, Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import Table from './Table'
 

@@ -1,5 +1,5 @@
 import type { InfoProps } from './Info'
-import type { Meta, StoryObj } from 'storybook-solidjs'
+import type { Meta, StoryObj } from '@storybook/react'
 
 import React from 'react'
 

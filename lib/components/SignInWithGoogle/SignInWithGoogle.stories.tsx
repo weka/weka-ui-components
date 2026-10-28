@@ -1,7 +1,7 @@
 import type { Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import SignInWithGoogle from './SignInWithGoogle'
 

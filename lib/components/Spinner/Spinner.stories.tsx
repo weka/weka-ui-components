@@ -1,5 +1,5 @@
 import type { SpinnerProps } from './Spinner'
-import type { Meta, StoryObj } from 'storybook-solidjs'
+import type { Meta, StoryObj } from '@storybook/react'
 
 import React from 'react'
 

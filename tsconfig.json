@@ -27,6 +27,7 @@
     "rootDir": "./"
   },
   "include": [
+    ".storybook/*.ts",
     "lib",
     "plugins",
     "vitest.setup.ts"
