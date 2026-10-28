@@ -1,5 +1,5 @@
 import type { SingleToggleProps } from './SingleToggle'
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
 import { useToggle } from '#hooks'
@@ -35,11 +35,9 @@ export default {
       type: { name: 'boolean', required: false }
     }
   }
-} as ComponentMeta<typeof SingleToggleComponent>
+} as Meta<typeof SingleToggleComponent>
 
-const Template: ComponentStory<typeof SingleToggleComponent> = (
-  args: SingleToggleProps
-) => {
+function Template(args: SingleToggleProps) {
   const [enabled, toggleEnabled] = useToggle(false)
   return (
     <SingleToggleComponent
@@ -50,7 +48,8 @@ const Template: ComponentStory<typeof SingleToggleComponent> = (
   )
 }
 
-export const SingleToggle = Template.bind({})
+export const SingleToggle: StoryFn<typeof SingleToggleComponent> =
+  Template.bind({})
 SingleToggle.args = {
   enabledText: 'Enabled',
   disabledText: 'Disabled',

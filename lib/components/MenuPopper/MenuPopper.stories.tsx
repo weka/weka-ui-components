@@ -1,6 +1,6 @@
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryFn } from '@storybook/react'
 
-import React, { useState } from 'react'
+import { type ComponentProps, useState } from 'react'
 
 import Button from '../Button'
 import { default as MenuPopperComponent } from './MenuPopper'
@@ -8,9 +8,9 @@ import { default as MenuPopperComponent } from './MenuPopper'
 export default {
   title: 'Components/MenuPopper',
   component: MenuPopperComponent
-} as ComponentMeta<typeof MenuPopperComponent>
+} as Meta<typeof MenuPopperComponent>
 
-const Template: ComponentStory<typeof MenuPopperComponent> = (args) => {
+function Template(args: ComponentProps<typeof MenuPopperComponent>) {
   const [anchorEl, setAnchorEl] = useState(null)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -35,7 +35,7 @@ const Template: ComponentStory<typeof MenuPopperComponent> = (args) => {
   )
 }
 
-export const MenuPopper = Template.bind({})
+export const MenuPopper: StoryFn<typeof MenuPopperComponent> = Template.bind({})
 MenuPopper.args = {
   items: [
     {

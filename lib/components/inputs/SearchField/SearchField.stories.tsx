@@ -1,8 +1,8 @@
 import type { SearchFieldProps } from './SearchField'
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 
 import { default as SearchFieldComponent } from './SearchField'
 
@@ -29,13 +29,15 @@ export default {
       type: { name: 'number', required: false }
     }
   }
-} as ComponentMeta<typeof SearchFieldComponent>
+} as Meta<typeof SearchFieldComponent>
 
-const Template: ComponentStory<typeof SearchFieldComponent> = (
-  args: SearchFieldProps
-) => <SearchFieldComponent {...args} />
+function Template(args: SearchFieldProps) {
+  return <SearchFieldComponent {...args} />
+}
 
-export const SearchField = Template.bind({})
+export const SearchField: StoryFn<typeof SearchFieldComponent> = Template.bind(
+  {}
+)
 SearchField.args = {
   label: 'Search Value',
   onValueUpdate: action('Value Updated'),

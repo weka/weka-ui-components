@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { FORM_VALIDATIONS } from '#consts'
 import { useToggle } from '#hooks'
 import { DateTime } from 'luxon'

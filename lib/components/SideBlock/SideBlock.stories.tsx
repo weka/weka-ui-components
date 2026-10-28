@@ -1,8 +1,8 @@
 import type { SideBlockProps } from './SideBlock'
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
-import { action } from '@storybook/addon-actions'
+import { action } from 'storybook/actions'
 import { useToggle } from '#hooks'
 
 import { default as SideBlockComponent } from './SideBlock'
@@ -40,11 +40,9 @@ export default {
       type: { name: 'object', required: false }
     }
   }
-} as ComponentMeta<typeof SideBlockComponent>
+} as Meta<typeof SideBlockComponent>
 
-const Template: ComponentStory<typeof SideBlockComponent> = (
-  args: SideBlockProps
-) => {
+function Template(args: SideBlockProps) {
   const [selected, toggleSelected] = useToggle(false)
   return (
     <SideBlockComponent
@@ -55,7 +53,7 @@ const Template: ComponentStory<typeof SideBlockComponent> = (
   )
 }
 
-export const SideBlock = Template.bind({})
+export const SideBlock: StoryFn<typeof SideBlockComponent> = Template.bind({})
 SideBlock.args = {
   name: 'Test Side Block',
   actions: [

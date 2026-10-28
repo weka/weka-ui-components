@@ -1,5 +1,5 @@
 import type { ButtonProps } from './Button'
-import type { Meta, StoryObj } from 'storybook-solidjs'
+import type { Meta, StoryObj } from '@storybook/react'
 
 import React from 'react'
 
