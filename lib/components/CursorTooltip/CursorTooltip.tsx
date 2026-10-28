@@ -11,10 +11,6 @@ import Tooltip from '../Tooltip'
 
 export type CursorTooltipProps = {
   children: ReactElement<HTMLAttributes<HTMLElement>>
-  data?: ReactElement | string
-  extraClass?: string
-  extraPopperClass?: string
-  enterDelay?: number
   disappearAfterTimeout?: number
 } & ComponentProps<typeof Tooltip>
 
