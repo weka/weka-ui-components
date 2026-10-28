@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import Utils from '#utils'
@@ -9,7 +9,6 @@ const SUCCESS_MESSAGE = 'Saved successfully'
 const ERROR_MESSAGE = 'Failed to save'
 const DUPLICATE_ID = 'duplicate-toast'
 const TOAST_SELECTOR = '.Toastify__toast'
-const CLOSE_ON_CLICK_CLASS = 'Toastify__toast--close-on-click'
 
 afterEach(() => {
   act(() => {
@@ -38,15 +37,21 @@ describe('ToasterContainer', () => {
     expect(await screen.findByText(ERROR_MESSAGE)).toBeInTheDocument()
   })
 
-  it('makes toasts dismissible by clicking them', async () => {
+  it('dismisses a toast when it is clicked', async () => {
     render(<ToasterContainer />)
     act(() => {
       Utils.toastSuccess(SUCCESS_MESSAGE)
     })
-
     const message = await screen.findByText(SUCCESS_MESSAGE)
+    const toastElement = message.closest(TOAST_SELECTOR)
 
-    expect(message.closest(TOAST_SELECTOR)).toHaveClass(CLOSE_ON_CLICK_CLASS)
+    fireEvent.click(message)
+    // happy-dom doesn't run CSS animations, so end the exit animation manually
+    fireEvent.animationEnd(toastElement!)
+
+    await waitFor(() => {
+      expect(screen.queryByText(SUCCESS_MESSAGE)).not.toBeInTheDocument()
+    })
   })
 
   it('shows a toast with a given id only once', async () => {
