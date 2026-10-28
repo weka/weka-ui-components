@@ -8,16 +8,7 @@ import Tooltip from '../../../Tooltip'
 
 import './selectOption.scss'
 
-interface SelectOptionProps extends OptionProps {
-  data: {
-    label: string
-    icon?: React.ReactNode
-    tooltip?: string
-    subLabel?: string
-  }
-}
-
-function SelectOption(props: SelectOptionProps) {
+function SelectOption(props: OptionProps<Option, boolean>) {
   const {
     data: { label, icon, tooltip, subLabel }
   } = props
@@ -42,14 +33,14 @@ function SelectOption(props: SelectOptionProps) {
       className={icon ? 'has-icon' : EMPTY_STRING}
     >
       <Tooltip
-        data={tooltip || (isLabelOverflowing ? label : null)}
+        data={tooltip || (isLabelOverflowing ? label : undefined)}
         extraClass='option-tooltip'
       >
         <div className='option-wrapper'>
           {icon ? <div className='icon-wrapper'>{icon}</div> : null}
           <div className='label-wrapper'>
             <Tooltip
-              data={isLabelOverflowing ? label : null}
+              data={isLabelOverflowing ? label : undefined}
               extraClass='option-tooltip'
             >
               <div
@@ -61,7 +52,7 @@ function SelectOption(props: SelectOptionProps) {
             </Tooltip>
             {subLabel ? (
               <Tooltip
-                data={isSubLabelOverflowing ? subLabel : null}
+                data={isSubLabelOverflowing ? subLabel : undefined}
                 extraClass='option-tooltip'
               >
                 <div

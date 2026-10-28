@@ -251,7 +251,7 @@ export const ENCODING_TYPES = {
   text: 'text',
   binary: 'binary',
   base64: 'base64'
-}
+} as const
 
 const FORMULA_TYPES = {
   EQUALS: 'equals',

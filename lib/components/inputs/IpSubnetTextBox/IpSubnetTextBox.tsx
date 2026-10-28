@@ -26,7 +26,7 @@ function keyDown(event: React.KeyboardEvent) {
   }
   if (
     event.key === ZERO_STRING &&
-    event.target.value?.startsWith(ZERO_STRING)
+    (event.target as HTMLInputElement).value?.startsWith(ZERO_STRING)
   ) {
     event.preventDefault()
   }
@@ -73,7 +73,7 @@ function IpSubnetTextBox({
   const { disabled } = rest
   const [ipVal, subnet] = value
     ? value.split('/')
-    : ['...', fixedSubnet ?? EMPTY_STRING]
+    : ['...', String(fixedSubnet ?? EMPTY_STRING)]
   const [ipParts, setIpParts] = useState<any[]>(
     shouldConvertSubnet2Mask
       ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
@@ -118,7 +118,7 @@ function IpSubnetTextBox({
       if (shouldConvertSubnet2Mask) {
         onChange(
           `${newIpParts.slice(0, 4).join('.')}/${Utils.mask2SubnetOp(
-            newIpParts.slice(4)
+            Number(newIpParts[4])
           )}`
         )
       } else {
@@ -134,7 +134,9 @@ function IpSubnetTextBox({
       focusElement.parentNode &&
       focusElement.parentNode.parentNode === inputsRef.current
     ) {
-      inputsRef.current?.firstElementChild.firstElementChild.focus()
+      const firstInput = inputsRef.current?.firstElementChild
+        ?.firstElementChild as HTMLElement | null | undefined
+      firstInput?.focus()
     }
   }, [inputsRef.current])
   return (

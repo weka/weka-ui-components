@@ -1,12 +1,12 @@
-import type { ChangeEvent, ReactElement } from 'react'
+import type { ChangeEvent, ElementType, ReactElement } from 'react'
 
 import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING, EVENT_KEYS } from '#consts'
+import { useHighlightInput, useToggle } from '#hooks'
 import svgs from '#svgs'
 import Utils from '#utils'
-
-import { useHighlightInput, useToggle } from '#hooks'
 
 import InputLoader from '../../InputLoader'
 import Tooltip from '../../Tooltip'
@@ -23,9 +23,9 @@ interface TextBoxProps {
   placeholder?: string | number
   label?: string | ReactElement
   tooltip?: string | ReactElement
-  passwordTooltip?: string | ReactElement
+  passwordTooltip?: string
   error?: string | ReactElement
-  Icon?: ReactElement
+  Icon?: ElementType
   type?: string
   isRequired?: boolean
   info?: string | ReactElement
@@ -146,7 +146,7 @@ const TextBox = React.forwardRef(function TextBox(props: TextBoxProps, ref) {
           autoComplete='new-password'
           className={inputClasses}
           onChange={onTextChange}
-          placeholder={placeholder}
+          placeholder={placeholder?.toString()}
           step='any'
           type={showPassword && type === 'password' ? 'text' : type}
           value={value === null ? EMPTY_STRING : value}

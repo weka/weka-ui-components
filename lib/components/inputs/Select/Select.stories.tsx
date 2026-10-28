@@ -23,7 +23,7 @@ export default meta
 type Story = StoryObj<typeof Select>
 
 interface SelectProps {
-  onChange: (newVal: string) => void
+  onChange?: (newVal: string) => void
   isMulti?: boolean
   sortOptions?: boolean
   disabled?: boolean
@@ -34,13 +34,14 @@ interface SelectProps {
 }
 
 function SelectWithState(args: SelectProps) {
+  const { onChange } = args
   const [selectedValue, setSelectedValue] = useState<SelectProps['value']>(
     args.value || EMPTY_STRING
   )
 
   const handleChange = (newVal: string) => {
     setSelectedValue(newVal)
-    args?.onChange(newVal)
+    onChange?.(newVal)
   }
 
   return (

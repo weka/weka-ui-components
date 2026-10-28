@@ -1,5 +1,6 @@
-import React from 'react'
+import { type ChangeEvent, type KeyboardEvent } from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from '#consts'
 
 import './textField.scss'
@@ -11,7 +12,7 @@ interface TextFieldProps {
   error?: any
   label: string
   secondLabel?: string
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void
 }
 function TextField({
   label,
@@ -22,7 +23,7 @@ function TextField({
   secondLabel,
   ...rest
 }: TextFieldProps) {
-  function onTextChange(event) {
+  function onTextChange(event: ChangeEvent<HTMLInputElement>) {
     onChange(
       !Number.isNaN(event.target.valueAsNumber)
         ? event.target.valueAsNumber

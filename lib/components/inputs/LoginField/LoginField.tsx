@@ -1,7 +1,8 @@
-import type { ReactElement } from 'react'
+import type { ChangeEvent, ReactElement } from 'react'
 
 import React from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from '#consts'
 import { useToggle } from '#hooks'
 import Utils from '#utils'
@@ -35,7 +36,7 @@ function LoginField({
 }: LoginFieldProps) {
   const [showPassword, toggleShowPassword] = useToggle(false)
 
-  function onTextChange(event: React.KeyboardEvent<HTMLInputElement>) {
+  function onTextChange(event: ChangeEvent<HTMLInputElement>) {
     onChange(
       !Number.isNaN(event.target.valueAsNumber)
         ? event.target.valueAsNumber

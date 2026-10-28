@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import type { MultiValueProps } from 'react-select'
 
 import React from 'react'
@@ -5,13 +6,15 @@ import { components } from 'react-select'
 
 import Tooltip from '../../../Tooltip'
 
-interface ValueProps extends MultiValueProps {
-  data: any
-}
-function MultiValue(props: ValueProps) {
-  const {
-    data: { chipLabel, chipTooltip, label }
-  } = props
+type ChipOption = Option &
+  Partial<{
+    chipLabel: string | ReactElement
+    chipTooltip: string | ReactElement
+  }>
+
+function MultiValue(props: MultiValueProps<Option, boolean>) {
+  const { data } = props
+  const { chipLabel, chipTooltip, label } = data as ChipOption
   return (
     <components.MultiValue {...props}>
       <Tooltip
