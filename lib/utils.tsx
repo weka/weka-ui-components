@@ -1,7 +1,7 @@
 import type { DurationUnits } from 'luxon'
 
 import React from 'react'
-import { toast } from 'react-toastify'
+import { toast, type ToastPosition } from 'react-toastify'
 import { DateTime } from 'luxon'
 
 import {
@@ -21,6 +21,8 @@ import svgs from '#svgs'
 import { Toast, Tooltip } from './components'
 
 const { Approve, Hide, View: Show, Warning } = svgs
+
+const TOAST_POSITION: ToastPosition = 'bottom-center'
 
 export const MIME_TYPES = {
   CSV: 'text/csv',
@@ -191,7 +193,7 @@ const utils = {
               message={message}
             />,
             {
-              position: toast.POSITION.BOTTOM_CENTER,
+              position: TOAST_POSITION,
               icon: false,
               toastId,
               autoClose
@@ -205,7 +207,7 @@ const utils = {
             message={message}
           />,
           {
-            position: toast.POSITION.BOTTOM_CENTER,
+            position: TOAST_POSITION,
             icon: false,
             autoClose
           }
@@ -236,7 +238,7 @@ const utils = {
               message={message}
             />,
             {
-              position: toast.POSITION.BOTTOM_CENTER,
+              position: TOAST_POSITION,
               icon: false,
               toastId,
               autoClose
@@ -250,7 +252,7 @@ const utils = {
             message={message}
           />,
           {
-            position: toast.POSITION.BOTTOM_CENTER,
+            position: TOAST_POSITION,
             icon: false,
             autoClose
           }

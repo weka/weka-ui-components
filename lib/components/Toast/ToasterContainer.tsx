@@ -3,11 +3,12 @@ import { ToastContainer } from 'react-toastify'
 
 import CloseButton from '../CloseButton'
 
-import 'react-toastify/dist/ReactToastify.css'
-
 function ToasterContainer() {
   return (
     <ToastContainer
+      // react-toastify 10 turned these off by default; keep the v9 behavior
+      closeOnClick
+      draggable
       closeButton={<CloseButton />}
       limit={3}
     />
