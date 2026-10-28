@@ -1,13 +1,18 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
 
 import IpRangeTextBox from '../../inputs/IpRangeTextBox'
 
-interface ControlIpRangeBoxProps {
-  control: Control<Record<string, unknown>[]>
+type ControlIpRangeBoxProps = Omit<
+  ComponentProps<typeof IpRangeTextBox>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   defaultValue?: string
   rules?: Record<string, unknown>
@@ -29,7 +34,6 @@ function ControlIpRangeBox({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister
@@ -38,7 +42,7 @@ function ControlIpRangeBox({
           <IpRangeTextBox
             {...rest}
             error={error?.message}
-            isRequired={isRequiredInRules ? !disabled : null}
+            isRequired={isRequiredInRules ? !disabled : undefined}
             onChange={field.onChange}
             value={field.value}
           />

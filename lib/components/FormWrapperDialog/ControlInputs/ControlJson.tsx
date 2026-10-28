@@ -1,13 +1,18 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
+
 import { FORM_VALIDATIONS } from '#consts'
 
 import JsonBox from '../../inputs/JsonBox'
 
-interface ControlJsonProps {
-  control: Control<Record<string, unknown>[]>
+type ControlJsonProps = Omit<
+  ComponentProps<typeof JsonBox>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   defaultValue?: string
   rules?: Record<string, unknown>
@@ -29,7 +34,6 @@ function ControlJson({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister
@@ -38,7 +42,7 @@ function ControlJson({
           <JsonBox
             {...rest}
             error={error?.message}
-            isRequired={isRequiredInRules ? !disabled : null}
+            isRequired={isRequiredInRules ? !disabled : undefined}
             onChange={field.onChange}
             value={field.value}
           />

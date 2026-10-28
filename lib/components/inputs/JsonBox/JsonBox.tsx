@@ -1,5 +1,7 @@
-import React from 'react'
+import type { ComponentProps } from 'react'
+
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from '#consts'
 import svgs from '#svgs'
 
@@ -12,6 +14,7 @@ const { Info } = svgs
 
 interface JsonBoxProps {
   value: string | undefined
+  onChange?: ComponentProps<typeof JsonEditor>['onChange']
   wrapperClass?: string
   label: string
   error?: string

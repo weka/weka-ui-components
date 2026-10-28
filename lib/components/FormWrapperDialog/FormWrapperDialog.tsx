@@ -41,7 +41,7 @@ function FormWrapperDialog({
   info = EMPTY_STRING,
   children,
   handleSubmit,
-  handleValidate = null,
+  handleValidate,
   submitText = EMPTY_STRING,
   dialogClass,
   cancelText = EMPTY_STRING,

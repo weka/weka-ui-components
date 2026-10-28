@@ -21,14 +21,14 @@ interface ControlTextSelectValue {
 }
 
 interface ControlTextSelectBoxProps {
-  control: Control<Record<string, unknown>[]>
+  control: Control
   name: string
   defaultValue?: ControlTextSelectValue
   rules?: Record<string, unknown>
   label?: string
   info?: string
   onChange?: (newValue: string | number) => void
-  placeholder?: ControlTextSelectValue
+  placeholder?: Partial<ControlTextSelectValue>
   textType?: string
   options: Option[]
   disabled?: boolean
@@ -41,7 +41,7 @@ interface ControlTextSelectBoxProps {
 function ControlTextSelectBox({
   control,
   name,
-  defaultValue = null,
+  defaultValue,
   rules = {},
   label = EMPTY_STRING,
   placeholder = {},
@@ -57,7 +57,10 @@ function ControlTextSelectBox({
 }: ControlTextSelectBoxProps) {
   const formattedRules = { ...rules }
   if (rules.required) {
-    const requiredFunc = (value) =>
+    const requiredFunc = (value: {
+      selectValue?: unknown
+      textValue?: unknown
+    }) =>
       value.selectValue && !Utils.isEmpty(value.textValue)
         ? null
         : FORM_VALIDATIONS.REQUIRED
@@ -67,7 +70,10 @@ function ControlTextSelectBox({
       const formattedValidate = { validationFunc: rules.validate, requiredFunc }
       formattedRules.validate = { ...formattedValidate }
     } else if (Utils.isObject(rules.validate)) {
-      formattedRules.validate = { ...formattedRules.validate, requiredFunc }
+      formattedRules.validate = {
+        ...(formattedRules.validate as Record<string, unknown>),
+        requiredFunc
+      }
     }
   }
 
@@ -82,7 +88,6 @@ function ControlTextSelectBox({
     <Controller
       control={control}
       defaultValue={{ textValue, selectValue }}
-      isClearable
       name={name}
       rules={formattedRules}
       shouldUnregister

@@ -1,14 +1,19 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
-import { FORM_VALIDATIONS } from '#consts'
 import { DateTime } from 'luxon'
+
+import { FORM_VALIDATIONS } from '#consts'
 
 import DateTimePicker from '../../DateTimePicker'
 
-interface ControlDatePickerProps {
-  control: Control<Record<string, unknown>[]>
+type ControlDatePickerProps = Omit<
+  ComponentProps<typeof DateTimePicker>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   defaultValue: string
   rules?: Record<string, unknown>
@@ -30,7 +35,6 @@ function ControlDatePicker({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister
@@ -43,7 +47,7 @@ function ControlDatePicker({
             <DateTimePicker
               {...rest}
               error={error?.message}
-              isRequired={isRequiredInRules ? !disabled : null}
+              isRequired={isRequiredInRules ? !disabled : undefined}
               onChange={(date) => field.onChange(date ? date.toISO() : null)}
               value={formattedValue}
             />

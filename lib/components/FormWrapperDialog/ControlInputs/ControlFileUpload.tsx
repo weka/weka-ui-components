@@ -1,11 +1,18 @@
+import type { ComponentProps } from 'react'
+import type { Control } from 'react-hook-form'
+
 import React from 'react'
 import { Controller } from 'react-hook-form'
+
 import utils from '#utils'
 
 import UploadField from '../../inputs/UploadField'
 
-interface ControlFileUploadProps {
-  control: Record<string, unknown>
+type ControlFileUploadProps = Omit<
+  ComponentProps<typeof UploadField>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   rules?: Record<string, unknown>
 }
@@ -19,7 +26,6 @@ function ControlFileUpload({
   return (
     <Controller
       control={control}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister

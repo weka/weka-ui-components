@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
@@ -5,8 +6,11 @@ import { Controller } from 'react-hook-form'
 
 import ToggleButton from '../../ToggleButton'
 
-interface ControlToggleProps {
-  control: Control<Record<string, unknown>[]>
+type ControlToggleProps = Omit<
+  ComponentProps<typeof ToggleButton>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   defaultValue?: boolean
 }
@@ -21,14 +25,12 @@ function ControlToggle({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       shouldUnregister
-      render={({ field, fieldState: { error } }) => (
+      render={({ field }) => (
         <div className='field-container'>
           <ToggleButton
             {...rest}
-            error={error?.message}
             onChange={field.onChange}
             value={field.value}
           />

@@ -1,13 +1,18 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
 
 import Select from '../../inputs/Select'
 
-interface ControlSelectProps {
-  control: Control<Record<string, unknown>[]>
+type ControlSelectProps = Omit<
+  ComponentProps<typeof Select>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   defaultValue?: string | number | string[]
   rules?: Record<string, unknown>
@@ -30,7 +35,6 @@ function ControlSelect({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister
@@ -39,7 +43,7 @@ function ControlSelect({
           <Select
             {...rest}
             error={error?.message}
-            isRequired={isRequiredInRules ? !disabled : null}
+            isRequired={isRequiredInRules ? !disabled : undefined}
             onChange={field.onChange}
             value={field.value}
           />

@@ -1,13 +1,18 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
+
 import { FORM_VALIDATIONS } from '#consts'
 
 import TextBox from '../../inputs/TextBox'
 
-interface ControlTextBoxProps {
-  control: Control<Record<string, unknown>[]>
+type ControlTextBoxProps = Omit<
+  ComponentProps<typeof TextBox>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control
   name: string
   defaultValue?: string | number
   rules?: Record<string, unknown>
@@ -29,7 +34,6 @@ function ControlTextBox({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister
@@ -38,7 +42,7 @@ function ControlTextBox({
           <TextBox
             {...rest}
             error={error?.message}
-            isRequired={isRequiredInRules ? !disabled : null}
+            isRequired={isRequiredInRules ? !disabled : undefined}
             onChange={field.onChange}
             value={field.value}
           />

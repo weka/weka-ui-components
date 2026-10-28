@@ -1,14 +1,20 @@
+import type { ComponentProps } from 'react'
 import type { Control } from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from '#consts'
 
 import FormSwitch from '../../inputs/FormSwitch'
 
-interface ControlSwitchProps {
-  control: Control<Record<string, unknown>[]>
+// FormSwitchProps has an index signature, which makes Omit drop its named props
+type ControlSwitchProps = Pick<
+  ComponentProps<typeof FormSwitch>,
+  'label' | 'info' | 'oneColor' | 'disabled' | 'placeholder' | 'redInfo'
+> & {
+  control: Control
   name: string
   defaultValue?: boolean
   rules?: Record<string, unknown>
@@ -33,7 +39,6 @@ function ControlSwitch({
     <Controller
       control={control}
       defaultValue={defaultValue}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister
