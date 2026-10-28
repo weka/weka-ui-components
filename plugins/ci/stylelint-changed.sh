@@ -80,8 +80,9 @@ trap 'rm -f "$JSON" "$ERR_LOG" "$CHANGED_KEYS"' EXIT
 
 # stylelint exits non-zero both when it finds lint errors and when it fails to
 # run (bad config, crash). Keep stderr and validate the JSON so a broken
-# toolchain can't masquerade as a clean "no errors" result.
-npx stylelint "${FILES[@]}" --formatter json --allow-empty-input > "$JSON" 2>"$ERR_LOG" || true
+# toolchain can't masquerade as a clean "no errors" result. Stylelint 16+ prints its report to
+# stderr, so it is written to a file instead of read from stdout.
+npx stylelint "${FILES[@]}" --formatter json --allow-empty-input --output-file "$JSON" > /dev/null 2>"$ERR_LOG" || true
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "ERROR: jq is required to parse Stylelint JSON output (install jq and retry)."
