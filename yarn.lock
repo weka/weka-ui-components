@@ -3373,7 +3373,7 @@ __metadata:
     react-markdown: "npm:^10.1.0"
     react-router-dom: "npm:^7.18.4"
     react-select: "npm:^5.10.2"
-    react-toastify: "npm:^9.1.3"
+    react-toastify: "npm:^11.1.0"
     recharts: "npm:^2.15.4"
     sass: "npm:^1.105.1"
     simplebar-react: "npm:^3.3.2"
@@ -4036,13 +4036,6 @@ __metadata:
     chromatic: dist/bin.cjs
     chromatic-cli: dist/bin.cjs
   checksum: 10c0/8fac62cc13c515d31717b31c5565bb47c167159df4377d6c19d054f02da34e408ce1110eecb1855a5d16fe7d209a999d8c8e3b2520607ace5d51d458f373fea5
-  languageName: node
-  linkType: hard
-
-"clsx@npm:^1.1.1":
-  version: 1.2.1
-  resolution: "clsx@npm:1.2.1"
-  checksum: 10c0/34dead8bee24f5e96f6e7937d711978380647e936a22e76380290e35486afd8634966ce300fc4b74a32f3762c7d4c0303f442c3e259f4ce02374eb0c82834f27
   languageName: node
   linkType: hard
 
@@ -8581,15 +8574,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-toastify@npm:^9.1.3":
-  version: 9.1.3
-  resolution: "react-toastify@npm:9.1.3"
+"react-toastify@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "react-toastify@npm:11.1.0"
   dependencies:
-    clsx: "npm:^1.1.1"
+    clsx: "npm:^2.1.1"
   peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 10c0/51de1e51e9357a24773fbcd45a4db18bf74b8ec40d86a2bfb4a4fee23ca4f9fffdac5dfb7a3c21baea39971f72f72dfcdc79403a6de006f74d69e7bc12f8b3e0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  checksum: 10c0/b621b8272bb9287ec19914b773d91c2f7741eedba253f2986150716d30c82ff069ba9780a7ab4cbb511175b3aeb6e35f003aef3f04742d77df79fb8f4c1c3c98
   languageName: node
   linkType: hard
 

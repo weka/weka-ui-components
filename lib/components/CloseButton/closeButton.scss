@@ -3,8 +3,8 @@
   width: 26px;
   height: 26px;
   position: absolute !important;
-  top: 2px;
-  right: 2px;
+  top: 2px !important;
+  right: 2px !important;
   &:hover {
     background-color: #0000000a !important;
   }

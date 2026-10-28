@@ -1,3 +1,10 @@
+// react-toastify 11 styles toasts through these variables; keep the v9 look
+.Toastify {
+  --toastify-toast-padding: 8px;
+  --toastify-toast-bd-radius: 4px;
+  --toastify-toast-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
+}
+
 .Toastify__toast {
   width: fit-content;
   min-width: 320px;
@@ -47,6 +54,9 @@
 }
 
 .toast-wrapper {
+  // v11 dropped the Toastify__toast-body wrapper that stretched and padded content
+  flex: 1 1 auto;
+  padding: 6px;
   display: flex;
   height: 100%;
   word-break: break-word;
