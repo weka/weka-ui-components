@@ -1,4 +1,8 @@
-import { PARITY_STATUSES, type ParityStatus, PERCENTAGE } from '#v2/utils/consts'
+import {
+  PARITY_STATUSES,
+  type ParityStatus,
+  PERCENTAGE
+} from '#v2/utils/consts'
 
 export const PROTECTION_STATUS_TYPES = {
   FULLY_PROTECTED: 'FULLY_PROTECTED',

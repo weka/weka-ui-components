@@ -16,8 +16,9 @@ interface RenderWithFormOptions<TFieldValues extends FieldValues> {
   mode?: Mode
 }
 
-interface RenderWithFormResult<TFieldValues extends FieldValues>
-  extends RenderResult {
+interface RenderWithFormResult<
+  TFieldValues extends FieldValues
+> extends RenderResult {
   form: UseFormReturn<TFieldValues>
 }
 

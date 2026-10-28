@@ -9,7 +9,11 @@ import {
 } from '../capacityFormat'
 import { LegendItem } from '../LegendItem'
 import { TotalPill } from '../TotalPill'
-import { CAPSULE_TONES, type CapsuleTone, VerticalCapsule } from '../VerticalCapsule'
+import {
+  CAPSULE_TONES,
+  type CapsuleTone,
+  VerticalCapsule
+} from '../VerticalCapsule'
 
 import styles from '../capacityWidget.module.scss'
 
@@ -100,9 +104,13 @@ export function ProvisionedSection({
           ) : (
             <div className={styles.tierBlock}>
               <LegendItem
-                amount={formatCapacity(ssd.written, ssdUnit, ssd.writtenDisplay)}
                 dotClass={styles.dotSsd}
                 label={labels.written}
+                amount={formatCapacity(
+                  ssd.written,
+                  ssdUnit,
+                  ssd.writtenDisplay
+                )}
               />
               <LegendItem
                 amount={totalAmount}

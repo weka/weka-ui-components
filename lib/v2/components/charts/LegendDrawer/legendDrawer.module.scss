@@ -278,7 +278,9 @@
   justify-content: space-between;
   gap: 12px;
   opacity: 1;
-  transition: opacity 0.2s ease, background-color 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;

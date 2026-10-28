@@ -103,9 +103,7 @@ describe('CompactPerformanceChart', () => {
   it('does not render the unified tooltip before any chart is hovered', () => {
     render(<CompactPerformanceChart {...buildProps()} />)
 
-    expect(
-      screen.queryByTestId(TOOLTIP_TEST_ID)
-    ).not.toBeInTheDocument()
+    expect(screen.queryByTestId(TOOLTIP_TEST_ID)).not.toBeInTheDocument()
   })
 
   it('shows the unified tooltip with all three values once a chart reports a hovered point', () => {
@@ -116,9 +114,7 @@ describe('CompactPerformanceChart', () => {
       capturedOnMouseMove[0]({ activeTooltipIndex: 1, activeLabel: '10:01' })
     })
 
-    expect(
-      screen.getByTestId(TOOLTIP_TEST_ID)
-    ).toBeInTheDocument()
+    expect(screen.getByTestId(TOOLTIP_TEST_ID)).toBeInTheDocument()
     expect(screen.getByText('150 MB/s')).toBeInTheDocument()
     expect(screen.getByText('1500 ops')).toBeInTheDocument()
     expect(screen.getByText('2 ms')).toBeInTheDocument()
@@ -194,15 +190,11 @@ describe('CompactPerformanceChart', () => {
     act(() => {
       capturedOnMouseMove[0]({ activeTooltipIndex: 1, activeLabel: '10:01' })
     })
-    expect(
-      screen.getByTestId(TOOLTIP_TEST_ID)
-    ).toBeInTheDocument()
+    expect(screen.getByTestId(TOOLTIP_TEST_ID)).toBeInTheDocument()
 
     fireEvent.mouseLeave(screen.getByTestId(CONTAINER_TEST_ID))
 
-    expect(
-      screen.queryByTestId(TOOLTIP_TEST_ID)
-    ).not.toBeInTheDocument()
+    expect(screen.queryByTestId(TOOLTIP_TEST_ID)).not.toBeInTheDocument()
   })
 
   it('keeps a frozen metric value in the tooltip when it starts loading mid-hover', () => {

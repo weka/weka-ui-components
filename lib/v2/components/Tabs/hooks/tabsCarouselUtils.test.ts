@@ -9,7 +9,7 @@ import {
 const TAB_WIDTH = 250
 
 const makeTab = (offsetLeft: number): HTMLDivElement =>
-  ({ offsetLeft, offsetWidth: TAB_WIDTH } as HTMLDivElement)
+  ({ offsetLeft, offsetWidth: TAB_WIDTH }) as HTMLDivElement
 
 const TABS = [
   makeTab(0),

@@ -179,6 +179,6 @@ Same as 403 - authentication issue. Check token and SSO authorization.
 | Unlink             | Revert package.json to version, `yarn install` |
 | Release (auto)     | Merge PR to `main` (minor by default)          |
 | Release patch      | Add `patch` label to PR, then merge            |
-| Release major      | `git tag v5.0.0 && git push origin v5.0.0`    |
+| Release major      | `git tag v5.0.0 && git push origin v5.0.0`     |
 | Release beta       | `yarn release:beta`                            |
 | Check token        | `echo $WEKA_COMPONENTS_NPM_TOKEN`              |

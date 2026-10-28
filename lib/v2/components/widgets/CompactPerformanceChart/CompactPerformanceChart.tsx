@@ -104,9 +104,7 @@ export function CompactPerformanceChart({
    * render that activates the tooltip — a later poll update can never sneak
    * in between activation and the freeze taking effect.
    */
-  const [wasTooltipActive, setWasTooltipActive] = useState(
-    tooltipState.active
-  )
+  const [wasTooltipActive, setWasTooltipActive] = useState(tooltipState.active)
   const [frozenSnapshot, setFrozenSnapshot] = useState(liveSnapshot)
   if (tooltipState.active !== wasTooltipActive) {
     setWasTooltipActive(tooltipState.active)

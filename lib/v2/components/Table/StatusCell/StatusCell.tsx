@@ -55,15 +55,15 @@ export function StatusCell<TData>({
   row
 }: Readonly<CellContext<TData, StatusCellValue>>) {
   const meta = column.columnDef.meta as
-    | { cellOptions?: StatusCellOptions<TData> }
-    | undefined
+    { cellOptions?: StatusCellOptions<TData> } | undefined
   const cellOptions = meta?.cellOptions
 
   const value = cell.getValue()
   const variant =
     cellOptions?.classify?.(value, row.original) ?? getStatusVariant(value)
   const label = value
-    ? cellOptions?.formatLabel?.(value) ?? value.replace(/_/g, ' ')
+    ? // eslint-disable-next-line sonarjs/null-dereference -- guarded by the `value ?` check
+      (cellOptions?.formatLabel?.(value) ?? value.replace(/_/g, ' '))
     : EMPTY_STRING
 
   return (

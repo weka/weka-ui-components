@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { CAPACITY_FILL_COLORS, CapacityProgressBar } from './CapacityProgressBar'
+import {
+  CAPACITY_FILL_COLORS,
+  CapacityProgressBar
+} from './CapacityProgressBar'
 
 const getProgressBar = (container: HTMLElement) =>
   container.firstChild as HTMLElement

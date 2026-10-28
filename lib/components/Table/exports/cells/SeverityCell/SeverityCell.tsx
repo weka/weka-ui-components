@@ -10,8 +10,10 @@ import './severityCell.scss'
 
 export type SeverityCellValue = string
 
-interface SeverityCellProps<Data>
-  extends ExtendedCellProps<Data, SeverityCellValue> {
+interface SeverityCellProps<Data> extends ExtendedCellProps<
+  Data,
+  SeverityCellValue
+> {
   extraClass?: string
 }
 

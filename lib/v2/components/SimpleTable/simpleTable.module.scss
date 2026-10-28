@@ -58,7 +58,9 @@
     background: var(--scrollbar-thumb);
     border-radius: 8px;
     opacity: 0.6;
-    transition: opacity 0.2s ease, background 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      background 0.2s ease;
   }
 
   .simplebar-wrapper:hover .simplebar-track.simplebar-vertical {

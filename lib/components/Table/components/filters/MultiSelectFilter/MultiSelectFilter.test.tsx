@@ -23,7 +23,7 @@ const columnWith = (filterValue?: string[]) =>
     getFilterValue: () => filterValue,
     setFilterValue: vi.fn(),
     getFacetedUniqueValues: () => new Map()
-  } as unknown as Props['column'])
+  }) as unknown as Props['column']
 
 const renderOnEmptyPage = (
   filterOptions: MultiSelectFilterOptions,

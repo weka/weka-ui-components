@@ -1,4 +1,3 @@
-
 import clsx from 'clsx'
 
 import { ICON_VARIANTS, type IconVariant } from '#v2/utils/consts'
@@ -70,4 +69,3 @@ export function FileSystemIcon({
 
   return svgContent
 }
-

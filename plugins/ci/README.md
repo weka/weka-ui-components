@@ -12,13 +12,13 @@ Consumers get them in CI through the reusable workflow `.github/workflows/fronte
 
 ## Local scripts (run from the project directory)
 
-| Script | Env | Exit codes |
-| --- | --- | --- |
-| `tsc-changed.sh` | `BASE_REF` (required), `TSC_FLAGS` (default `--noEmit`; `-b` for project references) | 0 clean, 1 errors on changed lines, 2 tsc could not run |
-| `stylelint-changed.sh [--fix]` | `BASE_REF` (required); needs `jq` | 0 clean/warnings only, 1 errors, 2 stylelint could not run |
-| `prettier-changed.sh [--fix]` | `BASE_REF` (required) | 0 clean or nothing changed, 1 formatting issues, 2 bad usage |
-| `eslint-ci.sh` | `ESLINT_PLUGIN_DIFF_COMMIT` (diff mode when set) | eslint's |
-| `stylelint-ci.sh` | none | 0 clean, 1 auto-fixable issues were not fixed |
+| Script                         | Env                                                                                  | Exit codes                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `tsc-changed.sh`               | `BASE_REF` (required), `TSC_FLAGS` (default `--noEmit`; `-b` for project references) | 0 clean, 1 errors on changed lines, 2 tsc could not run      |
+| `stylelint-changed.sh [--fix]` | `BASE_REF` (required); needs `jq`                                                    | 0 clean/warnings only, 1 errors, 2 stylelint could not run   |
+| `prettier-changed.sh [--fix]`  | `BASE_REF` (required)                                                                | 0 clean or nothing changed, 1 formatting issues, 2 bad usage |
+| `eslint-ci.sh`                 | `ESLINT_PLUGIN_DIFF_COMMIT` (diff mode when set)                                     | eslint's                                                     |
+| `stylelint-ci.sh`              | none                                                                                 | 0 clean, 1 auto-fixable issues were not fixed                |
 
 `prettier-changed.sh` is for projects with existing formatting debt that cannot run a full-tree `prettier --check`.
 
@@ -26,11 +26,11 @@ Consumers get them in CI through the reusable workflow `.github/workflows/fronte
 
 Common env: `BASE_REF` (e.g. `origin/dev`), `WORKING_DIR` (project dir relative to the repo root), `GITHUB_WORKSPACE`; optional `RDJSONL_OUT`. Each writes rdjsonl for the aggregator and `total` (plus `errors` for ESLint/Stylelint) to `$GITHUB_OUTPUT`.
 
-| Script | Notes |
-| --- | --- |
-| `reviewdog-eslint.sh` | Needs `eslint.diff.config.{mjs,js}` in the project. Exit 1 on ESLint errors; warnings are posted. |
-| `reviewdog-stylelint.sh` | Changed `.scss` files; errors fail, warnings are posted on changed lines. |
-| `reviewdog-tsc.sh` | Wraps `tsc-changed.sh`; `TSC_FLAGS` passes through. Type errors are advisory; exit 1 only if tsc could not run. |
+| Script                    | Notes                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reviewdog-eslint.sh`     | Needs `eslint.diff.config.{mjs,js}` in the project. Exit 1 on ESLint errors; warnings are posted.                                                                                                                                                                                                                                                                                                                |
+| `reviewdog-stylelint.sh`  | Changed `.scss` files; errors fail, warnings are posted on changed lines.                                                                                                                                                                                                                                                                                                                                        |
+| `reviewdog-tsc.sh`        | Wraps `tsc-changed.sh`; `TSC_FLAGS` passes through. Type errors are advisory; exit 1 only if tsc could not run.                                                                                                                                                                                                                                                                                                  |
 | `reviewdog-aggregator.sh` | Applies `TOTAL_CAP` across tools, posts inline comments and one PR summary. Also takes `PRETTIER_FIX_CMD` (default `yarn format`), `PROJECT_TITLE`, `ARTIFACT_SUFFIX` (suffix of the `reviewdog-<tool>` artifact names, default empty), `PR_NUMBER`, `*_TOTAL`, `*_ERRORS`, `*_RESULT`, `STYLELINT_AUTOFIX_RESULT` (result of the Stylelint autofix-check job; default `success`, a failure blocks "All clear"). |
 
 ## What the consumer defines

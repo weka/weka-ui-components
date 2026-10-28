@@ -25,7 +25,7 @@ export const tableUtils = {
       customTitle ||
       (typeof column.columnDef.header === 'string'
         ? column.columnDef.header
-        : column.columnDef.id ?? EMPTY_STRING)
+        : (column.columnDef.id ?? EMPTY_STRING))
     )
   },
   isAccessorColumn: <Data, Value>(column: ExtendedColumn<Data, Value>) =>

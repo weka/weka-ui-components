@@ -19,7 +19,12 @@ export const Obs: Story = {
 }
 
 export const Wide: Story = {
-  args: { label: 'SSD', fillPercentage: 50, tone: CAPSULE_TONES.SSD, wide: true }
+  args: {
+    label: 'SSD',
+    fillPercentage: 50,
+    tone: CAPSULE_TONES.SSD,
+    wide: true
+  }
 }
 
 export const Full: Story = {

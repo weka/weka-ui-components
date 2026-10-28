@@ -12,12 +12,7 @@ export type DateRangeValue = { from?: string; to?: string }
  * (domain) filters carry their own object shapes, represented here as `object`.
  */
 export type FilterValue =
-  | string
-  | string[]
-  | DateRangeValue
-  | NumRangeFilterType
-  | object
-  | undefined
+  string | string[] | DateRangeValue | NumRangeFilterType | object | undefined
 
 /** Filter option with value and display label */
 export interface FilterOption {

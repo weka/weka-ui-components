@@ -30,8 +30,8 @@ function ExpandCollapseButton({
         (disabled
           ? EMPTY_STRING
           : shouldCollapse
-          ? 'Expand All'
-          : 'Collapse All')
+            ? 'Expand All'
+            : 'Collapse All')
       }
     >
       <div>

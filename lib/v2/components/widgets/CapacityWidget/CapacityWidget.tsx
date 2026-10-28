@@ -55,7 +55,9 @@ export function CapacityWidget({
         ssd={provisioned.ssd}
         total={provisioned.total}
         totalDisplay={provisioned.totalDisplay}
-        totalUnit={provisioned.unit ?? provisioned.ssd.unit ?? DEFAULT_CAPACITY_UNIT}
+        totalUnit={
+          provisioned.unit ?? provisioned.ssd.unit ?? DEFAULT_CAPACITY_UNIT
+        }
       />
     </div>
   )

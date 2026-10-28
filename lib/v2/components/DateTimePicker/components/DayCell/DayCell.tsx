@@ -1,9 +1,6 @@
 import type { DateTime } from 'luxon'
 
-import {
-  isDayOutOfBounds,
-  isDayOutsideMonth
-} from '../../utils/dateTimeUtils'
+import { isDayOutOfBounds, isDayOutsideMonth } from '../../utils/dateTimeUtils'
 
 import styles from './dayCell.module.scss'
 

@@ -57,8 +57,8 @@ function DayPicker({
         updatedDays.length === 0
           ? WEEK_DAYS.MONDAY
           : updatedDays.length === allDays.length
-          ? SELECT_ALL
-          : updatedDays.join(', ')
+            ? SELECT_ALL
+            : updatedDays.join(', ')
 
       onChange(finalDays)
     },

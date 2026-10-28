@@ -482,7 +482,7 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PROJECT_TITLE: ${{ inputs.project_title }}
           ARTIFACT_SUFFIX: -${{ needs.setup.outputs.artifact_key }}
-          TOTAL_CAP: "15"
+          TOTAL_CAP: '15'
           PRETTIER_FIX_CMD: ${{ inputs.full_tree_checks && 'yarn format' || 'yarn format:diff:fix' }}
           ESLINT_TOTAL: ${{ needs.eslint.outputs.total }}
           ESLINT_ERRORS: ${{ needs.eslint.outputs.errors }}

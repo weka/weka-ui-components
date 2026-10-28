@@ -113,7 +113,9 @@ describe('UnifiedTooltip', () => {
     )
 
     const tooltip = getPortaledTooltip()
-    expect(tooltip?.style.getPropertyValue('--tooltip-top')).toBe(`${MIN_TOP_PX}px`)
+    expect(tooltip?.style.getPropertyValue('--tooltip-top')).toBe(
+      `${MIN_TOP_PX}px`
+    )
   })
 
   it('falls back to the recharts label when no point carries a timestamp', () => {
@@ -135,9 +137,7 @@ describe('UnifiedTooltip', () => {
     render(
       <UnifiedTooltip
         {...defaultProps}
-        metrics={[
-          buildMetric('IOPS', 'var(--aqua-500)', [iopsPoint], false)
-        ]}
+        metrics={[buildMetric('IOPS', 'var(--aqua-500)', [iopsPoint], false)]}
       />
     )
 

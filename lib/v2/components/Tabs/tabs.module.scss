@@ -182,7 +182,11 @@
     justify-content: space-between !important;
     align-items: center;
     position: relative;
-    transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease;
 
     &::after {
       display: none;
@@ -339,7 +343,9 @@
   border: none;
   cursor: pointer;
   color: var(--gray-600-400);
-  transition: opacity 0.15s ease, width 0s ease 0.15s;
+  transition:
+    opacity 0.15s ease,
+    width 0s ease 0.15s;
   opacity: 0;
   visibility: hidden;
   flex-shrink: 0;
@@ -354,7 +360,9 @@
     width: 14px;
     margin-left: auto;
     margin-right: 8px;
-    transition: opacity 0.15s ease, width 0s ease 0s;
+    transition:
+      opacity 0.15s ease,
+      width 0s ease 0s;
   }
 
   &:hover {
@@ -364,7 +372,9 @@
 
   svg,
   svg path {
-    transition: fill 0.15s ease, opacity 0.15s ease;
+    transition:
+      fill 0.15s ease,
+      opacity 0.15s ease;
   }
 }
 
@@ -378,7 +388,9 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: opacity 0.2s ease, width 0s ease 0.2s;
+  transition:
+    opacity 0.2s ease,
+    width 0s ease 0.2s;
   flex-shrink: 0;
   margin-left: 0;
   opacity: 0;
@@ -389,11 +401,15 @@
     opacity: 1;
     visibility: visible;
     width: 14px;
-    transition: opacity 0.2s ease, width 0s ease 0s;
+    transition:
+      opacity 0.2s ease,
+      width 0s ease 0s;
   }
 
   svg path {
-    transition: fill 0.2s ease, opacity 0.2s ease;
+    transition:
+      fill 0.2s ease,
+      opacity 0.2s ease;
   }
 
   &:hover {

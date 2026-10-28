@@ -446,9 +446,9 @@ export function TableHeader({
 
   const canShowFilterChips = Boolean(
     showFilterChips &&
-      activeFilters.length > 0 &&
-      onClearAllFilters &&
-      onRemoveFilter
+    activeFilters.length > 0 &&
+    onClearAllFilters &&
+    onRemoveFilter
   )
 
   const renderFilterChips = () =>

@@ -13,8 +13,7 @@ export interface DefaultCellOptions<TData> {
   getUrl?: (values: TData) => string
   openInNewTab?: boolean
   tooltipText?:
-    | string
-    | ((cell: CellContext<TData, DefaultCellValue>) => string)
+    string | ((cell: CellContext<TData, DefaultCellValue>) => string)
   bold?: boolean
 }
 
@@ -36,8 +35,7 @@ export function DefaultCell<TData>(
   const { cell, row, column } = props
 
   const meta = column.columnDef.meta as
-    | { cellOptions?: DefaultCellOptions<TData> }
-    | undefined
+    { cellOptions?: DefaultCellOptions<TData> } | undefined
   const cellOptions = meta?.cellOptions
 
   const formattedValue = formatValue(cell.getValue())

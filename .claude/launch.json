@@ -4,7 +4,9 @@
     {
       "name": "storybook",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["storybook"],
+      "runtimeArgs": [
+        "storybook"
+      ],
       "port": 6006
     }
   ]

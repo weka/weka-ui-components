@@ -71,7 +71,10 @@ describe('MiniChartWrapper', () => {
   it('preserves the prior position when recharts reports a synced hover with no event', () => {
     const onTooltipChange = renderWrapper()
 
-    capturedHandlers.onMouseMove?.({ activeTooltipIndex: 1, activeLabel: '10:01' })
+    capturedHandlers.onMouseMove?.({
+      activeTooltipIndex: 1,
+      activeLabel: '10:01'
+    })
 
     expect(onTooltipChange).toHaveBeenCalledTimes(1)
     const updater = onTooltipChange.mock.calls[0][0] as (

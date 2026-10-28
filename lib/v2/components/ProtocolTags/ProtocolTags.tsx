@@ -29,7 +29,9 @@ export function ProtocolTags({
   size = PROTOCOL_TAG_SIZES.LARGE
 }: Readonly<ProtocolTagsProps>) {
   const sizeClass =
-    size === PROTOCOL_TAG_SIZES.SMALL ? styles.protocolSmall : styles.protocolLarge
+    size === PROTOCOL_TAG_SIZES.SMALL
+      ? styles.protocolSmall
+      : styles.protocolLarge
 
   return (
     <div className={clsx(styles.protocols, extraClass)}>

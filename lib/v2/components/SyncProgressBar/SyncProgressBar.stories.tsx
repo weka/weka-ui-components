@@ -6,7 +6,11 @@ import { useEffect, useState } from 'react'
 import { SYNC_FILL_COLORS, SyncProgressBar } from './SyncProgressBar'
 
 const ANIMATION_TICK_MS = 500
-const fillColorsColumnStyle: CSSProperties = { display: 'grid', gap: 16, width: 240 }
+const fillColorsColumnStyle: CSSProperties = {
+  display: 'grid',
+  gap: 16,
+  width: 240
+}
 const ANIMATION_STEP_PERCENT = 5
 
 /** Advances `percent` on an interval so the bar's `width` transition animates, looping back to 0 once full. */

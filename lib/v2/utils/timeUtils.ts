@@ -11,12 +11,7 @@ const DEFAULT_LOCALE = 'en-US'
  * Input types accepted by formatTimestamp and toDateTime.
  */
 export type TimestampInput =
-  | string
-  | Date
-  | DateTime
-  | number
-  | null
-  | undefined
+  string | Date | DateTime | number | null | undefined
 
 /**
  * Returns the browser's preferred locale, falling back to en-US in non-browser environments.

@@ -27,8 +27,7 @@ export function TableBodyCell<TData>({
   firstDataColumnId
 }: Readonly<TableBodyCellProps<TData>>) {
   const cellMeta = cell.column.columnDef.meta as
-    | { cellStyle?: CSSProperties }
-    | undefined
+    { cellStyle?: CSSProperties } | undefined
 
   const renderColumnCell = () =>
     flexRender(cell.column.columnDef.cell, cell.getContext())
