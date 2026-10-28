@@ -20,7 +20,7 @@ export interface SideBlockProps {
   name: string
   onSelect: () => void
   isSelected?: boolean
-  actions?: (menuItem & { Icon: ReactNode })[]
+  actions?: (menuItem & { Icon?: ReactNode })[]
   description?: string
   extraClass?: string
   children: ReactNode

@@ -41,9 +41,9 @@ function Template(args: SingleToggleProps) {
   const [enabled, toggleEnabled] = useToggle(false)
   return (
     <SingleToggleComponent
+      {...args}
       isEnabled={enabled}
       onChange={toggleEnabled}
-      {...args}
     />
   )
 }
