@@ -32,7 +32,7 @@ interface TableBodyProps<Data> {
     fetchNextPage: () => void
     isFetchingNextPage: boolean
   }
-  tableRef: RefObject<HTMLDivElement>
+  tableRef: RefObject<HTMLDivElement | null>
   rows: ExtendedRow<Data>[]
 }
 

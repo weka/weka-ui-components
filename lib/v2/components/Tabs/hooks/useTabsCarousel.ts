@@ -17,7 +17,7 @@ interface UseTabsCarouselProps {
 }
 
 interface UseTabsCarouselReturn {
-  tabsContainerRef: RefObject<HTMLDivElement>
+  tabsContainerRef: RefObject<HTMLDivElement | null>
   tabRefs: MutableRefObject<Map<string, HTMLDivElement>>
   showLeftArrow: boolean
   showRightArrow: boolean

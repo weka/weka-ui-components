@@ -66,8 +66,6 @@ function MenuPopper({
       className='popper-wrapper'
       disablePortal={disablePortal}
       nonce={undefined}
-      onResize={undefined}
-      onResizeCapture={undefined}
       open={open}
       transition
     >

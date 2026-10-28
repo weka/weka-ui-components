@@ -47,8 +47,8 @@ function findScrollableAncestor(el: HTMLElement): HTMLElement | null {
 export function useCloseOnScroll(
   isOpen: boolean,
   onClose: () => void,
-  dropdownRef?: RefObject<HTMLElement>,
-  anchorRef?: RefObject<HTMLElement>
+  dropdownRef?: RefObject<HTMLElement | null>,
+  anchorRef?: RefObject<HTMLElement | null>
 ): void {
   const onCloseRef = useRef(onClose)
   const accumulatedDelta = useRef(0)

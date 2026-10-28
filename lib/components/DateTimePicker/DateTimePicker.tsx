@@ -104,8 +104,6 @@ function DateTimePicker({
         className='popper-wrapper'
         disablePortal={disablePortal}
         nonce={undefined}
-        onResize={undefined}
-        onResizeCapture={undefined}
         open={isOpen}
         transition
       >

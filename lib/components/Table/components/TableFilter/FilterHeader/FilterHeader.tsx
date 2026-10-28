@@ -48,8 +48,6 @@ function FilterHeader({
           anchorEl={anchor.current}
           className='popper-wrapper'
           nonce={undefined}
-          onResize={undefined}
-          onResizeCapture={undefined}
           open={isPopperOpen}
           transition
         >

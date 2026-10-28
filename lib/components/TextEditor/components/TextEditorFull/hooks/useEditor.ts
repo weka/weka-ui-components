@@ -1,4 +1,4 @@
-import type { IAceEditor } from 'react-ace/lib/types'
+import type { IAceEditor } from '../../../types'
 
 import { useEffect } from 'react'
 

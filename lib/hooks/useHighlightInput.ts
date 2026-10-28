@@ -3,7 +3,7 @@ import type { RefObject } from 'react'
 import { useEffect, useState } from 'react'
 
 type UseHighlightInputProps = {
-  inputRef: RefObject<HTMLInputElement | HTMLDivElement>
+  inputRef: RefObject<HTMLInputElement | HTMLDivElement | null>
   isScrolledInto?: boolean
   isHighlighted?: boolean
   delay?: number

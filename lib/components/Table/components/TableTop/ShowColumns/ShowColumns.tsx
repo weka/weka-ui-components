@@ -48,8 +48,6 @@ function ShowColumns<Data>({ table }: ShowColumnsProps<Data>) {
         className='popper-wrapper'
         disablePortal
         nonce={undefined}
-        onResize={undefined}
-        onResizeCapture={undefined}
         open={isOpen}
         transition
       >

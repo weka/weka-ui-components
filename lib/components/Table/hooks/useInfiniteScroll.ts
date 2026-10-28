@@ -13,7 +13,7 @@ const useInfiniteScroll = <Data>({
   rows
 }: {
   data: Data[]
-  tableRef: RefObject<HTMLDivElement>
+  tableRef: RefObject<HTMLDivElement | null>
   infinityScrollConfig?: {
     isFetchingNextPage: boolean
     hasNextPage: boolean

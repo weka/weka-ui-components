@@ -11,7 +11,7 @@ import clsx from 'clsx'
 import styles from './stableChartContainer.module.scss'
 
 interface StableChartContainerProps {
-  children: ReactElement
+  children: ReactElement<Partial<ChartSize>>
   extraClass?: string
 }
 

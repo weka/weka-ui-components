@@ -1,15 +1,18 @@
-import React, { useRef, useState } from 'react'
+import {
+  cloneElement,
+  type ComponentProps,
+  type HTMLAttributes,
+  type ReactElement,
+  useRef,
+  useState
+} from 'react'
 
 import Tooltip from '../Tooltip'
 
 export type CursorTooltipProps = {
-  children: React.ReactElement
-  data?: React.ReactElement | string
-  extraClass?: string
-  extraPopperClass?: string
-  enterDelay?: number
+  children: ReactElement<HTMLAttributes<HTMLElement>>
   disappearAfterTimeout?: number
-} & React.ComponentProps<typeof Tooltip>
+} & ComponentProps<typeof Tooltip>
 
 function CursorTooltip({
   children,
@@ -47,6 +50,13 @@ function CursorTooltip({
     }, enterDelay)
   }
 
+  // eslint-disable-next-line react-hooks/refs -- the ref is only read inside the mouse handlers, not during render
+  const trigger = cloneElement(children, {
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    onMouseMove: handleMouseMove
+  })
+
   return (
     <Tooltip
       enterDelay={enterDelay}
@@ -54,11 +64,7 @@ function CursorTooltip({
       open={open}
       {...rest}
     >
-      {React.cloneElement(children, {
-        onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave,
-        onMouseMove: handleMouseMove
-      })}
+      {trigger}
     </Tooltip>
   )
 }

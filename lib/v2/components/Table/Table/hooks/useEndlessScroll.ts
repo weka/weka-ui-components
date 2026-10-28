@@ -11,8 +11,8 @@ interface UseEndlessScrollParams<TData> {
   isLoadingMore: boolean | undefined
   loading: boolean | undefined
   onLoadMore: (() => void) | undefined
-  sentinelRef: RefObject<HTMLDivElement>
-  scrollContainerRef: RefObject<HTMLDivElement>
+  sentinelRef: RefObject<HTMLDivElement | null>
+  scrollContainerRef: RefObject<HTMLDivElement | null>
   paginatedRows: Row<TData>[]
   prePaginationRows: Row<TData>[]
   isCompact: boolean

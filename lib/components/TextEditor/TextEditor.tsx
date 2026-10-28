@@ -4,7 +4,7 @@ import type {
   SearchDirection,
   TextEditorHandle
 } from './components'
-import type { IAceEditor } from 'react-ace/lib/types'
+import type { IAceEditor } from './types'
 
 import React, { forwardRef, useEffect } from 'react'
 

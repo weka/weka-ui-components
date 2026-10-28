@@ -1,5 +1,5 @@
 import type { CountMatchesOptions } from '../workers/countMatches'
-import type { IAceEditor } from 'react-ace/lib/types'
+import type { IAceEditor } from '../../../types'
 
 import { useCallback, useEffect, useRef } from 'react'
 
