@@ -1,0 +1,6 @@
+# Commits that only reformat code, skipped by `git blame`.
+# GitHub applies this automatically; locally run:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# chore(deps): upgrade Prettier 2 → 3 and reformat (#540)
+14c0c972309d8dc307e8bf126b10e4f55840d808
