@@ -416,3 +416,9 @@ export const FORM_VALIDATIONS = {
       return false
     }
 }
+
+/**
+ * copy-to-clipboard v4 made the `window.prompt()` last-resort fallback opt-in;
+ * keep it for browsers where both the Clipboard API and execCommand fail.
+ */
+export const COPY_TO_CLIPBOARD_OPTIONS = { fallbackToPrompt: true } as const

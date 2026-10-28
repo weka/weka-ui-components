@@ -1,6 +1,7 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
 import copy from 'copy-to-clipboard'
+import { COPY_TO_CLIPBOARD_OPTIONS } from '#consts'
 import svgs from '#svgs'
 
 import './toast.scss'
@@ -22,7 +23,7 @@ function Toast({ message, icon }: ToastProps) {
           className='toast-copy'
           onClick={(e) => {
             e.stopPropagation()
-            copy(message)
+            void copy(message, COPY_TO_CLIPBOARD_OPTIONS)
           }}
         >
           <Copy />

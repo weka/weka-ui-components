@@ -22,6 +22,8 @@ const RULE_LENGTH = 'At least 8 characters'
 const RULE_UPPER = 'One uppercase letter'
 const RULE_LOWER = 'One lowercase letter'
 const RULE_NUMBER = 'One number or special character'
+const VALUE_WITH_SPACE_ONLY = 'Letters only'
+const VALUE_WITH_PUNCTUATION = 'Letters-only'
 
 const createProps = (overrides = {}) => ({
   value: EMPTY_STRING,
@@ -230,6 +232,24 @@ describe('PasswordInput - Password rules', () => {
       />
     )
     expect(screen.getByText(RULE_LENGTH).className).not.toMatch(/met/)
+  })
+
+  it('does not count a space as a special character', () => {
+    render(
+      <PasswordInput
+        {...createProps({ value: VALUE_WITH_SPACE_ONLY, showRules: true })}
+      />
+    )
+    expect(screen.getByText(RULE_NUMBER).className).not.toMatch(/met/)
+  })
+
+  it('counts OWASP punctuation as a special character', () => {
+    render(
+      <PasswordInput
+        {...createProps({ value: VALUE_WITH_PUNCTUATION, showRules: true })}
+      />
+    )
+    expect(screen.getByText(RULE_NUMBER).className).toMatch(/met/)
   })
 })
 
