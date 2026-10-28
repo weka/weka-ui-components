@@ -14,7 +14,7 @@ type Story = StoryObj<typeof ErrorPageComponent>
 
 export const Default: Story = {
   args: {
-    children: 'Some error message'
+    error: 'Some error message'
   },
   render: (args: object) => <ErrorPageComponent {...args} />
 }

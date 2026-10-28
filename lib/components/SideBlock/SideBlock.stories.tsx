@@ -13,7 +13,7 @@ export default {
   argTypes: {
     actions: {
       description: 'Array of actions',
-      type: { name: 'object', required: false }
+      type: { name: 'other', value: 'object', required: false }
     },
     description: {
       description: 'Description of the side block',
@@ -21,7 +21,7 @@ export default {
     },
     info: {
       description: 'Info to be displayed',
-      type: { name: 'object', required: false }
+      type: { name: 'other', value: 'object', required: false }
     },
     isSelected: {
       description: 'Is the side block selected',
@@ -37,7 +37,7 @@ export default {
     },
     SubComponent: {
       description: 'Sub component to be displayed under the name',
-      type: { name: 'object', required: false }
+      type: { name: 'other', value: 'object', required: false }
     }
   }
 } as Meta<typeof SideBlockComponent>
@@ -46,9 +46,9 @@ function Template(args: SideBlockProps) {
   const [selected, toggleSelected] = useToggle(false)
   return (
     <SideBlockComponent
+      {...args}
       isSelected={selected}
       onSelect={toggleSelected}
-      {...args}
     />
   )
 }

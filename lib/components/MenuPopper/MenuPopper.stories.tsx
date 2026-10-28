@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/react'
 
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps, type MouseEvent, useState } from 'react'
 
 import Button from '../Button'
 import { default as MenuPopperComponent } from './MenuPopper'
@@ -11,8 +11,8 @@ export default {
 } as Meta<typeof MenuPopperComponent>
 
 function Template(args: ComponentProps<typeof MenuPopperComponent>) {
-  const [anchorEl, setAnchorEl] = useState(null)
-  const handleClick = (event) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -24,11 +24,10 @@ function Template(args: ComponentProps<typeof MenuPopperComponent>) {
       <Button onClick={handleClick}>Open popper</Button>
       {Boolean(anchorEl) && (
         <MenuPopperComponent
+          {...args}
           anchorEl={anchorEl}
-          items={[]}
           onClickAway={handleClose}
           open={Boolean(anchorEl)}
-          {...args}
         />
       )}
     </div>
@@ -44,7 +43,6 @@ MenuPopper.args = {
       },
       text: 'Menu1',
       tooltip: 'tooltip for menu 1',
-      disabled: false,
       hideMenu: false
     }
   ]
