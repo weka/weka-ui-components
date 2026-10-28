@@ -150,7 +150,7 @@ function useUrlFilters(props: {
   useEffect(handleFiltersChange, [handleFiltersChange])
 
   const [searchParams] = useSearchParams()
-  const lastSavedSearchRef = useRef<string>()
+  const lastSavedSearchRef = useRef<string>(undefined)
 
   useEffect(() => {
     if (lastSavedSearchRef.current !== window.location.search) {

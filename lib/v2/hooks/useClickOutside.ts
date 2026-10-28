@@ -9,7 +9,7 @@ import {
 } from '#v2/utils/consts'
 
 interface UseClickOutsideOptions {
-  additionalRefs?: RefObject<HTMLElement>[]
+  additionalRefs?: RefObject<HTMLElement | null>[]
   additionalSelectors?: string[]
   additionalDataAttributes?: string[]
   enabled?: boolean
@@ -20,7 +20,7 @@ interface UseClickOutsideOptions {
  * Check if click target is inside the main ref
  */
 function isClickInsideMainRef(
-  ref: RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   target: HTMLElement
 ): boolean {
   return Boolean(ref.current && ref.current.contains(target))
@@ -30,7 +30,7 @@ function isClickInsideMainRef(
  * Check if the main ref has any of the specified data attributes set to 'true'
  */
 function hasDataAttributeOnRef(
-  ref: RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   dataAttributes: readonly string[]
 ): boolean {
   return dataAttributes.some(
@@ -42,7 +42,7 @@ function hasDataAttributeOnRef(
  * Check if click target is inside any of the additional refs
  */
 function isClickInsideAdditionalRefs(
-  refs: readonly RefObject<HTMLElement>[],
+  refs: readonly RefObject<HTMLElement | null>[],
   target: HTMLElement
 ): boolean {
   return refs.some((r) => r.current && r.current.contains(target))
@@ -88,7 +88,7 @@ function hasDataAttributeInAncestors(
  * @param options - Additional options for more complex scenarios
  */
 export const useClickOutside = (
-  ref: RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   handler: () => void,
   options: UseClickOutsideOptions = {}
 ) => {

@@ -1,6 +1,7 @@
-import type { IAceEditor } from 'react-ace/lib/types'
+import type { IAceEditor } from '../../../types'
 
 import { useEffect } from 'react'
+
 import { EMPTY_STRING } from '#consts'
 
 function useForcedLineNumbers({

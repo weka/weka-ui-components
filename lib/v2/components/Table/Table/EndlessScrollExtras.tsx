@@ -8,7 +8,7 @@ interface EndlessScrollExtrasProps {
   readonly endless: boolean
   readonly isLoadingMore: boolean | undefined
   readonly loading?: boolean
-  readonly sentinelRef: RefObject<HTMLDivElement>
+  readonly sentinelRef: RefObject<HTMLDivElement | null>
 }
 
 /**

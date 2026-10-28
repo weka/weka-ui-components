@@ -108,7 +108,7 @@ function Range({ values, onChange, unitOptions }: Readonly<RangeProps>) {
     type: MinMaxType,
     isOpen: boolean,
     setDropdownOpen: (open: boolean) => void,
-    ref: RefObject<HTMLDivElement>
+    ref: RefObject<HTMLDivElement | null>
   ) => {
     const unitToShow = type === MIN_MAX.MAX ? maxUnit : minUnit
     const isMin = type === MIN_MAX.MIN

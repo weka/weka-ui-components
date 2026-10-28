@@ -16,7 +16,7 @@ export function JsonEditorCopyButton({
   getText
 }: Readonly<JsonEditorCopyButtonProps>) {
   const [isCopied, setIsCopied] = useState(false)
-  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => () => clearTimeout(resetTimeoutRef.current), [])
 

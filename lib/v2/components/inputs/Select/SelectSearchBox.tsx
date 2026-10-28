@@ -17,7 +17,7 @@ const NAVIGATION_KEYS: ReadonlySet<string> = new Set([
 ])
 
 interface SelectSearchBoxProps {
-  inputRef: RefObject<HTMLInputElement>
+  inputRef: RefObject<HTMLInputElement | null>
   query: string
   isLoading: boolean
   onQueryChange: (e: ChangeEvent<HTMLInputElement>) => void

@@ -23,7 +23,7 @@ export const MENU_POPOVER_STYLES = {
 export interface MenuPopoverProps {
   open: boolean
   onClose: () => void
-  anchorRef: RefObject<HTMLElement>
+  anchorRef: RefObject<HTMLElement | null>
   children: ReactNode
   /** Extra class applied to the popover container (e.g. to widen it). */
   extraClass?: string

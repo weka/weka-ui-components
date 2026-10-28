@@ -1,6 +1,6 @@
 import type { ExtendedTable } from '../types'
 
-import { useEffect } from 'react'
+import { type RefObject, useEffect } from 'react'
 import Utils from '#utils'
 
 import { ROW_HEIGHT, ROWS_PER_PAGE_RATIO } from '../tableConsts'
@@ -13,7 +13,7 @@ function usePageSize<Data>({
   data
 }: {
   table: ExtendedTable<Data>
-  tableRef: React.RefObject<HTMLDivElement>
+  tableRef: RefObject<HTMLDivElement | null>
   miniTable?: boolean
   fixedPageSize: number | undefined
   data: Data[]

@@ -1,5 +1,7 @@
 import type { ExternalSearchAction, ParsedData, SearchDirection } from './hooks'
-import type { IAceEditor } from 'react-ace/lib/types'
+import type ReactAce from 'react-ace'
+
+import type { IAceEditor } from '../../types'
 
 import React, {
   forwardRef,
@@ -166,7 +168,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
     }, [setTextEditorContext, mode])
 
     const id = useId()
-    const editorRef = useRef<{ editor: IAceEditor }>(null)
+    const editorRef = useRef<ReactAce>(null)
     const editor = editorRef.current?.editor
 
     const [onlyMatching, toggleOnlyMatching] = useToggle(false)

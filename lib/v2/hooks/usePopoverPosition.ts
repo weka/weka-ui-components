@@ -62,7 +62,7 @@ function getHorizontalPlacement(
 interface UsePopoverPositionOptions {
   offset?: number
   scrollCloseThreshold?: number
-  contentRef?: RefObject<HTMLElement>
+  contentRef?: RefObject<HTMLElement | null>
   align?: PopoverAlign
 }
 
@@ -76,7 +76,7 @@ interface UsePopoverPositionResult {
  */
 export function usePopoverPosition(
   isOpen: boolean,
-  anchorRef: RefObject<HTMLElement>,
+  anchorRef: RefObject<HTMLElement | null>,
   onClose: () => void,
   options: UsePopoverPositionOptions = {}
 ): UsePopoverPositionResult {

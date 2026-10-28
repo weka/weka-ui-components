@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { type RefObject, useLayoutEffect, useRef, useState } from 'react'
 
 const SIZE_WITHOUT_VALUE = 14
 
@@ -9,7 +9,7 @@ function useAutosizeWidth({
 }: {
   value: string | number
   autosize?: boolean
-  inputRef: React.RefObject<HTMLInputElement>
+  inputRef: RefObject<HTMLInputElement | null>
 }) {
   const [inputWidth, setInputWidth] = useState(SIZE_WITHOUT_VALUE)
   const calculationBoxRef = useRef<HTMLDivElement>(null)
