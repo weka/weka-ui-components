@@ -61,8 +61,9 @@ for f in "${REPO_FILES[@]}"; do
 done
 
 status=0
-(cd "$PROJECT" && npx stylelint "${PROJECT_FILES[@]}" --formatter json --allow-empty-input) \
-  > "$JSON" 2>"$ERR_LOG" || status=$?
+# Stylelint 16+ prints its report to stderr, so it is written to a file instead of read from stdout.
+(cd "$PROJECT" && npx stylelint "${PROJECT_FILES[@]}" --formatter json --allow-empty-input --output-file "$JSON") \
+  > /dev/null 2>"$ERR_LOG" || status=$?
 
 # stylelint exits 0 (clean) or 2 (lint problems); anything else, or non-array
 # JSON, means it crashed or was misconfigured.
