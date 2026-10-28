@@ -2,6 +2,12 @@
   "compilerOptions": {
     // Default
     "target": "es5",
+    "lib": [
+      "ES5",
+      "DOM",
+      "DOM.Iterable",
+      "ScriptHost"
+    ],
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
