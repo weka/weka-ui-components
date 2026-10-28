@@ -3,7 +3,7 @@
     // Default
     "target": "es5",
     "lib": [
-      "ES5",
+      "ES2022",
       "DOM",
       "DOM.Iterable",
       "ScriptHost"
@@ -27,6 +27,7 @@
     "rootDir": "./"
   },
   "include": [
+    "env.d.ts",
     ".storybook/*.ts",
     "lib",
     "plugins",
