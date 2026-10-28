@@ -104,13 +104,13 @@ export function ProvisionedSection({
           ) : (
             <div className={styles.tierBlock}>
               <LegendItem
+                dotClass={styles.dotSsd}
+                label={labels.written}
                 amount={formatCapacity(
                   ssd.written,
                   ssdUnit,
                   ssd.writtenDisplay
                 )}
-                dotClass={styles.dotSsd}
-                label={labels.written}
               />
               <LegendItem
                 amount={totalAmount}

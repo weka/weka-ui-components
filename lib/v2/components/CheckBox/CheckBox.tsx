@@ -41,14 +41,14 @@ export function Checkbox({
     <div
       aria-checked={partiallyChecked ? 'mixed' : checked}
       aria-disabled={disabled}
+      data-testid='custom-checkbox'
+      role='checkbox'
+      tabIndex={disabled ? -1 : 0}
       className={clsx(
         styles.checkbox,
         disabled && styles.disabled,
         wrapperClass
       )}
-      data-testid='custom-checkbox'
-      role='checkbox'
-      tabIndex={disabled ? -1 : 0}
       onClick={(event) => {
         event?.stopPropagation()
         if (disabled) {

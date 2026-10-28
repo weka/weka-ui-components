@@ -62,7 +62,8 @@ export function StatusCell<TData>({
   const variant =
     cellOptions?.classify?.(value, row.original) ?? getStatusVariant(value)
   const label = value
-    ? (cellOptions?.formatLabel?.(value) ?? value.replace(/_/g, ' '))
+    ? // eslint-disable-next-line sonarjs/null-dereference -- guarded by the `value ?` check
+      (cellOptions?.formatLabel?.(value) ?? value.replace(/_/g, ' '))
     : EMPTY_STRING
 
   return (
