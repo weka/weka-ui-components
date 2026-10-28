@@ -1,4 +1,3 @@
-
 import clsx from 'clsx'
 
 import { ICON_VARIANTS, type IconVariant } from '#v2/utils/consts'
@@ -72,4 +71,3 @@ export function S3BucketsIcon({
 
   return svgContent
 }
-

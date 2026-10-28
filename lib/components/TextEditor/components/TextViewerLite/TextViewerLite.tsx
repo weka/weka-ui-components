@@ -14,11 +14,10 @@ type TextViewerLiteProps = {
   value?: string
   fontSize: number
   maxLines?: number
-  lines?:
-    | {
-        number: string
-        text: string
-      }[]
+  lines?: {
+    number: string
+    text: string
+  }[]
 }
 
 function TextViewerLite({

@@ -1,5 +1,2 @@
-export type {
-  HeaderMetaBannerProps,
-  HeaderMetaItem
-} from './HeaderMetaBanner'
+export type { HeaderMetaBannerProps, HeaderMetaItem } from './HeaderMetaBanner'
 export { HeaderMetaBanner } from './HeaderMetaBanner'

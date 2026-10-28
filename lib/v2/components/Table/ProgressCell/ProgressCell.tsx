@@ -27,8 +27,7 @@ export function ProgressCell<TData>(
 ) {
   const { cell, column } = props
   const meta = column.columnDef.meta as
-    | { cellOptions?: ProgressCellOptions<TData> }
-    | undefined
+    { cellOptions?: ProgressCellOptions<TData> } | undefined
   const cellOptions = meta?.cellOptions
 
   const value = cell.getValue()

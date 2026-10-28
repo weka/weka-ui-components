@@ -245,8 +245,7 @@ function FilterChips({
           : undefined
         const filterMeta = (
           column as
-            | { meta?: { filter?: { uppercaseValue?: boolean } } }
-            | undefined
+            { meta?: { filter?: { uppercaseValue?: boolean } } } | undefined
         )?.meta?.filter
         const rawValue = String(filter.value)
         const labelByValue = getOptionLabelMap(columns, filter.columnId)

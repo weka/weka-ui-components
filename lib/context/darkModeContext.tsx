@@ -38,9 +38,7 @@ const DarkModeContext = createContext<{
 function DarkModeProvider(props: Readonly<PropsWithChildren>) {
   const [themeState, setThemeState] = useState<Theme>(() => {
     const savedDarkMode = localStorage.getItem(STORAGE_KEY) as
-      | 'true'
-      | 'false'
-      | null
+      'true' | 'false' | null
     const prefersDarkMode = getPrefersDarkMode()
 
     if (savedDarkMode === 'true') {

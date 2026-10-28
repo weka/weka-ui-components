@@ -107,7 +107,7 @@ describe('useLocalStorage', () => {
     expect(result.current[0]).toBe(STORED_VALUE)
   })
 
-  it('never commits the previous key\'s value once the key changes', () => {
+  it("never commits the previous key's value once the key changes", () => {
     localStorage.setItem(FIRST_KEY, JSON.stringify(FIRST_VALUE))
     localStorage.setItem(SECOND_KEY, JSON.stringify(SECOND_VALUE))
 
@@ -116,10 +116,16 @@ describe('useLocalStorage', () => {
       committedValues.push(value)
 
     const { rerender } = render(
-      <StorageConsumer onCommit={recordCommit} storageKey={FIRST_KEY} />
+      <StorageConsumer
+        onCommit={recordCommit}
+        storageKey={FIRST_KEY}
+      />
     )
     rerender(
-      <StorageConsumer onCommit={recordCommit} storageKey={SECOND_KEY} />
+      <StorageConsumer
+        onCommit={recordCommit}
+        storageKey={SECOND_KEY}
+      />
     )
 
     expect(committedValues).toEqual([FIRST_VALUE, SECOND_VALUE])

@@ -19,8 +19,7 @@ export function BooleanIconCell<TData>({
   column
 }: Readonly<CellContext<TData, BooleanIconCellValue>>) {
   const meta = column.columnDef.meta as
-    | { cellOptions?: BooleanIconCellOptions }
-    | undefined
+    { cellOptions?: BooleanIconCellOptions } | undefined
   const cellOptions = meta?.cellOptions
 
   const value = cell.getValue()

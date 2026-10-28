@@ -54,9 +54,7 @@ function SelectFilter<Data, Value>({
 }: ExtendedFilterProps<Data, Value, SelectFilterOptions>) {
   const { fixedOptions, advancedFiltering = true } = filterOptions
   const filterValue = column.getFilterValue() as
-    | SelectFilterValue
-    | string
-    | undefined
+    SelectFilterValue | string | undefined
 
   const initialValue = getValueFromFilterValue(filterValue)
   const initialMode = advancedFiltering

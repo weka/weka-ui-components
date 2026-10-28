@@ -7,7 +7,9 @@
   overflow: hidden;
 
   > .collapsible-content-wrapper {
-    transition: height var(--duration) ease, opacity var(--duration) ease;
+    transition:
+      height var(--duration) ease,
+      opacity var(--duration) ease;
     overflow: hidden;
     opacity: var(--expanded, 0);
     height: auto;

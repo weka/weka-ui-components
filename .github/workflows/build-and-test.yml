@@ -43,7 +43,6 @@ jobs:
           ESLINT_PLUGIN_DIFF_COMMIT: origin/${{ github.base_ref }}
         run: yarn exec eslint . --config eslint.diff.config.mjs
 
-
       - name: Test
         run: yarn test:run
 

@@ -33,7 +33,10 @@ export function isDayOutOfBounds(
 /**
  * Determines if a day belongs to a month other than the one being displayed.
  */
-export function isDayOutsideMonth(date: DateTime, currentMonth: number): boolean {
+export function isDayOutsideMonth(
+  date: DateTime,
+  currentMonth: number
+): boolean {
   return currentMonth !== date.month
 }
 

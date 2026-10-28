@@ -1,7 +1,7 @@
 ---
 name: migrate-component
 description: Migrate a component from observe/frontend to weka-ui-components v2
-argument-hint: "<ComponentName>"
+argument-hint: '<ComponentName>'
 disable-model-invocation: true
 ---
 
@@ -36,6 +36,7 @@ Migrate the specified component from `observe/frontend/src/components/` into `li
 6. **Run the full workflow** using `ts-react-linter-driven-development:linter-driven-development` skill.
 
 7. **Validate** by running:
+
    ```bash
    yarn typecheck
    yarn lintcheck

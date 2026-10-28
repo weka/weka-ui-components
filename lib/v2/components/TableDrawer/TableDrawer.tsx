@@ -116,7 +116,10 @@ export function TableDrawer({
         </button>
       </div>
       <div
-        className={clsx(styles.drawerContent, hideScrollbar && styles.hideScrollbar)}
+        className={clsx(
+          styles.drawerContent,
+          hideScrollbar && styles.hideScrollbar
+        )}
       >
         {children}
       </div>

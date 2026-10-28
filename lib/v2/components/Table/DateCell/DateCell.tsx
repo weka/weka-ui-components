@@ -19,8 +19,7 @@ export function DateCell<TData>({
   column
 }: Readonly<CellContext<TData, DateCellValue>>) {
   const meta = column.columnDef.meta as
-    | { cellOptions?: DateCellOptions }
-    | undefined
+    { cellOptions?: DateCellOptions } | undefined
   const cellOptions = meta?.cellOptions
 
   const value = cell.getValue()

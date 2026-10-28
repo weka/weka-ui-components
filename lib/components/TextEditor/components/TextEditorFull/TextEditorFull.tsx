@@ -212,9 +212,9 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     const hasExternalSearch = Boolean(
       externalSearchTerm ||
-        externalSearchAction ||
-        onSearchBoundary ||
-        onSearchCounterUpdate
+      externalSearchAction ||
+      onSearchBoundary ||
+      onSearchCounterUpdate
     )
 
     const internalSearch = useInternalSearch()

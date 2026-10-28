@@ -97,7 +97,7 @@ function TableBodyComponent<Data>({
             row={row}
             rowActions={rowActions}
             rowCanExpand={
-              isExpandable ? getRowCanExpand?.(row.original) ?? true : null
+              isExpandable ? (getRowCanExpand?.(row.original) ?? true) : null
             }
             {...(infinityScrollConfig && {
               virtualRow,

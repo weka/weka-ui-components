@@ -115,6 +115,4 @@ export interface YAxisExtendedConfig extends ChartAxisConfig {
 }
 
 export type ChartSyncMethod =
-  | 'index'
-  | 'value'
-  | ((tooltipTicks: unknown[], data: unknown) => number)
+  'index' | 'value' | ((tooltipTicks: unknown[], data: unknown) => number)

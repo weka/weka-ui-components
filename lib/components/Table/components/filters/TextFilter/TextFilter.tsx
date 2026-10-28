@@ -56,9 +56,7 @@ function TextFilter<Data, Value>({
   const { advancedFiltering = true } = filterOptions
 
   const filterValue = column.getFilterValue() as
-    | TextFilterValue
-    | string
-    | undefined
+    TextFilterValue | string | undefined
 
   const initialPattern = getPatternFromFilterValue(filterValue)
   const initialMode = advancedFiltering

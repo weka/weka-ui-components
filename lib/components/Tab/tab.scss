@@ -8,7 +8,9 @@
   cursor: pointer;
   border-bottom: solid transparent 4px;
   box-sizing: border-box;
-  transition: background-color 0.5s, border-bottom-color 0.25s;
+  transition:
+    background-color 0.5s,
+    border-bottom-color 0.25s;
   height: 100%;
   position: relative;
 

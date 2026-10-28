@@ -21,7 +21,7 @@ export function calculateFilterBound(
   threshold: CapacityThreshold | undefined
 ): number | undefined {
   return threshold
-    ? calculateBytesFromOption(threshold) ?? undefined
+    ? (calculateBytesFromOption(threshold) ?? undefined)
     : undefined
 }
 

@@ -61,10 +61,7 @@ function MultiSelectFilter<Data, Value>({
   filterOptions
 }: ExtendedFilterProps<Data, Value, MultiSelectFilterOptions>) {
   const filterValue = column.getFilterValue() as
-    | MultiSelectFilterValue
-    | string[]
-    | string
-    | undefined
+    MultiSelectFilterValue | string[] | string | undefined
   const { fixedOptions, advancedFiltering = true } = filterOptions
 
   const [values, setValues] = useState<string[]>(

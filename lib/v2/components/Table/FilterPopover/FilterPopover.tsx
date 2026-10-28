@@ -462,7 +462,7 @@ function FilterPopover({
             onChange={(date?: DateTime) => {
               setTempValue({
                 ...dateValue,
-                from: date?.isValid ? date.toISO() ?? undefined : undefined
+                from: date?.isValid ? (date.toISO() ?? undefined) : undefined
               })
             }}
           />
@@ -479,7 +479,7 @@ function FilterPopover({
             onChange={(date?: DateTime) => {
               setTempValue({
                 ...dateValue,
-                to: date?.isValid ? date.toISO() ?? undefined : undefined
+                to: date?.isValid ? (date.toISO() ?? undefined) : undefined
               })
             }}
           />

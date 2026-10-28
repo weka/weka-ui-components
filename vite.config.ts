@@ -40,10 +40,7 @@ const v2ExternalPatterns: RegExp[] = v2DeclaredDeps.map(
 // must be externalized explicitly; consumers resolve them via their parent dep.
 const v1TransitiveExternals: RegExp[] = [/^@tanstack\/table-core(\/|$)/]
 
-function matchesAny(
-  source: string,
-  patterns: (string | RegExp)[]
-): boolean {
+function matchesAny(source: string, patterns: (string | RegExp)[]): boolean {
   return patterns.some((pattern) =>
     typeof pattern === 'string' ? pattern === source : pattern.test(source)
   )

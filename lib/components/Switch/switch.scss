@@ -57,7 +57,9 @@
   background-color: var(--neutral-t4);
   border-radius: 50%;
   transform: translate(0px, 0px);
-  transition: 0.5s ease transform, 0.5s box-shadow;
+  transition:
+    0.5s ease transform,
+    0.5s box-shadow;
   border: 1px solid var(--ironhide-s3);
 }
 

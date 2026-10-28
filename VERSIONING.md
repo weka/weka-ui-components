@@ -50,11 +50,11 @@ Releases happen **automatically** when a PR is merged to `main`:
 
 ### Bump types
 
-| Bump type | How to trigger                                          | Example             |
-| --------- | ------------------------------------------------------- | ------------------- |
-| **Minor** | Merge a PR (default)                                    | `4.1.0` → `4.2.0`  |
-| **Patch** | Add the `patch` label to the PR before merging          | `4.2.0` → `4.2.1`  |
-| **Major** | Manual: `git tag v5.0.0 && git push origin v5.0.0`     | `4.9.0` → `5.0.0`  |
+| Bump type | How to trigger                                     | Example           |
+| --------- | -------------------------------------------------- | ----------------- |
+| **Minor** | Merge a PR (default)                               | `4.1.0` → `4.2.0` |
+| **Patch** | Add the `patch` label to the PR before merging     | `4.2.0` → `4.2.1` |
+| **Major** | Manual: `git tag v5.0.0 && git push origin v5.0.0` | `4.9.0` → `5.0.0` |
 
 ### Pre-release (beta)
 

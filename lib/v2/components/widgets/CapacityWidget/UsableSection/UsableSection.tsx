@@ -37,7 +37,9 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
   } = data
 
   const usedAmount = formatCapacity(used, unit, usedDisplay)
-  const percentage = formatPercentage(clampPercentage(toPercentage(used, total)))
+  const percentage = formatPercentage(
+    clampPercentage(toPercentage(used, total))
+  )
 
   const segments = [
     { name: labels.used, value: used, color: `url(#${gradientId})` },

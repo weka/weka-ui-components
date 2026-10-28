@@ -45,7 +45,7 @@ function addFilterFn<Data, Value>({
     const filter =
       typeof filterDef === 'string'
         ? filterDef
-        : filterDef?.filterFn ?? filterDef?.type
+        : (filterDef?.filterFn ?? filterDef?.type)
 
     if (!filter) {
       return column

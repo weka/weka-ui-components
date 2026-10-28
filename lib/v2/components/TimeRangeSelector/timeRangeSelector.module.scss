@@ -40,7 +40,9 @@
 
 .dropdownArrow {
   color: var(--text-secondary);
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;

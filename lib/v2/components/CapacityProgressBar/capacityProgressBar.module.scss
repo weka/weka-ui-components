@@ -20,27 +20,15 @@
 }
 
 .fillCyan {
-  background: linear-gradient(
-    90deg,
-    var(--cyan-300-600) 0%,
-    var(--cyan-100-400) 100%
-  );
+  background: linear-gradient(90deg, var(--cyan-300-600) 0%, var(--cyan-100-400) 100%);
 }
 
 .fillOrange {
-  background: linear-gradient(
-    90deg,
-    var(--orange-300-600) 0%,
-    var(--orange-100-400) 100%
-  );
+  background: linear-gradient(90deg, var(--orange-300-600) 0%, var(--orange-100-400) 100%);
 }
 
 .fillRed {
-  background: linear-gradient(
-    90deg,
-    var(--red-300-600) 0%,
-    var(--red-100-400) 100%
-  );
+  background: linear-gradient(90deg, var(--red-300-600) 0%, var(--red-100-400) 100%);
 }
 
 .percentageText {

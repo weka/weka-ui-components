@@ -13,7 +13,10 @@
   border-radius: 4px;
   overflow: hidden;
   height: 32px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, border-radius 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    border-radius 0.2s ease;
 }
 
 .searchIcon {
@@ -65,7 +68,9 @@
     height: 16px;
     opacity: 0.8;
     color: var(--gray-600-400);
-    transition: opacity 0.2s ease, color 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      color 0.2s ease;
   }
 
   &:hover {

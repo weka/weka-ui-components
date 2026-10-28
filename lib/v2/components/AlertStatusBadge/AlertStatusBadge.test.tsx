@@ -37,9 +37,7 @@ describe('AlertStatusBadge', () => {
       const { container } = render(
         <AlertStatusBadge severity={SEVERITY_TYPES.MINOR} />
       )
-      const timeElements = container.querySelectorAll(
-        '[class*="statusTime"]'
-      )
+      const timeElements = container.querySelectorAll('[class*="statusTime"]')
       expect(timeElements).toHaveLength(0)
     })
   })

@@ -112,7 +112,7 @@ function BlocksCell<Data>({
           'table-count-cell-is-link': getUrl
         })}
       >
-        {showTotalCountOnly ?? !value.length
+        {(showTotalCountOnly ?? !value.length)
           ? value.length
           : `${upBlocks.length}/${value.length}`}
       </span>

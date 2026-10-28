@@ -44,7 +44,7 @@ export function withCapacityRequired<
   const requiredValidator: Validate<unknown, TFieldValues> = (value) =>
     hasCapacityNumber(value) || message
   const validators =
-    typeof validate === 'function' ? { value: validate } : validate ?? {}
+    typeof validate === 'function' ? { value: validate } : (validate ?? {})
 
   return {
     ...rest,

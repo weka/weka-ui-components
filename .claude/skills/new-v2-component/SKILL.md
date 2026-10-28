@@ -1,7 +1,7 @@
 ---
 name: new-v2-component
 description: Scaffold a new v2 component with all required files (tsx, scss, test, stories, index)
-argument-hint: "<ComponentName>"
+argument-hint: '<ComponentName>'
 disable-model-invocation: true
 ---
 

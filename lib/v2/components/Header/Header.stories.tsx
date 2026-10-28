@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import {
-  DarkModeIcon,
-  NotificationsIcon,
-  ThreeDotsMenuIcon
-} from '../../icons'
+import { DarkModeIcon, NotificationsIcon, ThreeDotsMenuIcon } from '../../icons'
 import { HeaderMetaBanner } from '../HeaderMetaBanner'
 import { IconButton } from '../IconButton'
 import { Header } from './Header'

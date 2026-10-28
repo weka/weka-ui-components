@@ -333,11 +333,9 @@ function foldMarkerDOM(open: boolean): HTMLElement {
 export interface JsonEditorStaticConfig {
   getCompletionSource: () => JsonEditorCompletionSource | undefined
   getCursorHandler: () =>
-    | ((context: JsonEditorCursorContext) => void)
-    | undefined
+    ((context: JsonEditorCursorContext) => void) | undefined
   getOnValidate: () =>
-    | ((errors: JsonEditorValidationError[]) => void)
-    | undefined
+    ((errors: JsonEditorValidationError[]) => void) | undefined
 }
 
 const JSON_LINT_DELAY_MS = 300

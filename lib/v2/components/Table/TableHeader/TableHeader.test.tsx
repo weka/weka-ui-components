@@ -25,7 +25,7 @@ const createTableMock = (
     getState: () => ({ columnVisibility }),
     getFilteredRowModel: () => ({ rows: [] }),
     setColumnVisibility
-  } as unknown as MockTable)
+  }) as unknown as MockTable
 
 const COLUMNS = [
   { accessorKey: 'name', header: 'Name' },

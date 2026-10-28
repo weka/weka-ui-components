@@ -7,7 +7,8 @@ vi.mock('recharts', () => ({
   Cell: () => null,
   Pie: ({ children }: { children?: unknown }) => children ?? null,
   PieChart: ({ children }: { children?: unknown }) => children ?? null,
-  ResponsiveContainer: ({ children }: { children?: unknown }) => children ?? null
+  ResponsiveContainer: ({ children }: { children?: unknown }) =>
+    children ?? null
 }))
 
 describe('DonutChart', () => {

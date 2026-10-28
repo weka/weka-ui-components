@@ -38,7 +38,7 @@ function DefaultCell<Data>({
 
   const formattedValue = Array.isArray(value)
     ? value.join(', ')
-    : value?.toString() ?? EMPTY_STRING
+    : (value?.toString() ?? EMPTY_STRING)
 
   const {
     getUrl,
@@ -84,7 +84,7 @@ function DefaultCell<Data>({
       data={
         customTooltipText instanceof Function
           ? customTooltipText(cell)
-          : customTooltipText ?? tooltip
+          : (customTooltipText ?? tooltip)
       }
     >
       {getUrl ? (
