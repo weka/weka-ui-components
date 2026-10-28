@@ -47,12 +47,12 @@ export const eslintConfig = tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      react,
+      react: fixupPluginRules(react),
       promise,
       'unused-imports': unusedImports,
       weka: { rules: localRules },
       import: fixupPluginRules(importPlugin),
-      'jsx-a11y': jsxA11y,
+      'jsx-a11y': fixupPluginRules(jsxA11y),
       'simple-import-sort': simpleImportSort
     },
     settings: {
