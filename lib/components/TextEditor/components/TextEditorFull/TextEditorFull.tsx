@@ -89,7 +89,7 @@ const CUSTOM_SEARCH_COMMANDS = {
 }
 
 export interface TextEditorFullProps {
-  onChange?: () => void
+  onChange?: (value: string) => void
   /** called once the underlying Ace editor instance has mounted */
   onLoad?: (editor: IAceEditor) => void
   readOnly?: boolean

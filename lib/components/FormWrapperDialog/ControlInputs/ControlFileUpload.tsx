@@ -10,7 +10,7 @@ import UploadField from '../../inputs/UploadField'
 
 type ControlFileUploadProps = Omit<
   ComponentProps<typeof UploadField>,
-  'onChange' | 'value' | 'error' | 'isRequired'
+  'onChange' | 'value' | 'error' | 'isRequired' | 'onReadError'
 > & {
   control: Control
   name: string
