@@ -15,6 +15,8 @@ import './ipSubnetTextBox.scss'
 
 const { Info } = svgs
 
+const DEFAULT_IP_SUBNET = '.../'
+
 function keyDown(event: React.KeyboardEvent) {
   if (
     event.key === 'e' ||
@@ -71,14 +73,16 @@ function IpSubnetTextBox({
   ...rest
 }: IpSubnetTextBoxProps) {
   const { disabled } = rest
-  const [ipVal, subnet] = value
-    ? value.split('/')
-    : ['...', String(fixedSubnet ?? EMPTY_STRING)]
-  const [ipParts, setIpParts] = useState<any[]>(
-    shouldConvertSubnet2Mask
-      ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
-      : [...ipVal.split('.'), subnet]
-  )
+  const [ipVal, subnet] = (value || DEFAULT_IP_SUBNET).split('/')
+  // Only a subnet parsed from `value` is a mask; `fixedSubnet` is already a prefix length
+  const parsedSubnet = shouldConvertSubnet2Mask
+    ? Utils.subnet2MaskOp(subnet)
+    : subnet
+  const [ipParts, setIpParts] = useState<any[]>([
+    // eslint-disable-next-line sonarjs/null-dereference -- split() always yields a first element
+    ...ipVal.split('.'),
+    value ? parsedSubnet : (fixedSubnet ?? EMPTY_STRING)
+  ])
   const ipSubnetBoxRef = React.useRef<HTMLInputElement | null>(null)
   const highlighted = useHighlightInput({
     inputRef: ipSubnetBoxRef,
