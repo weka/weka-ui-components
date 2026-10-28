@@ -1,6 +1,6 @@
 import type { Result } from 'check-password-strength'
 
-import { passwordStrength } from 'check-password-strength'
+import { owaspSymbols, passwordStrength } from 'check-password-strength'
 import clsx from 'clsx'
 
 import styles from './passwordInput.module.scss'
@@ -34,7 +34,8 @@ export interface PasswordRequirementsProps {
 export function PasswordRequirements({
   value
 }: Readonly<PasswordRequirementsProps>) {
-  const strength = passwordStrength(value)
+  // v3's default counts any non-alphanumeric character (e.g. spaces) as a symbol
+  const strength = passwordStrength(value, undefined, owaspSymbols)
   return (
     <div className={styles.rules}>
       <span className={styles.rulesHeader}>{RULES_HEADER}</span>

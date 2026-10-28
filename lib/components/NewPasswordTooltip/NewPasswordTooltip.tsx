@@ -1,5 +1,5 @@
 import React from 'react'
-import { passwordStrength } from 'check-password-strength'
+import { owaspSymbols, passwordStrength } from 'check-password-strength'
 import { EMPTY_STRING } from '#consts'
 
 import './newPasswordTooltip.scss'
@@ -10,7 +10,8 @@ interface NewPasswordTooltipProps {
 function NewPasswordTooltip({
   passValue = EMPTY_STRING
 }: NewPasswordTooltipProps) {
-  const passStrength = passwordStrength(passValue)
+  // v3's default counts any non-alphanumeric character (e.g. spaces) as a symbol
+  const passStrength = passwordStrength(passValue, undefined, owaspSymbols)
 
   return (
     <div className='password-min-demand'>

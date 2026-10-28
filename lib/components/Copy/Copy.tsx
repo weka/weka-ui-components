@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
 import copy from 'copy-to-clipboard'
+import { COPY_TO_CLIPBOARD_OPTIONS } from '#consts'
 import svgs from '#svgs'
 
 import Tooltip from '../Tooltip'
@@ -30,7 +31,7 @@ function Copy({
   function onClick(e: React.MouseEvent) {
     e.stopPropagation()
 
-    copy(text)
+    void copy(text, COPY_TO_CLIPBOARD_OPTIONS)
     setCopyPress(true)
     setTimeout(() => setCopyPress(false), 2000)
   }

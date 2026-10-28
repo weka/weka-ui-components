@@ -3343,9 +3343,9 @@ __metadata:
     "@types/react-dom": "npm:^19.3.0"
     "@vitejs/plugin-react": "npm:^6.1.2"
     ace-builds: "npm:^1.44.0"
-    check-password-strength: "npm:^2.0.7"
+    check-password-strength: "npm:^3.0.0"
     clsx: "npm:^2.1.1"
-    copy-to-clipboard: "npm:^3.3.3"
+    copy-to-clipboard: "npm:^4.0.2"
     eslint: "npm:^10.13.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-import-resolver-typescript: "npm:^4.4.5"
@@ -4010,10 +4010,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"check-password-strength@npm:^2.0.7":
-  version: 2.0.10
-  resolution: "check-password-strength@npm:2.0.10"
-  checksum: 10c0/f0e1296316b72650b013e4b367c6939da672efdbf7e0c7c3bfd4a54ef0da62558b6fae1e9c7c6f994cca043c8b248d97f429f8d28e79c2b8730c8f72a135cdb7
+"check-password-strength@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "check-password-strength@npm:3.0.0"
+  dependencies:
+    escape-string-regexp: "npm:^5.0.0"
+  checksum: 10c0/e97cda55bffcb25e5231c7ceb63f68a9a85599080bec33efa9e1ebd16ecaa23f06ca7f0afa6b9406f82df183fdd901997cc65bbb7efbeb490c0ce40c34891230
   languageName: node
   linkType: hard
 
@@ -4202,12 +4204,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-to-clipboard@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "copy-to-clipboard@npm:3.3.3"
-  dependencies:
-    toggle-selection: "npm:^1.0.6"
-  checksum: 10c0/3ebf5e8ee00601f8c440b83ec08d838e8eabb068c1fae94a9cda6b42f288f7e1b552f3463635f419af44bf7675afc8d0390d30876cf5c2d5d35f86d9c56a3e5f
+"copy-to-clipboard@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "copy-to-clipboard@npm:4.0.2"
+  checksum: 10c0/0a007c86cc5f235653ddd98ef9901fa8d52b40bd0aeadce4ecc92d6aad16f89136a526f2ae7050421de5b02a374d803de88a40cde1298915093d1b62aeadc9e5
   languageName: node
   linkType: hard
 
@@ -5012,6 +5012,13 @@ __metadata:
   version: 4.0.0
   resolution: "escape-string-regexp@npm:4.0.0"
   checksum: 10c0/9497d4dd307d845bd7f75180d8188bb17ea8c151c1edbf6b6717c100e104d629dc2dfb687686181b0f4b7d732c7dfdc4d5e7a8ff72de1b0ca283a75bbb3a9cd9
+  languageName: node
+  linkType: hard
+
+"escape-string-regexp@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "escape-string-regexp@npm:5.0.0"
+  checksum: 10c0/6366f474c6f37a802800a435232395e04e9885919873e382b157ab7e8f0feb8fed71497f84a6f6a81a49aab41815522f5839112bd38026d203aea0c91622df95
   languageName: node
   linkType: hard
 
@@ -10130,13 +10137,6 @@ __metadata:
   dependencies:
     is-number: "npm:^7.0.0"
   checksum: 10c0/487988b0a19c654ff3e1961b87f471702e708fa8a8dd02a298ef16da7206692e8552a0250e8b3e8759270f62e9d8314616f6da274734d3b558b1fc7b7724e892
-  languageName: node
-  linkType: hard
-
-"toggle-selection@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "toggle-selection@npm:1.0.6"
-  checksum: 10c0/f2cf1f2c70f374fd87b0cdc8007453ba9e981c4305a8bf4eac10a30e62ecdfd28bca7d18f8f15b15a506bf8a7bfb20dbe3539f0fcf2a2c8396c1a78d53e1f179
   languageName: node
   linkType: hard
 
