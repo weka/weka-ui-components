@@ -1,8 +1,14 @@
-import type { Control } from 'react-hook-form'
+import type {
+  Control,
+  FieldPath,
+  FieldValues,
+  PathValue
+} from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import clsx from 'clsx'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
 import svgs from '#svgs'
 import Utils from '#utils'
@@ -20,9 +26,11 @@ interface ControlTextSelectValue {
   unit: { value: string | number }
 }
 
-interface ControlTextSelectBoxProps {
-  control: Control
-  name: string
+interface ControlTextSelectBoxProps<
+  TFieldValues extends FieldValues = FieldValues
+> {
+  control: Control<TFieldValues>
+  name: FieldPath<TFieldValues>
   defaultValue?: ControlTextSelectValue
   rules?: Record<string, unknown>
   label?: string
@@ -38,7 +46,7 @@ interface ControlTextSelectBoxProps {
   wrapperClass?: string
 }
 
-function ControlTextSelectBox({
+function ControlTextSelectBox<TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
   defaultValue,
@@ -54,7 +62,7 @@ function ControlTextSelectBox({
   onChange,
   info = EMPTY_STRING,
   allowDecimal = false
-}: ControlTextSelectBoxProps) {
+}: ControlTextSelectBoxProps<TFieldValues>) {
   const formattedRules = { ...rules }
   if (rules.required) {
     const requiredFunc = (value: {
@@ -87,10 +95,15 @@ function ControlTextSelectBox({
   return (
     <Controller
       control={control}
-      defaultValue={{ textValue, selectValue }}
       name={name}
       rules={formattedRules}
       shouldUnregister
+      defaultValue={
+        { textValue, selectValue } as PathValue<
+          TFieldValues,
+          FieldPath<TFieldValues>
+        >
+      }
       render={({ field, fieldState: { error } }) => {
         const classes = clsx({
           disabled,

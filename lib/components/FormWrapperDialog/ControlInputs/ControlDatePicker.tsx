@@ -1,5 +1,10 @@
 import type { ComponentProps } from 'react'
-import type { Control } from 'react-hook-form'
+import type {
+  Control,
+  FieldPath,
+  FieldValues,
+  PathValue
+} from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
@@ -9,24 +14,24 @@ import { FORM_VALIDATIONS } from '#consts'
 
 import DateTimePicker from '../../DateTimePicker'
 
-type ControlDatePickerProps = Omit<
-  ComponentProps<typeof DateTimePicker>,
-  'onChange' | 'value' | 'error' | 'isRequired'
-> & {
-  control: Control
-  name: string
-  defaultValue: string
-  rules?: Record<string, unknown>
-  disabled?: boolean
-}
+type ControlDatePickerProps<TFieldValues extends FieldValues = FieldValues> =
+  Omit<
+    ComponentProps<typeof DateTimePicker>,
+    'onChange' | 'value' | 'error' | 'isRequired'
+  > & {
+    control: Control<TFieldValues>
+    name: FieldPath<TFieldValues>
+    defaultValue: string
+    rules?: Record<string, unknown>
+  }
 
-function ControlDatePicker({
+function ControlDatePicker<TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
   defaultValue,
   rules = {},
   ...rest
-}: ControlDatePickerProps) {
+}: ControlDatePickerProps<TFieldValues>) {
   const { disabled } = rest
   const isRequiredInRules = Object.values(rules).includes(
     FORM_VALIDATIONS.REQUIRED
@@ -34,10 +39,12 @@ function ControlDatePicker({
   return (
     <Controller
       control={control}
-      defaultValue={defaultValue}
       name={name}
       rules={rules}
       shouldUnregister
+      defaultValue={
+        defaultValue as PathValue<TFieldValues, FieldPath<TFieldValues>>
+      }
       render={({ field, fieldState: { error } }) => {
         const formattedValue = field.value
           ? DateTime.fromISO(field.value)
