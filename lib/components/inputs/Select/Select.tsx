@@ -211,7 +211,7 @@ function Select({
           defaultValueIndex !== undefined &&
           !Utils.isEmpty(defaultValueIndex)
         ) {
-          onChange(asyncOptions[defaultValueIndex].value)
+          onChange(asyncOptions[defaultValueIndex]?.value)
         } else if (!Utils.isEmpty(defaultValueKey)) {
           onChange(
             asyncOptions.find((option) => option.value === defaultValueKey)

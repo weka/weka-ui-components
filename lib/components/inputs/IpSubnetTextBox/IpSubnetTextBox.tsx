@@ -74,14 +74,15 @@ function IpSubnetTextBox({
 }: IpSubnetTextBoxProps) {
   const { disabled } = rest
   const [ipVal, subnet] = (value || DEFAULT_IP_SUBNET).split('/')
-  // Only a subnet parsed from `value` is a mask; `fixedSubnet` is already a prefix length
+  // A subnet parsed from `value` is a mask; `fixedSubnet` is already a prefix length
+  // and, since its input is read-only, always wins
   const parsedSubnet = shouldConvertSubnet2Mask
     ? Utils.subnet2MaskOp(subnet)
     : subnet
   const [ipParts, setIpParts] = useState<any[]>([
     // eslint-disable-next-line sonarjs/null-dereference -- split() always yields a first element
     ...ipVal.split('.'),
-    value ? parsedSubnet : (fixedSubnet ?? EMPTY_STRING)
+    fixedSubnet ?? parsedSubnet
   ])
   const ipSubnetBoxRef = React.useRef<HTMLInputElement | null>(null)
   const highlighted = useHighlightInput({

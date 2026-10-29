@@ -1,7 +1,15 @@
+import type { ReactElement } from 'react'
+
 export {}
 
+/** Shorter label and tooltip for the chip of a selected option in a multi-select */
+interface ChipFields {
+  chipLabel: string | ReactElement
+  chipTooltip: string | ReactElement
+}
+
 declare global {
-  interface Option {
+  interface Option extends Partial<ChipFields> {
     label: string
     value?: string | number | boolean | string[] | number[] | boolean[]
     icon?: React.ReactNode

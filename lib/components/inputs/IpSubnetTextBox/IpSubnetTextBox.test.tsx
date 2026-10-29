@@ -11,6 +11,7 @@ const FIXED_PREFIX = 24
 const FIXED_MASK = '255.255.255.0'
 const IP_PARTS = ['10', '0', '0', '1']
 const PREFIX_INPUT_INDEX = 4
+const PARTIAL_VALUE_WITH_PREFIX = `.../${FIXED_PREFIX}`
 
 function getInputs() {
   return screen.getAllByRole('spinbutton') as HTMLInputElement[]
@@ -40,6 +41,28 @@ describe('IpSubnetTextBox', () => {
         value={EMPTY_STRING}
       />
     )
+
+    IP_PARTS.forEach((part, index) => {
+      fireEvent.change(getInputs()[index], { target: { value: part } })
+    })
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      `${IP_PARTS.join('.')}/${FIXED_MASK}`
+    )
+  })
+
+  it('keeps a fixed subnet when remounted with a partial value', () => {
+    const onChange = vi.fn()
+    render(
+      <IpSubnetTextBox
+        fixedSubnet={FIXED_PREFIX}
+        label={LABEL}
+        onChange={onChange}
+        value={PARTIAL_VALUE_WITH_PREFIX}
+      />
+    )
+
+    expect(getInputs()[PREFIX_INPUT_INDEX]).toHaveValue(FIXED_PREFIX)
 
     IP_PARTS.forEach((part, index) => {
       fireEvent.change(getInputs()[index], { target: { value: part } })

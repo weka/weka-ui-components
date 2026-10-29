@@ -113,7 +113,10 @@ function UploadField({
           type='file'
           onChange={(e) => {
             const [file] = e.target.files ?? []
-            onFileChange(file)
+            // the list is empty when the dialog is cancelled after `value` was cleared
+            if (file) {
+              onFileChange(file)
+            }
           }}
           onClick={(e) => {
             e.stopPropagation()
