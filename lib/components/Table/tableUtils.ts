@@ -197,8 +197,8 @@ export const getCustomSortingFns = (grouping?: string[]) => ({
       if (utils.isEmpty(b)) {
         return -1
       }
-      const numberA = parseFloat(a)
-      const numberB = parseFloat(b)
+      const numberA = parseFloat(String(a))
+      const numberB = parseFloat(String(b))
       if (numberA === numberB) {
         return 0
       }
@@ -213,13 +213,13 @@ export const getCustomSortingFns = (grouping?: string[]) => ({
         return -1
       }
       const num1 = Number(
-        a
+        String(a)
           .split('.')
           .map((num: string) => `000${num}`.slice(-3))
           .join(EMPTY_STRING)
       )
       const num2 = Number(
-        b
+        String(b)
           .split('.')
           .map((num: string) => `000${num}`.slice(-3))
           .join(EMPTY_STRING)
@@ -311,7 +311,8 @@ export const urlFilterParsers = {
     }
   },
   severity: (rawValue: Parameters<UrlFilterParser>[0]) =>
-    Array.isArray(rawValue) && SEVERITIES.includes(rawValue[0])
+    Array.isArray(rawValue) &&
+    (SEVERITIES as readonly string[]).includes(rawValue[0])
       ? rawValue[0]
       : null,
   duration: (rawValue: Parameters<UrlFilterParser>[0]) => {
@@ -508,7 +509,7 @@ export const filterFns = {
     columnId: string,
     filterValue: { duration: string; operator: CompareOperator }
   ): boolean {
-    const valueTime = row.getValue(columnId)
+    const valueTime = row.getValue<number>(columnId)
 
     const parts = filterValue.duration.split(' ')
     const durationObj: Record<string, number> = {}

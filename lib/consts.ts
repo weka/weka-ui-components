@@ -1,5 +1,6 @@
-import svgs from '#svgs'
+import type { ElementType } from 'react'
 
+import svgs from '#svgs'
 import utils from '#utils'
 
 const {
@@ -170,7 +171,7 @@ export const CAPACITY = {
   Bytes: 1
 }
 
-type SeverityIcons = Record<string, unknown>
+type SeverityIcons = Record<string, ElementType>
 
 export const SEVERITY_DEBUG = 'DEBUG'
 export const SEVERITY_INFO = 'INFO'
@@ -209,7 +210,7 @@ export const SEVERITIES_ICONS: SeverityIcons = {
   CRITICAL: AccidentCritical
 } as const
 
-type ShortRoles = Record<string, unknown>
+type ShortRoles = Record<string, string>
 
 export const SHORT_ROLES: ShortRoles = {
   FRONTEND: 'FE',

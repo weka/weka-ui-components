@@ -1,6 +1,6 @@
 import type { ExtendedCell, ExtendedRow, TableExtraClasses } from '../../types'
 import type { ColumnMeta } from '@tanstack/react-table'
-import type { FC } from 'react'
+import type { CSSProperties, FC } from 'react'
 
 import React, { useCallback, useMemo } from 'react'
 import { flexRender } from '@tanstack/react-table'
@@ -16,7 +16,7 @@ interface TableCellProps<Data, Value> {
   extraClasses?: TableExtraClasses
   onRowClick?: (values: Data) => void
   onToggleExpand?: (row: ExtendedRow<Data>) => void
-  RowSubComponent?: FC
+  RowSubComponent?: FC<{ row: ExtendedRow<Data> }>
   grouping?: string[]
   rowIndex: number
 }
@@ -94,7 +94,7 @@ function TableCell<Data, Value>({
     columnMeta?: ColumnMeta<Data, Value>
   ) => {
     const sizeVar = `var(${Utils.makeCssVarName('col', columnId, 'size')})`
-    const baseStyle = {
+    const baseStyle: CSSProperties = {
       position: 'relative',
       width: `calc(${sizeVar} * 1px)`
     }

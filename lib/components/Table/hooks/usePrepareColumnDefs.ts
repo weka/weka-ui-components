@@ -107,7 +107,8 @@ function usePrepareColumnDefs<Data, Value>({
       columnDefs: columnDefsWithFilterFns
     })
 
-    return columnDefsWithCells
+    // addId gave every def an id; addCells' signature just doesn't carry it
+    return columnDefsWithCells as ExtendedColumnDefWithId<Data, Value>[]
   }, [columnDefs])
 }
 

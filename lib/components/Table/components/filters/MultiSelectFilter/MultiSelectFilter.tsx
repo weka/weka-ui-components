@@ -93,7 +93,7 @@ function MultiSelectFilter<Data, Value>({
     } else {
       ;[...column.getFacetedUniqueValues().keys()].flatMap(
         (rowValue: string | string[] | undefined) => {
-          if (Utils.isEmpty(rowValue)) {
+          if (rowValue === undefined || Utils.isEmpty(rowValue)) {
             return
           }
 

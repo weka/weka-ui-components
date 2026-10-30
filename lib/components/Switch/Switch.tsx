@@ -1,7 +1,8 @@
-import type { ChangeEvent } from 'react'
+import type { ChangeEvent, SyntheticEvent } from 'react'
 
 import React from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from '#consts'
 
 import Tooltip from '../Tooltip'
@@ -13,6 +14,7 @@ interface SwitchProps {
   oneColor?: boolean
   checked: boolean
   tooltip?: string
+  onClick?: (event: SyntheticEvent) => void
 }
 function Switch({
   onChange,

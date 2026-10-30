@@ -32,11 +32,6 @@ export const MIME_TYPES = {
   JSON: 'application/json'
 } as const
 
-interface CustomEventPayload {
-  status: string
-  message: string
-}
-
 interface Error {
   data: { error?: string } | { message?: string } | string | unknown
 }
@@ -364,7 +359,7 @@ const utils = {
 
       return acc
     }, {}),
-  dispatchCustomEvent: (id: string, data: CustomEventPayload) => {
+  dispatchCustomEvent: (id: string, data?: unknown) => {
     document.dispatchEvent(new CustomEvent(id, { detail: data }))
   },
   isNumber: (value: any) => {
