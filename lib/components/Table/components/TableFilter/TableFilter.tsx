@@ -1,6 +1,6 @@
 import type { BaseFilterProps } from '../../types'
 
-import React from 'react'
+import type { ComponentType } from 'react'
 
 import { TABLE_FILTERS_MAP } from '../../tableConsts'
 
@@ -13,10 +13,12 @@ function TableFilter<Data>({ table, column }: BaseFilterProps<Data, unknown>) {
     throw new Error('Filter definition not found')
   }
 
-  const FilterComponent =
-    TABLE_FILTERS_MAP[
-      typeof filterDef === 'string' ? filterDef : filterDef.type
-    ].component
+  // Each filter types its own options; they all share BaseFilterProps
+  const FilterComponent = TABLE_FILTERS_MAP[
+    typeof filterDef === 'string' ? filterDef : filterDef.type
+  ].component as ComponentType<
+    BaseFilterProps<Data, unknown> & { filterOptions: object }
+  >
 
   return (
     <FilterComponent

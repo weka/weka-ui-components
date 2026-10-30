@@ -53,12 +53,13 @@ function TableRow<Data, Value>({
   disableActionsPortal,
   rowCanExpand,
   extraClasses,
-  expandedRows = null,
+  expandedRows,
   virtualRow,
   getInfScrollPropsRow
 }: TableRowProps<Data, Value>) {
   const isRowExpanded = expandedRows
-    ? expandedRows[row.original.uuid]
+    ? // expandedRows is keyed by each row's uuid
+      expandedRows[(row.original as { uuid: string }).uuid]
     : row.getIsExpanded()
   const classes = clsx({
     'table-line': true,

@@ -1,11 +1,19 @@
 import type {
+  ExtendedColumn,
   ExtendedColumnDef,
   ExtendedColumnFilter,
   ExtendedRow,
   RowAction,
   TableExtraClasses
 } from './types'
-import type { ColumnFilter, FilterFn } from '@tanstack/react-table'
+import type {
+  CellContext,
+  ColumnDefTemplate,
+  ColumnFilter,
+  ColumnFiltersState,
+  FilterFn,
+  Updater
+} from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 
 import React, {
@@ -69,8 +77,8 @@ export interface TableProps<Data, Value> {
   globalFilter?: any
   globalFilterFn?: FilterFn<Data>
   defaultGlobalFilter?: string
-  checkRowSelected?: (row: object) => boolean
-  checkRowHighlighted?: (row: object) => boolean
+  checkRowSelected?: (row: Data) => boolean
+  checkRowHighlighted?: (row: Data) => boolean
   getRowId?: (
     originalRow: Data,
     index: number,
@@ -293,9 +301,18 @@ function Table<Data, Value>({
           },
       ...(userColumnFilters && { columnFilters: userColumnFilters })
     },
-    ...(userColumnFilters && { onColumnFiltersChange: onFiltersChanged }),
+    ...(userColumnFilters && {
+      // TanStack passes an updater (value or function); consumers expect the array
+      onColumnFiltersChange: (updater: Updater<ColumnFiltersState>) =>
+        onFiltersChanged?.(
+          (typeof updater === 'function'
+            ? updater(userColumnFilters)
+            : updater) as ExtendedColumnFilter[]
+        )
+    }),
     defaultColumn: {
-      cell: DefaultCell,
+      // cells take ExtendedCellProps, the table's own view of CellContext
+      cell: DefaultCell as ColumnDefTemplate<CellContext<Data, unknown>>,
       aggregatedCell: AggregatedTotalCell,
       size: 100,
       sortingFn: 'stringSort'
@@ -314,7 +331,6 @@ function Table<Data, Value>({
     autoResetExpanded:
       collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
     autoResetPageIndex: false,
-    autoResetPage: false,
     paginateExpandedRows: false,
     getRowId,
     manualPagination,
@@ -385,7 +401,10 @@ function Table<Data, Value>({
   }, [columnFilters, addFilterToUrl])
 
   useEffect(() => {
-    onVisibilityChange(allColumns, columnVisibility)
+    onVisibilityChange(
+      allColumns as ExtendedColumn<Data, Value>[],
+      columnVisibility
+    )
   }, [onVisibilityChange, allColumns, columnVisibility])
 
   useEffect(() => {
