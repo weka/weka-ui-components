@@ -1,34 +1,43 @@
-import type { Control } from 'react-hook-form'
+import type { ComponentProps } from 'react'
+import type {
+  Control,
+  FieldPath,
+  FieldValues,
+  PathValue
+} from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
 
 import ToggleButton from '../../ToggleButton'
 
-interface ControlToggleProps {
-  control: Control<Record<string, unknown>[]>
-  name: string
+type ControlToggleProps<TFieldValues extends FieldValues = FieldValues> = Omit<
+  ComponentProps<typeof ToggleButton>,
+  'onChange' | 'value' | 'error' | 'isRequired'
+> & {
+  control: Control<TFieldValues>
+  name: FieldPath<TFieldValues>
   defaultValue?: boolean
 }
 
-function ControlToggle({
+function ControlToggle<TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
   defaultValue = false,
   ...rest
-}: ControlToggleProps) {
+}: ControlToggleProps<TFieldValues>) {
   return (
     <Controller
       control={control}
-      defaultValue={defaultValue}
-      isClearable
       name={name}
       shouldUnregister
-      render={({ field, fieldState: { error } }) => (
+      defaultValue={
+        defaultValue as PathValue<TFieldValues, FieldPath<TFieldValues>>
+      }
+      render={({ field }) => (
         <div className='field-container'>
           <ToggleButton
             {...rest}
-            error={error?.message}
             onChange={field.onChange}
             value={field.value}
           />

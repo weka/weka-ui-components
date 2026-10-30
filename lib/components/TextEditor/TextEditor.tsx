@@ -25,7 +25,7 @@ import { TextEditorProvider, useTextEditorContext } from './context'
 import { useLinesCount, useTags } from './hooks'
 
 interface TextEditorProps {
-  onChange?: () => void
+  onChange?: (value: string) => void
   /**
    * Called once the underlying Ace editor instance has mounted; useful for
    * consumers that need to attach listeners as soon as the editor exists

@@ -1,25 +1,36 @@
+import type { ComponentProps } from 'react'
+import type {
+  Control,
+  FieldPath,
+  FieldValues
+} from 'react-hook-form'
+
 import React from 'react'
 import { Controller } from 'react-hook-form'
+
 import utils from '#utils'
 
 import UploadField from '../../inputs/UploadField'
 
-interface ControlFileUploadProps {
-  control: Record<string, unknown>
-  name: string
-  rules?: Record<string, unknown>
-}
+type ControlFileUploadProps<TFieldValues extends FieldValues = FieldValues> =
+  Omit<
+    ComponentProps<typeof UploadField>,
+    'onChange' | 'value' | 'error' | 'isRequired' | 'onReadError'
+  > & {
+    control: Control<TFieldValues>
+    name: FieldPath<TFieldValues>
+    rules?: Record<string, unknown>
+  }
 
-function ControlFileUpload({
+function ControlFileUpload<TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
   rules = {},
   ...rest
-}: ControlFileUploadProps) {
+}: ControlFileUploadProps<TFieldValues>) {
   return (
     <Controller
       control={control}
-      isClearable
       name={name}
       rules={rules}
       shouldUnregister

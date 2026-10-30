@@ -24,7 +24,7 @@ interface UploadFieldProps {
   error?: string
   disabled?: boolean
   tooltipText?: string
-  encoding: keyof typeof ENCODING_TYPES
+  encoding?: keyof typeof ENCODING_TYPES
   info?: ReactElement | string
   isRequired?: boolean
   description?: ReactNode

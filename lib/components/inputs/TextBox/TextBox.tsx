@@ -31,6 +31,7 @@ interface TextBoxProps {
   info?: string | ReactElement
   allowDecimal?: boolean
   allowNegative?: boolean
+  disabled?: boolean
   autosize?: boolean
   maxLength?: number
   autofill?: boolean

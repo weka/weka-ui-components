@@ -48,7 +48,7 @@ interface IpRangeTextBoxProps {
   subnet: Subnet
   wrapperClass?: string
   label: string
-  error: string
+  error?: string
   info?: string
 }
 

@@ -1,8 +1,14 @@
-import type { Control } from 'react-hook-form'
+import type {
+  Control,
+  FieldPath,
+  FieldValues,
+  PathValue
+} from 'react-hook-form'
 
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import clsx from 'clsx'
+
 import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
 import svgs from '#svgs'
 import Utils from '#utils'
@@ -20,15 +26,17 @@ interface ControlTextSelectValue {
   unit: { value: string | number }
 }
 
-interface ControlTextSelectBoxProps {
-  control: Control<Record<string, unknown>[]>
-  name: string
+interface ControlTextSelectBoxProps<
+  TFieldValues extends FieldValues = FieldValues
+> {
+  control: Control<TFieldValues>
+  name: FieldPath<TFieldValues>
   defaultValue?: ControlTextSelectValue
   rules?: Record<string, unknown>
   label?: string
   info?: string
   onChange?: (newValue: string | number) => void
-  placeholder?: ControlTextSelectValue
+  placeholder?: Partial<ControlTextSelectValue>
   textType?: string
   options: Option[]
   disabled?: boolean
@@ -38,10 +46,10 @@ interface ControlTextSelectBoxProps {
   wrapperClass?: string
 }
 
-function ControlTextSelectBox({
+function ControlTextSelectBox<TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
-  defaultValue = null,
+  defaultValue,
   rules = {},
   label = EMPTY_STRING,
   placeholder = {},
@@ -54,10 +62,13 @@ function ControlTextSelectBox({
   onChange,
   info = EMPTY_STRING,
   allowDecimal = false
-}: ControlTextSelectBoxProps) {
+}: ControlTextSelectBoxProps<TFieldValues>) {
   const formattedRules = { ...rules }
   if (rules.required) {
-    const requiredFunc = (value) =>
+    const requiredFunc = (value: {
+      selectValue?: unknown
+      textValue?: unknown
+    }) =>
       value.selectValue && !Utils.isEmpty(value.textValue)
         ? null
         : FORM_VALIDATIONS.REQUIRED
@@ -67,7 +78,10 @@ function ControlTextSelectBox({
       const formattedValidate = { validationFunc: rules.validate, requiredFunc }
       formattedRules.validate = { ...formattedValidate }
     } else if (Utils.isObject(rules.validate)) {
-      formattedRules.validate = { ...formattedRules.validate, requiredFunc }
+      formattedRules.validate = {
+        ...(formattedRules.validate as Record<string, unknown>),
+        requiredFunc
+      }
     }
   }
 
@@ -81,11 +95,15 @@ function ControlTextSelectBox({
   return (
     <Controller
       control={control}
-      defaultValue={{ textValue, selectValue }}
-      isClearable
       name={name}
       rules={formattedRules}
       shouldUnregister
+      defaultValue={
+        { textValue, selectValue } as PathValue<
+          TFieldValues,
+          FieldPath<TFieldValues>
+        >
+      }
       render={({ field, fieldState: { error } }) => {
         const classes = clsx({
           disabled,

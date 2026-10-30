@@ -4,7 +4,7 @@ import type { Meta, StoryFn } from '@storybook/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { action } from 'storybook/actions'
-import { FORM_VALIDATIONS } from '#consts'
+import { EMPTY_STRING, FORM_VALIDATIONS } from '#consts'
 import { useToggle } from '#hooks'
 import { DateTime } from 'luxon'
 
@@ -32,12 +32,12 @@ const Template: StoryFn<typeof FormWrapperDialog> = (args: FormDialogProps) => {
     <>
       <Button onClick={toggleOpen}>Open Dialog</Button>
       <FormWrapperDialog
+        {...args}
         handleSubmit={handleSubmit(onSubmit)}
         isOpen={isOpen}
         showSubmit
         title='Dialog Title'
         toggleOpen={toggleOpen}
-        {...args}
       >
         <ControlTextBox
           control={control}
@@ -49,7 +49,7 @@ const Template: StoryFn<typeof FormWrapperDialog> = (args: FormDialogProps) => {
         />
         <ControlDatePicker
           control={control}
-          defaultValue={DateTime.now()}
+          defaultValue={DateTime.now().toISO() ?? EMPTY_STRING}
           label='Birth Date'
           name='birthDate'
         />
