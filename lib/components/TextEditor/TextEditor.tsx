@@ -33,6 +33,7 @@ interface TextEditorProps {
   onLoad?: (editor: IAceEditor) => void
   readOnly?: boolean
   value?: string
+  tabSize?: number
   onValidate?: () => void
   extraClass?: string
   allowSearch?: boolean

@@ -109,13 +109,19 @@ function UploadField({
         <input
           disabled={disabled}
           id={id}
-          onChange={(e) => onFileChange(e.target.files[0])}
           placeholder={placeholder}
           type='file'
+          onChange={(e) => {
+            const [file] = e.target.files ?? []
+            // the list is empty when the dialog is cancelled after `value` was cleared
+            if (file) {
+              onFileChange(file)
+            }
+          }}
           onClick={(e) => {
             e.stopPropagation()
             // we need this to enable choosing the same file more than once in a row:
-            e.target.value = EMPTY_STRING
+            ;(e.target as HTMLInputElement).value = EMPTY_STRING
           }}
           {...rest}
         />

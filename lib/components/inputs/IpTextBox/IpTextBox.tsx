@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING, EVENT_KEYS, NOP } from '#consts'
+import { useHighlightInput } from '#hooks'
 import svgs from '#svgs'
 import Utils from '#utils'
-
-import { useHighlightInput } from '#hooks'
 
 import Copy from '../../Copy'
 import Tooltip from '../../Tooltip'
@@ -13,7 +13,7 @@ import './ipTextBox.scss'
 
 const { Info } = svgs
 
-function keyDown(event: React.KeyboardEvent) {
+function keyDown(event: KeyboardEvent) {
   if (event.key === EVENT_KEYS.DOT || event.key === EVENT_KEYS.ARROW_RIGHT) {
     Utils.goToNextInput()
     event.preventDefault()
@@ -51,8 +51,8 @@ function IpTextBox({
   ...rest
 }: IpTextBoxProps) {
   const { disabled } = rest
-  const ipBoxRef = React.useRef<HTMLInputElement | null>(null)
-  const [ipParts, setIpParts] = useState(
+  const ipBoxRef = useRef<HTMLInputElement | null>(null)
+  const [ipParts, setIpParts] = useState<(string | number)[]>(
     value
       ? value.split('.')
       : [EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING]
@@ -70,12 +70,12 @@ function IpTextBox({
     'is-highlighted': highlighted
   })
 
-  function setIpPart(index, val) {
+  function setIpPart(index: number, val: ChangeEvent<HTMLInputElement>) {
     const newIpParts = [...ipParts]
     newIpParts[index] =
       val.target.value &&
       Math.max(0, Math.min(255, parseInt(val.target.value, 10)))
-    if (newIpParts[index] >= 100) {
+    if (Number(newIpParts[index]) >= 100) {
       Utils.goToNextInput()
     }
     setIpParts(newIpParts)

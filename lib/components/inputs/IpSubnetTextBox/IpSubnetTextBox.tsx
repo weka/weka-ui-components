@@ -15,6 +15,8 @@ import './ipSubnetTextBox.scss'
 
 const { Info } = svgs
 
+const DEFAULT_IP_SUBNET = '.../'
+
 function keyDown(event: React.KeyboardEvent) {
   if (
     event.key === 'e' ||
@@ -26,7 +28,7 @@ function keyDown(event: React.KeyboardEvent) {
   }
   if (
     event.key === ZERO_STRING &&
-    event.target.value?.startsWith(ZERO_STRING)
+    (event.target as HTMLInputElement).value?.startsWith(ZERO_STRING)
   ) {
     event.preventDefault()
   }
@@ -71,14 +73,17 @@ function IpSubnetTextBox({
   ...rest
 }: IpSubnetTextBoxProps) {
   const { disabled } = rest
-  const [ipVal, subnet] = value
-    ? value.split('/')
-    : ['...', fixedSubnet ?? EMPTY_STRING]
-  const [ipParts, setIpParts] = useState<any[]>(
-    shouldConvertSubnet2Mask
-      ? [...ipVal.split('.'), Utils.subnet2MaskOp(subnet)]
-      : [...ipVal.split('.'), subnet]
-  )
+  const [ipVal, subnet] = (value || DEFAULT_IP_SUBNET).split('/')
+  // A subnet parsed from `value` is a mask; `fixedSubnet` is already a prefix length
+  // and, since its input is read-only, always wins
+  const parsedSubnet = shouldConvertSubnet2Mask
+    ? Utils.subnet2MaskOp(subnet)
+    : subnet
+  const [ipParts, setIpParts] = useState<any[]>([
+    // eslint-disable-next-line sonarjs/null-dereference -- split() always yields a first element
+    ...ipVal.split('.'),
+    fixedSubnet ?? parsedSubnet
+  ])
   const ipSubnetBoxRef = React.useRef<HTMLInputElement | null>(null)
   const highlighted = useHighlightInput({
     inputRef: ipSubnetBoxRef,
@@ -118,7 +123,7 @@ function IpSubnetTextBox({
       if (shouldConvertSubnet2Mask) {
         onChange(
           `${newIpParts.slice(0, 4).join('.')}/${Utils.mask2SubnetOp(
-            newIpParts.slice(4)
+            Number(newIpParts[4])
           )}`
         )
       } else {
@@ -134,7 +139,9 @@ function IpSubnetTextBox({
       focusElement.parentNode &&
       focusElement.parentNode.parentNode === inputsRef.current
     ) {
-      inputsRef.current?.firstElementChild.firstElementChild.focus()
+      const firstInput = inputsRef.current?.firstElementChild
+        ?.firstElementChild as HTMLElement | null | undefined
+      firstInput?.focus()
     }
   }, [inputsRef.current])
   return (

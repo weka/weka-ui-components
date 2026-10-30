@@ -6,14 +6,13 @@ import { EMPTY_STRING } from '#consts'
 
 import Tooltip from '../../../Tooltip'
 
-interface ClearIndicatorProp extends ClearIndicatorProps {
-  selectProps: any
-}
-function ClearIndicator(props: ClearIndicatorProp) {
+function ClearIndicator(props: ClearIndicatorProps<Option, boolean>) {
+  // `clearText` is a custom prop callers pass through to react-select
   const { selectProps } = props
+  const { clearText } = selectProps as { clearText?: string }
 
   return (
-    <Tooltip data={selectProps.clearText || EMPTY_STRING}>
+    <Tooltip data={clearText || EMPTY_STRING}>
       <div>
         <components.ClearIndicator {...props} />
       </div>

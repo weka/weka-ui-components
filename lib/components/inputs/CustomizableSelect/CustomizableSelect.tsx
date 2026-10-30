@@ -1,14 +1,15 @@
-import type { MouseEvent, ReactElement } from 'react'
+import type { KeyboardEvent, MouseEvent, ReactElement } from 'react'
+import type { SingleValue } from 'react-select'
 
 import React, { useEffect, useState } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { FormControl } from '@mui/material'
 import clsx from 'clsx'
+
 import { EMPTY_STRING, EVENT_KEYS, NOP } from '#consts'
+import { useHighlightInput } from '#hooks'
 import svgs from '#svgs'
 import Utils from '#utils'
-
-import { useHighlightInput } from '#hooks'
 
 import Tooltip from '../../Tooltip'
 import { CommonSelectComponents, getStyle } from '../Select/Select'
@@ -46,6 +47,8 @@ interface CustomizableSelectProps {
   isScrolledInto?: boolean
 }
 
+const emptyRedInfo = () => EMPTY_STRING
+
 function CustomizableSelect({
   onChange = NOP,
   options: localOptions,
@@ -58,7 +61,7 @@ function CustomizableSelect({
   placeholder = 'Select...',
   info,
   isRequired,
-  redInfo = NOP,
+  redInfo = emptyRedInfo,
   isClearable = true,
   customValueValidation = () => true,
   customValueError,
@@ -75,7 +78,7 @@ function CustomizableSelect({
 }: CustomizableSelectProps) {
   const [editValue, setEditValue] = useState(EMPTY_STRING)
   const [isMenuOpen, setMenuIsOpen] = useState(false)
-  const [asyncOptions, setAsyncOptions] = useState(null)
+  const [asyncOptions, setAsyncOptions] = useState<Option[] | null>(null)
   const isAsync = !!getAsyncOptions
   const [isLoadingOptions, setLoadingOptions] = useState(false)
   const options = isAsync ? asyncOptions : localOptions
@@ -96,7 +99,10 @@ function CustomizableSelect({
       optionsFunc.then((asyncOptions) => {
         setAsyncOptions(asyncOptions)
         setLoadingOptions(false)
-        if (!Utils.isEmpty(defaultValueIndex)) {
+        if (
+          defaultValueIndex !== undefined &&
+          !Utils.isEmpty(defaultValueIndex)
+        ) {
           onChange(asyncOptions[defaultValueIndex]?.value)
         } else if (!Utils.isEmpty(defaultValueKey)) {
           onChange(
@@ -158,7 +164,7 @@ function CustomizableSelect({
             </Tooltip>
           )}
         </span>
-        <CreatableSelect
+        <CreatableSelect<Option, false>
           {...rest}
           classNamePrefix='react-creatable-select'
           components={CommonSelectComponents}
@@ -166,7 +172,7 @@ function CustomizableSelect({
           inputValue={editValue}
           isClearable={isClearable}
           isDisabled={disabled}
-          isLoading={isLoadingOptions && !editValue ? !value : null}
+          isLoading={isLoadingOptions && !editValue ? !value : undefined}
           menuIsOpen={isMenuOpen}
           menuPortalTarget={document.body}
           menuPosition='fixed'
@@ -189,7 +195,7 @@ function CustomizableSelect({
               )}
             </div>
           )}
-          onChange={(newVal: Option | null) => {
+          onChange={(newVal: SingleValue<Option>) => {
             const newValue = newVal?.value ?? EMPTY_STRING
             onChange(newValue)
           }}
@@ -206,11 +212,11 @@ function CustomizableSelect({
           value={
             options?.find((option) => option?.value === value) ||
             (value
-              ? {
+              ? ({
                   label: value,
                   value
-                }
-              : EMPTY_STRING)
+                } as Option)
+              : null)
           }
         />
         <span className='creatable-select-error capitalize-first-letter'>

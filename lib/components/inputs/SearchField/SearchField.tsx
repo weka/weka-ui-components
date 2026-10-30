@@ -28,7 +28,7 @@ function SearchField({
   return (
     <TextBox
       label={label}
-      onChange={setTerm}
+      onChange={(newTerm) => setTerm(String(newTerm))}
       value={term}
       {...rest}
     />

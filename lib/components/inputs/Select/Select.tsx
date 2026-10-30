@@ -1,4 +1,9 @@
 import type { ReactElement } from 'react'
+import type {
+  MultiValue as SelectedOptions,
+  SingleValue as SelectedOption,
+  StylesConfig
+} from 'react-select'
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import ReactSelect, { createFilter } from 'react-select'
@@ -22,17 +27,29 @@ import './select.scss'
 
 const { Info } = svgs
 
+const MENU_PORTAL_GAP = 6
+
 const filterOption = createFilter<Option>({
   stringify: ({ label, value, data }) =>
     `${label} ${value} ${data.subLabel ?? EMPTY_STRING}`
 })
 
-export const getStyle = (hasError, hasLabel) => ({
-  menuPortal: (provided, state) => ({
-    ...provided,
-    zIndex: 1500,
-    top: state.offset === state.rect.top ? state.offset + 6 : state.offset - 6
-  }),
+export const getStyle = (
+  hasError: boolean,
+  hasLabel: boolean
+): StylesConfig<Option, boolean> => ({
+  menuPortal: (provided, state) => {
+    // react-select types `rect` as { left, width }, but passes a full DOMRect
+    const { top } = state.rect as DOMRect
+    return {
+      ...provided,
+      zIndex: 1500,
+      top:
+        state.offset === top
+          ? state.offset + MENU_PORTAL_GAP
+          : state.offset - MENU_PORTAL_GAP
+    }
+  },
   menu: (base) => ({
     ...base,
     boxShadow: '0 0 0 2px var(--main-color)',
@@ -49,7 +66,9 @@ export const getStyle = (hasError, hasLabel) => ({
     minHeight: hasLabel ? 48 : 32,
     ...(hasError
       ? { boxShadow: '0 0 0 1px var(--focus-key)' }
-      : { boxShadow: state.isFocused ? '0 0 0 1px var(--main-color)' : 0 }),
+      : {
+          boxShadow: state.isFocused ? '0 0 0 1px var(--main-color)' : 'none'
+        }),
     ...(hasError
       ? {
           borderColor: 'var(--focus-key)',
@@ -66,7 +85,7 @@ export const getStyle = (hasError, hasLabel) => ({
           }
         })
   }),
-  clearIndicator: (base, { isDisabled }) => ({
+  clearIndicator: (base, { selectProps: { isDisabled } }) => ({
     ...base,
     cursor: 'pointer',
     color: isDisabled ? 'var(--ironhide-key)' : 'var(--main-color)',
@@ -86,13 +105,15 @@ export const getStyle = (hasError, hasLabel) => ({
     ':hover': {
       color: state.isDisabled ? 'var(--ironhide-key)' : 'var(--main-color)'
     },
-    '>svg': { transform: state.selectProps.menuIsOpen && 'rotate(180deg)' }
+    '>svg': {
+      transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : undefined
+    }
   }),
   option: (base, { isDisabled }) => ({
     ...base,
     willChange: 'transform',
     color: 'var(--text-color)',
-    opacity: isDisabled && '.5',
+    opacity: isDisabled ? '.5' : undefined,
     backgroundColor: isDisabled ? 'transparent' : 'var(--neutral-t4)',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -186,8 +207,11 @@ function Select({
         : getAsyncOptions()
       optionsFunc.then((asyncOptions) => {
         initialOptionsSetup(asyncOptions)
-        if (!Utils.isEmpty(defaultValueIndex)) {
-          onChange(asyncOptions[defaultValueIndex].value)
+        if (
+          defaultValueIndex !== undefined &&
+          !Utils.isEmpty(defaultValueIndex)
+        ) {
+          onChange(asyncOptions[defaultValueIndex]?.value)
         } else if (!Utils.isEmpty(defaultValueKey)) {
           onChange(
             asyncOptions.find((option) => option.value === defaultValueKey)
@@ -202,12 +226,15 @@ function Select({
 
   const formattedGroupedOptions = useMemo(() => {
     if (groupedOptions) {
-      return options.reduce((acc, { options }) => {
-        options.forEach(({ label, value }) =>
-          acc.push(Utils.formatOption(label, value))
-        )
-        return acc
-      }, [])
+      return options.reduce<Option[]>(
+        (acc, { options }: { options: Option[] }) => {
+          options.forEach(({ label, value }) =>
+            acc.push(Utils.formatOption(label, value))
+          )
+          return acc
+        },
+        []
+      )
     }
     return []
   }, [JSON.stringify(options)])
@@ -243,16 +270,18 @@ function Select({
     }
   }
 
-  function onSelectChange(data) {
+  function onSelectChange(
+    data: SelectedOptions<Option> | SelectedOption<Option>
+  ) {
     if (!isMulti) {
       if (data) {
-        const { value: newValue } = data
+        const { value: newValue } = data as Option
         onChange(newValue)
       } else {
         onChange(EMPTY_STRING)
       }
     } else {
-      onChange(data.map((option: Option) => option.value))
+      onChange((data as SelectedOptions<Option>).map((option) => option.value))
     }
   }
 
@@ -307,14 +336,12 @@ function Select({
           filterOption={filterOption}
           {...rest}
           autoFocus={autoFocus}
-          autosize
           classNamePrefix='react-select'
           closeMenuOnSelect={!isMulti}
           components={{ ...CommonSelectComponents, MultiValue }}
-          dropdownAlign={{ offset: [0, 0] }}
           isClearable={(isMulti && isClearable) || isSingleClearable}
           isDisabled={disabled}
-          isLoading={isAsync ? !saveOptions : null}
+          isLoading={isAsync ? !saveOptions : undefined}
           isMulti={isMulti}
           menuPortalTarget={document.body}
           menuPosition='fixed'

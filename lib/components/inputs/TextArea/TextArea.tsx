@@ -1,7 +1,8 @@
-import type { ReactElement } from 'react'
+import type { ChangeEvent, ReactElement } from 'react'
 
 import React from 'react'
 import clsx from 'clsx'
+
 import { EMPTY_STRING } from '#consts'
 import svgs from '#svgs'
 
@@ -38,8 +39,8 @@ function TextArea({
   insetLabel = false,
   ...rest
 }: TextAreaProps) {
-  function onTextChange(event) {
-    onChange(event.target.value)
+  function onTextChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    onChange?.(event.target.value)
   }
 
   const wrapperClasses = clsx({
@@ -56,7 +57,7 @@ function TextArea({
           className='field__input'
           disabled={disabled}
           onChange={onTextChange}
-          placeholder={placeholder}
+          placeholder={placeholder?.toString()}
           value={value === null ? EMPTY_STRING : value}
           {...rest}
         />

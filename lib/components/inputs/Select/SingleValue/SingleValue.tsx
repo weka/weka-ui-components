@@ -7,15 +7,7 @@ import SpanTooltip from '../../../SpanTooltip'
 
 import './singleValue.scss'
 
-interface ValueProps extends SingleValueProps {
-  data: {
-    label: string
-    icon?: React.ReactNode
-    subLabel?: string
-  }
-}
-
-function SingleValue(props: ValueProps) {
+function SingleValue(props: SingleValueProps<Option, boolean>) {
   const {
     data: { icon, label, subLabel }
   } = props

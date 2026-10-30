@@ -48,19 +48,19 @@ function TextSelectBox({
     'text-select-wrapper': true
   })
 
-  const onTextChange = (newValue) => {
+  const onTextChange = (newValue: string | number) => {
     if (Utils.isEmpty(newValue)) {
       onChange(undefined)
     } else if (!Utils.isEmpty(selectValue)) {
-      onChange(Math.floor(selectValue * newValue))
+      onChange(Math.floor(selectValue * Number(newValue)))
     }
     setTextValue(newValue)
   }
-  const onSelectChange = (newValue) => {
+  const onSelectChange = (newValue: string | number) => {
     if (Utils.isEmpty(newValue)) {
       onChange(undefined)
     } else if (!Utils.isEmpty(textValue)) {
-      onChange(Math.floor(textValue * newValue))
+      onChange(Math.floor(textValue * Number(newValue)))
     } else {
       onChange(undefined)
     }

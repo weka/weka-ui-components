@@ -5,10 +5,7 @@ import { components } from 'react-select'
 
 import Tooltip from '../../../Tooltip'
 
-interface ValueProps extends MultiValueProps {
-  data: any
-}
-function MultiValue(props: ValueProps) {
+function MultiValue(props: MultiValueProps<Option, boolean>) {
   const {
     data: { chipLabel, chipTooltip, label }
   } = props
