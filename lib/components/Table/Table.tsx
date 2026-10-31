@@ -17,6 +17,7 @@ import type {
 import type { ReactNode } from 'react'
 
 import React, {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -246,6 +247,26 @@ function Table<Data, Value>({
 
   const { current: initialUrlFilters = [] } = useRef(urlFilters)
 
+  // TanStack passes onColumnFiltersChange an updater (value or function), but
+  // consumers expect the array. Updates are resolved against a pending snapshot
+  // so several in one batch compose before the parent re-renders with them.
+  const pendingFiltersRef = useRef(userColumnFilters)
+  useEffect(() => {
+    pendingFiltersRef.current = userColumnFilters
+  }, [userColumnFilters])
+  const resolveFiltersUpdate = useCallback(
+    (updater: Updater<ColumnFiltersState>) => {
+      const nextFilters = (
+        typeof updater === 'function'
+          ? updater(pendingFiltersRef.current ?? [])
+          : updater
+      ) as ExtendedColumnFilter[]
+      pendingFiltersRef.current = nextFilters
+      onFiltersChanged?.(nextFilters)
+    },
+    [onFiltersChanged]
+  )
+
   const initialFilters = useMemo(() => {
     if (!extendedInitialUserFilters) {
       return initialUrlFilters
@@ -302,13 +323,7 @@ function Table<Data, Value>({
       ...(userColumnFilters && { columnFilters: userColumnFilters })
     },
     ...(userColumnFilters && {
-      // TanStack passes an updater (value or function); consumers expect the array
-      onColumnFiltersChange: (updater: Updater<ColumnFiltersState>) =>
-        onFiltersChanged?.(
-          (typeof updater === 'function'
-            ? updater(userColumnFilters)
-            : updater) as ExtendedColumnFilter[]
-        )
+      onColumnFiltersChange: resolveFiltersUpdate
     }),
     defaultColumn: {
       // cells take ExtendedCellProps, the table's own view of CellContext
