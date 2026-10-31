@@ -1,6 +1,7 @@
 import type { Meta, StoryFn } from '@storybook/react'
 
 import React from 'react'
+import { TOASTER_TYPES } from '#consts'
 import Utils from '#utils'
 
 import { DialogProvider } from '#context'
@@ -19,13 +20,17 @@ interface ToasterStoryArgs {
   errorToastMessage: string
 }
 
-function DialogStory(args: DialogStoryArgs) {
+function DialogStory({ successMessage, errorMessage }: DialogStoryArgs) {
   return (
     <div style={{ display: 'flex', gap: '20px' }}>
-      <Button onClick={() => Utils.toastSuccess(args.successMessage, true)}>
+      <Button
+        onClick={() => Utils.toastSuccess(successMessage, TOASTER_TYPES.DIALOG)}
+      >
         Dialog Success
       </Button>
-      <Button onClick={() => Utils.toastError(args.errorMessage, true)}>
+      <Button
+        onClick={() => Utils.toastError(errorMessage, TOASTER_TYPES.DIALOG)}
+      >
         Dialog Error
       </Button>
     </div>

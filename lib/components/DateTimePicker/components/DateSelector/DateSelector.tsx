@@ -16,7 +16,7 @@ interface DateSelectorProps {
   minDate?: DateTime | null
 }
 
-function getDaysOfTheMonth(referenceDate) {
+function getDaysOfTheMonth(referenceDate: DateTime) {
   const startDate = DateTime.local(referenceDate.year, referenceDate.month)
   let fromDate = startDate.minus({ day: startDate.weekday - 1 })
   const endDate = DateTime.local(referenceDate.year, referenceDate.month).plus({
@@ -68,7 +68,7 @@ function DateSelector({
     currentMonthYear.year
   }`
 
-  function isSelected(d) {
+  function isSelected(d: DateTime) {
     return d.day === date.day && d.year === date.year && d.month === date.month
   }
 
@@ -101,12 +101,12 @@ function DateSelector({
       </div>
       {allDays.map((w) => (
         <div
-          key={w}
+          key={String(w)}
           className='calendar-row'
         >
           {w.map((d) => (
             <DayCell
-              key={d}
+              key={String(d)}
               date={d}
               maxDate={maxDate}
               minDate={minDate}

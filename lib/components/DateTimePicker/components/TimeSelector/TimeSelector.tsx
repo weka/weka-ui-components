@@ -28,13 +28,14 @@ function TimeSelector({
     minute: false,
     second: false
   }
-  const [numFocus, setNumFocus] = useState(initialNumState)
+  const [numFocus, setNumFocus] =
+    useState<Record<string, boolean>>(initialNumState)
 
   const [hours, setHours] = useState(time ? time.hour : 0)
   const [minutes, setMinutes] = useState(time ? time.minute : 0)
   const [seconds, setSeconds] = useState(time ? time.second : 0)
 
-  function doValidate(key: string, value) {
+  function doValidate(key: string, value: number) {
     const setOfTime = { hour: hours, minute: minutes, second: seconds }
     onSubmit(time.set({ ...setOfTime, [key]: value }))
   }

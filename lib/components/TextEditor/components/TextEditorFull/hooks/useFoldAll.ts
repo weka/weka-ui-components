@@ -26,7 +26,7 @@ function useFoldAll({
         )
     } else {
       editor.execCommand('unfoldall')
-      editor.scrollToLine(0)
+      editor.scrollToLine(0, false, false)
     }
   }, [editor, foldAll, value])
 }
