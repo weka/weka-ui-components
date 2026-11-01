@@ -120,7 +120,7 @@ function useUrlFilters(props: {
           ) {
             throw new Error('Invalid filter value. Expected string or number.')
           } else if (!Utils.isEmpty(innerVal)) {
-            searchParams.append(`${id}[${innerKey}]`, innerVal.toString())
+            searchParams.append(`${id}[${innerKey}]`, String(innerVal))
           }
         })
       } else if (!Utils.isEmpty(value)) {

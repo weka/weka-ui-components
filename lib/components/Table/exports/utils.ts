@@ -1,23 +1,29 @@
 import type { IconButtonCellOptions } from './cells'
-import type { ColumnDef, ColumnHelper } from '@tanstack/react-table'
+import type {
+  CellContext,
+  ColumnDef,
+  ColumnDefTemplate,
+  ColumnHelper
+} from '@tanstack/react-table'
 
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { IconButtonCell } from './cells'
 
-export const createColumnHelperWithAction: <Data>() => ColumnHelper<Data> & {
+export function createColumnHelperWithAction<Data>(): ColumnHelper<Data> & {
   action: (actionDef: IconButtonCellOptions<Data>) => ColumnDef<Data, unknown>
-} = <Data>() => {
+} {
   const columnHelper = createColumnHelper<Data>()
 
   let lastIdForAction = 0
 
   return {
     ...columnHelper,
-    action: (action) =>
+    action: (action: IconButtonCellOptions<Data>) =>
       columnHelper.display({
         id: `action_column_${lastIdForAction++}`,
-        cell: IconButtonCell,
+        // cells take ExtendedCellProps, the table's own view of CellContext
+        cell: IconButtonCell as ColumnDefTemplate<CellContext<Data, unknown>>,
         enableResizing: false,
         meta: {
           _type: 'action',

@@ -1,14 +1,23 @@
 import type {
+  ExtendedColumn,
   ExtendedColumnDef,
   ExtendedColumnFilter,
   ExtendedRow,
   RowAction,
   TableExtraClasses
 } from './types'
-import type { ColumnFilter, FilterFn } from '@tanstack/react-table'
+import type {
+  CellContext,
+  ColumnDefTemplate,
+  ColumnFilter,
+  ColumnFiltersState,
+  FilterFn,
+  Updater
+} from '@tanstack/react-table'
 import type { ReactNode } from 'react'
 
 import React, {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -69,8 +78,8 @@ export interface TableProps<Data, Value> {
   globalFilter?: any
   globalFilterFn?: FilterFn<Data>
   defaultGlobalFilter?: string
-  checkRowSelected?: (row: object) => boolean
-  checkRowHighlighted?: (row: object) => boolean
+  checkRowSelected?: (row: Data) => boolean
+  checkRowHighlighted?: (row: Data) => boolean
   getRowId?: (
     originalRow: Data,
     index: number,
@@ -238,6 +247,26 @@ function Table<Data, Value>({
 
   const { current: initialUrlFilters = [] } = useRef(urlFilters)
 
+  // TanStack passes onColumnFiltersChange an updater (value or function), but
+  // consumers expect the array. Updates are resolved against a pending snapshot
+  // so several in one batch compose before the parent re-renders with them.
+  const pendingFiltersRef = useRef(userColumnFilters)
+  useEffect(() => {
+    pendingFiltersRef.current = userColumnFilters
+  }, [userColumnFilters])
+  const resolveFiltersUpdate = useCallback(
+    (updater: Updater<ColumnFiltersState>) => {
+      const nextFilters = (
+        typeof updater === 'function'
+          ? updater(pendingFiltersRef.current ?? [])
+          : updater
+      ) as ExtendedColumnFilter[]
+      pendingFiltersRef.current = nextFilters
+      onFiltersChanged?.(nextFilters)
+    },
+    [onFiltersChanged]
+  )
+
   const initialFilters = useMemo(() => {
     if (!extendedInitialUserFilters) {
       return initialUrlFilters
@@ -293,9 +322,12 @@ function Table<Data, Value>({
           },
       ...(userColumnFilters && { columnFilters: userColumnFilters })
     },
-    ...(userColumnFilters && { onColumnFiltersChange: onFiltersChanged }),
+    ...(userColumnFilters && {
+      onColumnFiltersChange: resolveFiltersUpdate
+    }),
     defaultColumn: {
-      cell: DefaultCell,
+      // cells take ExtendedCellProps, the table's own view of CellContext
+      cell: DefaultCell as ColumnDefTemplate<CellContext<Data, unknown>>,
       aggregatedCell: AggregatedTotalCell,
       size: 100,
       sortingFn: 'stringSort'
@@ -314,7 +346,6 @@ function Table<Data, Value>({
     autoResetExpanded:
       collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
     autoResetPageIndex: false,
-    autoResetPage: false,
     paginateExpandedRows: false,
     getRowId,
     manualPagination,
@@ -385,7 +416,10 @@ function Table<Data, Value>({
   }, [columnFilters, addFilterToUrl])
 
   useEffect(() => {
-    onVisibilityChange(allColumns, columnVisibility)
+    onVisibilityChange(
+      allColumns as ExtendedColumn<Data, Value>[],
+      columnVisibility
+    )
   }, [onVisibilityChange, allColumns, columnVisibility])
 
   useEffect(() => {

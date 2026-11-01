@@ -80,7 +80,7 @@ function DateFilter<Data>({
             customFormat={customFormat}
             enableCustomFormat={enableCustomFormat}
             label={toLabel}
-            minDate={from ? from.startOf('day') : null}
+            minDate={from ? from.startOf('day') : undefined}
             onChange={onToChange}
             showSeconds
             value={to}

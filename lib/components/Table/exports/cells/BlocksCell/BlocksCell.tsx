@@ -44,7 +44,7 @@ function BlocksCell<Data>({
   const cellRef = React.useRef<HTMLDivElement>(null)
   const [maxBlocksCount, setMaxBlocksCount] = useState(0)
 
-  const isUpBlock = ({ status }) =>
+  const isUpBlock = ({ status }: { status: string }) =>
     status === NODES_STATUSES.UP ||
     status === DRIVES_STATUSES.ACTIVE ||
     status === DRIVES_STATUSES.PHASING_OUT ||

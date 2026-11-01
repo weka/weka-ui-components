@@ -4,6 +4,7 @@ import type {
   RowAction,
   TableExtraClasses
 } from '../../types'
+import type { VirtualItem } from '@tanstack/react-virtual'
 import type { RefObject } from 'react'
 
 import React from 'react'
@@ -97,10 +98,13 @@ function TableBodyComponent<Data>({
             row={row}
             rowActions={rowActions}
             rowCanExpand={
-              isExpandable ? (getRowCanExpand?.(row.original) ?? true) : null
+              isExpandable
+                ? (getRowCanExpand?.(row.original) ?? true)
+                : undefined
             }
             {...(infinityScrollConfig && {
-              virtualRow,
+              // with infinite scroll, items come from the virtualizer
+              virtualRow: virtualRow as VirtualItem,
               getInfScrollPropsRow
             })}
           />

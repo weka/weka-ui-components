@@ -57,7 +57,8 @@ const columns: ExtendedColumnDef<SampleData, keyof SampleData>[] = [
 ]
 
 const Template: StoryFn<TableProps<SampleData, keyof SampleData>> = (args) => (
-  <Table {...args} />
+  // React.memo(Table) drops Table's generics, so its props are TableProps<unknown, unknown>
+  <Table {...(args as unknown as TableProps<unknown, unknown>)} />
 )
 
 Template.args = {
