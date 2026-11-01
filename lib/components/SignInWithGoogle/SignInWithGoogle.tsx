@@ -24,6 +24,23 @@ interface TokenClient {
   requestAccessToken(): void
 }
 
+declare global {
+  interface Window {
+    /** Google Identity Services, loaded at runtime from the `googleApi` script */
+    google?: {
+      accounts: {
+        oauth2: {
+          initTokenClient: (config: {
+            client_id: string
+            callback: (response: TokenResponse) => void
+            scope: string
+          }) => TokenClient
+        }
+      }
+    }
+  }
+}
+
 interface SignInWithGoogleProps {
   googleApi: string
   clientId: string
@@ -80,7 +97,7 @@ function SignInWithGoogle({
 
   useEffect(() => {
     const initializeGsi = () => {
-      if (!googleLoaded) {
+      if (!googleLoaded || !window.google) {
         return
       }
       setClient(

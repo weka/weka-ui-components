@@ -77,7 +77,7 @@ function ToggleButton({
 
       const values = Array.isArray(value) ? value : [value]
       const pads = Array.from(
-        instanceElement.querySelectorAll('.toggle-button-pad')
+        instanceElement.querySelectorAll<HTMLElement>('.toggle-button-pad')
       )
 
       values.forEach((val, index) => {

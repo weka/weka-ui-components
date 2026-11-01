@@ -1,4 +1,8 @@
+import type { StoryFn } from '@storybook/react'
+import type { ComponentProps } from 'react'
+
 import React, { useState } from 'react'
+
 import Utils from '#utils'
 
 import { default as ToggleButtonComponent } from './ToggleButton'
@@ -22,7 +26,7 @@ export default {
   }
 }
 
-function Template(args: object) {
+function Template(args: ComponentProps<typeof ToggleButtonComponent>) {
   const { options } = args
   const [value, setValue] = useState(options[0].value)
   return (
@@ -35,7 +39,8 @@ function Template(args: object) {
   )
 }
 
-export const ToggleButton = Template.bind({})
+export const ToggleButton: StoryFn<typeof ToggleButtonComponent> =
+  Template.bind({})
 ToggleButton.args = {
   options: ['one', 'two', 'three'].map(Utils.formatStringOption)
 }

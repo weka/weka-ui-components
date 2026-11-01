@@ -6,7 +6,7 @@ function useIsScrollbarVisible({ editorReady }: { editorReady: boolean }) {
   )
 
   useEffect(() => {
-    const verticalScrollbar = document.querySelector(
+    const verticalScrollbar = document.querySelector<HTMLElement>(
       '.ace_scrollbar.ace_scrollbar-v'
     )
 

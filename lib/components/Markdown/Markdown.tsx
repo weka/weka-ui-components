@@ -1,11 +1,11 @@
-import type { ReactElement } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import './markdown.scss'
 
-function LinkRenderer(props: { href: string; children: ReactElement }) {
+function LinkRenderer(props: ComponentPropsWithoutRef<'a'>) {
   return (
     <a
       aria-label={`${props.children}`}

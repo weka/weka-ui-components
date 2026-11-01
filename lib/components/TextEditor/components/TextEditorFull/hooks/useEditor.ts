@@ -16,7 +16,7 @@ function useEditor({
       return
     }
 
-    editor.scrollToLine(0)
+    editor.scrollToLine(0, false, false)
     editor.selection.clearSelection()
   }, [editor, onlyMatching, value])
 }

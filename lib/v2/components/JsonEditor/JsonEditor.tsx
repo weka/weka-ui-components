@@ -49,7 +49,7 @@ export interface JsonEditorProps {
   fontSize?: number
   showLineNumbers?: boolean
   completionSource?: JsonEditorCompletionSource
-  decorations?: JsonEditorDecoration[]
+  decorations?: readonly JsonEditorDecoration[]
   onCursorActivity?: (context: JsonEditorCursorContext) => void
   autoFocus?: boolean
   extraClass?: string
@@ -77,7 +77,7 @@ export const JsonEditor = forwardRef<
     fontSize = DEFAULT_FONT_SIZE_PX,
     showLineNumbers = true,
     completionSource,
-    decorations = EMPTY_ARRAY as JsonEditorDecoration[],
+    decorations = EMPTY_ARRAY,
     onCursorActivity,
     autoFocus = false,
     extraClass = EMPTY_STRING,

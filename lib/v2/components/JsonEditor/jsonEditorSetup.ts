@@ -152,7 +152,7 @@ interface CollectedMatch {
 function collectMatches(
   text: string,
   offset: number,
-  rules: JsonEditorDecoration[]
+  rules: readonly JsonEditorDecoration[]
 ): CollectedMatch[] {
   const matches: CollectedMatch[] = []
   for (const rule of rules) {
@@ -185,7 +185,7 @@ function collectMatches(
  * sorted and overlaps dropped so the RangeSetBuilder receives ordered,
  * non-overlapping ranges. Rebuilt on every doc/viewport change.
  */
-function decorationsPlugin(rules: JsonEditorDecoration[]): Extension {
+function decorationsPlugin(rules: readonly JsonEditorDecoration[]): Extension {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet

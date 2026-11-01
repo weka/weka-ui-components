@@ -10,11 +10,11 @@ const { Arrow } = svgs
 interface NumInputProps {
   max: number
   value: number
-  onChange?: (val?: number) => void
+  onChange?: (val: number) => void
   numTitle?: string
-  numFocus?: { [key: string]: any }
-  setNumFocus?: (state: { [key: string]: any }) => void
-  initialNumState?: { [key: string]: any }
+  numFocus?: Record<string, boolean>
+  setNumFocus?: (state: Record<string, boolean>) => void
+  initialNumState?: Record<string, boolean>
 }
 
 function NumInput({
@@ -33,7 +33,7 @@ function NumInput({
 
   return (
     <div
-      onBlur={() => setNumFocus({ initialNumState })}
+      onBlur={() => setNumFocus({ ...initialNumState })}
       onFocus={() => {
         setNumFocus({ ...initialNumState, [numTitle]: true })
       }}
@@ -48,7 +48,7 @@ function NumInput({
         type='number'
         value={value < 10 ? `0${value}` : value}
         onChange={(e) => {
-          e.target.value = parseInt(e.target.value, 10)
+          e.target.value = String(parseInt(e.target.value, 10))
           const valAsNum = e.target.valueAsNumber
           const formattedVal = valAsNum > max ? max : valAsNum
           onChange(formattedVal)
