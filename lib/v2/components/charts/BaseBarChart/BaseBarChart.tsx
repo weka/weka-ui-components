@@ -135,7 +135,7 @@ export function BaseBarChart({
   xAxis,
   yAxis,
   barSize = 30,
-  minPointSize,
+  minPointSize = 0,
   fill = 'url(#gradient-blue-600-400-vertical)',
   tooltip,
   customShape,
