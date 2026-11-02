@@ -58,6 +58,8 @@ const BRUSH_TRAVELLER_WIDTH = 8
 const DASHED_LINE_STROKE_DASHARRAY = '6 4'
 /** Fill opacity of the drag-to-select highlight overlay (`referenceArea`). */
 const SELECTION_FILL_OPACITY = 0.2
+/** recharts' own default axis id; passing it explicitly survives React 19, which drops defaultProps. */
+const PRIMARY_Y_AXIS_ID = 0
 
 type TooltipCursor = boolean | ReactElement | SVGProps<SVGElement>
 
@@ -189,7 +191,7 @@ export function BaseComposedChart({
           stroke={resolveSeriesColor(color)}
           strokeWidth={strokeWidth}
           type='monotone'
-          yAxisId={seriesItem.yAxisId}
+          yAxisId={seriesItem.yAxisId ?? PRIMARY_Y_AXIS_ID}
         />
       )
     }
@@ -205,7 +207,7 @@ export function BaseComposedChart({
           name={seriesItem.name}
           shape={customBarShape}
           stackId={barStackId}
-          yAxisId={seriesItem.yAxisId}
+          yAxisId={seriesItem.yAxisId ?? PRIMARY_Y_AXIS_ID}
         />
       )
     }
@@ -221,7 +223,7 @@ export function BaseComposedChart({
         stroke={color}
         strokeWidth={strokeWidth}
         type='monotone'
-        yAxisId={seriesItem.yAxisId}
+        yAxisId={seriesItem.yAxisId ?? PRIMARY_Y_AXIS_ID}
         strokeDasharray={
           seriesItem.dashed ? DASHED_LINE_STROKE_DASHARRAY : undefined
         }
@@ -264,6 +266,7 @@ export function BaseComposedChart({
         <YAxis
           domain={yAxis?.domain}
           tickLine={false}
+          yAxisId={PRIMARY_Y_AXIS_ID}
           {...buildYAxisStyleProps(yAxis)}
           {...buildYAxisConfig(yAxis)}
         />
