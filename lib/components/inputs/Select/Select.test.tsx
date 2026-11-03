@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { EMPTY_STRING } from '#consts'
 
+import Tooltip from '../../Tooltip'
 import Select, { getStyle } from './Select'
 
 const AMSTERDAM_LABEL = 'Europe/Amsterdam'
@@ -99,15 +100,33 @@ describe('Select - Search functionality', () => {
   })
 })
 
+const getMenuPortalZIndex = () => {
+  const menuPortal = getStyle(false, false).menuPortal as (
+    base: object,
+    state: unknown
+  ) => { zIndex: number }
+  return menuPortal({}, { rect: { top: 0 }, offset: 0 }).zIndex
+}
+
 describe('Select - menu stacking', () => {
   it('renders the portalled menu above a .popper-wrapper that hosts it', () => {
-    const menuPortal = getStyle(false, false).menuPortal as (
-      base: object,
-      state: unknown
-    ) => { zIndex: number }
+    expect(getMenuPortalZIndex()).toBeGreaterThan(POPPER_WRAPPER_Z_INDEX)
+  })
 
-    const { zIndex } = menuPortal({}, { rect: { top: 0 }, offset: 0 })
+  it('keeps tooltips, such as an option overflow tooltip, above the menu', () => {
+    render(
+      <Tooltip
+        data='Full option label'
+        open
+      >
+        <span>Option</span>
+      </Tooltip>
+    )
 
-    expect(zIndex).toBeGreaterThan(POPPER_WRAPPER_Z_INDEX)
+    const popper = screen.getByRole('tooltip')
+
+    expect(Number(getComputedStyle(popper).zIndex)).toBeGreaterThan(
+      getMenuPortalZIndex()
+    )
   })
 })
