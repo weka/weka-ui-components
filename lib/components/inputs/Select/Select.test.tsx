@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { EMPTY_STRING } from '#consts'
 
-import Select from './Select'
+import Select, { getStyle } from './Select'
 
 const AMSTERDAM_LABEL = 'Europe/Amsterdam'
 const AMSTERDAM_SUB_LABEL = '(GMT+2:00) Amsterdam, Berlin, Bern, Rome'
@@ -13,6 +13,9 @@ const HONOLULU_LABEL = 'Pacific/Honolulu'
 const HONOLULU_SUB_LABEL = '(GMT-10:00) Hawaii'
 const NO_OPTIONS_TEXT = 'No options'
 const MENU_SIZE = 300
+// v2 FormPopup raises every .popper-wrapper to this z-index so v1 poppers clear
+// its overlay; a Select opened inside one must still render above it.
+const POPPER_WRAPPER_Z_INDEX = 2000
 
 const timeZoneOptions: Option[] = [
   {
@@ -93,5 +96,18 @@ describe('Select - Search functionality', () => {
 
     expect(screen.getByText(NO_OPTIONS_TEXT)).toBeInTheDocument()
     expect(screen.queryByText(AMSTERDAM_LABEL)).not.toBeInTheDocument()
+  })
+})
+
+describe('Select - menu stacking', () => {
+  it('renders the portalled menu above a .popper-wrapper that hosts it', () => {
+    const menuPortal = getStyle(false, false).menuPortal as (
+      base: object,
+      state: unknown
+    ) => { zIndex: number }
+
+    const { zIndex } = menuPortal({}, { rect: { top: 0 }, offset: 0 })
+
+    expect(zIndex).toBeGreaterThan(POPPER_WRAPPER_Z_INDEX)
   })
 })

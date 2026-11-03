@@ -28,6 +28,9 @@ import './select.scss'
 const { Info } = svgs
 
 const MENU_PORTAL_GAP = 6
+// Above v2 Popup and every .popper-wrapper (up to 2000 once v2 FormPopup's
+// global rule loads), so a Select inside them stays visible; below tooltips (2200).
+const MENU_PORTAL_Z_INDEX = 2100
 
 const filterOption = createFilter<Option>({
   stringify: ({ label, value, data }) =>
@@ -43,7 +46,7 @@ export const getStyle = (
     const { top } = state.rect as DOMRect
     return {
       ...provided,
-      zIndex: 1500,
+      zIndex: MENU_PORTAL_Z_INDEX,
       top:
         state.offset === top
           ? state.offset + MENU_PORTAL_GAP
