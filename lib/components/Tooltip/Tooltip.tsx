@@ -10,6 +10,10 @@ import Markdown from '../Markdown'
 
 import './tooltip.scss'
 
+// Same layer as v2 tooltips: above popups and Select menus (2100), whose
+// options and controls show these tooltips. MUI's default (1500) is too low.
+const TOOLTIP_Z_INDEX = 2200
+
 export type TooltipProps = {
   children: ReactElement
   clear?: boolean
@@ -47,6 +51,7 @@ function Tooltip({
       enterNextDelay={400}
       followCursor={followCursor}
       placement='top'
+      slotProps={{ popper: { sx: { zIndex: TOOLTIP_Z_INDEX } } }}
       classes={{
         tooltip: classes,
         arrow: 'tooltip-arrow',
