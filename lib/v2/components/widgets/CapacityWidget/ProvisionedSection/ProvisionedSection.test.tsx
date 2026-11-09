@@ -1,11 +1,11 @@
-import type { CapacityWidgetLabels } from '../types'
+import type { ResolvedCapacityWidgetLabels } from '../types'
 
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { ProvisionedSection } from './ProvisionedSection'
 
-const labels: CapacityWidgetLabels = {
+const labels: ResolvedCapacityWidgetLabels = {
   used: 'Used',
   free: 'Free',
   totalUsable: 'Total Usable',

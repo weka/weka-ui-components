@@ -1,4 +1,4 @@
-import type { CapacityTierData, CapacityWidgetLabels } from '../types'
+import type { CapacityTierData, ResolvedCapacityWidgetLabels } from '../types'
 
 import clsx from 'clsx'
 
@@ -26,7 +26,7 @@ export interface ProvisionedSectionProps {
   totalDisplay?: string
   quota?: number
   quotaDisplay?: string
-  labels: CapacityWidgetLabels
+  labels: ResolvedCapacityWidgetLabels
   noDataReduction?: boolean
 }
 
@@ -76,7 +76,12 @@ export function ProvisionedSection({
   }
 
   return (
-    <div className={styles.provisionedSection}>
+    <div
+      className={clsx(
+        styles.provisionedSection,
+        quota !== undefined && styles.provisionedSectionWithQuota
+      )}
+    >
       <div
         className={clsx(
           styles.provisionedBody,
@@ -132,15 +137,13 @@ export function ProvisionedSection({
           label={labels.totalProvisioned}
         />
       ) : null}
-      {quota ? (
-        <QuotaFooter
-          label={labels.quota}
-          provisioned={total}
-          quota={quota}
-          quotaDisplay={quotaDisplay}
-          unit={totalUnit}
-        />
-      ) : null}
+      <QuotaFooter
+        label={labels.quota}
+        provisioned={total}
+        quota={quota}
+        quotaDisplay={quotaDisplay}
+        unit={totalUnit}
+      />
     </div>
   )
 }

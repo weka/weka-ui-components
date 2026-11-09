@@ -55,9 +55,12 @@ export interface CapacityWidgetLabels {
   totalProvisioned: string
   ssd: string
   obs: string
-  sharedPool: string
-  quota: string
+  sharedPool?: string
+  quota?: string
 }
+
+/** The labels once the defaults are merged in, as the sections read them. */
+export type ResolvedCapacityWidgetLabels = Required<CapacityWidgetLabels>
 
 export interface CapacityWidgetProps {
   usable: CapacityUsableData

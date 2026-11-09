@@ -230,6 +230,7 @@ describe('CapacityWidget', () => {
 
   describe('Quota', () => {
     const QUOTA_LABEL = 'Total Quota'
+    const VALUE_NOW = 'aria-valuenow'
 
     it('shows the quota and the share of it provisioned, on a bar', () => {
       renderWidget({
@@ -241,17 +242,21 @@ describe('CapacityWidget', () => {
       expect(screen.getByText('(70.0%)')).toBeInTheDocument()
       expect(
         screen.getByRole('progressbar', { name: QUOTA_LABEL })
-      ).toHaveAttribute('aria-valuenow', '70')
+      ).toHaveAttribute(VALUE_NOW, '70')
     })
 
     it('fills the bar at most to the end when provisioned exceeds the quota', () => {
       renderWidget({ provisioned: { ...provisionedSsdOnly, quota: 1000 } })
 
       expect(screen.getByText('(140.0%)')).toBeInTheDocument()
-      expect(screen.getByRole('progressbar')).toHaveAttribute(
-        'aria-valuenow',
-        '100'
-      )
+      expect(screen.getByRole('progressbar')).toHaveAttribute(VALUE_NOW, '100')
+    })
+
+    it('shows a zero quota rather than hiding it', () => {
+      renderWidget({ provisioned: { ...provisionedSsdOnly, quota: 0 } })
+
+      expect(screen.getByText(QUOTA_LABEL)).toBeInTheDocument()
+      expect(screen.getByRole('progressbar')).toHaveAttribute(VALUE_NOW, '0')
     })
 
     it('is omitted without a quota', () => {

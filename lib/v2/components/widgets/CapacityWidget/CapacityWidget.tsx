@@ -1,4 +1,4 @@
-import type { CapacityWidgetLabels, CapacityWidgetProps } from './types'
+import type { CapacityWidgetProps, ResolvedCapacityWidgetLabels } from './types'
 
 import { DEFAULT_CAPACITY_UNIT } from './capacityFormat'
 import { ProvisionedSection } from './ProvisionedSection'
@@ -15,7 +15,7 @@ export type {
   CapacityWidgetProps
 } from './types'
 
-const DEFAULT_LABELS: CapacityWidgetLabels = {
+const DEFAULT_LABELS: ResolvedCapacityWidgetLabels = {
   used: 'Used',
   free: 'Free',
   totalUsable: 'Total Usable',

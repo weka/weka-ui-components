@@ -1,4 +1,4 @@
-import type { CapacityUsableData, CapacityWidgetLabels } from '../types'
+import type { CapacityUsableData, ResolvedCapacityWidgetLabels } from '../types'
 
 import { useId } from 'react'
 import clsx from 'clsx'
@@ -20,7 +20,7 @@ import styles from '../capacityWidget.module.scss'
 
 export interface UsableSectionProps {
   data: CapacityUsableData
-  labels: CapacityWidgetLabels
+  labels: ResolvedCapacityWidgetLabels
 }
 
 export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {

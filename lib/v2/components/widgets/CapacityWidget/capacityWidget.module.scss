@@ -302,6 +302,11 @@ $capsule-radius: 50px;
   min-height: 160px;
 }
 
+/* The quota footer takes its own height, so the capsule gives up some of its. */
+.provisionedSectionWithQuota .provisionedBodyNoObs .capsuleBarWide {
+  min-height: 100px;
+}
+
 .capsuleFill {
   position: absolute;
   bottom: 0;

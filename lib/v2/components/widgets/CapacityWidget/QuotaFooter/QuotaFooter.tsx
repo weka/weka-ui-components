@@ -12,7 +12,8 @@ import styles from '../capacityWidget.module.scss'
 export interface QuotaFooterProps {
   label: string
   provisioned: number
-  quota: number
+  /** Nothing is drawn without one. */
+  quota?: number
   unit: string
   quotaDisplay?: string
 }
@@ -25,6 +26,10 @@ export function QuotaFooter({
   unit,
   quotaDisplay
 }: Readonly<QuotaFooterProps>) {
+  if (quota === undefined) {
+    return null
+  }
+
   const amount = formatCapacity(quota, unit, quotaDisplay)
   const share = toPercentage(provisioned, quota)
   const fill = clampPercentage(share)
