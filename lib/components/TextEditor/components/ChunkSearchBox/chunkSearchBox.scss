@@ -101,6 +101,10 @@
     font-size: 14px;
     cursor: pointer;
     user-select: none;
+
+    &.loading {
+      cursor: default;
+    }
   }
 
   .option-btn {

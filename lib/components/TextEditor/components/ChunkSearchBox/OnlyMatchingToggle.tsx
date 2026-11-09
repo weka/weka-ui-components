@@ -1,4 +1,5 @@
 import { CircularProgress } from '@mui/material'
+import clsx from 'clsx'
 
 import { Checkbox } from '../../../inputs'
 
@@ -19,7 +20,10 @@ function OnlyMatchingToggle({
   }
 
   return (
-    <label className='search-only-matching'>
+    <label
+      aria-busy={loading}
+      className={clsx('search-only-matching', loading && 'loading')}
+    >
       {loading ? (
         <CircularProgress size={16} />
       ) : (

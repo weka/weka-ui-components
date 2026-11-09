@@ -219,8 +219,14 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     const showSearchBox =
       options.allowSearch && !hasExternalSearch && !internalSearch.dismissed
-    // the toggle lives in the search box, so the filter must not outlive it
-    const isOnlyMatchingActive = onlyMatching && showSearchBox
+    const hasMatchedData = Boolean(valueForMatched || isValueForMatchedLoading)
+    const isOnlyMatchingActive = onlyMatching && hasMatchedData && showSearchBox
+
+    // the toggle lives in the search box, so closing it is an explicit opt-out
+    const closeSearch = () => {
+      setDismissed(true)
+      setOnlyMatching(false)
+    }
 
     const latestOpenSearchRef = useRef<() => boolean>(() => false)
     const latestFindDirectionRef = useRef<(backwards: boolean) => void>(NOP)
@@ -322,6 +328,11 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       allowSearch: options.allowSearch,
       onlyMatching: isOnlyMatchingActive,
       searchValue,
+      searchOptions: {
+        isRegex: internalSearch.isRegex,
+        caseSensitive: internalSearch.isCaseSensitive,
+        wholeWord: internalSearch.isWholeWord
+      },
       value,
       valueForMatched
     })
@@ -382,7 +393,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             isRegex={internalSearch.isRegex}
             isWholeWord={internalSearch.isWholeWord}
             onCaseSensitiveChange={internalSearch.setIsCaseSensitive}
-            onClose={() => setDismissed(true)}
+            onClose={closeSearch}
             onNext={internalSearch.handleNext}
             onPrev={internalSearch.handlePrev}
             onRegexChange={internalSearch.setIsRegex}
@@ -392,11 +403,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             searchInputRef={searchInputRef}
             searchTerm={internalSearch.searchTerm}
             totalMatches={internalSearch.counter.total}
-            onOnlyMatchingChange={
-              valueForMatched || isValueForMatchedLoading
-                ? setOnlyMatching
-                : undefined
-            }
+            onOnlyMatchingChange={hasMatchedData ? setOnlyMatching : undefined}
           />
         ) : null}
         <Suspense fallback={<Loader />}>

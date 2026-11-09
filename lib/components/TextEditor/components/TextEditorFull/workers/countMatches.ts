@@ -22,6 +22,27 @@ function escapeRegExp(term: string): string {
   return term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+/**
+ * Builds the RegExp both the match counter and the "only matching lines"
+ * filter use, so they agree on regex / case / whole-word semantics.
+ * Returns null for an invalid user-typed regex.
+ */
+export function buildSearchRegExp(
+  term: string,
+  options: CountMatchesOptions
+): RegExp | null {
+  let source = options.isRegex ? term : escapeRegExp(term)
+  if (options.wholeWord) {
+    source = `\\b${source}\\b`
+  }
+
+  try {
+    return new RegExp(source, options.caseSensitive ? 'g' : 'gi')
+  } catch {
+    return null
+  }
+}
+
 export function countMatches(
   content: string,
   term: string,
@@ -32,15 +53,8 @@ export function countMatches(
     return { count: 0, exceeded: false }
   }
 
-  let source = options.isRegex ? term : escapeRegExp(term)
-  if (options.wholeWord) {
-    source = `\\b${source}\\b`
-  }
-
-  let regex: RegExp
-  try {
-    regex = new RegExp(source, options.caseSensitive ? 'g' : 'gi')
-  } catch {
+  const regex = buildSearchRegExp(term, options)
+  if (!regex) {
     return { count: 0, exceeded: false }
   }
 

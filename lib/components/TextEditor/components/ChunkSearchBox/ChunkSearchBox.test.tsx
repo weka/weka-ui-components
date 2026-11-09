@@ -38,11 +38,10 @@ describe('ChunkSearchBox only matching lines toggle', () => {
     expect(screen.queryByText(ONLY_MATCHING_LABEL)).toBeNull()
   })
 
-  it('is rendered inside the search box when a change handler is provided', () => {
-    const { container } = renderSearchBox({ onOnlyMatchingChange: vi.fn() })
+  it('is rendered when a change handler is provided', () => {
+    renderSearchBox({ onOnlyMatchingChange: vi.fn() })
 
-    const searchBox = container.querySelector('.text-editor-chunk-search-box')
-    expect(searchBox?.textContent).toContain(ONLY_MATCHING_LABEL)
+    expect(screen.getByLabelText(ONLY_MATCHING_LABEL)).toBeTruthy()
   })
 
   it('reports the new checked state when clicked', () => {
@@ -62,5 +61,8 @@ describe('ChunkSearchBox only matching lines toggle', () => {
 
     expect(screen.queryByRole('checkbox')).toBeNull()
     expect(screen.getByRole('progressbar')).toBeTruthy()
+    expect(
+      screen.getByText(ONLY_MATCHING_LABEL).closest('label')?.getAttribute('aria-busy')
+    ).toBe('true')
   })
 })
