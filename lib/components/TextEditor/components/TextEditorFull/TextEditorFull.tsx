@@ -15,14 +15,11 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { CircularProgress } from '@mui/material'
 import clsx from 'clsx'
 
 import { EMPTY_STRING, NOP } from '#consts'
-import { useToggle } from '#hooks'
 
 import Copy from '../../../Copy'
-import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
 import { ChunkSearchBox } from '../ChunkSearchBox'
@@ -32,7 +29,6 @@ import {
   useFoldAll,
   useForcedLineNumbers,
   useInternalSearch,
-  useIsScrollbarVisible,
   useLinePosition,
   useOnlyMatching,
   useSearch
@@ -171,7 +167,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
     const editorRef = useRef<ReactAce>(null)
     const editor = editorRef.current?.editor
 
-    const [onlyMatching, toggleOnlyMatching] = useToggle(false)
+    const [onlyMatching, setOnlyMatching] = useState(false)
     const [editorReady, setEditorReady] = useState(false)
     const [aceEditor, setAceEditor] = useState<IAceEditor | undefined>(
       undefined
@@ -356,8 +352,6 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       value: options.value
     })
 
-    const isScrollbarVisible = useIsScrollbarVisible({ editorReady })
-
     const classes = clsx({
       'text-editor-wrapper': true,
       'read-only': readOnly,
@@ -377,30 +371,12 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             text={jsonValue}
           />
         ) : null}
-        {(valueForMatched || isValueForMatchedLoading) &&
-        options.allowSearch &&
-        isScrollbarVisible !== null ? (
-          <div
-            className={clsx('matching-toggle', {
-              'with-scrollbar': isScrollbarVisible
-            })}
-          >
-            <span>Show only matching lines</span>
-            {isValueForMatchedLoading ? (
-              <CircularProgress size={16} />
-            ) : (
-              <Checkbox
-                checked={onlyMatching}
-                onChange={toggleOnlyMatching}
-              />
-            )}
-          </div>
-        ) : null}
         {showSearchBox ? (
           <ChunkSearchBox
             currentMatch={internalSearch.counter.current}
             exceeded={internalSearch.exceeded}
             isCaseSensitive={internalSearch.isCaseSensitive}
+            isOnlyMatchingLoading={isValueForMatchedLoading}
             isRegex={internalSearch.isRegex}
             isWholeWord={internalSearch.isWholeWord}
             onCaseSensitiveChange={internalSearch.setIsCaseSensitive}
@@ -410,9 +386,15 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             onRegexChange={internalSearch.setIsRegex}
             onSearchTermChange={setSearchTerm}
             onWholeWordChange={internalSearch.setIsWholeWord}
+            onlyMatching={onlyMatching}
             searchInputRef={searchInputRef}
             searchTerm={internalSearch.searchTerm}
             totalMatches={internalSearch.counter.total}
+            onOnlyMatchingChange={
+              valueForMatched || isValueForMatchedLoading
+                ? setOnlyMatching
+                : undefined
+            }
           />
         ) : null}
         <Suspense fallback={<Loader />}>
