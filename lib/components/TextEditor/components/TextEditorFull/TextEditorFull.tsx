@@ -219,6 +219,8 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     const showSearchBox =
       options.allowSearch && !hasExternalSearch && !internalSearch.dismissed
+    // the toggle lives in the search box, so the filter must not outlive it
+    const isOnlyMatchingActive = onlyMatching && showSearchBox
 
     const latestOpenSearchRef = useRef<() => boolean>(() => false)
     const latestFindDirectionRef = useRef<(backwards: boolean) => void>(NOP)
@@ -318,7 +320,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     const jsonValue = useOnlyMatching({
       allowSearch: options.allowSearch,
-      onlyMatching,
+      onlyMatching: isOnlyMatchingActive,
       searchValue,
       value,
       valueForMatched
@@ -348,7 +350,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     useEditor({
       editor,
-      onlyMatching,
+      onlyMatching: isOnlyMatchingActive,
       value: options.value
     })
 
@@ -356,7 +358,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       'text-editor-wrapper': true,
       'read-only': readOnly,
       'text-editor-wrapper-with-copy': allowCopy,
-      'text-editor-wrapper-only-matching-lines': onlyMatching,
+      'text-editor-wrapper-only-matching-lines': isOnlyMatchingActive,
       'disable-folding': !!(lines && lines.length > 0),
       [extraClass]: true
     })
@@ -412,7 +414,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             readOnly={readOnly}
             setOptions={{ maxLines, ...editorOptions }}
             showPrintMargin={false}
-            value={onlyMatching ? jsonValue : options.value}
+            value={isOnlyMatchingActive ? jsonValue : options.value}
             width='calc(100% - 16px)'
             {...rest}
           />
