@@ -25,7 +25,9 @@ const DEFAULT_LABELS: CapacityWidgetLabels = {
   provisioned: 'Provisioned',
   totalProvisioned: 'Total Provisioned',
   ssd: 'SSD',
-  obs: 'OBS'
+  obs: 'OBS',
+  sharedPool: 'Shared pool',
+  quota: 'Total Quota'
 }
 
 /**
@@ -52,6 +54,8 @@ export function CapacityWidget({
         labels={labels}
         noDataReduction={!usable.dataReduction}
         obs={provisioned.obs}
+        quota={provisioned.quota}
+        quotaDisplay={provisioned.quotaDisplay}
         ssd={provisioned.ssd}
         total={provisioned.total}
         totalDisplay={provisioned.totalDisplay}

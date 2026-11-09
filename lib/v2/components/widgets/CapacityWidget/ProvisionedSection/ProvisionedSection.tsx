@@ -8,6 +8,7 @@ import {
   toPercentage
 } from '../capacityFormat'
 import { LegendItem } from '../LegendItem'
+import { QuotaFooter } from '../QuotaFooter'
 import { TotalPill } from '../TotalPill'
 import {
   CAPSULE_TONES,
@@ -23,6 +24,8 @@ export interface ProvisionedSectionProps {
   total: number
   totalUnit: string
   totalDisplay?: string
+  quota?: number
+  quotaDisplay?: string
   labels: CapacityWidgetLabels
   noDataReduction?: boolean
 }
@@ -42,6 +45,8 @@ export function ProvisionedSection({
   total,
   totalUnit,
   totalDisplay,
+  quota,
+  quotaDisplay,
   labels,
   noDataReduction = false
 }: Readonly<ProvisionedSectionProps>) {
@@ -125,6 +130,15 @@ export function ProvisionedSection({
         <TotalPill
           amount={totalAmount}
           label={labels.totalProvisioned}
+        />
+      ) : null}
+      {quota ? (
+        <QuotaFooter
+          label={labels.quota}
+          provisioned={total}
+          quota={quota}
+          quotaDisplay={quotaDisplay}
+          unit={totalUnit}
         />
       ) : null}
     </div>

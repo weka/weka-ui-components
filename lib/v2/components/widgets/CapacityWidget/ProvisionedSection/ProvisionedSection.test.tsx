@@ -15,7 +15,9 @@ const labels: CapacityWidgetLabels = {
   provisioned: 'Provisioned',
   totalProvisioned: 'Total Provisioned',
   ssd: 'SSD',
-  obs: 'OBS'
+  obs: 'OBS',
+  sharedPool: 'Shared pool',
+  quota: 'Total Quota'
 }
 
 const ssd = { written: 943, provisioned: 1400 }

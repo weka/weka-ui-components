@@ -5,8 +5,16 @@ export interface CapacityDataReduction {
 
 export interface CapacityUsableData {
   used: number
-  free: number
-  total: number
+  /** Read only when `sharedPool` is not set. */
+  free?: number
+  /** Read only when `sharedPool` is not set. */
+  total?: number
+  /**
+   * No capacity of its own: the used space comes out of a pool shared with
+   * others, so there is no donut and no Free, and the footer shows
+   * `labels.sharedPool` instead of Total Usable.
+   */
+  sharedPool?: boolean
   unit?: string
   usedDisplay?: string
   freeDisplay?: string
@@ -28,6 +36,12 @@ export interface CapacityProvisionedData {
   total: number
   unit?: string
   totalDisplay?: string
+  /**
+   * The most that may be provisioned. When set, a footer shows it with the
+   * share of it already provisioned, as text and as a thin bar.
+   */
+  quota?: number
+  quotaDisplay?: string
 }
 
 export interface CapacityWidgetLabels {
@@ -41,6 +55,8 @@ export interface CapacityWidgetLabels {
   totalProvisioned: string
   ssd: string
   obs: string
+  sharedPool: string
+  quota: string
 }
 
 export interface CapacityWidgetProps {

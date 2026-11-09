@@ -372,6 +372,43 @@ $capsule-radius: 50px;
   align-self: stretch;
 }
 
+.totalPillNote {
+  font-size: 14px;
+  color: var(--gray-600-400);
+}
+
+.quotaFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.quotaText {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.quotaShare {
+  font-weight: 400;
+  color: var(--gray-600-400);
+}
+
+.quotaBar {
+  height: 4px;
+  overflow: hidden;
+  background-color: var(--gray-300-700);
+  border-radius: 2px;
+}
+
+.quotaFill {
+  height: 100%;
+  background-color: var(--purple-600-400);
+}
+
 @container (width <= 700px) {
   .usableBody {
     gap: 12px;

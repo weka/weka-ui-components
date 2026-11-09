@@ -213,6 +213,55 @@ describe('CapacityWidget', () => {
     })
   })
 
+  describe('Shared pool', () => {
+    it('shows Used and the shared-pool note, with no donut, Free or Total Usable', () => {
+      const { container } = renderWidget({
+        usable: { used: 4.2, unit: 'TB', sharedPool: true },
+        provisioned: provisionedSsdOnly
+      })
+
+      expect(screen.getByText('Used')).toBeInTheDocument()
+      expect(screen.getByText('Shared pool')).toBeInTheDocument()
+      expect(screen.queryByText('Free')).not.toBeInTheDocument()
+      expect(screen.queryByText('Total Usable')).not.toBeInTheDocument()
+      expect(container.querySelector('[class*="donut"]')).toBeNull()
+    })
+  })
+
+  describe('Quota', () => {
+    const QUOTA_LABEL = 'Total Quota'
+
+    it('shows the quota and the share of it provisioned, on a bar', () => {
+      renderWidget({
+        provisioned: { ...provisionedSsdOnly, quota: 2000, unit: 'TB' }
+      })
+
+      expect(screen.getByText(QUOTA_LABEL)).toBeInTheDocument()
+      expect(screen.getByText('2000')).toBeInTheDocument()
+      expect(screen.getByText('(70.0%)')).toBeInTheDocument()
+      expect(
+        screen.getByRole('progressbar', { name: QUOTA_LABEL })
+      ).toHaveAttribute('aria-valuenow', '70')
+    })
+
+    it('fills the bar at most to the end when provisioned exceeds the quota', () => {
+      renderWidget({ provisioned: { ...provisionedSsdOnly, quota: 1000 } })
+
+      expect(screen.getByText('(140.0%)')).toBeInTheDocument()
+      expect(screen.getByRole('progressbar')).toHaveAttribute(
+        'aria-valuenow',
+        '100'
+      )
+    })
+
+    it('is omitted without a quota', () => {
+      renderWidget({ provisioned: provisionedSsdOnly })
+
+      expect(screen.queryByText(QUOTA_LABEL)).not.toBeInTheDocument()
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+    })
+  })
+
   describe('Labels', () => {
     it('applies label overrides', () => {
       renderWidget({ labels: { used: 'Consumed', ssd: 'Flash' } })

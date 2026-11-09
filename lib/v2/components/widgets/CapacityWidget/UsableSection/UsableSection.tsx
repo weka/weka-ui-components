@@ -24,11 +24,15 @@ export interface UsableSectionProps {
 }
 
 export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
-  const gradientId = `capacityUsedGradient-${useId().replace(/:/g, EMPTY_STRING)}`
+  const gradientId = `capacityUsedGradient-${useId().replace(
+    /:/g,
+    EMPTY_STRING
+  )}`
   const {
     used,
-    free,
-    total,
+    free = 0,
+    total = 0,
+    sharedPool = false,
     unit = DEFAULT_CAPACITY_UNIT,
     usedDisplay,
     freeDisplay,
@@ -58,36 +62,39 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
           !dataReduction && styles.usableBodyNoDr
         )}
       >
-        <div className={styles.donut}>
-          <DonutChart
-            segments={segments}
-            defs={
-              <linearGradient
-                id={gradientId}
-                x1='0%'
-                x2='100%'
-                y1='0%'
-                y2='0%'
-              >
-                <stop
-                  offset='0%'
-                  stopColor='var(--fuchsia-600-400)'
-                />
-                <stop
-                  offset='100%'
-                  stopColor='var(--fuchsia-400-600)'
-                />
-              </linearGradient>
-            }
-          />
-          <div className={styles.donutCenter}>
-            <div className={styles.donutPercent}>{percentage}</div>
-            <div className={styles.donutUsed}>
-              ({usedAmount.value}
-              <span className={styles.donutUsedUnit}> {usedAmount.unit}</span>)
+        {sharedPool ? null : (
+          <div className={styles.donut}>
+            <DonutChart
+              segments={segments}
+              defs={
+                <linearGradient
+                  id={gradientId}
+                  x1='0%'
+                  x2='100%'
+                  y1='0%'
+                  y2='0%'
+                >
+                  <stop
+                    offset='0%'
+                    stopColor='var(--fuchsia-600-400)'
+                  />
+                  <stop
+                    offset='100%'
+                    stopColor='var(--fuchsia-400-600)'
+                  />
+                </linearGradient>
+              }
+            />
+            <div className={styles.donutCenter}>
+              <div className={styles.donutPercent}>{percentage}</div>
+              <div className={styles.donutUsed}>
+                ({usedAmount.value}
+                <span className={styles.donutUsedUnit}> {usedAmount.unit}</span>
+                )
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div
           className={clsx(
             styles.usableLegend,
@@ -99,11 +106,13 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
             dotClass={styles.dotUsed}
             label={labels.used}
           />
-          <LegendItem
-            amount={formatCapacity(free, unit, freeDisplay)}
-            dotClass={styles.dotFree}
-            label={labels.free}
-          />
+          {sharedPool ? null : (
+            <LegendItem
+              amount={formatCapacity(free, unit, freeDisplay)}
+              dotClass={styles.dotFree}
+              label={labels.free}
+            />
+          )}
           {dataReduction && savings ? (
             <div className={styles.dataReduction}>
               <div className={styles.legendLabel}>{labels.dataReduction}</div>
@@ -120,10 +129,16 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
           ) : null}
         </div>
       </div>
-      <TotalPill
-        amount={formatCapacity(total, unit, totalDisplay)}
-        label={labels.totalUsable}
-      />
+      {sharedPool ? (
+        <div className={clsx(styles.totalPill, styles.totalPillNote)}>
+          {labels.sharedPool}
+        </div>
+      ) : (
+        <TotalPill
+          amount={formatCapacity(total, unit, totalDisplay)}
+          label={labels.totalUsable}
+        />
+      )}
     </div>
   )
 }
