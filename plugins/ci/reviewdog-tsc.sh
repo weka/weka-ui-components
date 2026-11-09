@@ -3,9 +3,10 @@
 # `yarn ts:diff`) and emit TypeScript diagnostics for changed files as advisory
 # rdjsonl entries for the aggregator. The change-detection + tsc + filtering all
 # live in tsc-changed.sh; this script only converts its output to rdjsonl.
-# Type errors in changed files are advisory (posted inline, never fail the job),
-# but a tsc that could not run at all (tsc-changed.sh exit 2) fails the job so a
-# broken toolchain can't masquerade as "no diagnostics".
+# Type errors in changed files are advisory (posted inline, exit 0). A tsc that
+# could not run at all (tsc-changed.sh exit 2) exits 1 so the caller can tell a
+# broken toolchain apart from "no diagnostics"; the shared workflow runs this
+# step with continue-on-error and reports it in the PR summary instead of failing.
 #
 # Env: BASE_REF (e.g. origin/dev), WORKING_DIR (e.g. frontend), GITHUB_WORKSPACE.
 # Optional: RDJSONL_OUT (path relative to $GITHUB_WORKSPACE, default rdjsonl-tsc.jsonl).
@@ -49,12 +50,12 @@ tsc_status=${PIPESTATUS[0]}
 set -e
 
 # tsc could not run: its diagnostics are unreliable, so post nothing inline,
-# report zero, and fail the job — otherwise TSC_TOTAL stays 0 and the PR summary
+# report zero, and exit non-zero — otherwise TSC_TOTAL stays 0 and the PR summary
 # would falsely show "All clear".
 if [ "$tsc_status" -eq 2 ]; then
   : > "$GITHUB_WORKSPACE/$OUT_RDJSONL"
   emit_outputs 0
-  echo "::error::TypeScript could not run (see log above); failing the check." >&2
+  echo "::warning::TypeScript could not run (see log above); no diagnostics reported." >&2
   exit 1
 fi
 

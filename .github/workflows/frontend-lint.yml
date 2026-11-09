@@ -375,6 +375,9 @@ jobs:
       CI_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/node_modules/@weka/weka-ui-components/plugins/ci
     outputs:
       total: ${{ steps.run.outputs.total }}
+      # continue-on-error leaves the job green even when tsc could not run; the
+      # step outcome is what tells the summary TypeScript reported nothing.
+      outcome: ${{ steps.run.outcome }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -404,6 +407,8 @@ jobs:
 
       - id: run
         name: Run TypeScript
+        # Advisory only: findings go to the PR through reviewdog, never fail CI.
+        continue-on-error: true
         env:
           BASE_REF: HEAD^1
           WORKING_DIR: ${{ inputs.working_directory }}
@@ -491,7 +496,7 @@ jobs:
           STYLELINT_ERRORS: ${{ needs['stylelint-changed'].outputs.errors }}
           STYLELINT_RESULT: ${{ needs['stylelint-changed'].result }}
           TSC_TOTAL: ${{ needs.typescript.outputs.total }}
-          TSC_RESULT: ${{ needs.typescript.result }}
+          TSC_RESULT: ${{ needs.typescript.outputs.outcome || needs.typescript.result }}
           PRETTIER_RESULT: ${{ needs.prettier.result }}
           STYLELINT_AUTOFIX_RESULT: ${{ needs['stylelint-autofix'].result }}
           SETUP_RESULT: ${{ needs.setup.result }}
