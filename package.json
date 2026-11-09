@@ -8,7 +8,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "version": "4.71.6",
+  "version": "4.72.0",
   "module": "lib/main.ts",
   "types": "lib/main.ts",
   "imports": {
