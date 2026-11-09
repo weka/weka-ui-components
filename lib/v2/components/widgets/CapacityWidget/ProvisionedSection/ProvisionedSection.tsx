@@ -8,8 +8,7 @@ import {
   toPercentage
 } from '../capacityFormat'
 import { LegendItem } from '../LegendItem'
-import { QuotaFooter } from '../QuotaFooter'
-import { TotalPill } from '../TotalPill'
+import { ProvisionedFooter } from '../ProvisionedFooter'
 import {
   CAPSULE_TONES,
   type CapsuleTone,
@@ -131,17 +130,14 @@ export function ProvisionedSection({
           )}
         </div>
       </div>
-      {hasObs ? (
-        <TotalPill
-          amount={totalAmount}
-          label={labels.totalProvisioned}
-        />
-      ) : null}
-      <QuotaFooter
-        label={labels.quota}
+      <ProvisionedFooter
         provisioned={total}
         quota={quota}
         quotaDisplay={quotaDisplay}
+        quotaLabel={labels.quota}
+        showTotal={hasObs}
+        totalAmount={totalAmount}
+        totalLabel={labels.totalProvisioned}
         unit={totalUnit}
       />
     </div>

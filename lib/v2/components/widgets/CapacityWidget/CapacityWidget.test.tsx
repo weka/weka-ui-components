@@ -252,6 +252,22 @@ describe('CapacityWidget', () => {
       expect(screen.getByRole('progressbar')).toHaveAttribute(VALUE_NOW, '100')
     })
 
+    it('shows the quota share beside the bar, under the Total Provisioned pill, with OBS', () => {
+      renderWidget({
+        provisioned: {
+          ...provisionedWithObs,
+          quota: 10_000,
+          quotaDisplay: '10 PB'
+        }
+      })
+
+      expect(screen.queryByText(QUOTA_LABEL)).not.toBeInTheDocument()
+      expect(screen.getByText('51.0% of 10 PB')).toBeInTheDocument()
+      expect(
+        screen.getByRole('progressbar', { name: QUOTA_LABEL })
+      ).toHaveAttribute(VALUE_NOW, '51')
+    })
+
     it('shows a zero quota rather than hiding it', () => {
       renderWidget({ provisioned: { ...provisionedSsdOnly, quota: 0 } })
 

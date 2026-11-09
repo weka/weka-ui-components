@@ -302,9 +302,22 @@ $capsule-radius: 50px;
   min-height: 160px;
 }
 
-/* The quota footer takes its own height, so the capsule gives up some of its. */
-.provisionedSectionWithQuota .provisionedBodyNoObs .capsuleBarWide {
-  min-height: 100px;
+/*
+ * The quota footer takes its own height, so the capsules fill what is left
+ * instead of keeping their fixed height, which with OBS and the Total
+ * Provisioned pill would spill above the widget.
+ */
+.provisionedSectionWithQuota {
+  .capsules {
+    align-self: stretch;
+  }
+
+  .capsuleBar,
+  .provisionedBodyNoObs .capsuleBarWide {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 60px;
+  }
 }
 
 .capsuleFill {
@@ -385,8 +398,33 @@ $capsule-radius: 50px;
 .quotaFooter {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.quotaRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .quotaBar {
+    flex: 1 1 auto;
+  }
+}
+
+.quotaRowText {
+  font-size: 12px;
+  line-height: 14px;
+  white-space: nowrap;
+  color: var(--gray-600-400);
+}
+
+/* With OBS, the four-row legend gives up its spacing to make room for the quota. */
+.provisionedSectionWithQuota .provisionedBody:not(.provisionedBodyNoObs) {
+  .provisionedLegend,
+  .tierBlock {
+    gap: 2px;
+  }
 }
 
 .quotaText {
