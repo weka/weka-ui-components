@@ -1,9 +1,9 @@
-import type { CapacityWidgetLabels } from '../types'
+import type { ResolvedCapacityWidgetLabels } from '../types'
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { ProvisionedSection } from './ProvisionedSection'
 
-const LABELS: CapacityWidgetLabels = {
+const LABELS: ResolvedCapacityWidgetLabels = {
   used: 'Used',
   free: 'Free',
   totalUsable: 'Total Usable',
@@ -13,7 +13,9 @@ const LABELS: CapacityWidgetLabels = {
   provisioned: 'Provisioned',
   totalProvisioned: 'Total Provisioned',
   ssd: 'SSD',
-  obs: 'OBS'
+  obs: 'OBS',
+  sharedPool: 'Shared pool',
+  quota: 'Total Quota'
 }
 
 const meta: Meta<typeof ProvisionedSection> = {

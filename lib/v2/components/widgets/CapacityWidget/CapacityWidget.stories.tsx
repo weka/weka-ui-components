@@ -256,3 +256,23 @@ export const CustomLabels: Story = {
     </Frame>
   )
 }
+
+/** A tenant with no capacity of its own and a cap on what it may provision. */
+export const SharedPoolWithQuota: Story = {
+  render: (args) => (
+    <Frame
+      height={252}
+      showLimits={args.showLimits}
+      width={736}
+    >
+      <CapacityWidget
+        usable={{ used: 406.5, unit: 'TB', sharedPool: true }}
+        provisioned={{
+          ...provisionedSsdOnly,
+          quota: 2000,
+          quotaDisplay: '2 PB'
+        }}
+      />
+    </Frame>
+  )
+}

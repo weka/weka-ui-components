@@ -1,4 +1,4 @@
-import type { CapacityWidgetLabels } from '../types'
+import type { ResolvedCapacityWidgetLabels } from '../types'
 
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
@@ -12,7 +12,7 @@ vi.mock('recharts', () => ({
   ResponsiveContainer: () => null
 }))
 
-const labels: CapacityWidgetLabels = {
+const labels: ResolvedCapacityWidgetLabels = {
   used: 'Used',
   free: 'Free',
   totalUsable: 'Total Usable',
@@ -22,7 +22,9 @@ const labels: CapacityWidgetLabels = {
   provisioned: 'Provisioned',
   totalProvisioned: 'Total Provisioned',
   ssd: 'SSD',
-  obs: 'OBS'
+  obs: 'OBS',
+  sharedPool: 'Shared pool',
+  quota: 'Total Quota'
 }
 
 describe('UsableSection', () => {

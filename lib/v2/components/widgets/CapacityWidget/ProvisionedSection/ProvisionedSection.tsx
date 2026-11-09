@@ -1,4 +1,4 @@
-import type { CapacityTierData, CapacityWidgetLabels } from '../types'
+import type { CapacityTierData, ResolvedCapacityWidgetLabels } from '../types'
 
 import clsx from 'clsx'
 
@@ -8,7 +8,7 @@ import {
   toPercentage
 } from '../capacityFormat'
 import { LegendItem } from '../LegendItem'
-import { TotalPill } from '../TotalPill'
+import { ProvisionedFooter } from '../ProvisionedFooter'
 import {
   CAPSULE_TONES,
   type CapsuleTone,
@@ -23,7 +23,9 @@ export interface ProvisionedSectionProps {
   total: number
   totalUnit: string
   totalDisplay?: string
-  labels: CapacityWidgetLabels
+  quota?: number
+  quotaDisplay?: string
+  labels: ResolvedCapacityWidgetLabels
   noDataReduction?: boolean
 }
 
@@ -42,6 +44,8 @@ export function ProvisionedSection({
   total,
   totalUnit,
   totalDisplay,
+  quota,
+  quotaDisplay,
   labels,
   noDataReduction = false
 }: Readonly<ProvisionedSectionProps>) {
@@ -71,7 +75,12 @@ export function ProvisionedSection({
   }
 
   return (
-    <div className={styles.provisionedSection}>
+    <div
+      className={clsx(
+        styles.provisionedSection,
+        quota !== undefined && styles.provisionedSectionWithQuota
+      )}
+    >
       <div
         className={clsx(
           styles.provisionedBody,
@@ -121,12 +130,16 @@ export function ProvisionedSection({
           )}
         </div>
       </div>
-      {hasObs ? (
-        <TotalPill
-          amount={totalAmount}
-          label={labels.totalProvisioned}
-        />
-      ) : null}
+      <ProvisionedFooter
+        provisioned={total}
+        quota={quota}
+        quotaDisplay={quotaDisplay}
+        quotaLabel={labels.quota}
+        showTotal={hasObs}
+        totalAmount={totalAmount}
+        totalLabel={labels.totalProvisioned}
+        unit={totalUnit}
+      />
     </div>
   )
 }

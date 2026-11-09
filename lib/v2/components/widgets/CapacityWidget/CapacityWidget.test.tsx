@@ -213,6 +213,76 @@ describe('CapacityWidget', () => {
     })
   })
 
+  describe('Shared pool', () => {
+    it('shows Used and the shared-pool note, with no donut, Free or Total Usable', () => {
+      const { container } = renderWidget({
+        usable: { used: 4.2, unit: 'TB', sharedPool: true },
+        provisioned: provisionedSsdOnly
+      })
+
+      expect(screen.getByText('Used')).toBeInTheDocument()
+      expect(screen.getByText('Shared pool')).toBeInTheDocument()
+      expect(screen.queryByText('Free')).not.toBeInTheDocument()
+      expect(screen.queryByText('Total Usable')).not.toBeInTheDocument()
+      expect(container.querySelector('[class*="donut"]')).toBeNull()
+    })
+  })
+
+  describe('Quota', () => {
+    const QUOTA_LABEL = 'Total Quota'
+    const VALUE_NOW = 'aria-valuenow'
+
+    it('shows the quota and the share of it provisioned, on a bar', () => {
+      renderWidget({
+        provisioned: { ...provisionedSsdOnly, quota: 2000, unit: 'TB' }
+      })
+
+      expect(screen.getByText(QUOTA_LABEL)).toBeInTheDocument()
+      expect(screen.getByText('2000')).toBeInTheDocument()
+      expect(screen.getByText('(70.0%)')).toBeInTheDocument()
+      expect(
+        screen.getByRole('progressbar', { name: QUOTA_LABEL })
+      ).toHaveAttribute(VALUE_NOW, '70')
+    })
+
+    it('fills the bar at most to the end when provisioned exceeds the quota', () => {
+      renderWidget({ provisioned: { ...provisionedSsdOnly, quota: 1000 } })
+
+      expect(screen.getByText('(140.0%)')).toBeInTheDocument()
+      expect(screen.getByRole('progressbar')).toHaveAttribute(VALUE_NOW, '100')
+    })
+
+    it('shows the quota share beside the bar, under the Total Provisioned pill, with OBS', () => {
+      renderWidget({
+        provisioned: {
+          ...provisionedWithObs,
+          quota: 10_000,
+          quotaDisplay: '10 PB'
+        }
+      })
+
+      expect(screen.queryByText(QUOTA_LABEL)).not.toBeInTheDocument()
+      expect(screen.getByText('51.0% of 10 PB')).toBeInTheDocument()
+      expect(
+        screen.getByRole('progressbar', { name: QUOTA_LABEL })
+      ).toHaveAttribute(VALUE_NOW, '51')
+    })
+
+    it('shows a zero quota rather than hiding it', () => {
+      renderWidget({ provisioned: { ...provisionedSsdOnly, quota: 0 } })
+
+      expect(screen.getByText(QUOTA_LABEL)).toBeInTheDocument()
+      expect(screen.getByRole('progressbar')).toHaveAttribute(VALUE_NOW, '0')
+    })
+
+    it('is omitted without a quota', () => {
+      renderWidget({ provisioned: provisionedSsdOnly })
+
+      expect(screen.queryByText(QUOTA_LABEL)).not.toBeInTheDocument()
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
+    })
+  })
+
   describe('Labels', () => {
     it('applies label overrides', () => {
       renderWidget({ labels: { used: 'Consumed', ssd: 'Flash' } })

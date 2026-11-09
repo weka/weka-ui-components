@@ -1,4 +1,4 @@
-import type { CapacityWidgetLabels, CapacityWidgetProps } from './types'
+import type { CapacityWidgetProps, ResolvedCapacityWidgetLabels } from './types'
 
 import { DEFAULT_CAPACITY_UNIT } from './capacityFormat'
 import { ProvisionedSection } from './ProvisionedSection'
@@ -15,7 +15,7 @@ export type {
   CapacityWidgetProps
 } from './types'
 
-const DEFAULT_LABELS: CapacityWidgetLabels = {
+const DEFAULT_LABELS: ResolvedCapacityWidgetLabels = {
   used: 'Used',
   free: 'Free',
   totalUsable: 'Total Usable',
@@ -25,7 +25,9 @@ const DEFAULT_LABELS: CapacityWidgetLabels = {
   provisioned: 'Provisioned',
   totalProvisioned: 'Total Provisioned',
   ssd: 'SSD',
-  obs: 'OBS'
+  obs: 'OBS',
+  sharedPool: 'Shared pool',
+  quota: 'Total Quota'
 }
 
 /**
@@ -52,6 +54,8 @@ export function CapacityWidget({
         labels={labels}
         noDataReduction={!usable.dataReduction}
         obs={provisioned.obs}
+        quota={provisioned.quota}
+        quotaDisplay={provisioned.quotaDisplay}
         ssd={provisioned.ssd}
         total={provisioned.total}
         totalDisplay={provisioned.totalDisplay}
