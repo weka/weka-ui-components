@@ -294,10 +294,26 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       })
     }, [aceEditor])
 
+    const searchValue = showSearchBox ? internalSearch.searchTerm : EMPTY_STRING
+
+    const jsonValue = useOnlyMatching({
+      allowSearch: options.allowSearch,
+      onlyMatching: isOnlyMatchingActive,
+      searchValue,
+      searchOptions: {
+        isRegex: internalSearch.isRegex,
+        caseSensitive: internalSearch.isCaseSensitive,
+        wholeWord: internalSearch.isWholeWord
+      },
+      value,
+      valueForMatched
+    })
+    const editorValue = isOnlyMatchingActive ? jsonValue : options.value
+
     useSearch({
       editor: aceEditor,
       editorReady,
-      value: options.value,
+      value: editorValue,
       externalSearchTerm: hasExternalSearch
         ? externalSearchTerm
         : (showSearchBox && internalSearch.searchTerm) || undefined,
@@ -320,21 +336,6 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       onSearchCounterUpdate: hasExternalSearch
         ? onSearchCounterUpdate
         : internalSearch.handleCounterUpdate
-    })
-
-    const searchValue = showSearchBox ? internalSearch.searchTerm : EMPTY_STRING
-
-    const jsonValue = useOnlyMatching({
-      allowSearch: options.allowSearch,
-      onlyMatching: isOnlyMatchingActive,
-      searchValue,
-      searchOptions: {
-        isRegex: internalSearch.isRegex,
-        caseSensitive: internalSearch.isCaseSensitive,
-        wholeWord: internalSearch.isWholeWord
-      },
-      value,
-      valueForMatched
     })
 
     useFoldAll({
@@ -421,7 +422,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             readOnly={readOnly}
             setOptions={{ maxLines, ...editorOptions }}
             showPrintMargin={false}
-            value={isOnlyMatchingActive ? jsonValue : options.value}
+            value={editorValue}
             width='calc(100% - 16px)'
             {...rest}
           />
