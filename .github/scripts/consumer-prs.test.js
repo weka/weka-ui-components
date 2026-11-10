@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 const require = createRequire(import.meta.url)
 const {
   AUTO_BRANCH,
+  isLatestRelease,
   planAutoPrs,
   ensureBranch,
   openPr
@@ -206,6 +207,49 @@ describe('planAutoPrs', () => {
     await plan({ github, tickets: '' })
 
     expect(github.rest.pulls.get).not.toHaveBeenCalled()
+  })
+})
+
+describe('isLatestRelease', () => {
+  function githubWithTags(listTags) {
+    return { paginate: vi.fn(listTags), rest: { repos: { listTags: vi.fn() } } }
+  }
+  const tags =
+    (...names) =>
+    async () =>
+      names.map((name) => ({ name }))
+
+  it('accepts the highest stable tag, with or without the v prefix', async () => {
+    const github = githubWithTags(
+      tags('v4.9.0', 'v4.74.0', 'v4.75.0-beta.0', 'v4.73.1')
+    )
+
+    expect(
+      await isLatestRelease({ github, core: makeCore(), version: 'v4.74.0' })
+    ).toBe(true)
+    expect(
+      await isLatestRelease({ github, core: makeCore(), version: '4.74.0' })
+    ).toBe(true)
+  })
+
+  it('rejects a release superseded by a newer stable one', async () => {
+    const github = githubWithTags(tags('v4.74.0', 'v4.75.0'))
+
+    expect(
+      await isLatestRelease({ github, core: makeCore(), version: 'v4.74.0' })
+    ).toBe(false)
+  })
+
+  it('proceeds with a warning when tags cannot be listed', async () => {
+    const github = githubWithTags(async () => {
+      throw httpError(500, 'Server Error')
+    })
+    const core = makeCore()
+
+    expect(await isLatestRelease({ github, core, version: 'v4.74.0' })).toBe(
+      true
+    )
+    expect(core.warning).toHaveBeenCalledOnce()
   })
 })
 

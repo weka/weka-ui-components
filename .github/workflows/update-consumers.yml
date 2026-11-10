@@ -180,6 +180,11 @@ jobs:
     needs: plan-auto-prs
     if: needs.plan-auto-prs.outputs.creates != '[]'
     runs-on: ubuntu-latest
+    # Runs for different releases share each repo's auto branch, so they take turns per repo.
+    # A queued run superseded by a newer one is dropped, which is fine: the newer release wins.
+    concurrency:
+      group: consumer-auto-pr-${{ matrix.create.repo }}
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -191,7 +196,19 @@ jobs:
         with:
           sparse-checkout: .github
 
+      - name: Check this is still the latest release
+        id: latest
+        uses: actions/github-script@v8
+        env:
+          VERSION: ${{ inputs.version }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const { isLatestRelease } = require('./.github/scripts/consumer-prs.cjs');
+            core.setOutput('ok', String(await isLatestRelease({ github, core, version: process.env.VERSION })));
+
       - name: Prepare auto PR branch
+        if: steps.latest.outputs.ok == 'true'
         uses: actions/github-script@v8
         env:
           CREATE: ${{ toJSON(matrix.create) }}
@@ -203,6 +220,7 @@ jobs:
             await ensureBranch({ github, core, repo: c.repo, base: c.base, branch: c.branch });
 
       - name: Update consumer paths
+        if: steps.latest.outputs.ok == 'true'
         uses: ./.github/actions/update-consumer-paths
         with:
           repo: ${{ matrix.create.repo }}
@@ -213,6 +231,7 @@ jobs:
           token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
 
       - name: Open PR and request review
+        if: steps.latest.outputs.ok == 'true'
         uses: actions/github-script@v8
         env:
           CREATE: ${{ toJSON(matrix.create) }}

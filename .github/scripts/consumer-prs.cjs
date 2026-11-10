@@ -170,6 +170,40 @@ async function planAutoPrs({
   }))
 }
 
+const STABLE_TAG = /^v(\d+)\.(\d+)\.(\d+)$/
+
+function compareStableTags(a, b) {
+  const [pa, pb] = [a, b].map((tag) => tag.match(STABLE_TAG).slice(1).map(Number))
+  return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2]
+}
+
+/**
+ * True when `version` is still the highest stable weka-ui-components tag. An older release whose
+ * run reaches the auto branch after a newer one must not move the auto PR back to its version.
+ * Tags are compared instead of GitHub's "latest release", which can point at a beta.
+ */
+async function isLatestRelease({ github, core, version }) {
+  const tag = toTag(version)
+  try {
+    const tags = await github.paginate(github.rest.repos.listTags, {
+      owner: UIC_OWNER,
+      repo: UIC_REPO,
+      per_page: 100
+    })
+    const newer = tags
+      .map((t) => t.name)
+      .filter((name) => STABLE_TAG.test(name) && compareStableTags(name, tag) > 0)
+      .sort(compareStableTags)
+      .pop()
+    if (!newer) return true
+    core.notice(`${tag} is superseded by ${newer} — leaving the auto PRs to that release`)
+    return false
+  } catch (err) {
+    core.warning(`Could not list release tags (${err.message}) — proceeding with ${tag}`)
+    return true
+  }
+}
+
 /**
  * Prepares `branch`: kept as-is while it has an open PR, otherwise (re)started from the base head,
  * so a branch left behind by a merged or closed auto PR never leaks old commits into a new one.
@@ -260,6 +294,7 @@ async function openPr({ github, core, repo, base, branch, title, body, reviewers
 module.exports = {
   AUTO_BRANCH,
   planAutoPrs,
+  isLatestRelease,
   ensureBranch,
   openPr,
   buildTitle,
