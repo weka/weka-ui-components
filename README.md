@@ -42,9 +42,10 @@ We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.
 
 ### Automatic consumer updates
 
-Consumers are listed in `.github/consumer-targets.json` (`repo`, `path` of the frontend project, optional `commit_prefix`, default `chore:`): `weka/gohome` (`frontend`, `observe/frontend`) and `weka/wekapp` (`build/packages/dashboard/files`, commit prefix `UI:`).
+Consumers are listed in `.github/consumer-targets.json` (`repo`, `path` of the frontend project, optional `commit_prefix`, default `chore:`): `weka/gohome` (`frontend`, `observe/frontend`) and `weka/wekapp` (`build/packages/dashboard/files`, commit prefix `UI:`). Optional per-repo settings for auto-opened PRs (set on any of the repo's entries): `title_prefix` (default `chore:`), `ticket_pattern` (the repo's own tickets: `WH-…` for gohome, `WEKAPP-…` for wekapp) and `base` (default: the repo's default branch).
 
 - A `weka-ui-components` PR and a consumer PR that share a ticket (`WH-123` or `WEKAPP-123`, in the title or branch) are linked automatically: the consumer PR gets a commit pointing at the UIC PR head (`pr-preview-consumers.yml`), and after a release open consumer PRs with the release's tickets are bumped to the new version (`update-consumers.yml`).
+- After a stable release (not beta/rc), every consumer repo whose own ticket (`ticket_pattern`) is in the release but has **no** such open PR on its base branch gets a PR that only bumps `@weka/weka-ui-components` (e.g. `UI: update weka-ui-components to 4.74.0 (WEKAPP-123)`; the released UIC PR titles go in the description), with review requested from the authors of the released UIC PRs. The token owner is never asked to review their own PR, and review-request failures only warn. These PRs always use the `auto/weka-ui-components` branch: while one is open, each later release retargets it (version, title, description) instead of opening another, and previews of unreleased UIC PRs are never pushed to it. Logic and tests: `.github/scripts/consumer-prs.cjs`.
 - A consumer PR notifies this repo through the reusable `notify-consumer-pr.yml` workflow.
 
 ### Shared frontend CI for consumers
