@@ -17,7 +17,7 @@ inputs:
 
 outputs:
   prs:
-    description: JSON array of matched PRs ({ repo, number, branch, base, ticket })
+    description: JSON array of matched PRs ({ repo, number, branch, base, ticket, tickets }) — `ticket` is the first match, `tickets` all of them
     value: ${{ steps.find.outputs.prs || '[]' }}
 
 runs:
@@ -33,9 +33,9 @@ runs:
       with:
         github-token: ${{ inputs.token }}
         script: |
-          function prMatchesTicket(pr, tickets) {
+          function prMatchingTickets(pr, tickets) {
             const searchText = `${pr.title}\n${pr.body || ''}\n${pr.head.ref}`.toUpperCase();
-            return tickets.find(t => new RegExp(`\\b${t.toUpperCase()}\\b`).test(searchText));
+            return tickets.filter(t => new RegExp(`\\b${t.toUpperCase()}\\b`).test(searchText));
           }
 
           const tickets = process.env.TICKETS.split(',')
@@ -62,14 +62,15 @@ runs:
               per_page: 100,
             });
             for (const pr of pulls) {
-              const ticket = prMatchesTicket(pr, tickets);
-              if (ticket) {
+              const prTickets = prMatchingTickets(pr, tickets);
+              if (prTickets.length > 0) {
                 matched.push({
                   repo: fullRepo,
                   number: pr.number,
                   branch: pr.head.ref,
                   base: pr.base.ref,
-                  ticket,
+                  ticket: prTickets[0],
+                  tickets: prTickets,
                 });
               }
             }

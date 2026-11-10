@@ -99,8 +99,9 @@ async function listOpenPrsForBranch({ github, repo, branch }) {
 /**
  * Returns one entry per consumer repo whose auto PR the create-pr job opens or retargets.
  * `updates` are the open PRs matching the release tickets (without the auto PR) that update-pr
- * bumps. Only one on the repo's base branch counts as covering the repo, so a backport PR does
- * not stop the base branch from getting the bump.
+ * bumps. One covers the repo only if it targets the repo's base branch and carries one of the
+ * repo's own release tickets, so neither a backport PR nor a PR that mentions only the other
+ * project's ticket stops the auto PR.
  */
 async function planAutoPrs({
   github,
@@ -131,7 +132,12 @@ async function planAutoPrs({
         core.info(`${repo}: no release ticket matches ${meta.ticket_pattern} — skipping`)
         continue
       }
-      const covering = updates.find((pr) => pr.repo === repo && pr.base === base)
+      const covering = updates.find(
+        (pr) =>
+          pr.repo === repo &&
+          pr.base === base &&
+          (pr.tickets || [pr.ticket]).some((t) => repoTickets.includes(t.toUpperCase()))
+      )
       if (covering) {
         core.info(`${repo}: #${covering.number} matches the release tickets — it is bumped instead`)
         continue

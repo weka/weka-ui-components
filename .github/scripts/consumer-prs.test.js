@@ -141,7 +141,13 @@ describe('planAutoPrs', () => {
 
   it('skips a repo whose matching open PR targets its base branch', async () => {
     const updates = [
-      { repo: 'weka/wekapp', number: 1, branch: 'x', base: 'trunk/dev' }
+      {
+        repo: 'weka/wekapp',
+        number: 1,
+        branch: 'x',
+        base: 'trunk/dev',
+        tickets: ['WEKAPP-1']
+      }
     ]
 
     const creates = await plan({ tickets: 'WH-4579,WEKAPP-1', updates })
@@ -149,9 +155,31 @@ describe('planAutoPrs', () => {
     expect(creates.map((c) => c.repo)).toEqual(['weka/gohome'])
   })
 
+  it('still opens a PR when the matching open PR carries only the other project ticket', async () => {
+    const updates = [
+      {
+        repo: 'weka/gohome',
+        number: 2,
+        branch: 'x',
+        base: 'dev',
+        tickets: ['WEKAPP-692143']
+      }
+    ]
+
+    const creates = await plan({ tickets: 'WH-4579,WEKAPP-692143', updates })
+
+    expect(creates.map((c) => c.repo)).toEqual(['weka/gohome', 'weka/wekapp'])
+  })
+
   it('still opens a PR when the only matching PR is a backport', async () => {
     const updates = [
-      { repo: 'weka/wekapp', number: 1, branch: 'x', base: 'trunk/v6.x' }
+      {
+        repo: 'weka/wekapp',
+        number: 1,
+        branch: 'x',
+        base: 'trunk/v6.x',
+        tickets: ['WEKAPP-1']
+      }
     ]
 
     const creates = await plan({ tickets: 'WEKAPP-1', updates })
