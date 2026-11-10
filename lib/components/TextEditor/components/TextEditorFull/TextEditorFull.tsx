@@ -395,6 +395,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             onCaseSensitiveChange={internalSearch.setIsCaseSensitive}
             onClose={closeSearch}
             onNext={internalSearch.handleNext}
+            onOnlyMatchingChange={hasMatchedData ? setOnlyMatching : undefined}
             onPrev={internalSearch.handlePrev}
             onRegexChange={internalSearch.setIsRegex}
             onSearchTermChange={setSearchTerm}
@@ -403,7 +404,6 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             searchInputRef={searchInputRef}
             searchTerm={internalSearch.searchTerm}
             totalMatches={internalSearch.counter.total}
-            onOnlyMatchingChange={hasMatchedData ? setOnlyMatching : undefined}
           />
         ) : null}
         <Suspense fallback={<Loader />}>
