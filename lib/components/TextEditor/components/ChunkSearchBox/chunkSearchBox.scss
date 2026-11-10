@@ -92,6 +92,21 @@
     padding: 0 8px;
   }
 
+  .search-only-matching {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px 6px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+
+    &.loading {
+      cursor: default;
+    }
+  }
+
   .option-btn {
     margin-left: 2px;
     cursor: pointer;

@@ -15,14 +15,11 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { CircularProgress } from '@mui/material'
 import clsx from 'clsx'
 
 import { EMPTY_STRING, NOP } from '#consts'
-import { useToggle } from '#hooks'
 
 import Copy from '../../../Copy'
-import { Checkbox } from '../../../inputs'
 import Loader from '../../../Loader'
 import { useTextEditorContext } from '../../context'
 import { ChunkSearchBox } from '../ChunkSearchBox'
@@ -32,7 +29,6 @@ import {
   useFoldAll,
   useForcedLineNumbers,
   useInternalSearch,
-  useIsScrollbarVisible,
   useLinePosition,
   useOnlyMatching,
   useSearch
@@ -171,7 +167,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
     const editorRef = useRef<ReactAce>(null)
     const editor = editorRef.current?.editor
 
-    const [onlyMatching, toggleOnlyMatching] = useToggle(false)
+    const [onlyMatching, setOnlyMatching] = useState(false)
     const [editorReady, setEditorReady] = useState(false)
     const [aceEditor, setAceEditor] = useState<IAceEditor | undefined>(
       undefined
@@ -223,6 +219,14 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     const showSearchBox =
       options.allowSearch && !hasExternalSearch && !internalSearch.dismissed
+    const hasMatchedData = Boolean(valueForMatched || isValueForMatchedLoading)
+    const isOnlyMatchingActive = onlyMatching && hasMatchedData && showSearchBox
+
+    // the toggle lives in the search box, so closing it is an explicit opt-out
+    const closeSearch = () => {
+      setDismissed(true)
+      setOnlyMatching(false)
+    }
 
     const latestOpenSearchRef = useRef<() => boolean>(() => false)
     const latestFindDirectionRef = useRef<(backwards: boolean) => void>(NOP)
@@ -290,10 +294,26 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       })
     }, [aceEditor])
 
+    const searchValue = showSearchBox ? internalSearch.searchTerm : EMPTY_STRING
+
+    const jsonValue = useOnlyMatching({
+      allowSearch: options.allowSearch,
+      onlyMatching: isOnlyMatchingActive,
+      searchValue,
+      searchOptions: {
+        isRegex: internalSearch.isRegex,
+        caseSensitive: internalSearch.isCaseSensitive,
+        wholeWord: internalSearch.isWholeWord
+      },
+      value,
+      valueForMatched
+    })
+    const editorValue = isOnlyMatchingActive ? jsonValue : options.value
+
     useSearch({
       editor: aceEditor,
       editorReady,
-      value: options.value,
+      value: editorValue,
       externalSearchTerm: hasExternalSearch
         ? externalSearchTerm
         : (showSearchBox && internalSearch.searchTerm) || undefined,
@@ -316,16 +336,6 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
       onSearchCounterUpdate: hasExternalSearch
         ? onSearchCounterUpdate
         : internalSearch.handleCounterUpdate
-    })
-
-    const searchValue = showSearchBox ? internalSearch.searchTerm : EMPTY_STRING
-
-    const jsonValue = useOnlyMatching({
-      allowSearch: options.allowSearch,
-      onlyMatching,
-      searchValue,
-      value,
-      valueForMatched
     })
 
     useFoldAll({
@@ -352,17 +362,15 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
 
     useEditor({
       editor,
-      onlyMatching,
+      onlyMatching: isOnlyMatchingActive,
       value: options.value
     })
-
-    const isScrollbarVisible = useIsScrollbarVisible({ editorReady })
 
     const classes = clsx({
       'text-editor-wrapper': true,
       'read-only': readOnly,
       'text-editor-wrapper-with-copy': allowCopy,
-      'text-editor-wrapper-only-matching-lines': onlyMatching,
+      'text-editor-wrapper-only-matching-lines': isOnlyMatchingActive,
       'disable-folding': !!(lines && lines.length > 0),
       [extraClass]: true
     })
@@ -377,39 +385,23 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             text={jsonValue}
           />
         ) : null}
-        {(valueForMatched || isValueForMatchedLoading) &&
-        options.allowSearch &&
-        isScrollbarVisible !== null ? (
-          <div
-            className={clsx('matching-toggle', {
-              'with-scrollbar': isScrollbarVisible
-            })}
-          >
-            <span>Show only matching lines</span>
-            {isValueForMatchedLoading ? (
-              <CircularProgress size={16} />
-            ) : (
-              <Checkbox
-                checked={onlyMatching}
-                onChange={toggleOnlyMatching}
-              />
-            )}
-          </div>
-        ) : null}
         {showSearchBox ? (
           <ChunkSearchBox
             currentMatch={internalSearch.counter.current}
             exceeded={internalSearch.exceeded}
             isCaseSensitive={internalSearch.isCaseSensitive}
+            isOnlyMatchingLoading={isValueForMatchedLoading}
             isRegex={internalSearch.isRegex}
             isWholeWord={internalSearch.isWholeWord}
             onCaseSensitiveChange={internalSearch.setIsCaseSensitive}
-            onClose={() => setDismissed(true)}
+            onClose={closeSearch}
             onNext={internalSearch.handleNext}
+            onOnlyMatchingChange={hasMatchedData ? setOnlyMatching : undefined}
             onPrev={internalSearch.handlePrev}
             onRegexChange={internalSearch.setIsRegex}
             onSearchTermChange={setSearchTerm}
             onWholeWordChange={internalSearch.setIsWholeWord}
+            onlyMatching={onlyMatching}
             searchInputRef={searchInputRef}
             searchTerm={internalSearch.searchTerm}
             totalMatches={internalSearch.counter.total}
@@ -430,7 +422,7 @@ const TextEditorFull = forwardRef<TextEditorHandle, TextEditorFullProps>(
             readOnly={readOnly}
             setOptions={{ maxLines, ...editorOptions }}
             showPrintMargin={false}
-            value={onlyMatching ? jsonValue : options.value}
+            value={editorValue}
             width='calc(100% - 16px)'
             {...rest}
           />

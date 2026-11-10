@@ -2,6 +2,8 @@ import type { Ref } from 'react'
 
 import clsx from 'clsx'
 
+import OnlyMatchingToggle from './OnlyMatchingToggle'
+
 import './chunkSearchBox.scss'
 
 const OPTION_BTN_CLASS = 'option-btn'
@@ -25,6 +27,10 @@ export interface ChunkSearchBoxProps {
   totalMatches: number
   exceeded?: boolean
   searchInputRef?: Ref<HTMLInputElement>
+  /** renders the "Show only matching lines" toggle when provided */
+  onOnlyMatchingChange?: (checked: boolean) => void
+  onlyMatching?: boolean
+  isOnlyMatchingLoading?: boolean
 }
 
 function ChunkSearchBox({
@@ -45,7 +51,10 @@ function ChunkSearchBox({
   currentMatch,
   totalMatches,
   exceeded = false,
-  searchInputRef
+  searchInputRef,
+  onOnlyMatchingChange,
+  onlyMatching,
+  isOnlyMatchingLoading
 }: Readonly<ChunkSearchBoxProps>) {
   const totalDisplay = exceeded ? '999+' : String(totalMatches)
   const counterText =
@@ -128,6 +137,11 @@ function ChunkSearchBox({
           </span>
         ) : null}
       </div>
+      <OnlyMatchingToggle
+        checked={onlyMatching}
+        loading={isOnlyMatchingLoading}
+        onChange={onOnlyMatchingChange}
+      />
     </div>
   )
 }
