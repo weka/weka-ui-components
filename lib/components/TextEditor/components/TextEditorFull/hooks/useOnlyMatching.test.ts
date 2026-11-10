@@ -59,6 +59,16 @@ describe('useOnlyMatching', () => {
     ).toEqual(['Foo', 'other'])
   })
 
+  it('applies whole-word boundaries to every regex alternative', () => {
+    expect(
+      getMatchedKeys('foo|one', {
+        isRegex: true,
+        caseSensitive: false,
+        wholeWord: true
+      })
+    ).toEqual(['Foo', 'other'])
+  })
+
   it('matches nothing for an invalid regex', () => {
     expect(getMatchedKeys('(', { ...DEFAULT_OPTIONS, isRegex: true })).toEqual(
       []

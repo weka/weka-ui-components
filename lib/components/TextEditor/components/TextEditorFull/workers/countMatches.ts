@@ -33,7 +33,7 @@ export function buildSearchRegExp(
 ): RegExp | null {
   let source = options.isRegex ? term : escapeRegExp(term)
   if (options.wholeWord) {
-    source = `\\b${source}\\b`
+    source = `\\b(?:${source})\\b`
   }
 
   try {
