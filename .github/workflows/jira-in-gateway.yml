@@ -1,0 +1,35 @@
+name: jira-in-gateway
+
+on:
+  # pull_request_target, so the workflow and the script both come from the base branch and
+  # the job never runs code a pull request wrote while holding the Jira credential.
+  pull_request_target:
+    # `edited` covers a ticket added to the title after the pull request was opened.
+    types: [opened, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jira-in-gateway-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  in-gateway:
+    name: jira-in-gateway
+    if: >-
+      github.event.pull_request.state == 'open' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: .github/scripts
+
+      - name: Move cited tickets
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          JIRA_CLIENT_ID: ${{ secrets.JIRA_CLIENT_ID }}
+          JIRA_CLIENT_SECRET: ${{ secrets.JIRA_CLIENT_SECRET }}
+        run: node .github/scripts/jira-sync.mjs WH='In Gateway,In Review' WEKAPP='In Progress'
