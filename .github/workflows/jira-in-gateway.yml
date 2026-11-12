@@ -32,4 +32,4 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           JIRA_CLIENT_ID: ${{ secrets.JIRA_CLIENT_ID }}
           JIRA_CLIENT_SECRET: ${{ secrets.JIRA_CLIENT_SECRET }}
-        run: node .github/scripts/jira-sync.mjs WH='In Gateway,In Review' WEKAPP='In Progress'
+        run: node .github/scripts/jira-sync.mjs --parents WH='In Gateway,In Review' WEKAPP='In Progress'

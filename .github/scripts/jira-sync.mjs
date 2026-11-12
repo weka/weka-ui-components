@@ -3,7 +3,8 @@
 //
 //   PR_TITLE='fix: thing (WH-1234)' node jira-sync.mjs WH='In Gateway,In Review'
 //
-// Each argument is PROJECT='Status[,Fallback status]'. Set DRY_RUN=1 to report without writing.
+// Each argument is PROJECT='Status[,Fallback status]'. --parents also moves every ancestor of a
+// cited ticket (its story, its epic) to In Progress. Set DRY_RUN=1 to report without writing.
 
 const CLOUD_ID = '0b7ca77e-5961-4878-bb06-ce25499c17ac'
 const API = `https://api.atlassian.com/ex/jira/${CLOUD_ID}/rest/api/3`
@@ -38,8 +39,11 @@ const PARKED = new Set([
   'pending cs',
   'in cs',
   'pending rca',
-  'pending automation'
+  'pending automation',
+  'stabilization'
 ])
+
+const PARENT_TARGETS = ['In Progress']
 
 const warn = (message) => console.log(`::warning::${message}`)
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -134,7 +138,10 @@ function jiraClient(token) {
   }
 
   return {
-    status: async (key) => (await get(`/issue/${key}?fields=status`)).fields.status.name,
+    issue: async (key) => {
+      const { fields } = await get(`/issue/${key}?fields=status,parent`)
+      return { status: fields.status.name, parent: fields.parent?.key }
+    },
     transitions: async (key) => (await get(`/issue/${key}/transitions`)).transitions,
     // Not retried: a write that failed halfway may still have moved the ticket.
     transition: (key, id) => call('POST', `/issue/${key}/transitions`, { transition: { id } })
@@ -151,19 +158,24 @@ function pickTransition(transitions, targets) {
   return undefined
 }
 
+// Returns the key of the ticket's parent, if it has one.
 async function moveOne(jira, key, targets, dryRun) {
-  let status
+  let issue
   try {
-    status = await jira.status(key)
+    issue = await jira.issue(key)
   } catch (error) {
     warn(
       error.status === 404
         ? `${key}: no such ticket in Jira.`
         : `${key}: could not read it: ${error.message}.`
     )
-    return
+    return undefined
   }
+  await moveFrom(jira, key, issue.status, targets, dryRun)
+  return issue.parent
+}
 
+async function moveFrom(jira, key, status, targets, dryRun) {
   const stage = stageOf(status)
   if (stage === undefined) {
     warn(`${key} is in "${status}", which jira-sync does not classify, so it was left alone.`)
@@ -195,8 +207,8 @@ async function moveOne(jira, key, targets, dryRun) {
   try {
     await jira.transition(key, move.id)
   } catch (error) {
-    const now = await jira.status(key).catch(() => undefined)
-    if (!now || !targets.some((target) => sameStatus(target, now))) {
+    const now = await jira.issue(key).catch(() => undefined)
+    if (!now || !targets.some((target) => sameStatus(target, now.status))) {
       warn(`${key}: could not move it out of "${status}": ${error.message}.`)
       return
     }
@@ -205,7 +217,9 @@ async function moveOne(jira, key, targets, dryRun) {
 }
 
 async function main() {
-  const rules = parseRules(process.argv.slice(2))
+  const args = process.argv.slice(2)
+  const moveParents = args.includes('--parents')
+  const rules = parseRules(args.filter((arg) => arg !== '--parents'))
   const keys = citedKeys(process.env.PR_TITLE ?? '', [...rules.keys()])
   if (keys.length === 0) {
     console.log('The pull request title cites no ticket to move.')
@@ -219,8 +233,13 @@ async function main() {
   }
 
   const jira = jiraClient(await authenticate(JIRA_CLIENT_ID, JIRA_CLIENT_SECRET))
+  const seen = new Set(keys)
   for (const key of keys) {
-    await moveOne(jira, key, rules.get(key.split('-')[0]), Boolean(DRY_RUN))
+    let parent = await moveOne(jira, key, rules.get(key.split('-')[0]), Boolean(DRY_RUN))
+    while (moveParents && parent && !seen.has(parent)) {
+      seen.add(parent)
+      parent = await moveOne(jira, parent, PARENT_TARGETS, Boolean(DRY_RUN))
+    }
   }
 }
 
