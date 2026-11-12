@@ -211,51 +211,43 @@ function compareStableTags(a, b) {
 }
 
 /**
- * Highest stable weka-ui-components tag, or null if tags cannot be listed. Tags are compared instead
- * of GitHub's "latest release", which can point at a beta.
+ * Highest stable weka-ui-components release, or null if releases cannot be listed. v2-release.yml
+ * creates the GitHub release only after publishing, so unlike a bare tag it is installable. Stable
+ * tags are compared instead of GitHub's "latest release", which can point at a beta.
  */
-async function newestStableTag({ github, core }) {
+async function newestPublishedRelease({ github, core }) {
   try {
-    const tags = await github.paginate(github.rest.repos.listTags, {
+    const releases = await github.paginate(github.rest.repos.listReleases, {
       owner: UIC_OWNER,
       repo: UIC_REPO,
       per_page: 100
     })
     return (
-      tags
-        .map((t) => t.name)
-        .filter((name) => STABLE_TAG.test(name))
+      releases
+        .filter((r) => !r.draft && !r.prerelease && STABLE_TAG.test(r.tag_name))
+        .map((r) => r.tag_name)
         .sort(compareStableTags)
         .pop() || null
     )
   } catch (err) {
-    core.warning(`Could not list release tags (${err.message})`)
+    core.warning(`Could not list releases (${err.message})`)
     return null
   }
 }
 
 /**
- * Final create-pr entry, decided inside the per-repo lock, or null to leave the repo alone.
- * - Superseded release with an open auto PR: the newer release owns that PR, and moving it back to
- *   this version would downgrade it.
- * - Superseded release without one: the newer release may not have planned this repo at all (its
- *   tickets can belong to the other project), so the PR is still opened, at the newest version.
- * Tickets already in the open auto PR's title are kept, as they may have been added after planning.
+ * Final create-pr entry, decided inside the per-repo lock. A newer release's run may not cover this
+ * repo (its tickets can belong to the other project), so a superseded run still opens or bumps the
+ * PR, at the newest published version, so the auto PR never moves back. Tickets already in the
+ * open auto PR's title are kept, as they may have been added after planning.
  */
 async function resolveCreate({ github, core, create }) {
   const [autoPr] = await listOpenPrsForBranch({ github, repo: create.repo, branch: create.branch })
-  const newest = await newestStableTag({ github, core })
+  const newest = await newestPublishedRelease({ github, core })
   const superseded = newest && compareStableTags(newest, create.release) > 0
-
-  if (superseded && autoPr) {
-    core.notice(
-      `${create.release} is superseded by ${newest} — leaving ${create.repo}#${autoPr.number} to it`
-    )
-    return null
-  }
   if (superseded) {
     core.notice(
-      `${create.release} is superseded by ${newest} — opening the ${create.repo} PR at ${newest}`
+      `${create.release} is superseded by ${newest} — bumping ${create.repo} to ${newest}`
     )
   }
 

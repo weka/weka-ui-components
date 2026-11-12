@@ -239,14 +239,18 @@ describe('planAutoPrs', () => {
 })
 
 describe('resolveCreate', () => {
-  const tags =
+  const releases =
     (...names) =>
     async () =>
-      names.map((name) => ({ name }))
+      names.map((tag_name) => ({
+        tag_name,
+        draft: false,
+        prerelease: tag_name.includes('-')
+      }))
 
-  function githubWith({ listTags, openAutoPrs } = {}) {
+  function githubWith({ listReleases, openAutoPrs } = {}) {
     const github = makeGithub({ openAutoPrs })
-    github.paginate = vi.fn(listTags)
+    github.paginate = vi.fn(listReleases)
     return github
   }
 
@@ -255,10 +259,10 @@ describe('resolveCreate', () => {
     return create
   }
 
-  it('keeps the planned PR while its release is the newest stable tag', async () => {
+  it('keeps the planned PR while its release is the newest published one', async () => {
     const create = await plannedGohome()
     const github = githubWith({
-      listTags: tags('v4.9.0', 'v4.74.0', 'v4.75.0-beta.0', 'v4.73.1')
+      listReleases: releases('v4.9.0', 'v4.74.0', 'v4.75.0-beta.0', 'v4.73.1')
     })
 
     expect(await resolveCreate({ github, core: makeCore(), create })).toEqual(
@@ -266,19 +270,39 @@ describe('resolveCreate', () => {
     )
   })
 
-  it('leaves an open auto PR to a newer release', async () => {
+  it('bumps an open auto PR to a newer published release instead of skipping it', async () => {
     const create = await plannedGohome()
     const github = githubWith({
-      listTags: tags('v4.74.0', 'v4.75.0'),
-      openAutoPrs: { 'weka/gohome': { number: 5, title: 'x (WH-4579)' } }
+      listReleases: releases('v4.74.0', 'v4.75.0'),
+      openAutoPrs: { 'weka/gohome': { number: 5, title: 'x (WH-1111)' } }
     })
 
-    expect(await resolveCreate({ github, core: makeCore(), create })).toBeNull()
+    const resolved = await resolveCreate({ github, core: makeCore(), create })
+
+    expect(resolved).toMatchObject({
+      spec: '@weka/weka-ui-components@^4.75.0',
+      title: 'feat: update weka-ui-components to 4.75.0 (WH-1111, WH-4579)'
+    })
   })
 
-  it('still opens the PR, at the newest version, when a newer release did not', async () => {
+  it('ignores newer prereleases and drafts', async () => {
     const create = await plannedGohome()
-    const github = githubWith({ listTags: tags('v4.74.0', 'v4.75.0') })
+    const github = githubWith({
+      listReleases: async () => [
+        { tag_name: 'v4.74.0', draft: false, prerelease: false },
+        { tag_name: 'v4.76.0', draft: true, prerelease: false },
+        { tag_name: 'v4.75.0-rc.1', draft: false, prerelease: true }
+      ]
+    })
+
+    expect(await resolveCreate({ github, core: makeCore(), create })).toEqual(
+      create
+    )
+  })
+
+  it('still opens the PR, at the newest version, when a newer release was published', async () => {
+    const create = await plannedGohome()
+    const github = githubWith({ listReleases: releases('v4.74.0', 'v4.75.0') })
 
     const resolved = await resolveCreate({ github, core: makeCore(), create })
 
@@ -295,7 +319,7 @@ describe('resolveCreate', () => {
   it('keeps tickets added to the open auto PR after planning', async () => {
     const create = await plannedGohome()
     const github = githubWith({
-      listTags: tags('v4.74.0'),
+      listReleases: releases('v4.74.0'),
       openAutoPrs: {
         'weka/gohome': {
           number: 5,
@@ -311,10 +335,10 @@ describe('resolveCreate', () => {
     )
   })
 
-  it('proceeds with the planned version when tags cannot be listed', async () => {
+  it('proceeds with the planned version when releases cannot be listed', async () => {
     const create = await plannedGohome()
     const github = githubWith({
-      listTags: async () => {
+      listReleases: async () => {
         throw httpError(500, 'Server Error')
       }
     })
