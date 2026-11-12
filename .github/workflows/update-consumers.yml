@@ -177,6 +177,7 @@ jobs:
           token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
 
   create-pr:
+    name: create-pr (${{ matrix.create.repo }})
     needs: plan-auto-prs
     if: needs.plan-auto-prs.outputs.creates != '[]'
     runs-on: ubuntu-latest
@@ -196,22 +197,24 @@ jobs:
         with:
           sparse-checkout: .github
 
-      - name: Check this is still the latest release
-        id: latest
-        uses: actions/github-script@v8
-        env:
-          VERSION: ${{ inputs.version }}
-        with:
-          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
-          script: |
-            const { isLatestRelease } = require('./.github/scripts/consumer-prs.cjs');
-            core.setOutput('ok', String(await isLatestRelease({ github, core, version: process.env.VERSION })));
-
-      - name: Prepare auto PR branch
-        if: steps.latest.outputs.ok == 'true'
+      # Decided inside the lock: a newer release may have taken over since planning.
+      - name: Resolve version against newer releases
+        id: resolve
         uses: actions/github-script@v8
         env:
           CREATE: ${{ toJSON(matrix.create) }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const { resolveCreate } = require('./.github/scripts/consumer-prs.cjs');
+            const create = await resolveCreate({ github, core, create: JSON.parse(process.env.CREATE) });
+            core.setOutput('create', create ? JSON.stringify(create) : '');
+
+      - name: Prepare auto PR branch
+        if: steps.resolve.outputs.create != ''
+        uses: actions/github-script@v8
+        env:
+          CREATE: ${{ steps.resolve.outputs.create }}
         with:
           github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
           script: |
@@ -220,21 +223,21 @@ jobs:
             await ensureBranch({ github, core, repo: c.repo, base: c.base, branch: c.branch });
 
       - name: Update consumer paths
-        if: steps.latest.outputs.ok == 'true'
+        if: steps.resolve.outputs.create != ''
         uses: ./.github/actions/update-consumer-paths
         with:
-          repo: ${{ matrix.create.repo }}
-          branch: ${{ matrix.create.branch }}
-          paths: ${{ toJSON(matrix.create.paths) }}
-          spec: ${{ matrix.create.spec }}
-          commit_message: ${{ matrix.create.commit_message }}
+          repo: ${{ fromJSON(steps.resolve.outputs.create).repo }}
+          branch: ${{ fromJSON(steps.resolve.outputs.create).branch }}
+          paths: ${{ toJSON(fromJSON(steps.resolve.outputs.create).paths) }}
+          spec: ${{ fromJSON(steps.resolve.outputs.create).spec }}
+          commit_message: ${{ fromJSON(steps.resolve.outputs.create).commit_message }}
           token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
 
       - name: Open PR and request review
-        if: steps.latest.outputs.ok == 'true'
+        if: steps.resolve.outputs.create != ''
         uses: actions/github-script@v8
         env:
-          CREATE: ${{ toJSON(matrix.create) }}
+          CREATE: ${{ steps.resolve.outputs.create }}
         with:
           github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
           script: |

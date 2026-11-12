@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 const require = createRequire(import.meta.url)
 const {
   AUTO_BRANCH,
-  isLatestRelease,
+  resolveCreate,
   planAutoPrs,
   ensureBranch,
   openPr
@@ -238,45 +238,89 @@ describe('planAutoPrs', () => {
   })
 })
 
-describe('isLatestRelease', () => {
-  function githubWithTags(listTags) {
-    return { paginate: vi.fn(listTags), rest: { repos: { listTags: vi.fn() } } }
-  }
+describe('resolveCreate', () => {
   const tags =
     (...names) =>
     async () =>
       names.map((name) => ({ name }))
 
-  it('accepts the highest stable tag, with or without the v prefix', async () => {
-    const github = githubWithTags(
-      tags('v4.9.0', 'v4.74.0', 'v4.75.0-beta.0', 'v4.73.1')
+  function githubWith({ listTags, openAutoPrs } = {}) {
+    const github = makeGithub({ openAutoPrs })
+    github.paginate = vi.fn(listTags)
+    return github
+  }
+
+  async function plannedGohome() {
+    const [create] = await plan({ tickets: 'WH-4579' })
+    return create
+  }
+
+  it('keeps the planned PR while its release is the newest stable tag', async () => {
+    const create = await plannedGohome()
+    const github = githubWith({
+      listTags: tags('v4.9.0', 'v4.74.0', 'v4.75.0-beta.0', 'v4.73.1')
+    })
+
+    expect(await resolveCreate({ github, core: makeCore(), create })).toEqual(
+      create
     )
-
-    expect(
-      await isLatestRelease({ github, core: makeCore(), version: 'v4.74.0' })
-    ).toBe(true)
-    expect(
-      await isLatestRelease({ github, core: makeCore(), version: '4.74.0' })
-    ).toBe(true)
   })
 
-  it('rejects a release superseded by a newer stable one', async () => {
-    const github = githubWithTags(tags('v4.74.0', 'v4.75.0'))
+  it('leaves an open auto PR to a newer release', async () => {
+    const create = await plannedGohome()
+    const github = githubWith({
+      listTags: tags('v4.74.0', 'v4.75.0'),
+      openAutoPrs: { 'weka/gohome': { number: 5, title: 'x (WH-4579)' } }
+    })
 
-    expect(
-      await isLatestRelease({ github, core: makeCore(), version: 'v4.74.0' })
-    ).toBe(false)
+    expect(await resolveCreate({ github, core: makeCore(), create })).toBeNull()
   })
 
-  it('proceeds with a warning when tags cannot be listed', async () => {
-    const github = githubWithTags(async () => {
-      throw httpError(500, 'Server Error')
+  it('still opens the PR, at the newest version, when a newer release did not', async () => {
+    const create = await plannedGohome()
+    const github = githubWith({ listTags: tags('v4.74.0', 'v4.75.0') })
+
+    const resolved = await resolveCreate({ github, core: makeCore(), create })
+
+    expect(resolved).toMatchObject({
+      spec: '@weka/weka-ui-components@^4.75.0',
+      title: 'feat: update weka-ui-components to 4.75.0 (WH-4579)',
+      commit_message:
+        'chore: update @weka/weka-ui-components to v4.75.0 (WH-4579)'
+    })
+    expect(resolved.body).toContain('to [v4.75.0]')
+    expect(resolved.body).toContain('### Changes in [v4.74.0]')
+  })
+
+  it('keeps tickets added to the open auto PR after planning', async () => {
+    const create = await plannedGohome()
+    const github = githubWith({
+      listTags: tags('v4.74.0'),
+      openAutoPrs: {
+        'weka/gohome': {
+          number: 5,
+          title: 'feat: update weka-ui-components to 4.73.0 (WH-1111)'
+        }
+      }
+    })
+
+    const resolved = await resolveCreate({ github, core: makeCore(), create })
+
+    expect(resolved.title).toBe(
+      'feat: update weka-ui-components to 4.74.0 (WH-1111, WH-4579)'
+    )
+  })
+
+  it('proceeds with the planned version when tags cannot be listed', async () => {
+    const create = await plannedGohome()
+    const github = githubWith({
+      listTags: async () => {
+        throw httpError(500, 'Server Error')
+      }
     })
     const core = makeCore()
 
-    expect(await isLatestRelease({ github, core, version: 'v4.74.0' })).toBe(
-      true
-    )
+    expect(await resolveCreate({ github, core, create })).toEqual(create)
     expect(core.warning).toHaveBeenCalledOnce()
   })
 })

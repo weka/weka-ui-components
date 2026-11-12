@@ -45,17 +45,20 @@ function buildTitle({ prefix, version, tickets }) {
 
 // Logins are written as code, not @mentions: authors already get a review request,
 // and bots must not be pinged.
-function buildBody({ version, paths, uicPrs }) {
+function releaseLink(version) {
   const tag = toTag(version)
-  const releaseUrl = `https://github.com/${UIC_OWNER}/${UIC_REPO}/releases/tag/${tag}`
+  return `[${tag}](https://github.com/${UIC_OWNER}/${UIC_REPO}/releases/tag/${tag})`
+}
+
+function buildBody({ version, release = version, paths, uicPrs }) {
   const lines = [
-    `Bumps \`${UIC_PACKAGE}\` to [${tag}](${releaseUrl}) in ${paths.map((p) => `\`${p}\``).join(', ')}.`,
+    `Bumps \`${UIC_PACKAGE}\` to ${releaseLink(version)} in ${paths.map((p) => `\`${p}\``).join(', ')}.`,
     '',
     'Opened automatically after a weka-ui-components release because no open PR here referenced it. ' +
       'While this PR stays open, later releases retarget it instead of opening new ones.'
   ]
   if (uicPrs.length > 0) {
-    lines.push('', `### Changes in ${tag}`, '')
+    lines.push('', `### Changes in ${releaseLink(release)}`, '')
     for (const pr of uicPrs) {
       lines.push(`- **${pr.title}** — ${UIC_OWNER}/${UIC_REPO}#${pr.number} by \`${pr.author}\``)
     }
@@ -161,19 +164,43 @@ async function planAutoPrs({
 
   const uicPrs = await loadUicPrs({ github, core, prNumbers })
   const reviewers = [...new Set(uicPrs.filter((pr) => !pr.bot).map((pr) => pr.author))]
-  const tag = toTag(version)
 
-  return planned.map(({ repo, meta, base, titleTickets }) => ({
-    repo,
-    base,
-    branch: AUTO_BRANCH,
-    paths: repoPaths[repo],
+  return planned.map(({ repo, meta, base, titleTickets }) =>
+    renderCreate({
+      repo,
+      base,
+      branch: AUTO_BRANCH,
+      paths: repoPaths[repo],
+      reviewers,
+      uicPrs,
+      release: toTag(version),
+      tickets: titleTickets,
+      title_prefix: meta.title_prefix || 'chore:',
+      commit_prefix: meta.commit_prefix || 'chore:',
+      ticket_pattern: meta.ticket_pattern
+    })
+  )
+}
+
+/**
+ * Fills in the version-dependent fields of a create-pr entry. `version` is what the PR bumps to;
+ * it differs from `entry.release` (whose PRs the body lists) when a newer release took over.
+ */
+function renderCreate(entry, version = entry.release) {
+  const tag = toTag(version)
+  return {
+    ...entry,
+    version: tag,
     spec: `${UIC_PACKAGE}@^${tag.slice(1)}`,
-    reviewers,
-    title: buildTitle({ prefix: meta.title_prefix || 'chore:', version, tickets: titleTickets }),
-    body: buildBody({ version, paths: repoPaths[repo], uicPrs }),
-    commit_message: `${meta.commit_prefix || 'chore:'} update ${UIC_PACKAGE} to ${tag} (${titleTickets.join(', ')})`
-  }))
+    title: buildTitle({ prefix: entry.title_prefix, version: tag, tickets: entry.tickets }),
+    body: buildBody({
+      version: tag,
+      release: entry.release,
+      paths: entry.paths,
+      uicPrs: entry.uicPrs
+    }),
+    commit_message: `${entry.commit_prefix} update ${UIC_PACKAGE} to ${tag} (${entry.tickets.join(', ')})`
+  }
 }
 
 const STABLE_TAG = /^v(\d+)\.(\d+)\.(\d+)$/
@@ -184,30 +211,58 @@ function compareStableTags(a, b) {
 }
 
 /**
- * True when `version` is still the highest stable weka-ui-components tag. An older release whose
- * run reaches the auto branch after a newer one must not move the auto PR back to its version.
- * Tags are compared instead of GitHub's "latest release", which can point at a beta.
+ * Highest stable weka-ui-components tag, or null if tags cannot be listed. Tags are compared instead
+ * of GitHub's "latest release", which can point at a beta.
  */
-async function isLatestRelease({ github, core, version }) {
-  const tag = toTag(version)
+async function newestStableTag({ github, core }) {
   try {
     const tags = await github.paginate(github.rest.repos.listTags, {
       owner: UIC_OWNER,
       repo: UIC_REPO,
       per_page: 100
     })
-    const newer = tags
-      .map((t) => t.name)
-      .filter((name) => STABLE_TAG.test(name) && compareStableTags(name, tag) > 0)
-      .sort(compareStableTags)
-      .pop()
-    if (!newer) return true
-    core.notice(`${tag} is superseded by ${newer} — leaving the auto PRs to that release`)
-    return false
+    return (
+      tags
+        .map((t) => t.name)
+        .filter((name) => STABLE_TAG.test(name))
+        .sort(compareStableTags)
+        .pop() || null
+    )
   } catch (err) {
-    core.warning(`Could not list release tags (${err.message}) — proceeding with ${tag}`)
-    return true
+    core.warning(`Could not list release tags (${err.message})`)
+    return null
   }
+}
+
+/**
+ * Final create-pr entry, decided inside the per-repo lock, or null to leave the repo alone.
+ * - Superseded release with an open auto PR: the newer release owns that PR, and moving it back to
+ *   this version would downgrade it.
+ * - Superseded release without one: the newer release may not have planned this repo at all (its
+ *   tickets can belong to the other project), so the PR is still opened, at the newest version.
+ * Tickets already in the open auto PR's title are kept, as they may have been added after planning.
+ */
+async function resolveCreate({ github, core, create }) {
+  const [autoPr] = await listOpenPrsForBranch({ github, repo: create.repo, branch: create.branch })
+  const newest = await newestStableTag({ github, core })
+  const superseded = newest && compareStableTags(newest, create.release) > 0
+
+  if (superseded && autoPr) {
+    core.notice(
+      `${create.release} is superseded by ${newest} — leaving ${create.repo}#${autoPr.number} to it`
+    )
+    return null
+  }
+  if (superseded) {
+    core.notice(
+      `${create.release} is superseded by ${newest} — opening the ${create.repo} PR at ${newest}`
+    )
+  }
+
+  const tickets = pickTickets([autoPr?.title || '', ...create.tickets], {
+    ticket_pattern: create.ticket_pattern
+  })
+  return renderCreate({ ...create, tickets }, superseded ? newest : create.release)
 }
 
 /**
@@ -300,7 +355,7 @@ async function openPr({ github, core, repo, base, branch, title, body, reviewers
 module.exports = {
   AUTO_BRANCH,
   planAutoPrs,
-  isLatestRelease,
+  resolveCreate,
   ensureBranch,
   openPr,
   buildTitle,
