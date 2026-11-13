@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { ActivityFillIcon } from './ActivityFillIcon'
 import { AnalyticsFillIcon } from './AnalyticsFillIcon'
+import { BackArrowIcon } from './BackArrowIcon'
 import { CapacityFillIcon } from './CapacityFillIcon'
 import { CodeForkIcon } from './CodeForkIcon'
 import { DashboardFillIcon } from './DashboardFillIcon'
@@ -25,6 +26,7 @@ const CUSTOM_SIZE = 16
 const FIGMA_LAYER_COUNTS = {
   ActivityFillIcon: 1,
   AnalyticsFillIcon: 4,
+  BackArrowIcon: 1,
   CapacityFillIcon: 2,
   CodeForkIcon: 1,
   DashboardFillIcon: 4,
@@ -46,6 +48,7 @@ const NAVIGATION_FILL_ICONS = [
     AnalyticsFillIcon,
     FIGMA_LAYER_COUNTS.AnalyticsFillIcon
   ],
+  ['BackArrowIcon', BackArrowIcon, FIGMA_LAYER_COUNTS.BackArrowIcon],
   ['CapacityFillIcon', CapacityFillIcon, FIGMA_LAYER_COUNTS.CapacityFillIcon],
   ['CodeForkIcon', CodeForkIcon, FIGMA_LAYER_COUNTS.CodeForkIcon],
   [
