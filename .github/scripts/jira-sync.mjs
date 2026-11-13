@@ -9,7 +9,7 @@
 const CLOUD_ID = '0b7ca77e-5961-4878-bb06-ce25499c17ac'
 const API = `https://api.atlassian.com/ex/jira/${CLOUD_ID}/rest/api/3`
 const TOKEN_URL = 'https://auth.atlassian.com/oauth/token'
-const REQUEST_TIMEOUT_MS = 20_000
+const REQUEST_TIMEOUT_MS = 20000
 
 // A ticket only ever moves to a later stage, so a reopened or follow-up pull request
 // cannot drag one back out of review or QA.
