@@ -22,11 +22,12 @@
     height: auto;
   }
 
-  // Size to content when a page has fewer rows than the page size, but keep
-  // shrinking (and scrolling inside .tableWrapper) when those rows still
-  // don't fit the parent — e.g. a large partial last page.
+  // Size a single short page to its rows, but never past the parent: when the
+  // rows don't fit, the body shrinks and scrolls inside .tableWrapper instead
+  // of overflowing into a clipping parent.
   &.compactTable {
     height: auto;
+    max-height: min(100%, 100vh);
 
     .tableContainer {
       flex: 0 1 auto;
