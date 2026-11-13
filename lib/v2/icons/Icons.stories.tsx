@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { ActivityFillIcon } from './ActivityFillIcon'
 import { AnalyticsFillIcon } from './AnalyticsFillIcon'
 import { ARROW_DIRECTIONS, ArrowIcon } from './ArrowIcon'
+import { BackArrowIcon } from './BackArrowIcon'
 import { BugIcon } from './BugIcon'
 import { CapacityFillIcon } from './CapacityFillIcon'
 import { ChartIcon } from './ChartIcon'
@@ -331,6 +332,7 @@ export const FileSystemMetricIcons: Story = {
 const navigationFillIcons = [
   { name: 'ActivityFillIcon', Icon: ActivityFillIcon },
   { name: 'AnalyticsFillIcon', Icon: AnalyticsFillIcon },
+  { name: 'BackArrowIcon', Icon: BackArrowIcon },
   { name: 'CapacityFillIcon', Icon: CapacityFillIcon },
   { name: 'CodeForkIcon', Icon: CodeForkIcon },
   { name: 'DashboardFillIcon', Icon: DashboardFillIcon },
