@@ -4,7 +4,8 @@ on:
   # pull_request_target, so the workflow and the script both come from the base branch and
   # the job never runs code a pull request wrote while holding the Jira credential.
   pull_request_target:
-    # `edited` covers a ticket added to the title after the pull request was opened.
+    # `edited` covers a ticket added to the title after the pull request was opened. It also
+    # fires for description edits, which the job condition filters out.
     types: [opened, reopened, ready_for_review, edited]
 
 permissions:
@@ -20,7 +21,8 @@ jobs:
     if: >-
       github.event.pull_request.state == 'open' &&
       github.event.pull_request.draft == false &&
-      github.event.pull_request.head.repo.full_name == github.repository
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (github.event.action != 'edited' || github.event.changes.title != null)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

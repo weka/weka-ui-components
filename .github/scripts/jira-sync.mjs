@@ -9,6 +9,7 @@
 const CLOUD_ID = '0b7ca77e-5961-4878-bb06-ce25499c17ac'
 const API = `https://api.atlassian.com/ex/jira/${CLOUD_ID}/rest/api/3`
 const TOKEN_URL = 'https://auth.atlassian.com/oauth/token'
+const REQUEST_TIMEOUT_MS = 20_000
 
 // A ticket only ever moves to a later stage, so a reopened or follow-up pull request
 // cannot drag one back out of review or QA.
@@ -66,8 +67,11 @@ function parseRules(args) {
       .split(',')
       .map((status) => status.trim())
       .filter(Boolean)
-    if (!project || targets.length === 0 || stageOf(targets[0]) === undefined) {
-      throw new Error(`bad rule "${arg}", expected PROJECT='Status[,Status]'`)
+    // A parked status ranks after every stage, so as a target it would close open tickets.
+    if (!project || targets.length === 0 || !targets.every((t) => Number.isFinite(stageOf(t)))) {
+      throw new Error(
+        `bad rule "${arg}", expected PROJECT='Status[,Fallback status]' with statuses from STAGES`
+      )
     }
     rules.set(project.toUpperCase(), targets)
   }
@@ -90,6 +94,7 @@ function citedKeys(title, projects) {
 async function authenticate(clientId, clientSecret) {
   const response = await fetch(TOKEN_URL, {
     method: 'POST',
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
     body: new URLSearchParams({
       grant_type: 'client_credentials',
@@ -108,6 +113,7 @@ function jiraClient(token) {
   const call = async (method, path, body) => {
     const response = await fetch(`${API}${path}`, {
       method,
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
