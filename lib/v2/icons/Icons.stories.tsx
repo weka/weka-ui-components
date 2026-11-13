@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import type { ReactNode } from 'react'
 
+import { ActivityFillIcon } from './ActivityFillIcon'
+import { AnalyticsFillIcon } from './AnalyticsFillIcon'
 import { ARROW_DIRECTIONS, ArrowIcon } from './ArrowIcon'
 import { BugIcon } from './BugIcon'
+import { CapacityFillIcon } from './CapacityFillIcon'
 import { ChartIcon } from './ChartIcon'
 import { CheckboxCheckedIcon } from './CheckboxCheckedIcon'
 import { CheckboxPartialIcon } from './CheckboxPartialIcon'
@@ -13,11 +16,14 @@ import { ChevronLeftIcon } from './ChevronLeftIcon'
 import { CloseIcon } from './CloseIcon'
 import { CloseRoundedIcon } from './CloseRoundedIcon'
 import { CloseWithBgIcon } from './CloseWithBgIcon'
+import { CodeForkIcon } from './CodeForkIcon'
 import { ConfigureIcon } from './ConfigureIcon'
 import { CopyIcon } from './CopyIcon'
 import { DarkModeIcon } from './DarkModeIcon'
+import { DashboardFillIcon } from './DashboardFillIcon'
 import { DataReductionIcon } from './DataReductionIcon'
 import { DateTimeIcon } from './DateTimeIcon'
+import { DistributionFillIcon } from './DistributionFillIcon'
 import { DownloadIcon } from './DownloadIcon'
 import { DriversIcon } from './DriversIcon'
 import { EditIcon } from './EditIcon'
@@ -25,6 +31,7 @@ import { EyeIcon } from './EyeIcon'
 import { EyeOffIcon } from './EyeOffIcon'
 import { FileSystemIcon } from './FileSystemIcon'
 import { FilterIcon } from './FilterIcon'
+import { GridFillIcon } from './GridFillIcon'
 import { InfoIcon } from './InfoIcon'
 import { InvestigateIcon } from './InvestigateIcon'
 import { LightModeIcon } from './LightModeIcon'
@@ -33,7 +40,9 @@ import { LockIcon } from './LockIcon'
 import { LogoutIcon } from './LogoutIcon'
 import { MaintenanceIcon } from './MaintenanceIcon'
 import { ManageIcon } from './ManageIcon'
+import { MegaphoneFillIcon } from './MegaphoneFillIcon'
 import { MonitorIcon } from './MonitorIcon'
+import { MultiTenantFillIcon } from './MultiTenantFillIcon'
 import { MuteIcon } from './MuteIcon'
 import { NavChevronLeftIcon } from './NavChevronLeftIcon'
 import { NavChevronRightIcon } from './NavChevronRightIcon'
@@ -47,7 +56,9 @@ import { RestoreIcon } from './RestoreIcon'
 import { S3BucketsIcon } from './S3BucketsIcon'
 import { SavingIcon } from './SavingIcon'
 import { SearchIcon } from './SearchIcon'
+import { ServersFillIcon } from './ServersFillIcon'
 import { ServersIcon } from './ServersIcon'
+import { SettingsFillIcon } from './SettingsFillIcon'
 import { SettingsIcon } from './SettingsIcon'
 import { SnapshotsIcon } from './SnapshotsIcon'
 import { SortIcon } from './SortIcon'
@@ -55,14 +66,17 @@ import { SortUpDownIcon } from './SortUpDownIcon'
 import { SwapIcon } from './SwapIcon'
 import { TableSettingsIcon } from './TableSettingsIcon'
 import { TenantIcon } from './TenantIcon'
+import { TerminalFillIcon } from './TerminalFillIcon'
 import { ThreeDotsMenuIcon } from './ThreeDotsMenuIcon'
 import { UnmuteIcon } from './UnmuteIcon'
+import { UserFillIcon } from './UserFillIcon'
 import { UserIcon } from './UserIcon'
 import { VcheckFillIcon } from './VcheckFillIcon'
 import { VcheckGradientIcon } from './VcheckGradientIcon'
 import { WarningCircleIcon } from './WarningCircleIcon'
 import { WarningIcon } from './WarningIcon'
 import { WarningTriangleIcon } from './WarningTriangleIcon'
+import { WorkflowFillIcon } from './WorkflowFillIcon'
 
 const meta: Meta = {
   title: 'v2/Icons'
@@ -307,6 +321,39 @@ export const FileSystemMetricIcons: Story = {
             height={INVENTORY_ICON_SIZE}
             width={INVENTORY_ICON_SIZE}
           />
+          <span>{name}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const navigationFillIcons = [
+  { name: 'ActivityFillIcon', Icon: ActivityFillIcon },
+  { name: 'AnalyticsFillIcon', Icon: AnalyticsFillIcon },
+  { name: 'CapacityFillIcon', Icon: CapacityFillIcon },
+  { name: 'CodeForkIcon', Icon: CodeForkIcon },
+  { name: 'DashboardFillIcon', Icon: DashboardFillIcon },
+  { name: 'DistributionFillIcon', Icon: DistributionFillIcon },
+  { name: 'GridFillIcon', Icon: GridFillIcon },
+  { name: 'MegaphoneFillIcon', Icon: MegaphoneFillIcon },
+  { name: 'MultiTenantFillIcon', Icon: MultiTenantFillIcon },
+  { name: 'ServersFillIcon', Icon: ServersFillIcon },
+  { name: 'SettingsFillIcon', Icon: SettingsFillIcon },
+  { name: 'TerminalFillIcon', Icon: TerminalFillIcon },
+  { name: 'UserFillIcon', Icon: UserFillIcon },
+  { name: 'WorkflowFillIcon', Icon: WorkflowFillIcon }
+]
+
+export const NavigationFillIcons: Story = {
+  render: () => (
+    <div style={rowStyle}>
+      {navigationFillIcons.map(({ name, Icon }) => (
+        <div
+          key={name}
+          style={iconCellStyle}
+        >
+          <Icon />
           <span>{name}</span>
         </div>
       ))}
