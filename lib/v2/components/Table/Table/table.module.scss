@@ -22,17 +22,21 @@
     height: auto;
   }
 
+  // Size a single short page to its rows, but never past the parent: when the
+  // rows don't fit, the body shrinks and scrolls inside .tableWrapper instead
+  // of overflowing into a clipping parent.
   &.compactTable {
     height: auto;
+    max-height: min(100%, 100vh);
 
     .tableContainer {
-      flex: none;
+      flex: 0 1 auto;
 
       .tableScrollContainer {
-        flex: none;
+        flex: 0 1 auto;
 
         .tableWrapper {
-          flex: none;
+          flex: 0 1 auto;
         }
       }
     }

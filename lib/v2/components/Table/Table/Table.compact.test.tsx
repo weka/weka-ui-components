@@ -30,7 +30,7 @@ const getWrapper = (container: HTMLElement) =>
   container.querySelector<HTMLElement>(WRAPPER_SELECTOR)
 
 describe('Table compact height', () => {
-  it('shrinks to fit a partial last page in manual pagination', () => {
+  it('keeps full height on a partial last page in manual pagination', () => {
     const { container } = render(
       <Table
         columns={COLUMNS}
@@ -41,7 +41,7 @@ describe('Table compact height', () => {
         manualPagination
       />
     )
-    expect(getWrapper(container)?.className).toContain(COMPACT_CLASS)
+    expect(getWrapper(container)?.className).not.toContain(COMPACT_CLASS)
   })
 
   it('keeps full height on a full page in manual pagination', () => {
@@ -56,5 +56,16 @@ describe('Table compact height', () => {
       />
     )
     expect(getWrapper(container)?.className).not.toContain(COMPACT_CLASS)
+  })
+
+  it('shrinks to fit a single page with fewer rows than the page size', () => {
+    const { container } = render(
+      <Table
+        columns={COLUMNS}
+        data={makeRows(PAGE_SIZE - 1)}
+        fixedPageSize={PAGE_SIZE}
+      />
+    )
+    expect(getWrapper(container)?.className).toContain(COMPACT_CLASS)
   })
 })

@@ -425,12 +425,25 @@ export function Table<TData = unknown>({
   const visibleRowCount = paginatedRows.length
 
   const isCompactTable = useMemo(() => {
-    if (loading || maxHeight || visibleRowCount === 0 || drawerOpen) {
+    if (
+      loading ||
+      maxHeight ||
+      visibleRowCount === 0 ||
+      drawerOpen ||
+      showPagination
+    ) {
       return false
     }
 
     return visibleRowCount < effectivePageSize
-  }, [visibleRowCount, maxHeight, loading, drawerOpen, effectivePageSize])
+  }, [
+    visibleRowCount,
+    maxHeight,
+    loading,
+    drawerOpen,
+    showPagination,
+    effectivePageSize
+  ])
 
   const { displayRows, effectiveIsCompact, effectiveShowPagination } =
     useEndlessScroll({
