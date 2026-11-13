@@ -11,13 +11,14 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: jira-in-gateway-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   in-gateway:
     name: jira-in-gateway
+    # On the job, not the workflow, so an event the condition below skips never joins the group,
+    # and never cancelled, so a run that is moving a ticket always finishes.
+    concurrency:
+      group: jira-in-gateway-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
     if: >-
       github.event.pull_request.state == 'open' &&
       github.event.pull_request.draft == false &&
