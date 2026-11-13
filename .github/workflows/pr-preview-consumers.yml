@@ -61,7 +61,7 @@ jobs:
           set -euo pipefail
           REPOS=$(jq -c '[.[].repo] | unique' .github/consumer-targets.json)
           REPO_PATHS=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: map(.path)}) | from_entries' .github/consumer-targets.json)
-          REPO_PREFIXES=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: (.[0].commit_prefix // "chore:")}) | from_entries' .github/consumer-targets.json)
+          REPO_PREFIXES=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: ([.[].commit_prefix | values] | first // "chore:")}) | from_entries' .github/consumer-targets.json)
           echo "repos=$REPOS" >> "$GITHUB_OUTPUT"
           echo "repo_paths=$REPO_PATHS" >> "$GITHUB_OUTPUT"
           echo "repo_prefixes=$REPO_PREFIXES" >> "$GITHUB_OUTPUT"
@@ -110,12 +110,14 @@ jobs:
         with:
           github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
           script: |
+            const { AUTO_BRANCH } = require('./.github/scripts/consumer-prs.cjs');
             const foundPrs = JSON.parse(process.env.FOUND_PRS);
             let updates;
 
             if (process.env.EVENT_NAME === 'pull_request') {
               // foundPrs are consumer PRs (already carry their repo).
-              updates = foundPrs.map(pr => ({
+              // The auto-opened release bump PR must stay on a released version.
+              updates = foundPrs.filter(pr => pr.branch !== AUTO_BRANCH).map(pr => ({
                 repo: pr.repo,
                 branch: pr.branch,
                 uic_ref: process.env.UIC_SHA,
@@ -129,6 +131,11 @@ jobs:
               const consumerBranch = process.env.CONSUMER_BRANCH;
               if (!consumerRepo || !consumerBranch) {
                 core.setFailed('Dispatch flow requires both consumer_repo and pr_branch.');
+                return;
+              }
+              if (consumerBranch === AUTO_BRANCH) {
+                core.info(`${AUTO_BRANCH} is the auto release bump PR — not previewing into it`);
+                core.setOutput('updates', '[]');
                 return;
               }
               const updatesAsync = foundPrs.map(async (pr) => {

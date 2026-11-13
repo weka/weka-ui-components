@@ -5,6 +5,11 @@ name: Update Consumers
 # share a release ticket (WH-xxx or WEKAPP-xxx) and bumps their @weka/weka-ui-components
 # dependency to the released version. When a repo has multiple configured
 # paths, all of them are bumped in a single commit per consumer PR.
+#
+# A repo with no matching open PR, but with its own ticket in a stable release
+# (WH → gohome, WEKAPP → wekapp), gets a PR that only bumps the dependency, on
+# the reusable auto/weka-ui-components branch, with review requested from the
+# authors of the released UIC PRs (see .github/scripts/consumer-prs.cjs).
 
 permissions:
   contents: read
@@ -19,6 +24,10 @@ on:
       tickets:
         required: true
         type: string
+      prs:
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       version:
@@ -29,6 +38,11 @@ on:
         description: Comma-separated tickets (e.g. WH-123,WEKAPP-456)
         required: true
         type: string
+      prs:
+        description: Comma-separated released weka-ui-components PR numbers (authors are asked to review new consumer PRs)
+        required: false
+        type: string
+        default: ''
 
 concurrency:
   group: update-consumers-${{ inputs.version }}
@@ -40,7 +54,8 @@ jobs:
     outputs:
       repo_paths: ${{ steps.cfg.outputs.repo_paths }}
       repo_prefixes: ${{ steps.cfg.outputs.repo_prefixes }}
-      prs: ${{ steps.find.outputs.prs || '[]' }}
+      repo_meta: ${{ steps.cfg.outputs.repo_meta }}
+      updates: ${{ steps.updates.outputs.prs || '[]' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,10 +67,13 @@ jobs:
           set -euo pipefail
           REPOS=$(jq -c '[.[].repo] | unique' .github/consumer-targets.json)
           REPO_PATHS=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: map(.path)}) | from_entries' .github/consumer-targets.json)
-          REPO_PREFIXES=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: (.[0].commit_prefix // "chore:")}) | from_entries' .github/consumer-targets.json)
+          REPO_PREFIXES=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: ([.[].commit_prefix | values] | first // "chore:")}) | from_entries' .github/consumer-targets.json)
           echo "repos=$REPOS" >> "$GITHUB_OUTPUT"
           echo "repo_paths=$REPO_PATHS" >> "$GITHUB_OUTPUT"
           echo "repo_prefixes=$REPO_PREFIXES" >> "$GITHUB_OUTPUT"
+          # Per-repo settings merged across all of the repo's entries.
+          REPO_META=$(jq -c 'group_by(.repo) | map({key: .[0].repo, value: (map(del(.repo, .path)) | add)}) | from_entries' .github/consumer-targets.json)
+          echo "repo_meta=$REPO_META" >> "$GITHUB_OUTPUT"
 
       - name: Find consumer PRs matching release tickets
         id: find
@@ -66,15 +84,62 @@ jobs:
           repos: ${{ steps.cfg.outputs.repos }}
           token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
 
+      # The auto-opened bump PR is handled by create-pr, so update-pr leaves it out.
+      - name: Select PRs to bump
+        id: updates
+        env:
+          MATCHED_PRS: ${{ steps.find.outputs.prs || '[]' }}
+        run: |
+          set -euo pipefail
+          AUTO_BRANCH=$(node -p "require('./.github/scripts/consumer-prs.cjs').AUTO_BRANCH")
+          echo "prs=$(echo "$MATCHED_PRS" | jq -c --arg b "$AUTO_BRANCH" 'map(select(.branch != $b))')" >> "$GITHUB_OUTPUT"
+
+  # Separate from discover so a failure here never blocks bumping the PRs people opened.
+  plan-auto-prs:
+    needs: discover
+    runs-on: ubuntu-latest
+    outputs:
+      creates: ${{ steps.plan.outputs.creates || '[]' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
+      - name: Plan auto PRs for repos without a matching PR
+        id: plan
+        uses: actions/github-script@v8
+        env:
+          VERSION: ${{ inputs.version }}
+          TICKETS: ${{ inputs.tickets }}
+          UIC_PRS: ${{ inputs.prs }}
+          REPO_META: ${{ needs.discover.outputs.repo_meta }}
+          REPO_PATHS: ${{ needs.discover.outputs.repo_paths }}
+          UPDATES: ${{ needs.discover.outputs.updates }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const { planAutoPrs } = require('./.github/scripts/consumer-prs.cjs');
+            const creates = await planAutoPrs({
+              github,
+              core,
+              version: process.env.VERSION,
+              tickets: process.env.TICKETS,
+              prNumbers: process.env.UIC_PRS,
+              repoMeta: JSON.parse(process.env.REPO_META),
+              repoPaths: JSON.parse(process.env.REPO_PATHS),
+              updates: JSON.parse(process.env.UPDATES),
+            });
+            core.setOutput('creates', JSON.stringify(creates));
+
   update-pr:
     needs: discover
-    if: needs.discover.outputs.prs != '[]'
+    if: needs.discover.outputs.updates != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
-        pr: ${{ fromJson(needs.discover.outputs.prs) }}
+        pr: ${{ fromJson(needs.discover.outputs.updates) }}
     steps:
       - name: Checkout weka-ui-components (for local action)
         uses: actions/checkout@v4
@@ -110,3 +175,72 @@ jobs:
           spec: ${{ steps.prep.outputs.spec }}
           commit_message: ${{ steps.prep.outputs.commit_message }}
           token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+
+  create-pr:
+    name: create-pr (${{ matrix.create.repo }})
+    needs: plan-auto-prs
+    if: needs.plan-auto-prs.outputs.creates != '[]'
+    runs-on: ubuntu-latest
+    # Runs for different releases share each repo's auto branch, so they take turns per repo.
+    # A queued run superseded by a newer one is dropped, which is fine: the newer release wins.
+    concurrency:
+      group: consumer-auto-pr-${{ matrix.create.repo }}
+      cancel-in-progress: false
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        create: ${{ fromJson(needs.plan-auto-prs.outputs.creates) }}
+    steps:
+      - name: Checkout weka-ui-components (for local action and scripts)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
+      # Decided inside the lock: a newer release may have taken over since planning.
+      - name: Resolve version against newer releases
+        id: resolve
+        uses: actions/github-script@v8
+        env:
+          CREATE: ${{ toJSON(matrix.create) }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const { resolveCreate } = require('./.github/scripts/consumer-prs.cjs');
+            const create = await resolveCreate({ github, core, create: JSON.parse(process.env.CREATE) });
+            core.setOutput('create', create ? JSON.stringify(create) : '');
+
+      - name: Prepare auto PR branch
+        if: steps.resolve.outputs.create != ''
+        uses: actions/github-script@v8
+        env:
+          CREATE: ${{ steps.resolve.outputs.create }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const { ensureBranch } = require('./.github/scripts/consumer-prs.cjs');
+            const c = JSON.parse(process.env.CREATE);
+            await ensureBranch({ github, core, repo: c.repo, base: c.base, branch: c.branch });
+
+      - name: Update consumer paths
+        if: steps.resolve.outputs.create != ''
+        uses: ./.github/actions/update-consumer-paths
+        with:
+          repo: ${{ fromJSON(steps.resolve.outputs.create).repo }}
+          branch: ${{ fromJSON(steps.resolve.outputs.create).branch }}
+          paths: ${{ toJSON(fromJSON(steps.resolve.outputs.create).paths) }}
+          spec: ${{ fromJSON(steps.resolve.outputs.create).spec }}
+          commit_message: ${{ fromJSON(steps.resolve.outputs.create).commit_message }}
+          token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+
+      - name: Open PR and request review
+        if: steps.resolve.outputs.create != ''
+        uses: actions/github-script@v8
+        env:
+          CREATE: ${{ steps.resolve.outputs.create }}
+        with:
+          github-token: ${{ secrets.WEKA_COMPONENTS_NPM_TOKEN }}
+          script: |
+            const { openPr } = require('./.github/scripts/consumer-prs.cjs');
+            const c = JSON.parse(process.env.CREATE);
+            await openPr({ github, core, ...c });
