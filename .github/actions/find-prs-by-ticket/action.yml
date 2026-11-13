@@ -33,14 +33,23 @@ runs:
       with:
         github-token: ${{ inputs.token }}
         script: |
+          // Title and branch only: PR bodies (e.g. AI-generated summaries) often
+          // mention unrelated tickets.
           function prMatchesTicket(pr, tickets) {
-            const searchText = `${pr.title}\n${pr.body || ''}\n${pr.head.ref}`.toUpperCase();
+            const searchText = `${pr.title}\n${pr.head.ref}`.toUpperCase();
             return tickets.find(t => new RegExp(`\\b${t.toUpperCase()}\\b`).test(searchText));
           }
 
+          // WH-0000 / WEKAPP-0000 are placeholders for "no ticket", not a shared key.
           const tickets = process.env.TICKETS.split(',')
             .map(t => t.trim())
-            .filter(t => /^(WH|WEKAPP)-\d+$/i.test(t));
+            .filter(t => /^(WH|WEKAPP)-\d+$/i.test(t))
+            .filter(t => !/-0+$/.test(t));
+
+          if (tickets.length === 0) {
+            core.setOutput('prs', '[]');
+            return;
+          }
 
           const repos = process.env.TARGET_REPOS
             ? JSON.parse(process.env.TARGET_REPOS)
