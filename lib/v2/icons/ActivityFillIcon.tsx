@@ -1,0 +1,31 @@
+const DEFAULT_SIZE = 24
+
+export interface ActivityFillIconProps {
+  extraClass?: string
+  color?: string
+  width?: number
+  height?: number
+}
+
+export function ActivityFillIcon({
+  extraClass,
+  color = 'currentColor',
+  width = DEFAULT_SIZE,
+  height = DEFAULT_SIZE
+}: Readonly<ActivityFillIconProps>) {
+  return (
+    <svg
+      className={extraClass}
+      fill='none'
+      height={height}
+      viewBox='0 0 24 24'
+      width={width}
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M16.2353 3H7.76471C5.11765 3 3 5.11765 3 7.76471V16.2353C3 18.8824 5.11765 21 7.76471 21H16.2353C18.8824 21 21 18.8824 21 16.2353V7.76471C21 5.11765 18.8824 3 16.2353 3ZM18.9882 12.8471H18.8824H16.0235L14.0118 16.8706C13.9059 17.1882 13.5882 17.2941 13.2706 17.2941C12.9529 17.2941 12.6353 17.0824 12.5294 16.7647L9.98824 10.8353L9.56471 12.1059C9.45882 12.4235 9.14118 12.6353 8.71765 12.6353H5.32941C4.8 12.6353 4.48235 12.2118 4.48235 11.7882C4.48235 11.3647 4.90588 10.9412 5.32941 10.9412H8.08235L9.03529 8.08235C9.14118 7.76471 9.45882 7.55294 9.77647 7.44706C10.0941 7.44706 10.4118 7.65882 10.6235 7.97647L13.2706 14.2235L14.7529 11.3647C14.8588 11.0471 15.1765 10.9412 15.4941 10.9412H18.8824C19.4118 10.9412 19.7294 11.3647 19.7294 11.7882C19.7294 12.2118 19.4118 12.5294 18.9882 12.6353V12.8471Z'
+        fill={color}
+      />
+    </svg>
+  )
+}
