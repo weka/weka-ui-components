@@ -1,11 +1,3 @@
-import type {
-  JsonEditorCompletionSource,
-  JsonEditorCursorContext,
-  JsonEditorDecoration,
-  JsonEditorHandle,
-  JsonEditorValidationError
-} from './types'
-
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { startCompletion } from '@codemirror/autocomplete'
 import {
@@ -18,7 +10,12 @@ import {
 import { EditorView } from '@codemirror/view'
 import clsx from 'clsx'
 
-import { EMPTY_ARRAY, EMPTY_STRING } from '#v2/utils/consts'
+import {
+  DOM_EVENTS,
+  EMPTY_ARRAY,
+  EMPTY_STRING,
+  KEYBOARD_KEYS
+} from '#v2/utils/consts'
 
 import { JsonEditorCopyButton } from './JsonEditorCopyButton'
 import {
@@ -26,6 +23,15 @@ import {
   buildStaticExtensions,
   decorationsPlugin
 } from './jsonEditorSetup'
+import {
+  JSON_EDITOR_LANGUAGES,
+  type JsonEditorCompletionSource,
+  type JsonEditorCursorContext,
+  type JsonEditorDecoration,
+  type JsonEditorHandle,
+  type JsonEditorLanguage,
+  type JsonEditorValidationError
+} from './types'
 
 import styles from './jsonEditor.module.scss'
 
@@ -54,6 +60,18 @@ export interface JsonEditorProps {
   autoFocus?: boolean
   extraClass?: string
   dataTestId?: string
+  /** Read once, when the editor mounts. Defaults to `json`. */
+  language?: JsonEditorLanguage
+}
+
+/**
+ * An Escape the editor already used, such as closing its completion list, must
+ * not also reach a surrounding dialog and close it.
+ */
+function keepHandledEscapeInside(event: KeyboardEvent) {
+  if (event.key === KEYBOARD_KEYS.ESCAPE && event.defaultPrevented) {
+    event.stopPropagation()
+  }
 }
 
 /** Read-only viewers block edits and drop `contenteditable` while staying selectable. */
@@ -81,7 +99,8 @@ export const JsonEditor = forwardRef<
     onCursorActivity,
     autoFocus = false,
     extraClass = EMPTY_STRING,
-    dataTestId
+    dataTestId,
+    language = JSON_EDITOR_LANGUAGES.JSON
   },
   ref
 ) {
@@ -107,6 +126,7 @@ export const JsonEditor = forwardRef<
       return undefined
     }
     const staticExtensions = buildStaticExtensions({
+      language,
       getCompletionSource: () => completionSourceRef.current,
       getCursorHandler: () => cursorHandlerRef.current,
       getOnValidate: () => onValidateRef.current
@@ -142,10 +162,12 @@ export const JsonEditor = forwardRef<
       state: EditorState.create({ doc: value, extensions })
     })
     viewRef.current = view
+    view.dom.addEventListener(DOM_EVENTS.KEYDOWN, keepHandledEscapeInside)
     if (autoFocus && !readOnly) {
       view.focus()
     }
     return () => {
+      view.dom.removeEventListener(DOM_EVENTS.KEYDOWN, keepHandledEscapeInside)
       view.destroy()
       viewRef.current = null
     }

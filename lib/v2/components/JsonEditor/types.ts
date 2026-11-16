@@ -1,3 +1,12 @@
+/**
+ * What the editor edits. `json` adds JSON highlighting and parse validation;
+ * `text` is plain text with soft line wrapping, for templates such as a Slack
+ * message, where completion and decorations still apply.
+ */
+export const JSON_EDITOR_LANGUAGES = { JSON: 'json', TEXT: 'text' } as const
+export type JsonEditorLanguage =
+  (typeof JSON_EDITOR_LANGUAGES)[keyof typeof JSON_EDITOR_LANGUAGES]
+
 /** A single autocomplete suggestion offered by a {@link JsonEditorCompletionSource}. */
 export interface JsonEditorCompletion {
   /** Text shown in the popup and inserted unless {@link apply} overrides it. */
