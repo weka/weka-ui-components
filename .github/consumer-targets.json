@@ -1,7 +1,9 @@
 [
   {
     "repo": "weka/gohome",
-    "path": "observe/frontend"
+    "path": "observe/frontend",
+    "title_prefix": "feat:",
+    "ticket_pattern": "WH-[0-9]{4,}"
   },
   {
     "repo": "weka/gohome",
@@ -10,6 +12,9 @@
   {
     "repo": "weka/wekapp",
     "path": "build/packages/dashboard/files",
-    "commit_prefix": "UI:"
+    "commit_prefix": "UI:",
+    "title_prefix": "UI:",
+    "ticket_pattern": "WEKAPP-[0-9]+",
+    "base": "trunk/dev"
   }
 ]
