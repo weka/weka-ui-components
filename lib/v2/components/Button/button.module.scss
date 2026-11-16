@@ -53,6 +53,11 @@
   background: linear-gradient(0deg, $gray-300 0%, $gray-100 100%);
   color: var(--gray-920);
 
+  // The white icon of .button disappears on the light secondary background.
+  svg path {
+    fill: currentColor;
+  }
+
   &:active:not(:disabled) {
     transform: translateY(1px);
   }

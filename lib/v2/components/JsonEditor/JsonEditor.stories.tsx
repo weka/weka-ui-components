@@ -118,3 +118,21 @@ export const WithCopyButton: Story = {
     </div>
   )
 }
+
+const SLACK_TEMPLATE_VALUE =
+  ':bell: Alert Detected\n\n:rotating_light: *Severity:* {{severity}}\n*Cluster:* <{{url}}|{{cluster}}>\n*Details:*\n{{details}}'
+
+export const TextTemplate: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <JsonEditor
+        language='text'
+        maxHeight={280}
+        value={SLACK_TEMPLATE_VALUE}
+        decorations={[
+          { pattern: /\{\{\w+\}\}/g, className: 'cm-template-token' }
+        ]}
+      />
+    </div>
+  )
+}

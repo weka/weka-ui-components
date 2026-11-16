@@ -11,6 +11,8 @@ const SEVERITY_TOKEN = '{{severity}}'
 const SAMPLE_JSON = `{\n  "severity": "${SEVERITY_TOKEN}"\n}`
 const TOKEN_CLASS = 'template-token'
 const CONTENT_SELECTOR = '.cm-content'
+/** Longer than the 300 ms JSON lint delay, so a lint pass would have run. */
+const LINT_SETTLE_MS = 400
 
 afterEach(cleanup)
 
@@ -242,5 +244,110 @@ describe('JsonEditor - copy button', () => {
 
     expect(writeText).toHaveBeenCalledWith(SAMPLE_JSON)
     expect(getByRole('button', { name: 'Copied' })).toBeTruthy()
+  })
+})
+
+describe('JsonEditor - text language', () => {
+  const SLACK_TEMPLATE = ':bell: *Cluster:* {{cluster}}\n{{details'
+
+  it('does not report JSON parse errors for plain text', async () => {
+    const onValidate = vi.fn()
+    render(
+      <JsonEditor
+        language='text'
+        onValidate={onValidate}
+        value={SLACK_TEMPLATE}
+      />
+    )
+    await new Promise((resolve) => {
+      setTimeout(resolve, LINT_SETTLE_MS)
+    })
+    expect(onValidate).not.toHaveBeenCalled()
+  })
+
+  it('reports JSON parse errors in the default language', async () => {
+    const onValidate = vi.fn()
+    render(
+      <JsonEditor
+        onValidate={onValidate}
+        value={SLACK_TEMPLATE}
+      />
+    )
+    await waitFor(() => {
+      expect(onValidate).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.objectContaining({ row: 0 })])
+      )
+    })
+  })
+
+  it('wraps long lines in text mode', () => {
+    const { container } = render(
+      <JsonEditor
+        language='text'
+        value={SLACK_TEMPLATE}
+      />
+    )
+    expect(
+      container
+        .querySelector(CONTENT_SELECTOR)
+        ?.classList.contains('cm-lineWrapping')
+    ).toBe(true)
+  })
+
+  it('still decorates template variables in text mode', () => {
+    const { container } = render(
+      <JsonEditor
+        decorations={[{ pattern: /\{\{\w+\}\}/g, className: TOKEN_CLASS }]}
+        language='text'
+        value={SLACK_TEMPLATE}
+      />
+    )
+    expect(container.querySelector(`.${TOKEN_CLASS}`)?.textContent).toBe(
+      '{{cluster}}'
+    )
+  })
+})
+
+describe('JsonEditor - Escape inside a dialog', () => {
+  function pressEscape(
+    container: HTMLElement,
+    { handled }: { handled: boolean }
+  ) {
+    const content = container.querySelector(CONTENT_SELECTOR) as HTMLElement
+    const markHandled = (event: Event) => event.preventDefault()
+    if (handled) {
+      // Stands in for CodeMirror's keymap, which consumes Escape to close completion.
+      content.addEventListener('keydown', markHandled)
+    }
+    content.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true
+      })
+    )
+    content.removeEventListener('keydown', markHandled)
+  }
+
+  it('keeps an Escape the editor handled from reaching the dialog', () => {
+    const onDialogKeyDown = vi.fn()
+    const { container } = render(
+      <div onKeyDown={onDialogKeyDown}>
+        <JsonEditor value='{}' />
+      </div>
+    )
+    pressEscape(container, { handled: true })
+    expect(onDialogKeyDown).not.toHaveBeenCalled()
+  })
+
+  it('lets an unhandled Escape reach the dialog', () => {
+    const onDialogKeyDown = vi.fn()
+    const { container } = render(
+      <div onKeyDown={onDialogKeyDown}>
+        <JsonEditor value='{}' />
+      </div>
+    )
+    pressEscape(container, { handled: false })
+    expect(onDialogKeyDown).toHaveBeenCalledTimes(1)
   })
 })

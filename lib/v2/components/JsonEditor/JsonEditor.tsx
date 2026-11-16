@@ -1,11 +1,3 @@
-import type {
-  JsonEditorCompletionSource,
-  JsonEditorCursorContext,
-  JsonEditorDecoration,
-  JsonEditorHandle,
-  JsonEditorValidationError
-} from './types'
-
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { startCompletion } from '@codemirror/autocomplete'
 import {
@@ -26,6 +18,15 @@ import {
   buildStaticExtensions,
   decorationsPlugin
 } from './jsonEditorSetup'
+import {
+  JSON_EDITOR_LANGUAGES,
+  type JsonEditorCompletionSource,
+  type JsonEditorCursorContext,
+  type JsonEditorDecoration,
+  type JsonEditorHandle,
+  type JsonEditorLanguage,
+  type JsonEditorValidationError
+} from './types'
 
 import styles from './jsonEditor.module.scss'
 
@@ -54,6 +55,21 @@ export interface JsonEditorProps {
   autoFocus?: boolean
   extraClass?: string
   dataTestId?: string
+  /** Read once, when the editor mounts. Defaults to `json`. */
+  language?: JsonEditorLanguage
+}
+
+const KEYDOWN_EVENT = 'keydown'
+const ESCAPE_KEY = 'Escape'
+
+/**
+ * An Escape the editor already used, such as closing its completion list, must
+ * not also reach a surrounding dialog and close it.
+ */
+function keepHandledEscapeInside(event: KeyboardEvent) {
+  if (event.key === ESCAPE_KEY && event.defaultPrevented) {
+    event.stopPropagation()
+  }
 }
 
 /** Read-only viewers block edits and drop `contenteditable` while staying selectable. */
@@ -81,7 +97,8 @@ export const JsonEditor = forwardRef<
     onCursorActivity,
     autoFocus = false,
     extraClass = EMPTY_STRING,
-    dataTestId
+    dataTestId,
+    language = JSON_EDITOR_LANGUAGES.JSON
   },
   ref
 ) {
@@ -107,6 +124,7 @@ export const JsonEditor = forwardRef<
       return undefined
     }
     const staticExtensions = buildStaticExtensions({
+      language,
       getCompletionSource: () => completionSourceRef.current,
       getCursorHandler: () => cursorHandlerRef.current,
       getOnValidate: () => onValidateRef.current
@@ -142,10 +160,12 @@ export const JsonEditor = forwardRef<
       state: EditorState.create({ doc: value, extensions })
     })
     viewRef.current = view
+    view.dom.addEventListener(KEYDOWN_EVENT, keepHandledEscapeInside)
     if (autoFocus && !readOnly) {
       view.focus()
     }
     return () => {
+      view.dom.removeEventListener(KEYDOWN_EVENT, keepHandledEscapeInside)
       view.destroy()
       viewRef.current = null
     }

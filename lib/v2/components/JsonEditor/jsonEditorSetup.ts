@@ -1,9 +1,3 @@
-import type {
-  JsonEditorCompletionSource,
-  JsonEditorCursorContext,
-  JsonEditorDecoration,
-  JsonEditorValidationError
-} from './types'
 import type { Extension } from '@codemirror/state'
 
 import {
@@ -39,6 +33,15 @@ import {
   type ViewUpdate
 } from '@codemirror/view'
 import { tags } from '@lezer/highlight'
+
+import {
+  JSON_EDITOR_LANGUAGES,
+  type JsonEditorCompletionSource,
+  type JsonEditorCursorContext,
+  type JsonEditorDecoration,
+  type JsonEditorLanguage,
+  type JsonEditorValidationError
+} from './types'
 
 const MONO_FONT = "'IBM Plex Mono', 'IBM Plex Sans', monospace"
 const TEXT_COLOR = 'var(--gray-950-20)'
@@ -331,6 +334,7 @@ function foldMarkerDOM(open: boolean): HTMLElement {
 }
 
 export interface JsonEditorStaticConfig {
+  language: JsonEditorLanguage
   getCompletionSource: () => JsonEditorCompletionSource | undefined
   getCursorHandler: () =>
     ((context: JsonEditorCursorContext) => void) | undefined
@@ -366,6 +370,17 @@ function jsonValidationLinter(
   )
 }
 
+function languageExtensions(config: JsonEditorStaticConfig): Extension[] {
+  if (config.language === JSON_EDITOR_LANGUAGES.TEXT) {
+    return [EditorView.lineWrapping]
+  }
+  return [
+    json(),
+    syntaxHighlighting(jsonHighlightStyle),
+    jsonValidationLinter(config.getOnValidate)
+  ]
+}
+
 /**
  * Extensions that never change for the editor's lifetime (language, history,
  * keymaps, selection, autocomplete, cursor tracking). Kept out of any
@@ -382,9 +397,7 @@ export function buildStaticExtensions(
     indentOnInput(),
     bracketMatching(),
     highlightSelectionMatches(),
-    json(),
-    syntaxHighlighting(jsonHighlightStyle),
-    jsonValidationLinter(config.getOnValidate),
+    ...languageExtensions(config),
     completionAdapter(config.getCompletionSource),
     cursorActivityPlugin(config.getCursorHandler),
     blockTextSubstitution,

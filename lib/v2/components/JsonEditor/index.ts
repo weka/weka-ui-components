@@ -7,5 +7,7 @@ export type {
   JsonEditorCursorContext,
   JsonEditorDecoration,
   JsonEditorHandle,
-  JsonEditorInsertOptions
+  JsonEditorInsertOptions,
+  JsonEditorLanguage
 } from './types'
+export { JSON_EDITOR_LANGUAGES } from './types'
