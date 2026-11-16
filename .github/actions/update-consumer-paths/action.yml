@@ -92,6 +92,9 @@ runs:
       working-directory: consumer
       env:
         MSG: ${{ inputs.commit_message }}
+        REPO: ${{ inputs.repo }}
+        BRANCH: ${{ inputs.branch }}
+        GH_TOKEN: ${{ inputs.token }}
       run: |
         set -euo pipefail
         git config user.name "github-actions[bot]"
@@ -100,5 +103,32 @@ runs:
           echo "No changes — nothing to commit"
           exit 0
         fi
+
+        # Consumers with "autosquash": true fold this commit into the PR's first
+        # non-bot commit, so it never lands on the trunk as a commit of its own.
+        # Falls back to a normal commit when there is no unambiguous target.
+        AUTOSQUASH=$(jq -r --arg r "$REPO" 'any(.[]; .repo == $r and .autosquash == true)' "$GITHUB_WORKSPACE/.github/consumer-targets.json")
+        if [ "$AUTOSQUASH" = "true" ]; then
+          TARGET=$(
+            PR=$(gh api "repos/$REPO/pulls?state=open&head=${REPO%%/*}:$BRANCH" --jq '.[0].number // empty') &&
+            [ -n "$PR" ] &&
+            gh api --paginate "repos/$REPO/pulls/$PR/commits" | jq -rs '
+              add
+              | map({subject: (.commit.message | split("\n")[0]), parents: (.parents | length), bot: ((.author.login // "") == "github-actions[bot]")}) as $c
+              | if any($c[]; .parents > 1) then empty else
+                  [$c[] | select(.bot | not) | .subject | select(test("^(fixup|squash|amend)! ") | not)] as $own
+                  | if ($own | length) == 0 then empty
+                    elif ([$c[] | select(.subject == $own[0])] | length) > 1 then empty
+                    else $own[0] end
+                end' ||
+            true
+          )
+          if [ -n "$TARGET" ]; then
+            MSG="fixup! $TARGET"
+          else
+            echo "::warning::No unambiguous autosquash target in $REPO@$BRANCH — pushing a normal commit"
+          fi
+        fi
+
         git commit -m "$MSG"
         git push

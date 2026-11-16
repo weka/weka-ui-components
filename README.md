@@ -42,9 +42,10 @@ We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.
 
 ### Automatic consumer updates
 
-Consumers are listed in `.github/consumer-targets.json` (`repo`, `path` of the frontend project, optional `commit_prefix`, default `chore:`): `weka/gohome` (`frontend`, `observe/frontend`) and `weka/wekapp` (`build/packages/dashboard/files`, commit prefix `UI:`).
+Consumers are listed in `.github/consumer-targets.json` (`repo`, `path` of the frontend project, optional `commit_prefix`, default `chore:`, optional `autosquash`): `weka/gohome` (`frontend`, `observe/frontend`) and `weka/wekapp` (`build/packages/dashboard/files`, commit prefix `UI:`, `autosquash`).
 
 - A `weka-ui-components` PR and a consumer PR that share a ticket (`WH-123` or `WEKAPP-123`, in the title or branch) are linked automatically: the consumer PR gets a commit pointing at the UIC PR head (`pr-preview-consumers.yml`), and after a release open consumer PRs with the release's tickets are bumped to the new version (`update-consumers.yml`).
+- With `autosquash` set, these commits are pushed as `fixup! <subject of the PR's first non-bot commit>` so the consumer's CI folds them into the author's commit before merge. The commit stays a normal one when the PR has no non-bot commit, has a merge commit, or its first commit's subject is not unique.
 - A consumer PR notifies this repo through the reusable `notify-consumer-pr.yml` workflow.
 
 ### Shared frontend CI for consumers

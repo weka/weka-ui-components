@@ -10,6 +10,7 @@
   {
     "repo": "weka/wekapp",
     "path": "build/packages/dashboard/files",
-    "commit_prefix": "UI:"
+    "commit_prefix": "UI:",
+    "autosquash": true
   }
 ]
