@@ -10,7 +10,12 @@ import {
 import { EditorView } from '@codemirror/view'
 import clsx from 'clsx'
 
-import { EMPTY_ARRAY, EMPTY_STRING } from '#v2/utils/consts'
+import {
+  DOM_EVENTS,
+  EMPTY_ARRAY,
+  EMPTY_STRING,
+  KEYBOARD_KEYS
+} from '#v2/utils/consts'
 
 import { JsonEditorCopyButton } from './JsonEditorCopyButton'
 import {
@@ -59,15 +64,12 @@ export interface JsonEditorProps {
   language?: JsonEditorLanguage
 }
 
-const KEYDOWN_EVENT = 'keydown'
-const ESCAPE_KEY = 'Escape'
-
 /**
  * An Escape the editor already used, such as closing its completion list, must
  * not also reach a surrounding dialog and close it.
  */
 function keepHandledEscapeInside(event: KeyboardEvent) {
-  if (event.key === ESCAPE_KEY && event.defaultPrevented) {
+  if (event.key === KEYBOARD_KEYS.ESCAPE && event.defaultPrevented) {
     event.stopPropagation()
   }
 }
@@ -160,12 +162,12 @@ export const JsonEditor = forwardRef<
       state: EditorState.create({ doc: value, extensions })
     })
     viewRef.current = view
-    view.dom.addEventListener(KEYDOWN_EVENT, keepHandledEscapeInside)
+    view.dom.addEventListener(DOM_EVENTS.KEYDOWN, keepHandledEscapeInside)
     if (autoFocus && !readOnly) {
       view.focus()
     }
     return () => {
-      view.dom.removeEventListener(KEYDOWN_EVENT, keepHandledEscapeInside)
+      view.dom.removeEventListener(DOM_EVENTS.KEYDOWN, keepHandledEscapeInside)
       view.destroy()
       viewRef.current = null
     }

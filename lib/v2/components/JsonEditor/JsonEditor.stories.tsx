@@ -43,6 +43,11 @@ const decorations: JsonEditorDecoration[] = [
   }
 ]
 
+const TEMPLATE_TOKEN_STYLES = `
+  .sb-template-known { color: var(--purple-700-300); font-weight: 600; }
+  .sb-template-unknown { color: var(--red-500); text-decoration: underline wavy; }
+`
+
 const completionSource: JsonEditorCompletionSource = ({ textBefore }) => {
   const prefix = /\{\{\w*$/.exec(textBefore)
   if (!prefix) {
@@ -61,12 +66,7 @@ function EditableDemo() {
   const [value, setValue] = useState(SAMPLE)
   return (
     <div style={CONTAINER_STYLE}>
-      <style>
-        {`
-        .sb-template-known { color: var(--purple-700-300); font-weight: 600; }
-        .sb-template-unknown { color: var(--red-500); text-decoration: underline wavy; }
-      `}
-      </style>
+      <style>{TEMPLATE_TOKEN_STYLES}</style>
       <JsonEditor
         completionSource={completionSource}
         decorations={decorations}
@@ -125,13 +125,13 @@ const SLACK_TEMPLATE_VALUE =
 export const TextTemplate: Story = {
   render: () => (
     <div style={CONTAINER_STYLE}>
+      <style>{TEMPLATE_TOKEN_STYLES}</style>
       <JsonEditor
+        completionSource={completionSource}
+        decorations={decorations}
         language='text'
         maxHeight={280}
         value={SLACK_TEMPLATE_VALUE}
-        decorations={[
-          { pattern: /\{\{\w+\}\}/g, className: 'cm-template-token' }
-        ]}
       />
     </div>
   )
