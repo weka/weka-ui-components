@@ -40,7 +40,8 @@ jobs:
           PR_BRANCH: ${{ github.head_ref }}
           TICKET_PATTERN: ${{ inputs.ticket_pattern }}
         run: |
-          TICKETS=$(echo "$PR_TITLE $PR_BRANCH" | grep -oE "$TICKET_PATTERN" | sort -u | tr '\n' ',' || true)
+          # Drop all-zero placeholder tickets (WH-0000) so no-ticket PRs don't dispatch.
+          TICKETS=$(echo "$PR_TITLE $PR_BRANCH" | grep -oE "$TICKET_PATTERN" | grep -vE -- '-0+$' | sort -u | tr '\n' ',' || true)
           echo "tickets=${TICKETS%,}" >> $GITHUB_OUTPUT
 
       - name: Dispatch to weka-ui-components
