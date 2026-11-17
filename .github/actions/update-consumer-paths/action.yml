@@ -116,7 +116,7 @@ runs:
             COMMITS=$(gh api --paginate "repos/$REPO/pulls/$PR/commits"); then
             TARGET=$(jq -rs '
               add
-              | map({subject: (.commit.message | split("\n")[0]), parents: (.parents | length), bot: ((.author.login // "") == "github-actions[bot]")}) as $c
+              | map({subject: (.commit.message | split("\n")[0]), parents: (.parents | length), bot: (.author.type == "Bot" or ((.author.login // "") | endswith("[bot]")))}) as $c
               | if any($c[]; .parents > 1) then empty else
                   [$c[] | select(.bot | not) | .subject | select(test("^(fixup|squash|amend)! ") | not)] as $own
                   | if ($own | length) == 0 then empty
