@@ -32,11 +32,15 @@ function toTag(version) {
   return version.startsWith('v') ? version : `v${version}`
 }
 
+/** All-zero tickets (WH-0000) are "no ticket" placeholders, never a real link. */
+const PLACEHOLDER_TICKET = /-0+$/
+
 /** Tickets in `texts` that belong to this consumer, per its `ticket_pattern`. */
 function pickTickets(texts, meta) {
   if (!meta.ticket_pattern) return []
   const pattern = new RegExp(`\\b(?:${meta.ticket_pattern})\\b`, 'gi')
-  return [...new Set(texts.flatMap((t) => t.toUpperCase().match(pattern) || []))]
+  const tickets = texts.flatMap((t) => t.toUpperCase().match(pattern) || [])
+  return [...new Set(tickets.filter((t) => !PLACEHOLDER_TICKET.test(t)))]
 }
 
 function buildTitle({ prefix, version, tickets }) {

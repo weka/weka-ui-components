@@ -7,7 +7,8 @@ const {
   resolveCreate,
   planAutoPrs,
   ensureBranch,
-  openPr
+  openPr,
+  pickTickets
 } = require('./consumer-prs.cjs')
 
 const REPO_META = {
@@ -229,6 +230,55 @@ describe('planAutoPrs', () => {
     expect(create.spec).toBe('@weka/weka-ui-components@^4.74.0')
   })
 
+  it('ignores placeholder tickets in the release and in the open auto PR title', async () => {
+    const github = makeGithub({
+      openAutoPrs: {
+        'weka/wekapp': {
+          number: 7,
+          title:
+            'UI: update weka-ui-components to 4.73.0 (WEKAPP-697609, WEKAPP-0000)'
+        }
+      }
+    })
+
+    const creates = await plan({ github, tickets: 'WH-0000,WEKAPP-0000' })
+
+    expect(creates.map(({ repo, title }) => ({ repo, title }))).toEqual([
+      {
+        repo: 'weka/wekapp',
+        title: 'UI: update weka-ui-components to 4.74.0 (WEKAPP-697609)'
+      }
+    ])
+  })
+
+  it('skips an open auto PR whose title has only placeholder tickets', async () => {
+    const github = makeGithub({
+      openAutoPrs: {
+        'weka/gohome': {
+          number: 8,
+          title: 'feat: update weka-ui-components to 4.73.0 (WH-0000)'
+        }
+      }
+    })
+    const core = makeCore()
+
+    const creates = await planAutoPrs({
+      github,
+      core,
+      version: 'v4.74.0',
+      tickets: 'WH-0000',
+      prNumbers: '558',
+      repoMeta: REPO_META,
+      repoPaths: REPO_PATHS,
+      updates: []
+    })
+
+    expect(creates).toEqual([])
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringContaining('auto PR #8 has no')
+    )
+  })
+
   it('does not load UIC PRs when no repo needs a PR', async () => {
     const github = makeGithub()
 
@@ -446,5 +496,20 @@ describe('openPr', () => {
 
     expect(github.rest.pulls.create).not.toHaveBeenCalled()
     expect(github.rest.git.deleteRef).toHaveBeenCalled()
+  })
+})
+
+describe('pickTickets', () => {
+  it('drops only all-zero placeholders, keeping real tickets with zeros', () => {
+    expect(
+      pickTickets(['WH-0000 WH-100 WH-1000 WH-4612'], {
+        ticket_pattern: 'WH-[0-9]+'
+      })
+    ).toEqual(['WH-100', 'WH-1000', 'WH-4612'])
+    expect(
+      pickTickets(['WEKAPP-0000, WEKAPP-1000'], {
+        ticket_pattern: 'WEKAPP-[0-9]+'
+      })
+    ).toEqual(['WEKAPP-1000'])
   })
 })

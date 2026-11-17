@@ -272,9 +272,10 @@ export type {
   JsonEditorDecoration,
   JsonEditorHandle,
   JsonEditorInsertOptions,
+  JsonEditorLanguage,
   JsonEditorProps
 } from './JsonEditor'
-export { JsonEditor } from './JsonEditor'
+export { JSON_EDITOR_LANGUAGES, JsonEditor } from './JsonEditor'
 export type { LoadingStateProps, StateType } from './LoadingState'
 export { LoadingState, STATE_TYPES } from './LoadingState'
 export type { LoginFieldProps, LoginFieldType } from './LoginField'
