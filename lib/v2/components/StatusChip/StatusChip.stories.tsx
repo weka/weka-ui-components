@@ -133,6 +133,29 @@ export const Tinted: Story = {
   )
 }
 
+export const TintedWithoutDot: Story = {
+  render: () => (
+    <div style={rowStyle}>
+      {Object.values(STATUS_VARIANTS).map((variant) => (
+        <StatusChip
+          key={variant}
+          label={variant}
+          showDot={false}
+          tinted
+          variant={variant}
+        />
+      ))}
+      <StatusChip
+        count={4}
+        label='with count'
+        showDot={false}
+        tinted
+        variant={STATUS_VARIANTS.INFO}
+      />
+    </div>
+  )
+}
+
 const iconStyle = {
   width: 14,
   height: 14,

@@ -73,6 +73,11 @@ export interface StatusChipProps {
    * chips, etc.) are unaffected.
    */
   tinted?: boolean
+  /**
+   * Set to `false` to drop the status dot while keeping the variant tint —
+   * e.g. a dot-less `tinted` table-cell badge. Has no effect on `icon`.
+   */
+  showDot?: boolean
   onClick?: () => void
   extraClass?: string
 }
@@ -85,10 +90,11 @@ export function StatusChip({
   count,
   selected = false,
   tinted = false,
+  showDot = true,
   onClick,
   extraClass
 }: Readonly<StatusChipProps>) {
-  const showDot = !icon && (Boolean(variant) || Boolean(color))
+  const hasDot = showDot && !icon && (Boolean(variant) || Boolean(color))
 
   return (
     <Chip
@@ -102,7 +108,7 @@ export function StatusChip({
         isClickable: Boolean(onClick)
       })}
     >
-      {showDot ? (
+      {hasDot ? (
         <span
           style={color ? { backgroundColor: color } : undefined}
           className={clsx(
