@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { copyToClipboard } from '#v2/utils/clipboard'
+
 import { CheckIcon, CopyIcon } from '../../../icons'
 import { IconButton } from '../../IconButton'
 import { Tooltip } from '../../Tooltip'
@@ -22,14 +24,21 @@ export function JsonEditorCopyButton({
 
   useEffect(() => () => clearTimeout(resetTimeoutRef.current), [])
 
-  const handleCopy = () => {
-    void navigator.clipboard.writeText(getText())
+  const copyText = async () => {
+    const isCopiedToClipboard = await copyToClipboard(getText())
+    if (!isCopiedToClipboard) {
+      return
+    }
     setIsCopied(true)
     clearTimeout(resetTimeoutRef.current)
     resetTimeoutRef.current = setTimeout(
       () => setIsCopied(false),
       COPIED_RESET_MS
     )
+  }
+
+  const handleCopy = () => {
+    void copyText()
   }
 
   return (

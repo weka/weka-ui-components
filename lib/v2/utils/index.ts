@@ -16,6 +16,7 @@ export {
   UNIT_TYPES
 } from '#v2/utils/capacityUtils'
 export { calculateVisibleChips } from '#v2/utils/chipMeasurement'
+export { copyToClipboard } from '#v2/utils/clipboard'
 export type {
   BaseSeverity,
   CloudIconVariant,

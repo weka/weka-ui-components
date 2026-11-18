@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { JsonEditorCopyButton } from './JsonEditorCopyButton'
 
@@ -15,6 +15,12 @@ function mockClipboard() {
 }
 
 describe('JsonEditorCopyButton', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    Reflect.deleteProperty(navigator, 'clipboard')
+    Reflect.deleteProperty(document, 'execCommand')
+  })
+
   it('renders a copy button', () => {
     render(<JsonEditorCopyButton getText={() => SAMPLE_TEXT} />)
 
@@ -30,13 +36,35 @@ describe('JsonEditorCopyButton', () => {
     expect(writeText).toHaveBeenCalledWith(SAMPLE_TEXT)
   })
 
-  it('switches to a copied state after copying', () => {
+  it('switches to a copied state after copying', async () => {
     mockClipboard()
     render(<JsonEditorCopyButton getText={() => SAMPLE_TEXT} />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Copy' }))
 
-    expect(screen.getByRole('button', { name: 'Copied' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', { name: 'Copied' })
+    ).toBeInTheDocument()
+  })
+
+  it('stays in the copy state when the text cannot be copied', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('NotAllowedError'))
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    })
+    Object.defineProperty(document, 'execCommand', {
+      configurable: true,
+      value: () => false
+    })
+    const prompt = vi.fn()
+    vi.stubGlobal('prompt', prompt)
+    render(<JsonEditorCopyButton getText={() => SAMPLE_TEXT} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Copy' }))
+
+    await waitFor(() => expect(prompt).toHaveBeenCalled())
+    expect(screen.getByRole('button', { name: 'Copy' })).toBeInTheDocument()
   })
 
   it('reads the text lazily at click time', () => {

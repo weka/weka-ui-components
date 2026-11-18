@@ -88,7 +88,6 @@
     "ace-builds": "^1.44.0",
     "check-password-strength": "^3.0.0",
     "clsx": "^2.1.1",
-    "copy-to-clipboard": "^4.0.2",
     "luxon": "^3.7.2",
     "react-ace": "^15.0.0",
     "react-hook-form": "^7.90.0",

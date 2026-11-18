@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 
 import React, { useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
-import copy from 'copy-to-clipboard'
-import { COPY_TO_CLIPBOARD_OPTIONS } from '#consts'
+
 import svgs from '#svgs'
+import { copyToClipboard } from '#v2/utils/clipboard'
 
 import Tooltip from '../Tooltip'
 
@@ -28,12 +28,18 @@ function Copy({
 }: CopyProps) {
   const [isCopyPress, setCopyPress] = useState(false)
 
-  function onClick(e: React.MouseEvent) {
-    e.stopPropagation()
-
-    void copy(text, COPY_TO_CLIPBOARD_OPTIONS)
+  async function copyToClipboardAndConfirm() {
+    const isCopied = await copyToClipboard(text)
+    if (!isCopied) {
+      return
+    }
     setCopyPress(true)
     setTimeout(() => setCopyPress(false), 2000)
+  }
+
+  function onClick(e: MouseEvent) {
+    e.stopPropagation()
+    void copyToClipboardAndConfirm()
   }
 
   return (
