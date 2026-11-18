@@ -1,6 +1,33 @@
-import { DOM_EVENTS } from '#v2/utils/consts'
+import { DOM_EVENTS, NOOP } from '#v2/utils/consts'
 
 const COPY_COMMAND = 'copy'
+
+/**
+ * A focused input or textarea keeps its own selection, which `execCommand`
+ * copies instead of the document selection, so it is blurred for the copy.
+ * Returns a function that gives back its focus and selection.
+ */
+const blurFocusedTextControl = (): (() => void) => {
+  const control = document.activeElement
+  if (
+    !(control instanceof HTMLInputElement) &&
+    !(control instanceof HTMLTextAreaElement)
+  ) {
+    return NOOP
+  }
+  const { selectionStart, selectionEnd, selectionDirection } = control
+  control.blur()
+  return () => {
+    control.focus({ preventScroll: true })
+    if (selectionStart !== null && selectionEnd !== null) {
+      control.setSelectionRange(
+        selectionStart,
+        selectionEnd,
+        selectionDirection ?? undefined
+      )
+    }
+  }
+}
 
 /**
  * Selects a detached span instead of focusing a textarea: focus traps (MUI
@@ -31,6 +58,7 @@ const copyWithExecCommand = (text: string): boolean => {
       )
     : []
 
+  const restoreFocusedTextControl = blurFocusedTextControl()
   document.body.appendChild(span)
   try {
     const range = document.createRange()
@@ -45,6 +73,7 @@ const copyWithExecCommand = (text: string): boolean => {
     selection?.removeAllRanges()
     previousRanges.forEach((range) => selection?.addRange(range))
     span.remove()
+    restoreFocusedTextControl()
   }
 }
 

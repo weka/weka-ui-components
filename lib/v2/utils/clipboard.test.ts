@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { copyToClipboard } from '#v2/utils/clipboard'
 
 const TEXT = 'secret-token'
+const FIELD_SELECTION_END = 5
 
 function mockClipboardApi(writeText?: (text: string) => Promise<void>) {
   Object.defineProperty(navigator, 'clipboard', {
@@ -91,6 +92,33 @@ describe('copyToClipboard', () => {
     await expect(copyToClipboard(TEXT)).resolves.toBe(false)
 
     expect(prompt).toHaveBeenCalledWith(expect.any(String), TEXT)
+  })
+
+  it('copies the text, not a focused field selection, and gives the field its focus and selection back', async () => {
+    mockClipboardApi()
+    const field = document.createElement('textarea')
+    field.value = 'typed by the user'
+    document.body.appendChild(field)
+    field.focus()
+    field.setSelectionRange(0, FIELD_SELECTION_END)
+    let focusedDuringCopy: Element | null = null
+    let selectedText: string | undefined
+    mockExecCommand(() => {
+      focusedDuringCopy = document.activeElement
+      selectedText = document.getSelection()?.toString()
+      return true
+    })
+
+    await copyToClipboard(TEXT)
+
+    expect(focusedDuringCopy).not.toBe(field)
+    expect(selectedText).toBe(TEXT)
+    expect(document.activeElement).toBe(field)
+    expect([field.selectionStart, field.selectionEnd]).toEqual([
+      0,
+      FIELD_SELECTION_END
+    ])
+    field.remove()
   })
 
   it.each([
