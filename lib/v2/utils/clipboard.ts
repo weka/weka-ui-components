@@ -5,9 +5,11 @@ const COPY_COMMAND = 'copy'
 /**
  * A focused input or textarea keeps its own selection, which `execCommand`
  * copies instead of the document selection, so it is blurred for the copy.
- * Returns a function that gives back its focus and selection. Both steps fire
- * real `blur`/`focus` events, so the control's `onBlur` handlers run during
- * the copy (e.g. react-hook-form validation in `mode: 'onBlur'`).
+ * Input types without a text selection (number, date, checkbox, ...) report a
+ * `null` `selectionStart` and are left alone; `setSelectionRange` would throw
+ * on them. Returns a function that gives back focus and selection. Both steps
+ * fire real `blur`/`focus` events, so the control's `onBlur` handlers run
+ * during the copy (e.g. react-hook-form validation in `mode: 'onBlur'`).
  */
 const blurFocusedTextControl = (): (() => void) => {
   const control = document.activeElement
@@ -18,16 +20,17 @@ const blurFocusedTextControl = (): (() => void) => {
     return NOOP
   }
   const { selectionStart, selectionEnd, selectionDirection } = control
+  if (selectionStart === null || selectionEnd === null) {
+    return NOOP
+  }
   control.blur()
   return () => {
     control.focus({ preventScroll: true })
-    if (selectionStart !== null && selectionEnd !== null) {
-      control.setSelectionRange(
-        selectionStart,
-        selectionEnd,
-        selectionDirection ?? undefined
-      )
-    }
+    control.setSelectionRange(
+      selectionStart,
+      selectionEnd,
+      selectionDirection ?? undefined
+    )
   }
 }
 

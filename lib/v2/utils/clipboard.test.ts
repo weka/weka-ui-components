@@ -121,6 +121,23 @@ describe('copyToClipboard', () => {
     field.remove()
   })
 
+  it('leaves a focused input without a text selection focused', async () => {
+    mockClipboardApi()
+    const checkbox = document.createElement('input')
+    checkbox.type = 'checkbox'
+    document.body.appendChild(checkbox)
+    checkbox.focus()
+    const onBlur = vi.fn()
+    checkbox.addEventListener('blur', onBlur)
+    mockExecCommand(() => true)
+
+    await expect(copyToClipboard(TEXT)).resolves.toBe(true)
+
+    expect(onBlur).not.toHaveBeenCalled()
+    expect(document.activeElement).toBe(checkbox)
+    checkbox.remove()
+  })
+
   it.each([
     ['succeeds', () => true],
     [
