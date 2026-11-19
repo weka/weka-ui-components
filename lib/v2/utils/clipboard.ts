@@ -5,7 +5,9 @@ const COPY_COMMAND = 'copy'
 /**
  * A focused input or textarea keeps its own selection, which `execCommand`
  * copies instead of the document selection, so it is blurred for the copy.
- * Returns a function that gives back its focus and selection.
+ * Returns a function that gives back its focus and selection. Both steps fire
+ * real `blur`/`focus` events, so the control's `onBlur` handlers run during
+ * the copy (e.g. react-hook-form validation in `mode: 'onBlur'`).
  */
 const blurFocusedTextControl = (): (() => void) => {
   const control = document.activeElement
