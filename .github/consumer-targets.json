@@ -15,6 +15,7 @@
     "commit_prefix": "UI:",
     "title_prefix": "UI:",
     "ticket_pattern": "WEKAPP-[0-9]+",
-    "base": "trunk/dev"
+    "base": "trunk/dev",
+    "autosquash": true
   }
 ]

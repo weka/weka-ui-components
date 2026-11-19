@@ -144,7 +144,7 @@ jobs:
       - name: Checkout weka-ui-components (for local action)
         uses: actions/checkout@v4
         with:
-          sparse-checkout: .github/actions
+          sparse-checkout: .github
 
       - name: Resolve paths and spec
         id: prep
