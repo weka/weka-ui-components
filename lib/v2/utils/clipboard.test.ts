@@ -138,6 +138,29 @@ describe('copyToClipboard', () => {
     checkbox.remove()
   })
 
+  it('blurs a focused contenteditable for the copy and focuses it again', async () => {
+    mockClipboardApi()
+    const editor = document.createElement('div')
+    editor.tabIndex = 0
+    Object.defineProperty(editor, 'isContentEditable', { value: true })
+    document.body.appendChild(editor)
+    editor.focus()
+    let focusedDuringCopy: Element | null = null
+    let selectedText: string | undefined
+    mockExecCommand(() => {
+      focusedDuringCopy = document.activeElement
+      selectedText = document.getSelection()?.toString()
+      return true
+    })
+
+    await copyToClipboard(TEXT)
+
+    expect(focusedDuringCopy).not.toBe(editor)
+    expect(selectedText).toBe(TEXT)
+    expect(document.activeElement).toBe(editor)
+    editor.remove()
+  })
+
   it.each([
     ['succeeds', () => true],
     [

@@ -3,16 +3,22 @@ import { DOM_EVENTS, NOOP } from '#v2/utils/consts'
 const COPY_COMMAND = 'copy'
 
 /**
- * A focused input or textarea keeps its own selection, which `execCommand`
- * copies instead of the document selection, so it is blurred for the copy.
- * Input types without a text selection (number, date, checkbox, ...) report a
- * `null` `selectionStart` and are left alone; `setSelectionRange` would throw
- * on them. Returns a function that gives back focus and selection. Both steps
- * fire real `blur`/`focus` events, so the control's `onBlur` handlers run
- * during the copy (e.g. react-hook-form validation in `mode: 'onBlur'`).
+ * A focused input, textarea or contenteditable (e.g. CodeMirror) keeps its own
+ * selection, which `execCommand` copies instead of the document selection, so
+ * it is blurred for the copy. Input types without a text selection (number,
+ * date, checkbox, ...) report a `null` `selectionStart` and are left alone;
+ * `setSelectionRange` would throw on them. Returns a function that gives back
+ * focus and, for inputs, the selection; a contenteditable's selection comes
+ * back with the document selection. Both steps fire real `blur`/`focus`
+ * events, so the element's `onBlur` handlers run during the copy (e.g.
+ * react-hook-form validation in `mode: 'onBlur'`).
  */
-const blurFocusedTextControl = (): (() => void) => {
+const blurFocusedEditable = (): (() => void) => {
   const control = document.activeElement
+  if (control instanceof HTMLElement && control.isContentEditable) {
+    control.blur()
+    return () => control.focus({ preventScroll: true })
+  }
   if (
     !(control instanceof HTMLInputElement) &&
     !(control instanceof HTMLTextAreaElement)
@@ -63,7 +69,7 @@ const copyWithExecCommand = (text: string): boolean => {
       )
     : []
 
-  const restoreFocusedTextControl = blurFocusedTextControl()
+  const restoreFocusedEditable = blurFocusedEditable()
   document.body.appendChild(span)
   try {
     const range = document.createRange()
@@ -78,7 +84,7 @@ const copyWithExecCommand = (text: string): boolean => {
     selection?.removeAllRanges()
     previousRanges.forEach((range) => selection?.addRange(range))
     span.remove()
-    restoreFocusedTextControl()
+    restoreFocusedEditable()
   }
 }
 
