@@ -1,6 +1,6 @@
 import type { MouseEvent, ReactNode } from 'react'
 
-import React, { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { IconButton } from '@mui/material'
 import clsx from 'clsx'
 
@@ -12,6 +12,8 @@ import Tooltip from '../Tooltip'
 import './copy.scss'
 
 const { Copy: CopyIcon, Checkmark } = svgs
+
+const COPIED_RESET_MS = 2000
 
 interface CopyProps {
   text: string
@@ -27,6 +29,11 @@ function Copy({
   copyText = 'Copy'
 }: CopyProps) {
   const [isCopyPress, setCopyPress] = useState(false)
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
+
+  useEffect(() => () => clearTimeout(resetTimeoutRef.current), [])
 
   async function copyToClipboardAndConfirm() {
     const isCopied = await copyToClipboard(text)
@@ -34,7 +41,11 @@ function Copy({
       return
     }
     setCopyPress(true)
-    setTimeout(() => setCopyPress(false), 2000)
+    clearTimeout(resetTimeoutRef.current)
+    resetTimeoutRef.current = setTimeout(
+      () => setCopyPress(false),
+      COPIED_RESET_MS
+    )
   }
 
   function onClick(e: MouseEvent) {
