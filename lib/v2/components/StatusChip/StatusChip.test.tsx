@@ -8,6 +8,15 @@ const REPLICATING_LABEL = 'Replicating'
 const CHIP_INFO_SELECTOR = '[class*="chipInfo"]'
 const DOT_SELECTOR = '[class*="dot"]'
 
+const CHIP_CLASS_BY_VARIANT = {
+  [STATUS_VARIANTS.UP]: 'chipUp',
+  [STATUS_VARIANTS.WORKING]: 'chipWorking',
+  [STATUS_VARIANTS.DEGRADED]: 'chipDegraded',
+  [STATUS_VARIANTS.DOWN]: 'chipDown',
+  [STATUS_VARIANTS.INFO]: 'chipInfo',
+  [STATUS_VARIANTS.SYNCING]: 'chipSyncing'
+}
+
 describe('StatusChip', () => {
   it('renders the label', () => {
     render(<StatusChip label='Healthy' />)
@@ -162,6 +171,52 @@ describe('StatusChip', () => {
     expect(screen.getByTestId('status-icon')).toBeInTheDocument()
     expect(container.querySelector(DOT_SELECTOR)).not.toBeInTheDocument()
     expect(container.querySelector(CHIP_INFO_SELECTOR)).toBeInTheDocument()
+  })
+
+  it.each(Object.values(STATUS_VARIANTS))(
+    'keeps the %s tint but renders no dot when showDot is false',
+    (variant) => {
+      const { container } = render(
+        <StatusChip
+          label={REPLICATING_LABEL}
+          showDot={false}
+          tinted
+          variant={variant}
+        />
+      )
+
+      const chip = container.querySelector(
+        `[class*="${CHIP_CLASS_BY_VARIANT[variant]}"]`
+      )
+      expect(chip?.className).toContain('tinted')
+      expect(container.querySelector(DOT_SELECTOR)).not.toBeInTheDocument()
+      expect(chip?.children).toHaveLength(1)
+    }
+  )
+
+  it('renders no dot for a custom color when showDot is false', () => {
+    const { container } = render(
+      <StatusChip
+        color='#123456'
+        label='Custom'
+        showDot={false}
+      />
+    )
+
+    expect(container.querySelector(DOT_SELECTOR)).not.toBeInTheDocument()
+  })
+
+  it('still renders the icon when showDot is false', () => {
+    render(
+      <StatusChip
+        icon={<svg data-testid='status-icon' />}
+        label={REPLICATING_LABEL}
+        showDot={false}
+        variant={STATUS_VARIANTS.INFO}
+      />
+    )
+
+    expect(screen.getByTestId('status-icon')).toBeInTheDocument()
   })
 
   it('calls onClick when clicked', () => {
