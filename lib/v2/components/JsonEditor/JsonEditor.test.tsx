@@ -226,13 +226,13 @@ describe('JsonEditor - copy button', () => {
     expect(queryByRole('button', { name: 'Copy' })).toBeNull()
   })
 
-  it('copies the editor content to the clipboard on click', () => {
+  it('copies the editor content to the clipboard on click', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
       value: { writeText }
     })
-    const { getByRole } = render(
+    const { findByRole, getByRole } = render(
       <JsonEditor
         allowCopy
         readOnly
@@ -243,7 +243,7 @@ describe('JsonEditor - copy button', () => {
     fireEvent.click(getByRole('button', { name: 'Copy' }))
 
     expect(writeText).toHaveBeenCalledWith(SAMPLE_JSON)
-    expect(getByRole('button', { name: 'Copied' })).toBeTruthy()
+    expect(await findByRole('button', { name: 'Copied' })).toBeTruthy()
   })
 })
 
