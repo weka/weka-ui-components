@@ -1,6 +1,12 @@
 export default {
   extends: 'stylelint-config-standard-scss',
-  ignoreFiles: ['**/*.md', '**/*.test.*', '**/*.spec.*'],
+  ignoreFiles: [
+    '**/*.md',
+    '**/*.test.*',
+    '**/*.spec.*',
+    '**/dist/**',
+    '**/tests/**'
+  ],
   rules: {
     'selector-class-pattern': [
       '^([a-z][a-zA-Z0-9]+)?$',
