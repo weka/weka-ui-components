@@ -6,7 +6,7 @@ Shared React/TypeScript component library for Weka products. Published as `@weka
 
 Run as a loop; repeat until a full pass finds nothing:
 
-1. **Lint the changed files** (`yarn lintcheck` / `yarn stylelint <file>`) and fix every error.
+1. **Lint what you changed** with `yarn checkall` and fix every error. It covers only the diff against `origin/main`; do not use `yarn lintcheck` for this, it lints the whole tree.
 2. **Comment audit** — each comment you added is JSDoc or explains _why_; delete any that only restates _what_ the code does.
 3. **Run the tests** covering the change (`yarn test:run <path>`); they pass.
 4. **Re-read your own diff** against the rules in this file; fix, then repeat from step 1.
@@ -16,10 +16,15 @@ Run as a loop; repeat until a full pass finds nothing:
 ```bash
 yarn test:run          # Run all tests (Vitest)
 yarn test              # Run tests in watch mode
-yarn typecheck         # TypeScript type checking
-yarn lintcheck         # ESLint check
-yarn lint              # ESLint with auto-fix
-yarn format            # Prettier formatting
+yarn checkall          # Changed code only: type check, ESLint fix, Stylelint fix, Prettier
+yarn ts:diff           # TypeScript errors on changed lines
+yarn lint:diff         # ESLint on changed lines (lint:diff:fix to auto-fix)
+yarn style:diff        # Stylelint on changed SCSS files (style:diff:fix to auto-fix)
+yarn format:diff       # Prettier check on changed files (format:diff:fix to write)
+yarn typecheck         # TypeScript type checking, whole project
+yarn lintcheck         # ESLint check, whole project
+yarn lint              # ESLint with auto-fix, whole project
+yarn format            # Prettier formatting, whole project
 yarn build             # Build dist (Vite)
 yarn storybook         # Start Storybook on port 6006
 ```
