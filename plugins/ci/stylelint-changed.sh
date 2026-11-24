@@ -36,13 +36,15 @@ CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=changed-lines.sh
 . "$CI_DIR/changed-lines.sh"
 
-# Get changed files: committed changes + staged changes + unstaged changes
+# Get changed files: committed changes + staged changes + unstaged changes + untracked files
 COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
             git diff --name-only --diff-filter=ACMRT "$BASE_REF" 2>/dev/null || \
             echo "")
 STAGED=$(git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
 UNSTAGED=$(git diff --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
+# New files that were not `git add`ed yet: no git diff lists them.
+UNTRACKED=$(git ls-files --others --exclude-standard --full-name 2>/dev/null || echo "")
+ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED\n$UNTRACKED" | sort -u)
 
 # Filter to SCSS files in current directory, convert to relative paths
 # Line-by-line (not word-split) so paths containing spaces survive.
@@ -96,7 +98,7 @@ if ! jq -e . "$JSON" >/dev/null 2>&1; then
   exit 2
 fi
 
-print_changed_line_keys > "$CHANGED_KEYS"
+{ print_changed_line_keys; print_untracked_line_keys '*.scss'; } > "$CHANGED_KEYS"
 
 # Flatten to "severity<TAB>repo-relative-path<TAB>line<TAB>col<TAB>rule<TAB>text",
 # then keep every error and only warnings on a changed line.

@@ -8,7 +8,7 @@ bash node_modules/@weka/weka-ui-components/plugins/ci/tsc-changed.sh
 
 Consumers get them in CI through the reusable workflow `.github/workflows/frontend-lint.yml`; the same scripts back the local `yarn` commands below. All scripts find their siblings relative to their own location, so they work from any cwd.
 
-"Changed lines" is defined once, in `changed-lines.sh`: lines added relative to `BASE_REF` across committed (`BASE_REF...HEAD`), staged and unstaged changes. Local runs and CI (reviewdog `-filter-mode=added`) therefore agree.
+"Changed lines" is defined once, in `changed-lines.sh`: lines added relative to `BASE_REF` across committed (`BASE_REF...HEAD`), staged and unstaged changes. Local runs and CI (reviewdog `-filter-mode=added`) therefore agree. The local scripts also treat every line of an untracked file as changed, so a new file is checked before it is `git add`ed; CI runs on a clean checkout, where there are none.
 
 ## Local scripts (run from the project directory)
 

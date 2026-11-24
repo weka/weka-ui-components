@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run Prettier on changed files only (committed + staged + unstaged), for
+# Run Prettier on changed files only (committed + staged + unstaged + untracked), for
 # projects that still carry formatting debt elsewhere and so cannot run a
 # full-tree `prettier --check`. Run from the project directory (cwd is where
 # prettier and git diff are scoped).
@@ -30,13 +30,15 @@ CURRENT_DIR=$(pwd)
 PROJECT_PREFIX=""
 [ "$CURRENT_DIR" != "$REPO_ROOT" ] && PROJECT_PREFIX="${CURRENT_DIR#$REPO_ROOT/}/"
 
-# Get changed files: committed changes + staged changes + unstaged changes
+# Get changed files: committed changes + staged changes + unstaged changes + untracked files
 COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
             git diff --name-only --diff-filter=ACMRT "$BASE_REF" 2>/dev/null || \
             echo "")
 STAGED=$(git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
 UNSTAGED=$(git diff --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
+# New files that were not `git add`ed yet: no git diff lists them.
+UNTRACKED=$(git ls-files --others --exclude-standard --full-name 2>/dev/null || echo "")
+ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED\n$UNTRACKED" | sort -u)
 
 # Keep files under the current directory, as paths relative to it. Iterate
 # line-by-line so paths containing spaces survive; --ignore-unknown below skips
