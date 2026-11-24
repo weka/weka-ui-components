@@ -39,9 +39,10 @@ print_changed_files() {
   } | sort -u
 }
 
-# Reads a --unified=0 git diff on stdin and prints "<path>:<line>" for each added line.
+# Reads a --unified=0 git diff on stdin and prints "<path>:<line>" for each added
+# line, plus $1 (default 0) lines past the end of each hunk.
 added_line_keys_from_diff() {
-  awk '
+  awk -v extra="${1:-0}" '
       # New-file header: keep everything after "+++ b/" so paths with spaces survive;
       # git appends a tab to the header when the path has spaces.
       /^\+\+\+ / { path = $0; sub(/^\+\+\+ b\//, "", path); sub(/\t$/, "", path); next }
@@ -50,7 +51,7 @@ added_line_keys_from_diff() {
       /^@@ / {
         spec = $3; sub(/^\+/, "", spec)
         n = split(spec, f, ","); start = f[1] + 0; count = (n > 1 ? f[2] + 0 : 1)
-        for (i = 0; i < count; i++) print path ":" (start + i)
+        for (i = 0; i < count + extra; i++) print path ":" (start + i)
       }
   '
 }
@@ -65,8 +66,10 @@ print_changed_line_keys() {
 # print_untracked_line_keys [<pathspec>...] emits the same keys for every line of
 # each untracked, non-ignored file under the current directory. git diff never
 # lists such a file, so without this a new file that was not `git add`ed yet has
-# no changed lines and its findings are dropped. For the local scripts only: CI
-# runs on a clean checkout and must keep matching reviewdog.
+# no changed lines and its findings are dropped. The line after the last one is
+# included: an error at end of file, such as an unclosed brace, is reported
+# there. For the local scripts only: CI runs on a clean checkout and must keep
+# matching reviewdog.
 print_untracked_line_keys() {
   local root file
   root=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
@@ -75,5 +78,5 @@ print_untracked_line_keys() {
       [ -f "$root/$file" ] || continue
       # Against /dev/null the whole file is one added hunk, and git skips binaries.
       git -c core.quotePath=false -C "$root" diff --no-index --unified=0 -- /dev/null "$file" 2>/dev/null
-    done | added_line_keys_from_diff | sort -u
+    done | added_line_keys_from_diff 1 | sort -u
 }
