@@ -230,11 +230,26 @@ export const JsonEditor = forwardRef<
         }
         const { from, to } = view.state.selection.main
         const caret = from + text.length - (options?.cursorOffsetFromEnd ?? 0)
+        const { select } = options ?? {}
         view.dispatch({
           changes: { from, to, insert: text },
-          selection: { anchor: caret }
+          selection: select
+            ? { anchor: from + select.from, head: from + select.to }
+            : { anchor: caret }
         })
         view.focus()
+      },
+      getSelection: () => {
+        const view = viewRef.current
+        if (!view) {
+          return { text: EMPTY_STRING, atLineStart: true }
+        }
+        const { state } = view
+        const { from, to } = state.selection.main
+        return {
+          text: state.sliceDoc(from, to),
+          atLineStart: state.doc.lineAt(from).from === from
+        }
       },
       startCompletion: () => {
         const view = viewRef.current

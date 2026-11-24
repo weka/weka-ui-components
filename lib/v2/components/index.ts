@@ -273,7 +273,8 @@ export type {
   JsonEditorHandle,
   JsonEditorInsertOptions,
   JsonEditorLanguage,
-  JsonEditorProps
+  JsonEditorProps,
+  JsonEditorSelection
 } from './JsonEditor'
 export { JSON_EDITOR_LANGUAGES, JsonEditor } from './JsonEditor'
 export type { LoadingStateProps, StateType } from './LoadingState'
