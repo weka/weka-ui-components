@@ -226,6 +226,38 @@ describe('CapacityWidget', () => {
       expect(screen.queryByText('Total Usable')).not.toBeInTheDocument()
       expect(container.querySelector('[class*="donut"]')).toBeNull()
     })
+
+    it("shows the pool's free space when it is known", () => {
+      renderWidget({
+        usable: {
+          used: 21.6,
+          free: 435,
+          unit: 'GB',
+          freeDisplay: '435 GB',
+          sharedPool: true
+        },
+        provisioned: provisionedSsdOnly
+      })
+
+      expect(screen.getByText('Free')).toBeInTheDocument()
+      expect(screen.getByText('435')).toBeInTheDocument()
+      expect(screen.queryByText('Total Usable')).not.toBeInTheDocument()
+    })
+
+    it('shows the Free text as it is when the pool size is unknown', () => {
+      renderWidget({
+        usable: {
+          used: 21.6,
+          unit: 'GB',
+          freeDisplay: 'Not available',
+          sharedPool: true
+        },
+        provisioned: provisionedSsdOnly
+      })
+
+      expect(screen.getByText('Free')).toBeInTheDocument()
+      expect(screen.getByText('Not available')).toBeInTheDocument()
+    })
   })
 
   describe('Quota', () => {

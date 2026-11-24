@@ -276,3 +276,46 @@ export const SharedPoolWithQuota: Story = {
     </Frame>
   )
 }
+
+/** A tenant with no capacity of its own, beside the pool's free space. */
+export const SharedPoolWithFree: Story = {
+  render: (args) => (
+    <Frame
+      height={252}
+      showLimits={args.showLimits}
+      width={736}
+    >
+      <CapacityWidget
+        provisioned={provisionedSsdOnly}
+        usable={{
+          used: 21.6,
+          free: 435,
+          unit: 'GB',
+          freeDisplay: '435 GB',
+          sharedPool: true
+        }}
+      />
+    </Frame>
+  )
+}
+
+/** The pool's free space was not reported, so Free says so instead of guessing. */
+export const SharedPoolFreeNotAvailable: Story = {
+  render: (args) => (
+    <Frame
+      height={252}
+      showLimits={args.showLimits}
+      width={736}
+    >
+      <CapacityWidget
+        provisioned={provisionedSsdOnly}
+        usable={{
+          used: 21.6,
+          unit: 'GB',
+          freeDisplay: 'Not available',
+          sharedPool: true
+        }}
+      />
+    </Frame>
+  )
+}

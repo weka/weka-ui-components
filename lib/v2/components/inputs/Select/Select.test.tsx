@@ -470,6 +470,31 @@ describe('Select - Search functionality', () => {
     })
   })
 
+  it('keeps every option when filterByLabel is off, for a search that matches more than the label', async () => {
+    render(
+      <Select
+        {...createProps({ options: fruitOptions, filterByLabel: false })}
+      />
+    )
+    openSelect()
+
+    await waitFor(() => {
+      expect(
+        screen.getByPlaceholderText(SEARCH_PLACEHOLDER)
+      ).toBeInTheDocument()
+    })
+
+    fireEvent.change(screen.getByPlaceholderText(SEARCH_PLACEHOLDER), {
+      target: { value: 'app' }
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId(`${SELECT_OPTION_PREFIX}banana`)
+      ).toBeInTheDocument()
+    })
+  })
+
   it('keeps highlighted label parts in a single element separate from subLabel', async () => {
     const optionsWithSubLabel = fruitOptions.map((option) => ({
       ...option,

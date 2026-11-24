@@ -79,6 +79,12 @@ export interface SelectProps {
   onSearch?: (query: string) => void | Promise<void>
   searchDebounceMs?: number
   minSearchLength?: number
+  /**
+   * Narrow the options to those whose label contains the search text. Turn it
+   * off when `onSearch` matches on more than the label (such as an id the
+   * label does not show), or the options the server found are hidden again.
+   */
+  filterByLabel?: boolean
   searchThreshold?: number
   dataTestId?: string
   /**
@@ -116,6 +122,7 @@ export function Select({
   onSearch,
   searchDebounceMs = DEFAULT_SEARCH_DEBOUNCE_MS,
   minSearchLength = DEFAULT_MIN_SEARCH_LENGTH,
+  filterByLabel = true,
   searchThreshold = DEFAULT_SEARCH_THRESHOLD,
   dataTestId,
   menuWidth = 'auto',
@@ -166,8 +173,8 @@ export function Select({
 
     let baseOptions = optionsWithSelected
 
-    if (showSearch && searchQuery.trim()) {
-      const query = searchQuery.toLowerCase()
+    if (filterByLabel && showSearch && String(searchQuery).trim()) {
+      const query = String(searchQuery).toLowerCase()
       baseOptions = optionsWithSelected.filter((option) =>
         option.label.toLowerCase().includes(query)
       )
@@ -186,7 +193,14 @@ export function Select({
     })
 
     return [...missingSelectedOptions, ...baseOptions]
-  }, [optionsWithSelected, searchQuery, showSearch, value, multiple])
+  }, [
+    optionsWithSelected,
+    filterByLabel,
+    searchQuery,
+    showSearch,
+    value,
+    multiple
+  ])
 
   useEffect(() => {
     if (isOpen && showSearch) {
