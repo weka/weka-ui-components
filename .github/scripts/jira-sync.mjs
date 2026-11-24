@@ -118,8 +118,10 @@ function jiraClient(token) {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
         // fetch sends `Accept-Language: *` by default, and Jira answers that with translated
-        // names for its built-in statuses, which the English names above never match.
+        // names for its built-in statuses, which the English names above never match. Without
+        // the force header Jira prefers a language set on the service account's profile.
         'Accept-Language': 'en',
+        'X-Force-Accept-Language': 'true',
         ...(body && { 'Content-Type': 'application/json' })
       },
       body: body && JSON.stringify(body)
