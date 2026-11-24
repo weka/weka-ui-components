@@ -76,6 +76,20 @@ export interface JsonEditorInsertOptions {
    * inside the inserted text (e.g. between wrapping quotes).
    */
   cursorOffsetFromEnd?: number
+  /**
+   * Select this range of the inserted text after inserting, as offsets into
+   * `text` (e.g. the label a toolbar wrapped in markup). Takes precedence over
+   * `cursorOffsetFromEnd`.
+   */
+  select?: { from: number; to: number }
+}
+
+/** The main selection, as {@link JsonEditorHandle.getSelection} reports it. */
+export interface JsonEditorSelection {
+  /** The selected text; empty when nothing is selected. */
+  text: string
+  /** Whether the selection starts at the beginning of a line. */
+  atLineStart: boolean
 }
 
 /** Imperative handle exposed via `ref`. */
@@ -83,6 +97,8 @@ export interface JsonEditorHandle {
   focus: () => void
   /** Replace the selection with `text`, then optionally reposition the caret. */
   insert: (text: string, options?: JsonEditorInsertOptions) => void
+  /** The main selection, so a caller can wrap or rewrite it with `insert`. */
+  getSelection: () => JsonEditorSelection
   /** Open the autocomplete popup at the current cursor. */
   startCompletion: () => void
 }

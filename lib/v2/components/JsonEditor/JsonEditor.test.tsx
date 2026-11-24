@@ -156,6 +156,44 @@ describe('JsonEditor - imperative handle', () => {
     ref.current?.insert('X')
     expect(onChange).toHaveBeenLastCalledWith('"X"')
   })
+
+  it('selects part of the inserted text via select, and reports it through getSelection', () => {
+    const onChange = vi.fn()
+    const ref = createRef<JsonEditorHandle>()
+    render(
+      <JsonEditor
+        ref={ref}
+        onChange={onChange}
+        value={EMPTY_STRING}
+      />
+    )
+    ref.current?.insert('ab *Text*', { select: { from: 4, to: 8 } })
+    expect(ref.current?.getSelection()).toEqual({
+      text: 'Text',
+      atLineStart: false
+    })
+    ref.current?.insert('X')
+    expect(onChange).toHaveBeenLastCalledWith('ab *X*')
+  })
+
+  it('reports whether the selection starts a line', () => {
+    const ref = createRef<JsonEditorHandle>()
+    render(
+      <JsonEditor
+        ref={ref}
+        onChange={vi.fn()}
+        value={EMPTY_STRING}
+      />
+    )
+    expect(ref.current?.getSelection()).toEqual({
+      text: EMPTY_STRING,
+      atLineStart: true
+    })
+    ref.current?.insert('first')
+    expect(ref.current?.getSelection().atLineStart).toBe(false)
+    ref.current?.insert('\n')
+    expect(ref.current?.getSelection().atLineStart).toBe(true)
+  })
 })
 
 describe('JsonEditor - validation', () => {
