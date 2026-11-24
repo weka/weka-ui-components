@@ -12,13 +12,13 @@ Consumers get them in CI through the reusable workflow `.github/workflows/fronte
 
 ## Local scripts (run from the project directory)
 
-| Script                         | Env                                                                                  | Exit codes                                                   |
-| ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| `tsc-changed.sh`               | `BASE_REF` (required), `TSC_FLAGS` (default `--noEmit`; `-b` for project references) | 0 clean, 1 errors on changed lines, 2 tsc could not run      |
-| `stylelint-changed.sh [--fix]` | `BASE_REF` (required); needs `jq`                                                    | 0 clean/warnings only, 1 errors, 2 stylelint could not run   |
-| `prettier-changed.sh [--fix]`  | `BASE_REF` (required)                                                                | 0 clean or nothing changed, 1 formatting issues, 2 bad usage |
-| `eslint-ci.sh`                 | `ESLINT_PLUGIN_DIFF_COMMIT` (diff mode when set)                                     | eslint's                                                     |
-| `stylelint-ci.sh`              | none                                                                                 | 0 clean, 1 auto-fixable issues were not fixed                |
+| Script                         | Env                                                                                  | Exit codes                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `tsc-changed.sh`               | `BASE_REF` (required), `TSC_FLAGS` (default `--noEmit`; `-b` for project references) | 0 clean, 1 errors on changed lines, 2 tsc could not run or `BASE_REF` not found      |
+| `stylelint-changed.sh [--fix]` | `BASE_REF` (required); needs `jq`                                                    | 0 clean/warnings only, 1 errors, 2 stylelint could not run or `BASE_REF` not found   |
+| `prettier-changed.sh [--fix]`  | `BASE_REF` (required)                                                                | 0 clean or nothing changed, 1 formatting issues, 2 bad usage or `BASE_REF` not found |
+| `eslint-ci.sh`                 | `ESLINT_PLUGIN_DIFF_COMMIT` (diff mode when set)                                     | eslint's                                                                             |
+| `stylelint-ci.sh`              | none                                                                                 | 0 clean, 1 auto-fixable issues were not fixed                                        |
 
 `prettier-changed.sh` is for projects with existing formatting debt that cannot run a full-tree `prettier --check`.
 

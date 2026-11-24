@@ -13,6 +13,17 @@
 # Requires BASE_REF in the environment. Paths are git's repo-root-relative b/
 # paths; callers strip their own project prefix as needed. Run inside the repo.
 
+# A BASE_REF git cannot resolve makes every diff against it empty, which the
+# callers would report as "nothing changed" and pass. Only the ref itself has to
+# resolve: a shallow clone without a merge base still works through the two-dot
+# fallbacks.
+require_base_ref() {
+  git rev-parse --verify --quiet "$BASE_REF^{commit}" >/dev/null && return 0
+  echo "ERROR: BASE_REF '$BASE_REF' is not a commit git can find in this clone."
+  echo "Fetch it (for a remote branch: git fetch origin <branch>) and run again."
+  return 1
+}
+
 # Reads a --unified=0 git diff on stdin and prints "<path>:<line>" for each added line.
 added_line_keys_from_diff() {
   awk '

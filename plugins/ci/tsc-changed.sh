@@ -32,6 +32,7 @@ CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # CI, so local and CI agree on what is reportable.
 # shellcheck source=changed-lines.sh
 . "$CI_DIR/changed-lines.sh"
+require_base_ref || exit 2
 
 # Get changed files: committed changes + staged changes + unstaged changes + untracked files
 COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \

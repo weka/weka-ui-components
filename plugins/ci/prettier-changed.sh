@@ -8,7 +8,8 @@
 # Requires BASE_REF environment variable (e.g., origin/dev).
 # Optional: pass --fix to rewrite the changed files instead of only checking.
 #
-# Exit codes: 0 clean (or nothing changed), 1 formatting issues, 2 bad usage.
+# Exit codes: 0 clean (or nothing changed), 1 formatting issues, 2 bad usage or
+# BASE_REF not found.
 
 if [ -z "$BASE_REF" ]; then
   echo "ERROR: BASE_REF environment variable is required"
@@ -29,6 +30,11 @@ CURRENT_DIR=$(pwd)
 # Empty at the repo root, where CURRENT_DIR has no "$REPO_ROOT/" prefix to strip.
 PROJECT_PREFIX=""
 [ "$CURRENT_DIR" != "$REPO_ROOT" ] && PROJECT_PREFIX="${CURRENT_DIR#$REPO_ROOT/}/"
+
+CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=changed-lines.sh
+. "$CI_DIR/changed-lines.sh"
+require_base_ref || exit 2
 
 # Get changed files: committed changes + staged changes + unstaged changes + untracked files
 COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
