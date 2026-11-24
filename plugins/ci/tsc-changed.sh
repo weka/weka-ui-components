@@ -32,14 +32,9 @@ CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # CI, so local and CI agree on what is reportable.
 # shellcheck source=changed-lines.sh
 . "$CI_DIR/changed-lines.sh"
+require_base_ref || exit 2
 
-# Get changed files: committed changes + staged changes + unstaged changes
-COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
-            git diff --name-only --diff-filter=ACMRT "$BASE_REF" 2>/dev/null || \
-            echo "")
-STAGED=$(git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-UNSTAGED=$(git diff --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
+ALL_CHANGED=$(print_changed_files)
 
 # Filter to .ts/.tsx files in current directory, convert to relative paths.
 # Iterate line-by-line (not word-split) so paths containing spaces/tabs survive;
@@ -85,7 +80,7 @@ CONFIG_ERRORS=$(grep -E '\.json\([0-9]+,[0-9]+\): error TS[0-9]+: ' "$TSC_LOG" |
 # Changed lines of the changed .ts/.tsx files, as project-relative "<file>:<line>"
 # keys (the shared helper emits repo-relative paths; strip our project prefix and
 # keep the same .ts/.tsx, non-node_modules filter used for CHANGED_FILES above).
-CHANGED_LINE_KEYS=$(print_changed_line_keys | awk -v pfx="$PROJECT_PREFIX" '
+CHANGED_LINE_KEYS=$({ print_changed_line_keys; print_untracked_line_keys '*.ts' '*.tsx'; } | awk -v pfx="$PROJECT_PREFIX" '
   pfx == "" || index($0, pfx) == 1 {
     k = substr($0, length(pfx) + 1)        # "<relative_file>:<line>"
     f = k; sub(/:[0-9]+$/, "", f)

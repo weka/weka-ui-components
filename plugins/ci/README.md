@@ -8,17 +8,17 @@ bash node_modules/@weka/weka-ui-components/plugins/ci/tsc-changed.sh
 
 Consumers get them in CI through the reusable workflow `.github/workflows/frontend-lint.yml`; the same scripts back the local `yarn` commands below. All scripts find their siblings relative to their own location, so they work from any cwd.
 
-"Changed lines" is defined once, in `changed-lines.sh`: lines added relative to `BASE_REF` across committed (`BASE_REF...HEAD`), staged and unstaged changes. Local runs and CI (reviewdog `-filter-mode=added`) therefore agree.
+"Changed lines" is defined once, in `changed-lines.sh`: lines added relative to `BASE_REF` across committed (`BASE_REF...HEAD`), staged and unstaged changes. Local runs and CI (reviewdog `-filter-mode=added`) therefore agree. The local scripts also treat every line of an untracked file as changed, so a new file is checked before it is `git add`ed; CI runs on a clean checkout, where there are none.
 
 ## Local scripts (run from the project directory)
 
-| Script                         | Env                                                                                  | Exit codes                                                   |
-| ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| `tsc-changed.sh`               | `BASE_REF` (required), `TSC_FLAGS` (default `--noEmit`; `-b` for project references) | 0 clean, 1 errors on changed lines, 2 tsc could not run      |
-| `stylelint-changed.sh [--fix]` | `BASE_REF` (required); needs `jq`                                                    | 0 clean/warnings only, 1 errors, 2 stylelint could not run   |
-| `prettier-changed.sh [--fix]`  | `BASE_REF` (required)                                                                | 0 clean or nothing changed, 1 formatting issues, 2 bad usage |
-| `eslint-ci.sh`                 | `ESLINT_PLUGIN_DIFF_COMMIT` (diff mode when set)                                     | eslint's                                                     |
-| `stylelint-ci.sh`              | none                                                                                 | 0 clean, 1 auto-fixable issues were not fixed                |
+| Script                         | Env                                                                                  | Exit codes                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `tsc-changed.sh`               | `BASE_REF` (required), `TSC_FLAGS` (default `--noEmit`; `-b` for project references) | 0 clean, 1 errors on changed lines, 2 tsc could not run or `BASE_REF` not found      |
+| `stylelint-changed.sh [--fix]` | `BASE_REF` (required); needs `jq`                                                    | 0 clean/warnings only, 1 errors, 2 stylelint could not run or `BASE_REF` not found   |
+| `prettier-changed.sh [--fix]`  | `BASE_REF` (required)                                                                | 0 clean or nothing changed, 1 formatting issues, 2 bad usage or `BASE_REF` not found |
+| `eslint-ci.sh`                 | `ESLINT_PLUGIN_DIFF_COMMIT` (diff mode when set)                                     | eslint's                                                                             |
+| `stylelint-ci.sh`              | none                                                                                 | 0 clean, 1 auto-fixable issues were not fixed                                        |
 
 `prettier-changed.sh` is for projects with existing formatting debt that cannot run a full-tree `prettier --check`.
 

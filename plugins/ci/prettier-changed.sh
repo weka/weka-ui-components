@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run Prettier on changed files only (committed + staged + unstaged), for
+# Run Prettier on changed files only (committed + staged + unstaged + untracked), for
 # projects that still carry formatting debt elsewhere and so cannot run a
 # full-tree `prettier --check`. Run from the project directory (cwd is where
 # prettier and git diff are scoped).
@@ -8,7 +8,8 @@
 # Requires BASE_REF environment variable (e.g., origin/dev).
 # Optional: pass --fix to rewrite the changed files instead of only checking.
 #
-# Exit codes: 0 clean (or nothing changed), 1 formatting issues, 2 bad usage.
+# Exit codes: 0 clean (or nothing changed), 1 formatting issues, 2 bad usage or
+# BASE_REF not found.
 
 if [ -z "$BASE_REF" ]; then
   echo "ERROR: BASE_REF environment variable is required"
@@ -30,13 +31,12 @@ CURRENT_DIR=$(pwd)
 PROJECT_PREFIX=""
 [ "$CURRENT_DIR" != "$REPO_ROOT" ] && PROJECT_PREFIX="${CURRENT_DIR#$REPO_ROOT/}/"
 
-# Get changed files: committed changes + staged changes + unstaged changes
-COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
-            git diff --name-only --diff-filter=ACMRT "$BASE_REF" 2>/dev/null || \
-            echo "")
-STAGED=$(git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-UNSTAGED=$(git diff --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED" | sort -u)
+CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=changed-lines.sh
+. "$CI_DIR/changed-lines.sh"
+require_base_ref || exit 2
+
+ALL_CHANGED=$(print_changed_files)
 
 # Keep files under the current directory, as paths relative to it. Iterate
 # line-by-line so paths containing spaces survive; --ignore-unknown below skips
