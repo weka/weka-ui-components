@@ -6,7 +6,7 @@ Shared React/TypeScript component library for Weka products. Published as `@weka
 
 Run as a loop; repeat until a full pass finds nothing:
 
-1. **Lint what you changed** with `yarn checkall` and fix every error. It covers only the diff against `origin/main`; do not use `yarn lintcheck` for this, it lints the whole tree. Stage new files first (`git add -N <file>` is enough): `ts:diff`, `style:diff` and `format:diff` skip untracked files.
+1. **Lint what you changed** with `yarn checkall` and fix every error. It covers only the diff against `origin/main`; do not use `yarn lintcheck` for this, it lints the whole tree.
 2. **Comment audit** — each comment you added is JSDoc or explains _why_; delete any that only restates _what_ the code does.
 3. **Run the tests** covering the change (`yarn test:run <path>`); they pass.
 4. **Re-read your own diff** against the rules in this file; fix, then repeat from step 1.
