@@ -37,15 +37,7 @@ CI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$CI_DIR/changed-lines.sh"
 require_base_ref || exit 2
 
-# Get changed files: committed changes + staged changes + unstaged changes + untracked files
-COMMITTED=$(git diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null || \
-            git diff --name-only --diff-filter=ACMRT "$BASE_REF" 2>/dev/null || \
-            echo "")
-STAGED=$(git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-UNSTAGED=$(git diff --name-only --diff-filter=ACMRT 2>/dev/null || echo "")
-# New files that were not `git add`ed yet: no git diff lists them.
-UNTRACKED=$(git ls-files --others --exclude-standard --full-name 2>/dev/null || echo "")
-ALL_CHANGED=$(echo -e "$COMMITTED\n$STAGED\n$UNSTAGED\n$UNTRACKED" | sort -u)
+ALL_CHANGED=$(print_changed_files)
 
 # Filter to SCSS files in current directory, convert to relative paths
 # Line-by-line (not word-split) so paths containing spaces survive.

@@ -24,6 +24,21 @@ require_base_ref() {
   return 1
 }
 
+# print_changed_files lists the changed files as repo-root-relative paths:
+# committed (against BASE_REF), staged, unstaged, and untracked non-ignored files
+# under the current directory, which no git diff lists before they are `git add`ed.
+# core.quotePath=false keeps non-ASCII names literal; git otherwise prints them
+# quoted and escaped, and they would match no file on disk.
+print_changed_files() {
+  {
+    git -c core.quotePath=false diff --name-only --diff-filter=ACMRT "$BASE_REF"...HEAD 2>/dev/null ||
+      git -c core.quotePath=false diff --name-only --diff-filter=ACMRT "$BASE_REF" 2>/dev/null
+    git -c core.quotePath=false diff --cached --name-only --diff-filter=ACMRT 2>/dev/null
+    git -c core.quotePath=false diff --name-only --diff-filter=ACMRT 2>/dev/null
+    git -c core.quotePath=false ls-files --others --exclude-standard --full-name 2>/dev/null
+  } | sort -u
+}
+
 # Reads a --unified=0 git diff on stdin and prints "<path>:<line>" for each added line.
 added_line_keys_from_diff() {
   awk '
@@ -43,7 +58,8 @@ added_line_keys_from_diff() {
 print_changed_line_keys() {
   local base
   base=$(git merge-base "$BASE_REF" HEAD 2>/dev/null) || base="$BASE_REF"
-  git diff --unified=0 --diff-filter=ACMRT "$base" 2>/dev/null | added_line_keys_from_diff | sort -u
+  git -c core.quotePath=false diff --unified=0 --diff-filter=ACMRT "$base" 2>/dev/null |
+    added_line_keys_from_diff | sort -u
 }
 
 # print_untracked_line_keys [<pathspec>...] emits the same keys for every line of
@@ -58,6 +74,6 @@ print_untracked_line_keys() {
     while IFS= read -r -d '' file; do
       [ -f "$root/$file" ] || continue
       # Against /dev/null the whole file is one added hunk, and git skips binaries.
-      git -C "$root" diff --no-index --unified=0 -- /dev/null "$file" 2>/dev/null
+      git -c core.quotePath=false -C "$root" diff --no-index --unified=0 -- /dev/null "$file" 2>/dev/null
     done | added_line_keys_from_diff | sort -u
 }
