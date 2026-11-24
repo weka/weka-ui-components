@@ -5,14 +5,19 @@ export interface CapacityDataReduction {
 
 export interface CapacityUsableData {
   used: number
-  /** Read only when `sharedPool` is not set. */
+  /**
+   * With `sharedPool`, the pool's free space, shown only when `freeDisplay`
+   * is set too; leave it unset when the pool's free space is unknown.
+   */
   free?: number
   /** Read only when `sharedPool` is not set. */
   total?: number
   /**
    * No capacity of its own: the used space comes out of a pool shared with
-   * others, so there is no donut and no Free, and the footer shows
-   * `labels.sharedPool` instead of Total Usable.
+   * others, so there is no donut, and the footer shows `labels.sharedPool`
+   * instead of Total Usable. Free appears only when `freeDisplay` is set:
+   * the pool's free space when `free` is set, otherwise `freeDisplay` as is
+   * (such as "Not available").
    */
   sharedPool?: boolean
   unit?: string

@@ -1,3 +1,4 @@
+import type { FormattedCapacity } from '../capacityFormat'
 import type { CapacityUsableData, ResolvedCapacityWidgetLabels } from '../types'
 
 import { useId } from 'react'
@@ -23,6 +24,26 @@ export interface UsableSectionProps {
   labels: ResolvedCapacityWidgetLabels
 }
 
+/**
+ * Whether the Free row shows, and its amount. A shared pool shows it only with
+ * a `freeDisplay`; when its size is unknown that text is shown as it is, since
+ * splitting it into a number and a unit would garble "Not available".
+ */
+function freeLegendOf({
+  sharedPool,
+  free,
+  unit = DEFAULT_CAPACITY_UNIT,
+  freeDisplay
+}: CapacityUsableData): { shown: boolean; amount: FormattedCapacity } {
+  if (sharedPool && free === undefined && freeDisplay) {
+    return { shown: true, amount: { value: freeDisplay, unit: EMPTY_STRING } }
+  }
+  return {
+    shown: !sharedPool || Boolean(freeDisplay),
+    amount: formatCapacity(free ?? 0, unit, freeDisplay)
+  }
+}
+
 export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
   const gradientId = `capacityUsedGradient-${useId().replace(
     /:/g,
@@ -35,12 +56,12 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
     sharedPool = false,
     unit = DEFAULT_CAPACITY_UNIT,
     usedDisplay,
-    freeDisplay,
     totalDisplay,
     dataReduction
   } = data
 
   const usedAmount = formatCapacity(used, unit, usedDisplay)
+  const freeLegend = freeLegendOf(data)
   const percentage = formatPercentage(
     clampPercentage(toPercentage(used, total))
   )
@@ -106,13 +127,13 @@ export function UsableSection({ data, labels }: Readonly<UsableSectionProps>) {
             dotClass={styles.dotUsed}
             label={labels.used}
           />
-          {sharedPool ? null : (
+          {freeLegend.shown ? (
             <LegendItem
-              amount={formatCapacity(free, unit, freeDisplay)}
+              amount={freeLegend.amount}
               dotClass={styles.dotFree}
               label={labels.free}
             />
-          )}
+          ) : null}
           {dataReduction && savings ? (
             <div className={styles.dataReduction}>
               <div className={styles.legendLabel}>{labels.dataReduction}</div>
