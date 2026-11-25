@@ -90,7 +90,7 @@ export interface JsonEditorSelection {
   text: string
   /** Whether the selection starts at the beginning of a line. */
   atLineStart: boolean
-  /** Whether the selection ends at the end of a line. */
+  /** Whether the selection ends at the end of a line, or takes in that line's line break. */
   atLineEnd: boolean
 }
 

@@ -218,6 +218,23 @@ describe('JsonEditor - imperative handle', () => {
       atLineEnd: false
     })
   })
+
+  it('reports a selection that takes in its line break as ending the line', () => {
+    const ref = createRef<JsonEditorHandle>()
+    render(
+      <JsonEditor
+        ref={ref}
+        onChange={vi.fn()}
+        value={EMPTY_STRING}
+      />
+    )
+    ref.current?.insert('ab\ncd', { select: { from: 0, to: 3 } })
+    expect(ref.current?.getSelection()).toEqual({
+      text: 'ab\n',
+      atLineStart: true,
+      atLineEnd: true
+    })
+  })
 })
 
 describe('JsonEditor - validation', () => {

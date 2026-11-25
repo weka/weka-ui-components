@@ -246,10 +246,13 @@ export const JsonEditor = forwardRef<
         }
         const { state } = view
         const { from, to } = state.selection.main
+        const endLine = state.doc.lineAt(to)
         return {
           text: state.sliceDoc(from, to),
           atLineStart: state.doc.lineAt(from).from === from,
-          atLineEnd: state.doc.lineAt(to).to === to
+          // A selection that takes in a line break (triple-click, Shift+Down) ends at the
+          // start of the next line, but it still ends the line before.
+          atLineEnd: endLine.to === to || (to > from && endLine.from === to)
         }
       },
       startCompletion: () => {
