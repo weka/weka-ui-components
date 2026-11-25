@@ -2,7 +2,7 @@ name: Auto Merge
 
 on:
   pull_request:
-    types: [reopened, ready_for_review]
+    types: [synchronize, reopened, ready_for_review]
   pull_request_review:
     types: [submitted, dismissed]
 
@@ -44,24 +44,36 @@ jobs:
         run: |
           set -euo pipefail
 
+          PR_STATE=$(gh pr view "$PR" --json headRefOid,autoMergeRequest)
+          HEAD_SHA=$(jq -r .headRefOid <<<"$PR_STATE")
+          AUTO_MERGE_BY=$(jq -r '.autoMergeRequest.enabledBy.login // ""' <<<"$PR_STATE")
+          APP_LOGIN='^(app/)?weka-version-bumper(\[bot\])?$'
+
+          # Auto-merge a person enabled is theirs; only the app's own request is withdrawn.
+          not_auto_merging() {
+            echo "::notice::$1, not auto-merging"
+            if [[ "$AUTO_MERGE_BY" =~ $APP_LOGIN ]]; then
+              GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --disable-auto
+            fi
+          }
+
           # No fallback on a failed lookup: a red run is visible, while skipping would silently
           # leave an earlier auto-merge enabled.
           PERMISSION=$(gh api "repos/$GH_REPO/collaborators/$AUTHOR/permission" --jq .permission)
           if [[ "$PERMISSION" != admin && "$PERMISSION" != write ]]; then
-            echo "::notice::$AUTHOR has '$PERMISSION' access, not auto-merging"
+            not_auto_merging "$AUTHOR has '$PERMISSION' access"
             exit 0
           fi
 
           REVIEWS=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR/reviews" | jq -c 'add // []')
 
-          COPILOT_REVIEWS=$(jq '[.[] | select(.user.login == "copilot-pull-request-reviewer[bot]")] | length' <<<"$REVIEWS")
-          VERDICT=$(jq -r '
-            [.[] | select(.user.login == "copilot-pull-request-reviewer[bot]")] | last
-            | [(.body // "") | splits("\n") | select(startswith("### "))][0] // ""' <<<"$REVIEWS")
-          echo "Latest Copilot verdict: ${VERDICT:-none} ($COPILOT_REVIEWS Copilot reviews)"
+          HEAD_REVIEWS=$(jq -c --arg sha "$HEAD_SHA" '[.[]
+            | select(.user.login == "copilot-pull-request-reviewer[bot]" and .commit_id == $sha and .state != "DISMISSED")]' <<<"$REVIEWS")
+          VERDICT=$(jq -r 'last | [(.body // "") | splits("\n") | select(startswith("### "))][0] // ""' <<<"$HEAD_REVIEWS")
+          echo "Copilot verdict on ${HEAD_SHA:0:7}: ${VERDICT:-none}"
 
           KNOWN_VERDICTS=$'### 🟢 Approval recommended\n### 🟡 Changes recommended\n### 🔵 Needs a closer look'
-          if (( COPILOT_REVIEWS > 0 )) && ! grep -qxF -- "$VERDICT" <<<"$KNOWN_VERDICTS"; then
+          if [[ "$HEAD_REVIEWS" != "[]" ]] && ! grep -qxF -- "$VERDICT" <<<"$KNOWN_VERDICTS"; then
             echo "::warning::Unrecognised Copilot verdict '$VERDICT'. If Copilot changed its review format, update this workflow; until then nothing auto-merges."
           fi
 
@@ -71,20 +83,20 @@ jobs:
             [.[] | select(.user.login == "github-actions[bot]") | .state]
             | if index("DISMISSED") then "dismissed" elif index("APPROVED") then "approved" else "none" end' <<<"$REVIEWS")
 
-          if [[ "$VERDICT" == "### 🟢 Approval recommended" && "$BOT_APPROVAL" != dismissed ]]; then
-            if [[ "$BOT_APPROVAL" == none ]]; then
-              gh pr review "$PR" --approve --body "Auto-approved: branch in this repo by a writer, Copilot recommends approval."
-            fi
-            GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --auto --squash
+          if [[ "$BOT_APPROVAL" == dismissed ]]; then
+            not_auto_merging "The auto-approval was dismissed"
+            exit 0
+          fi
+          if [[ "$VERDICT" != "### 🟢 Approval recommended" ]]; then
+            not_auto_merging "Copilot has not recommended approval of ${HEAD_SHA:0:7}"
             exit 0
           fi
 
-          if [[ "$BOT_APPROVAL" == dismissed ]]; then
-            echo "::notice::The auto-approval was dismissed, not auto-merging"
+          if [[ "$BOT_APPROVAL" == none ]]; then
+            gh pr review "$PR" --approve --body "Auto-approved: branch in this repo by a writer, Copilot recommends approval."
           fi
-          # Leave auto-merge alone when a person enabled it.
-          ENABLED_BY_APP=$(gh pr view "$PR" --json autoMergeRequest \
-            --jq '(.autoMergeRequest.enabledBy.login // "") | test("^(app/)?weka-version-bumper(\\[bot\\])?$")')
-          if [[ "$ENABLED_BY_APP" == true ]]; then
-            GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --disable-auto
+          if [[ -n "$AUTO_MERGE_BY" ]]; then
+            echo "Auto-merge is already enabled by $AUTO_MERGE_BY"
+            exit 0
           fi
+          GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --auto --squash --match-head-commit "$HEAD_SHA"
