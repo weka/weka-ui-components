@@ -1,0 +1,90 @@
+name: Auto Merge
+
+on:
+  pull_request:
+    types: [reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    # Who can be auto-merged is decided only by these checks and the permission lookup below. The
+    # Copilot verdict only gates quality: a PR's own text can steer it. A branch in this repo needs
+    # write access to push; forks never qualify.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type == 'User' &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+
+    steps:
+      # Auto-merge must be enabled by an app: a merge enabled with GITHUB_TOKEN pushes to main
+      # without triggering Auto Release.
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: 919414
+          private-key: ${{ secrets.WEKA_VERSION_BUMPER_PRIVATE_KEY }}
+
+      - name: Enable or disable auto-merge
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          set -euo pipefail
+
+          # No fallback on a failed lookup: a red run is visible, while skipping would silently
+          # leave an earlier auto-merge enabled.
+          PERMISSION=$(gh api "repos/$GH_REPO/collaborators/$AUTHOR/permission" --jq .permission)
+          if [[ "$PERMISSION" != admin && "$PERMISSION" != write ]]; then
+            echo "::notice::$AUTHOR has '$PERMISSION' access, not auto-merging"
+            exit 0
+          fi
+
+          REVIEWS=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR/reviews" | jq -c 'add // []')
+
+          COPILOT_REVIEWS=$(jq '[.[] | select(.user.login == "copilot-pull-request-reviewer[bot]")] | length' <<<"$REVIEWS")
+          VERDICT=$(jq -r '
+            [.[] | select(.user.login == "copilot-pull-request-reviewer[bot]")] | last
+            | [(.body // "") | splits("\n") | select(startswith("### "))][0] // ""' <<<"$REVIEWS")
+          echo "Latest Copilot verdict: ${VERDICT:-none} ($COPILOT_REVIEWS Copilot reviews)"
+
+          KNOWN_VERDICTS=$'### 🟢 Approval recommended\n### 🟡 Changes recommended\n### 🔵 Needs a closer look'
+          if (( COPILOT_REVIEWS > 0 )) && ! grep -qxF -- "$VERDICT" <<<"$KNOWN_VERDICTS"; then
+            echo "::warning::Unrecognised Copilot verdict '$VERDICT'. If Copilot changed its review format, update this workflow; until then nothing auto-merges."
+          fi
+
+          # Dismissing the bot approval is how a person vetoes auto-merge. If "Dismiss stale
+          # approvals" is ever turned on, a push would also count as a veto.
+          BOT_APPROVAL=$(jq -r '
+            [.[] | select(.user.login == "github-actions[bot]") | .state]
+            | if index("DISMISSED") then "dismissed" elif index("APPROVED") then "approved" else "none" end' <<<"$REVIEWS")
+
+          if [[ "$VERDICT" == "### 🟢 Approval recommended" && "$BOT_APPROVAL" != dismissed ]]; then
+            if [[ "$BOT_APPROVAL" == none ]]; then
+              gh pr review "$PR" --approve --body "Auto-approved: branch in this repo by a writer, Copilot recommends approval."
+            fi
+            GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --auto --squash
+            exit 0
+          fi
+
+          if [[ "$BOT_APPROVAL" == dismissed ]]; then
+            echo "::notice::The auto-approval was dismissed, not auto-merging"
+          fi
+          # Leave auto-merge alone when a person enabled it.
+          ENABLED_BY_APP=$(gh pr view "$PR" --json autoMergeRequest \
+            --jq '(.autoMergeRequest.enabledBy.login // "") | test("^(app/)?weka-version-bumper(\\[bot\\])?$")')
+          if [[ "$ENABLED_BY_APP" == true ]]; then
+            GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --disable-auto
+          fi

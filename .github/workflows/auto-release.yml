@@ -10,7 +10,10 @@ concurrency:
 
 jobs:
   publish:
-    if: github.actor != 'weka-version-bumper[bot]'
+    # The app also merges PRs through Auto Merge; only its own version-bump commit must be skipped.
+    if: >-
+      !(github.actor == 'weka-version-bumper[bot]' &&
+      startsWith(github.event.head_commit.message, 'publish v'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
