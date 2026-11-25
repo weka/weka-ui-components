@@ -242,13 +242,14 @@ export const JsonEditor = forwardRef<
       getSelection: () => {
         const view = viewRef.current
         if (!view) {
-          return { text: EMPTY_STRING, atLineStart: true }
+          return { text: EMPTY_STRING, atLineStart: true, atLineEnd: true }
         }
         const { state } = view
         const { from, to } = state.selection.main
         return {
           text: state.sliceDoc(from, to),
-          atLineStart: state.doc.lineAt(from).from === from
+          atLineStart: state.doc.lineAt(from).from === from,
+          atLineEnd: state.doc.lineAt(to).to === to
         }
       },
       startCompletion: () => {

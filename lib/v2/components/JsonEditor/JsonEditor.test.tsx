@@ -170,7 +170,8 @@ describe('JsonEditor - imperative handle', () => {
     ref.current?.insert('ab *Text*', { select: { from: 4, to: 8 } })
     expect(ref.current?.getSelection()).toEqual({
       text: 'Text',
-      atLineStart: false
+      atLineStart: false,
+      atLineEnd: false
     })
     ref.current?.insert('X')
     expect(onChange).toHaveBeenLastCalledWith('ab *X*')
@@ -187,12 +188,35 @@ describe('JsonEditor - imperative handle', () => {
     )
     expect(ref.current?.getSelection()).toEqual({
       text: EMPTY_STRING,
-      atLineStart: true
+      atLineStart: true,
+      atLineEnd: true
     })
     ref.current?.insert('first')
     expect(ref.current?.getSelection().atLineStart).toBe(false)
     ref.current?.insert('\n')
     expect(ref.current?.getSelection().atLineStart).toBe(true)
+  })
+
+  it('reports whether the selection ends a line', () => {
+    const ref = createRef<JsonEditorHandle>()
+    render(
+      <JsonEditor
+        ref={ref}
+        onChange={vi.fn()}
+        value={EMPTY_STRING}
+      />
+    )
+    ref.current?.insert('ab cd', { select: { from: 3, to: 5 } })
+    expect(ref.current?.getSelection()).toMatchObject({
+      text: 'cd',
+      atLineEnd: true
+    })
+    // Replaces the selected "cd", so "cd" no longer ends the line "ab cd ef".
+    ref.current?.insert('cd ef', { select: { from: 0, to: 2 } })
+    expect(ref.current?.getSelection()).toMatchObject({
+      text: 'cd',
+      atLineEnd: false
+    })
   })
 })
 
