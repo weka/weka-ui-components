@@ -18,7 +18,13 @@ import {
 } from '@codemirror/language'
 import { linter } from '@codemirror/lint'
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search'
-import { RangeSetBuilder } from '@codemirror/state'
+import {
+  Annotation,
+  EditorState,
+  RangeSetBuilder,
+  type Text,
+  type TransactionSpec
+} from '@codemirror/state'
 import {
   Decoration,
   type DecorationSet,
@@ -33,6 +39,8 @@ import {
   type ViewUpdate
 } from '@codemirror/view'
 import { tags } from '@lezer/highlight'
+
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import {
   JSON_EDITOR_LANGUAGES,
@@ -335,6 +343,8 @@ function foldMarkerDOM(open: boolean): HTMLElement {
 
 export interface JsonEditorStaticConfig {
   language: JsonEditorLanguage
+  maxLength?: number
+  singleLine: boolean
   getCompletionSource: () => JsonEditorCompletionSource | undefined
   getCursorHandler: () =>
     ((context: JsonEditorCursorContext) => void) | undefined
@@ -370,9 +380,100 @@ function jsonValidationLinter(
   )
 }
 
+/**
+ * Marks the document change made when the controlled `value` prop is synced in.
+ * The change listener skips it, and so do the input limits: a saved value that
+ * is longer than the limit still loads whole.
+ */
+export const VALUE_SYNC = Annotation.define<boolean>()
+
+/** Counts characters as the backend does, so an emoji counts once. */
+function countChars(text: string): number {
+  return [...text].length
+}
+
+interface TextChange {
+  from: number
+  to: number
+  insert: string
+}
+
+/**
+ * Enter, which inserts a line break plus the next line's indent, inserts
+ * nothing; any other line break becomes a space.
+ */
+function toSingleLine(change: TextChange): TextChange {
+  const lines = change.insert.split('\n')
+  const isEnter =
+    lines.length === 2 && lines.join(EMPTY_STRING).trim() === EMPTY_STRING
+  return { ...change, insert: isEnter ? EMPTY_STRING : lines.join(' ') }
+}
+
+/** Cuts the insertions, in order, to the room the limit leaves. */
+function cutToRoom(
+  changes: readonly TextChange[],
+  doc: Text,
+  maxLength: number
+): TextChange[] {
+  const removed = changes.reduce(
+    (sum, change) => sum + countChars(doc.sliceString(change.from, change.to)),
+    0
+  )
+  let room = Math.max(maxLength - countChars(doc.toString()) + removed, 0)
+  return changes.map((change) => {
+    const chars = [...change.insert].slice(0, room)
+    room -= chars.length
+    return { ...change, insert: chars.join(EMPTY_STRING) }
+  })
+}
+
+/**
+ * Keeps typed, pasted and inserted text inside the editor's limits. A
+ * single-line editor ignores Enter and turns pasted line breaks into spaces; a
+ * length limit cuts an insertion to the room left, so typing stops at the limit.
+ */
+function inputLimits(config: JsonEditorStaticConfig): Extension[] {
+  const { maxLength, singleLine } = config
+  if (maxLength === undefined && !singleLine) {
+    return []
+  }
+  const filter = EditorState.transactionFilter.of(
+    (tr): readonly TransactionSpec[] => {
+      if (!tr.docChanged || tr.annotation(VALUE_SYNC)) {
+        return [tr]
+      }
+      const changes: TextChange[] = []
+      tr.changes.iterChangedRanges((from, to, fromB, toB) => {
+        changes.push({ from, to, insert: tr.newDoc.sliceString(fromB, toB) })
+      })
+      const lined = singleLine ? changes.map(toSingleLine) : changes
+      const limited =
+        maxLength === undefined
+          ? lined
+          : cutToRoom(lined, tr.startState.doc, maxLength)
+      if (limited.every((change, i) => change.insert === changes[i].insert)) {
+        return [tr]
+      }
+      const filtered = tr.startState.changes(limited)
+      if (filtered.empty) {
+        return []
+      }
+      // A line break swapped for a space keeps the length, so the edit's own
+      // selection still fits; a cut insertion leaves the caret after its text.
+      const selection =
+        filtered.newLength === tr.changes.newLength
+          ? tr.selection
+          : tr.startState.selection.map(filtered, 1)
+      return [{ changes: filtered, scrollIntoView: true, selection }]
+    }
+  )
+  return [filter]
+}
+
 function languageExtensions(config: JsonEditorStaticConfig): Extension[] {
   if (config.language === JSON_EDITOR_LANGUAGES.TEXT) {
-    return [EditorView.lineWrapping]
+    // A single line scrolls sideways instead: wrapped, it would look like two.
+    return config.singleLine ? [] : [EditorView.lineWrapping]
   }
   return [
     json(),
@@ -398,6 +499,7 @@ export function buildStaticExtensions(
     bracketMatching(),
     highlightSelectionMatches(),
     ...languageExtensions(config),
+    inputLimits(config),
     completionAdapter(config.getCompletionSource),
     cursorActivityPlugin(config.getCursorHandler),
     blockTextSubstitution,

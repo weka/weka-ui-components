@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { startCompletion } from '@codemirror/autocomplete'
 import {
-  Annotation,
   Compartment,
   EditorState,
   type Extension,
@@ -21,7 +20,8 @@ import { JsonEditorCopyButton } from './JsonEditorCopyButton'
 import {
   buildLayoutExtensions,
   buildStaticExtensions,
-  decorationsPlugin
+  decorationsPlugin,
+  VALUE_SYNC
 } from './jsonEditorSetup'
 import {
   JSON_EDITOR_LANGUAGES,
@@ -36,12 +36,6 @@ import {
 import styles from './jsonEditor.module.scss'
 
 const DEFAULT_FONT_SIZE_PX = 14
-
-/**
- * Marks the document change made when the controlled `value` prop is synced in,
- * so the change listener can skip it and only report genuine user edits.
- */
-const VALUE_SYNC = Annotation.define<boolean>()
 
 export interface JsonEditorProps {
   value: string
@@ -62,6 +56,16 @@ export interface JsonEditorProps {
   dataTestId?: string
   /** Read once, when the editor mounts. Defaults to `json`. */
   language?: JsonEditorLanguage
+  /**
+   * The most characters the user can type, paste or insert. A longer `value`
+   * prop still loads whole. Read once, when the editor mounts.
+   */
+  maxLength?: number
+  /**
+   * Keeps the text on one line: Enter does nothing and pasted line breaks
+   * become spaces. Read once, when the editor mounts.
+   */
+  singleLine?: boolean
 }
 
 /**
@@ -100,7 +104,9 @@ export const JsonEditor = forwardRef<
     autoFocus = false,
     extraClass = EMPTY_STRING,
     dataTestId,
-    language = JSON_EDITOR_LANGUAGES.JSON
+    language = JSON_EDITOR_LANGUAGES.JSON,
+    maxLength,
+    singleLine = false
   },
   ref
 ) {
@@ -127,6 +133,8 @@ export const JsonEditor = forwardRef<
     }
     const staticExtensions = buildStaticExtensions({
       language,
+      maxLength,
+      singleLine,
       getCompletionSource: () => completionSourceRef.current,
       getCursorHandler: () => cursorHandlerRef.current,
       getOnValidate: () => onValidateRef.current

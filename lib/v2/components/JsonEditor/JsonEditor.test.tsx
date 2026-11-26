@@ -387,6 +387,96 @@ describe('JsonEditor - text language', () => {
   })
 })
 
+describe('JsonEditor - input limits', () => {
+  function renderLimited(props: {
+    value: string
+    maxLength?: number
+    singleLine?: boolean
+  }) {
+    const onChange = vi.fn()
+    const ref = createRef<JsonEditorHandle>()
+    const view = render(
+      <JsonEditor
+        ref={ref}
+        language='text'
+        onChange={onChange}
+        {...props}
+      />
+    )
+    return { ...view, onChange, ref }
+  }
+
+  it('stops typing at maxLength', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'abcd',
+      maxLength: 5
+    })
+    ref.current?.insert('e')
+    ref.current?.insert('f')
+    expect(getContentText(container)).toBe('eabcd')
+    expect(onChange).toHaveBeenCalledTimes(1)
+  })
+
+  it('cuts an insertion to the room left under maxLength', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab', maxLength: 6 })
+    ref.current?.insert(SEVERITY_TOKEN)
+    expect(onChange).toHaveBeenLastCalledWith('{{seab')
+  })
+
+  it('counts an emoji as one character', () => {
+    const { onChange, ref } = renderLimited({ value: '🔥🔥', maxLength: 3 })
+    ref.current?.insert('ab')
+    expect(onChange).toHaveBeenLastCalledWith('a🔥🔥')
+  })
+
+  it('loads a value prop longer than maxLength whole', () => {
+    const { container, rerender } = renderLimited({
+      value: 'ab',
+      maxLength: 3
+    })
+    rerender(
+      <JsonEditor
+        language='text'
+        maxLength={3}
+        value='abcdef'
+      />
+    )
+    expect(getContentText(container)).toBe('abcdef')
+  })
+
+  it('ignores Enter in a single-line editor', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'ab',
+      singleLine: true
+    })
+    ref.current?.insert('\n  ')
+    expect(getContentText(container)).toBe('ab')
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('turns pasted line breaks into spaces in a single-line editor', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab', singleLine: true })
+    ref.current?.insert('c\nd ')
+    expect(onChange).toHaveBeenLastCalledWith('c d ab')
+    expect(ref.current?.getSelection().atLineStart).toBe(false)
+  })
+
+  it('keeps a single line unwrapped, so it scrolls sideways', () => {
+    const { container } = renderLimited({ value: 'ab', singleLine: true })
+    expect(
+      container
+        .querySelector(CONTENT_SELECTOR)
+        ?.classList.contains('cm-lineWrapping')
+    ).toBe(false)
+  })
+
+  it('lets line breaks through without singleLine', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab' })
+    ref.current?.insert('c\n')
+    expect(onChange).toHaveBeenLastCalledWith('c\nab')
+  })
+})
+
 describe('JsonEditor - Escape inside a dialog', () => {
   function pressEscape(
     container: HTMLElement,
