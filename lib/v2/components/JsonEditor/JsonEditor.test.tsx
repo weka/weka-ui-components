@@ -1,4 +1,5 @@
 import { createRef } from 'react'
+import { EditorView } from '@codemirror/view'
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -444,14 +445,78 @@ describe('JsonEditor - input limits', () => {
     expect(getContentText(container)).toBe('abcdef')
   })
 
+  function pressEnter(container: HTMLElement) {
+    const content = container.querySelector(CONTENT_SELECTOR)
+    if (content) {
+      fireEvent.keyDown(content, { key: 'Enter', code: 'Enter', keyCode: 13 })
+    }
+  }
+
+  /** Selects existing text, as a user's drag would. */
+  function selectRange(container: HTMLElement, range: [number, number]) {
+    const editor = container.querySelector<HTMLElement>('.cm-editor')
+    const view = editor ? EditorView.findFromDOM(editor) : null
+    view?.dispatch({ selection: { anchor: range[0], head: range[1] } })
+  }
+
+  const ABCD = 'abcd'
+  /** "bc" in "abcd". */
+  const MIDDLE_TWO: [number, number] = [ABCD.indexOf('b'), ABCD.indexOf('d')]
+  /** Shorter than the values below, so they start over the limit. */
+  const SHORT_LIMIT = 3
+
   it('ignores Enter in a single-line editor', () => {
-    const { container, onChange, ref } = renderLimited({
+    const { container, onChange } = renderLimited({
       value: 'ab',
       singleLine: true
     })
-    ref.current?.insert('\n  ')
+    pressEnter(container)
     expect(getContentText(container)).toBe('ab')
     expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('keeps the selected text when Enter is pressed in a single-line editor', () => {
+    const { container, onChange } = renderLimited({
+      value: 'abcd',
+      singleLine: true
+    })
+    selectRange(container, MIDDLE_TWO)
+    pressEnter(container)
+    expect(getContentText(container)).toBe('abcd')
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('turns a pasted lone line break into a space in a single-line editor', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab', singleLine: true })
+    ref.current?.insert('\n')
+    expect(onChange).toHaveBeenLastCalledWith(' ab')
+  })
+
+  it('leaves the caret after a cut insertion that replaced a selection', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'abcd',
+      maxLength: 5
+    })
+    selectRange(container, MIDDLE_TWO)
+    ref.current?.insert('WXYZ')
+    expect(onChange).toHaveBeenLastCalledWith('aWXYd')
+    expect(ref.current?.getSelection().text).toBe(EMPTY_STRING)
+  })
+
+  it('keeps the selection insert() asks for inside the text that remains', () => {
+    const { ref } = renderLimited({ value: 'a', maxLength: SHORT_LIMIT })
+    ref.current?.insert('WXYZ', { select: { from: 0, to: 1 } })
+    expect(ref.current?.getSelection().text).toBe('W')
+  })
+
+  it('lets an edit replace text in a value already over the limit', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'abcdef',
+      maxLength: SHORT_LIMIT
+    })
+    selectRange(container, [0, 2])
+    ref.current?.insert('XYZ')
+    expect(onChange).toHaveBeenLastCalledWith('XYcdef')
   })
 
   it('turns pasted line breaks into spaces in a single-line editor', () => {

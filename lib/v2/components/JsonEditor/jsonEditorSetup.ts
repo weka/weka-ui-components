@@ -20,9 +20,11 @@ import { linter } from '@codemirror/lint'
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search'
 import {
   Annotation,
+  ChangeSet,
+  type ChangeSpec,
   EditorState,
   RangeSetBuilder,
-  type Text,
+  type Transaction,
   type TransactionSpec
 } from '@codemirror/state'
 import {
@@ -392,45 +394,64 @@ function countChars(text: string): number {
   return [...text].length
 }
 
-interface TextChange {
-  from: number
-  to: number
-  insert: string
+/** UTF-16 length of the first `count` characters of `text`. */
+function prefixLength(text: string, count: number): number {
+  return [...text].slice(0, count).join(EMPTY_STRING).length
 }
 
 /**
- * Enter, which inserts a line break plus the next line's indent, inserts
- * nothing; any other line break becomes a space.
+ * The fixes, in the edited document, that bring an edit inside the limits: a
+ * space for each pasted line break, and the cut-off tail of each insertion
+ * past the room left. An edit never grows a document already over the limit,
+ * but it may replace text with up to as much new text.
  */
-function toSingleLine(change: TextChange): TextChange {
-  const lines = change.insert.split('\n')
-  const isEnter =
-    lines.length === 2 && lines.join(EMPTY_STRING).trim() === EMPTY_STRING
-  return { ...change, insert: isEnter ? EMPTY_STRING : lines.join(' ') }
-}
-
-/** Cuts the insertions, in order, to the room the limit leaves. */
-function cutToRoom(
-  changes: readonly TextChange[],
-  doc: Text,
-  maxLength: number
-): TextChange[] {
-  const removed = changes.reduce(
-    (sum, change) => sum + countChars(doc.sliceString(change.from, change.to)),
+function limitFixes(
+  tr: Transaction,
+  config: JsonEditorStaticConfig
+): ChangeSpec[] {
+  const { maxLength, singleLine } = config
+  const ranges: { from: number; to: number; fromB: number; toB: number }[] = []
+  tr.changes.iterChangedRanges((from, to, fromB, toB) => {
+    ranges.push({ from, to, fromB, toB })
+  })
+  const start = tr.startState.doc
+  const removed = ranges.reduce(
+    (sum, range) => sum + countChars(start.sliceString(range.from, range.to)),
     0
   )
-  let room = Math.max(maxLength - countChars(doc.toString()) + removed, 0)
-  return changes.map((change) => {
-    const chars = [...change.insert].slice(0, room)
-    room -= chars.length
-    return { ...change, insert: chars.join(EMPTY_STRING) }
-  })
+  let room =
+    maxLength === undefined
+      ? Infinity
+      : Math.max(maxLength - countChars(start.toString()) + removed, removed)
+  const fixes: ChangeSpec[] = []
+  for (const { fromB, toB } of ranges) {
+    const inserted = tr.newDoc.sliceString(fromB, toB)
+    const kept = Math.min(countChars(inserted), room)
+    room -= kept
+    const keptEnd = fromB + prefixLength(inserted, kept)
+    if (singleLine) {
+      // Each line that ends inside the kept insertion ends at a pasted break.
+      const doc = tr.newDoc
+      for (
+        let line = doc.lineAt(fromB);
+        line.to < keptEnd;
+        line = doc.line(line.number + 1)
+      ) {
+        fixes.push({ from: line.to, to: line.to + 1, insert: ' ' })
+      }
+    }
+    if (keptEnd < toB) {
+      fixes.push({ from: keptEnd, to: toB })
+    }
+  }
+  return fixes
 }
 
 /**
  * Keeps typed, pasted and inserted text inside the editor's limits. A
  * single-line editor ignores Enter and turns pasted line breaks into spaces; a
- * length limit cuts an insertion to the room left, so typing stops at the limit.
+ * length limit cuts an insertion to the room left, so typing stops at the
+ * limit. The edit's own selection is kept, moved into the text that remains.
  */
 function inputLimits(config: JsonEditorStaticConfig): Extension[] {
   const { maxLength, singleLine } = config
@@ -442,32 +463,28 @@ function inputLimits(config: JsonEditorStaticConfig): Extension[] {
       if (!tr.docChanged || tr.annotation(VALUE_SYNC)) {
         return [tr]
       }
-      const changes: TextChange[] = []
-      tr.changes.iterChangedRanges((from, to, fromB, toB) => {
-        changes.push({ from, to, insert: tr.newDoc.sliceString(fromB, toB) })
-      })
-      const lined = singleLine ? changes.map(toSingleLine) : changes
-      const limited =
-        maxLength === undefined
-          ? lined
-          : cutToRoom(lined, tr.startState.doc, maxLength)
-      if (limited.every((change, i) => change.insert === changes[i].insert)) {
+      const fixes = limitFixes(tr, config)
+      if (fixes.length === 0) {
         return [tr]
       }
-      const filtered = tr.startState.changes(limited)
-      if (filtered.empty) {
+      const fix = ChangeSet.of(fixes, tr.newDoc.length)
+      const changes = tr.changes.compose(fix)
+      if (changes.empty) {
         return []
       }
-      // A line break swapped for a space keeps the length, so the edit's own
-      // selection still fits; a cut insertion leaves the caret after its text.
-      const selection =
-        filtered.newLength === tr.changes.newLength
-          ? tr.selection
-          : tr.startState.selection.map(filtered, 1)
-      return [{ changes: filtered, scrollIntoView: true, selection }]
+      return [
+        {
+          changes,
+          selection: tr.selection?.map(fix),
+          scrollIntoView: tr.scrollIntoView
+        }
+      ]
     }
   )
-  return [filter]
+  // Ahead of the default keymap, so Enter never starts an edit; an open
+  // completion list still takes Enter first.
+  const enter = keymap.of([{ key: 'Enter', run: () => true }])
+  return singleLine ? [filter, enter] : [filter]
 }
 
 function languageExtensions(config: JsonEditorStaticConfig): Extension[] {
