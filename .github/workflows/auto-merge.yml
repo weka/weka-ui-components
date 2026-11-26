@@ -18,8 +18,10 @@ jobs:
   auto-merge:
     # Who can be auto-merged is decided only by these checks and the permission lookup below. The
     # Copilot verdict only gates quality: a PR's own text can steer it. A branch in this repo needs
-    # write access to push; forks never qualify.
+    # write access to push; forks never qualify. Only main has the ruleset that enforces CI and
+    # resolved threads, so PRs into other branches never qualify either.
     if: >-
+      github.event.pull_request.base.ref == 'main' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.user.type == 'User' &&
       !github.event.pull_request.draft
@@ -102,15 +104,31 @@ jobs:
           fi
           # The mutation is called directly rather than through `gh pr merge --auto`, which may
           # merge at once when it judges the PR mergeable, and the app can bypass the main ruleset.
-          # GitHub refuses auto-merge on a PR that is already mergeable; merge that one directly.
-          if ! ENABLE_OUTPUT=$(GH_TOKEN="$APP_TOKEN" gh api graphql \
+          if ENABLE_OUTPUT=$(GH_TOKEN="$APP_TOKEN" gh api graphql \
             -f query='mutation($id: ID!, $sha: GitObjectID!) {
               enablePullRequestAutoMerge(input: {pullRequestId: $id, mergeMethod: SQUASH, expectedHeadOid: $sha}) { clientMutationId }
             }' -f id="$PR_ID" -f sha="$HEAD_SHA" 2>&1); then
-            if ! grep -qE 'is in (clean|unstable) status' <<<"$ENABLE_OUTPUT"; then
-              echo "$ENABLE_OUTPUT" >&2
-              exit 1
-            fi
-            echo "The PR is already mergeable, merging it now"
-            GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --squash --match-head-commit "$HEAD_SHA"
+            exit 0
           fi
+          if ! grep -q 'is in clean status' <<<"$ENABLE_OUTPUT"; then
+            echo "$ENABLE_OUTPUT" >&2
+            exit 1
+          fi
+
+          # GitHub refuses auto-merge on a PR it already considers mergeable, the usual case when CI
+          # finishes before Copilot's review. The app's view of that cannot be trusted because the
+          # app bypasses the main ruleset, so merge only when the PR is also CLEAN for this job's own
+          # token, which cannot bypass it. UNKNOWN means GitHub is still computing the state.
+          for _ in 1 2 3 4 5 6; do
+            MERGE_STATE=$(gh pr view "$PR" --json mergeStateStatus --jq .mergeStateStatus)
+            if [[ "$MERGE_STATE" != UNKNOWN ]]; then
+              break
+            fi
+            sleep 5
+          done
+          if [[ "$MERGE_STATE" != CLEAN ]]; then
+            echo "::error::GitHub refused auto-merge as already mergeable, but without bypass the PR is $MERGE_STATE; not merging"
+            exit 1
+          fi
+          echo "The PR is already mergeable, merging it now"
+          GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --squash --match-head-commit "$HEAD_SHA"
