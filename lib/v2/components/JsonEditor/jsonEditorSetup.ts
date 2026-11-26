@@ -260,8 +260,10 @@ function completionAdapter(
     }
     return {
       from: result.from,
+      validFor: result.validFor,
       options: result.options.map((option) => ({
         label: option.label,
+        displayLabel: option.displayLabel,
         detail: option.detail,
         info: option.info,
         apply: option.apply ?? option.label

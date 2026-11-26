@@ -9,8 +9,13 @@ export type JsonEditorLanguage =
 
 /** A single autocomplete suggestion offered by a {@link JsonEditorCompletionSource}. */
 export interface JsonEditorCompletion {
-  /** Text shown in the popup and inserted unless {@link apply} overrides it. */
+  /**
+   * Text the typed text is matched against, shown in the popup unless
+   * {@link displayLabel} overrides it, and inserted unless {@link apply} does.
+   */
   label: string
+  /** Text shown in the popup instead of {@link label}. */
+  displayLabel?: string
   /** Muted text shown to the right of the label (e.g. a short description). */
   detail?: string
   /** Longer text shown in the details panel when the option is highlighted. */
@@ -24,6 +29,12 @@ export interface JsonEditorCompletionResult {
   /** Absolute document offset where the inserted text replaces from. */
   from: number
   options: JsonEditorCompletion[]
+  /**
+   * While the text typed from `from` to the cursor matches, the list stays
+   * open and filters by it instead of asking the source again. Without it,
+   * each keystroke asks again.
+   */
+  validFor?: RegExp
 }
 
 /** Document context handed to a completion source, free of engine types. */
