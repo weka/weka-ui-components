@@ -607,6 +607,56 @@ describe('JsonEditor - input limits', () => {
   })
 })
 
+describe('JsonEditor - completion', () => {
+  /** Matched as "severity", shown as the template placeholder. */
+  const OPTION = { label: 'severity', displayLabel: SEVERITY_TOKEN }
+  /** Longer than CodeMirror's typing debounce, so a re-query would have run. */
+  const QUERY_SETTLE_MS = 200
+
+  /** Types the start of "severity" where the list opened. */
+  function typeQuery(container: HTMLElement) {
+    const editor = container.querySelector<HTMLElement>('.cm-editor')
+    const view = editor ? EditorView.findFromDOM(editor) : null
+    view?.dispatch({
+      changes: { from: 0, insert: 's' },
+      selection: { anchor: 1 },
+      userEvent: 'input.type'
+    })
+  }
+
+  it('keeps filtering the open list while the typed text matches validFor', async () => {
+    const source = vi.fn((context: { textBefore: string }) => ({
+      from: context.textBefore.length,
+      options: [OPTION],
+      validFor: /^\w*$/
+    }))
+    const ref = createRef<JsonEditorHandle>()
+    const { container } = render(
+      <JsonEditor
+        ref={ref}
+        completionSource={source}
+        language='text'
+        value={EMPTY_STRING}
+      />
+    )
+    ref.current?.focus()
+    ref.current?.startCompletion()
+    await waitFor(() => {
+      expect(container.querySelector('.cm-tooltip-autocomplete')).not.toBeNull()
+    })
+
+    typeQuery(container)
+    await new Promise((resolve) => {
+      setTimeout(resolve, QUERY_SETTLE_MS)
+    })
+
+    expect(source).toHaveBeenCalledTimes(1)
+    expect(
+      container.querySelector('.cm-tooltip-autocomplete')?.textContent
+    ).toContain(SEVERITY_TOKEN)
+  })
+})
+
 describe('JsonEditor - Escape inside a dialog', () => {
   function pressEscape(
     container: HTMLElement,
