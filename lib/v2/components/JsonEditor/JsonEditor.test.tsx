@@ -1,4 +1,5 @@
 import { createRef } from 'react'
+import { undo } from '@codemirror/commands'
 import { EditorView } from '@codemirror/view'
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -445,18 +446,31 @@ describe('JsonEditor - input limits', () => {
     expect(getContentText(container)).toBe('abcdef')
   })
 
-  function pressEnter(container: HTMLElement) {
+  function pressEnter(
+    container: HTMLElement,
+    modifiers: { shiftKey?: boolean; ctrlKey?: boolean } = {}
+  ) {
     const content = container.querySelector(CONTENT_SELECTOR)
     if (content) {
-      fireEvent.keyDown(content, { key: 'Enter', code: 'Enter', keyCode: 13 })
+      fireEvent.keyDown(content, {
+        key: 'Enter',
+        code: 'Enter',
+        keyCode: 13,
+        ...modifiers
+      })
     }
+  }
+
+  function viewOf(container: HTMLElement): EditorView | null {
+    const editor = container.querySelector<HTMLElement>('.cm-editor')
+    return editor ? EditorView.findFromDOM(editor) : null
   }
 
   /** Selects existing text, as a user's drag would. */
   function selectRange(container: HTMLElement, range: [number, number]) {
-    const editor = container.querySelector<HTMLElement>('.cm-editor')
-    const view = editor ? EditorView.findFromDOM(editor) : null
-    view?.dispatch({ selection: { anchor: range[0], head: range[1] } })
+    viewOf(container)?.dispatch({
+      selection: { anchor: range[0], head: range[1] }
+    })
   }
 
   const ABCD = 'abcd'
@@ -484,6 +498,40 @@ describe('JsonEditor - input limits', () => {
     pressEnter(container)
     expect(getContentText(container)).toBe('abcd')
     expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['Shift', { shiftKey: true }],
+    ['Ctrl', { ctrlKey: true }]
+  ])('ignores %s+Enter on a selection in a single-line editor', (_, mods) => {
+    const { container, onChange } = renderLimited({
+      value: ABCD,
+      singleLine: true
+    })
+    selectRange(container, MIDDLE_TWO)
+    pressEnter(container, mods)
+    expect(getContentText(container)).toBe(ABCD)
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('undoes a cut paste on its own, keeping the typing before it', () => {
+    const { container } = renderLimited({ value: EMPTY_STRING, maxLength: 4 })
+    const view = viewOf(container)
+    view?.dispatch({
+      changes: { from: 0, insert: 'a' },
+      selection: { anchor: 1 },
+      userEvent: 'input.type'
+    })
+    view?.dispatch({
+      changes: { from: 1, insert: 'WXYZ' },
+      selection: { anchor: 5 },
+      userEvent: 'input.paste'
+    })
+    expect(getContentText(container)).toBe('aWXY')
+    if (view) {
+      undo(view)
+    }
+    expect(getContentText(container)).toBe('a')
   })
 
   it('turns a pasted lone line break into a space in a single-line editor', () => {

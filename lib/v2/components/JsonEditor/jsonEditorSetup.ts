@@ -468,22 +468,20 @@ function inputLimits(config: JsonEditorStaticConfig): Extension[] {
         return [tr]
       }
       const fix = ChangeSet.of(fixes, tr.newDoc.length)
-      const changes = tr.changes.compose(fix)
-      if (changes.empty) {
+      if (tr.changes.compose(fix).empty) {
         return []
       }
-      return [
-        {
-          changes,
-          selection: tr.selection?.map(fix),
-          scrollIntoView: tr.scrollIntoView
-        }
-      ]
+      // The edit stays as it is, with its annotations (paste, typing) and
+      // selection; the fix runs after it and moves its selection along.
+      return [tr, { changes: fix, sequential: true }]
     }
   )
-  // Ahead of the default keymap, so Enter never starts an edit; an open
-  // completion list still takes Enter first.
-  const enter = keymap.of([{ key: 'Enter', run: () => true }])
+  // Ahead of the default keymap, so no Enter shortcut starts an edit; an
+  // open completion list still takes Enter first.
+  const swallow = () => true
+  const enter = keymap.of(
+    ['Enter', 'Shift-Enter', 'Mod-Enter'].map((key) => ({ key, run: swallow }))
+  )
   return singleLine ? [filter, enter] : [filter]
 }
 
