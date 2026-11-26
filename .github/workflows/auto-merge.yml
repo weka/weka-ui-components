@@ -44,7 +44,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          PR_STATE=$(gh pr view "$PR" --json headRefOid,autoMergeRequest)
+          PR_STATE=$(gh pr view "$PR" --json id,headRefOid,autoMergeRequest)
+          PR_ID=$(jq -r .id <<<"$PR_STATE")
           HEAD_SHA=$(jq -r .headRefOid <<<"$PR_STATE")
           AUTO_MERGE_BY=$(jq -r '.autoMergeRequest.enabledBy.login // ""' <<<"$PR_STATE")
           APP_LOGIN='^(app/)?weka-version-bumper(\[bot\])?$'
@@ -99,4 +100,17 @@ jobs:
             echo "Auto-merge is already enabled by $AUTO_MERGE_BY"
             exit 0
           fi
-          GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --auto --squash --match-head-commit "$HEAD_SHA"
+          # The mutation is called directly rather than through `gh pr merge --auto`, which may
+          # merge at once when it judges the PR mergeable, and the app can bypass the main ruleset.
+          # GitHub refuses auto-merge on a PR that is already mergeable; merge that one directly.
+          if ! ENABLE_OUTPUT=$(GH_TOKEN="$APP_TOKEN" gh api graphql \
+            -f query='mutation($id: ID!, $sha: GitObjectID!) {
+              enablePullRequestAutoMerge(input: {pullRequestId: $id, mergeMethod: SQUASH, expectedHeadOid: $sha}) { clientMutationId }
+            }' -f id="$PR_ID" -f sha="$HEAD_SHA" 2>&1); then
+            if ! grep -qE 'is in (clean|unstable) status' <<<"$ENABLE_OUTPUT"; then
+              echo "$ENABLE_OUTPUT" >&2
+              exit 1
+            fi
+            echo "The PR is already mergeable, merging it now"
+            GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --squash --match-head-commit "$HEAD_SHA"
+          fi
