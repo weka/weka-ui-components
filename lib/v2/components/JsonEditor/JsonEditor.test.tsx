@@ -534,6 +534,23 @@ describe('JsonEditor - input limits', () => {
     expect(getContentText(container)).toBe('a')
   })
 
+  it('lets Undo bring back text deleted from a value over the limit', () => {
+    const { container } = renderLimited({
+      value: 'abcdef',
+      maxLength: SHORT_LIMIT
+    })
+    const view = viewOf(container)
+    view?.dispatch({
+      changes: { from: 0, to: 2 },
+      userEvent: 'delete.backward'
+    })
+    expect(getContentText(container)).toBe('cdef')
+    if (view) {
+      undo(view)
+    }
+    expect(getContentText(container)).toBe('abcdef')
+  })
+
   it('turns a pasted lone line break into a space in a single-line editor', () => {
     const { onChange, ref } = renderLimited({ value: 'ab', singleLine: true })
     ref.current?.insert('\n')
