@@ -10,7 +10,12 @@ concurrency:
 
 jobs:
   publish:
-    if: github.actor != 'weka-version-bumper[bot]'
+    # The app also merges PRs through Auto Merge; only its own version-bump commit must be skipped.
+    # The committer tells them apart: the bump below commits as github-actions, while GitHub commits
+    # squash merges as noreply@github.com whatever the PR title says.
+    if: >-
+      !(github.actor == 'weka-version-bumper[bot]' &&
+      github.event.head_commit.committer.email == 'github-actions@users.noreply.github.com')
     runs-on: ubuntu-latest
     permissions:
       contents: write

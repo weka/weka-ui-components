@@ -1,0 +1,134 @@
+name: Auto Merge
+
+on:
+  pull_request:
+    types: [synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    # Who can be auto-merged is decided only by these checks and the permission lookup below. The
+    # Copilot verdict only gates quality: a PR's own text can steer it. A branch in this repo needs
+    # write access to push; forks never qualify. Only main has the ruleset that enforces CI and
+    # resolved threads, so PRs into other branches never qualify either.
+    if: >-
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type == 'User' &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+
+    steps:
+      # Auto-merge must be enabled by an app: a merge enabled with GITHUB_TOKEN pushes to main
+      # without triggering Auto Release.
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: 919414
+          private-key: ${{ secrets.WEKA_VERSION_BUMPER_PRIVATE_KEY }}
+
+      - name: Enable or disable auto-merge
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          set -euo pipefail
+
+          PR_STATE=$(gh pr view "$PR" --json id,headRefOid,autoMergeRequest)
+          PR_ID=$(jq -r .id <<<"$PR_STATE")
+          HEAD_SHA=$(jq -r .headRefOid <<<"$PR_STATE")
+          AUTO_MERGE_BY=$(jq -r '.autoMergeRequest.enabledBy.login // ""' <<<"$PR_STATE")
+          APP_LOGIN='^(app/)?weka-version-bumper(\[bot\])?$'
+
+          # Auto-merge a person enabled is theirs; only the app's own request is withdrawn.
+          not_auto_merging() {
+            echo "::notice::$1, not auto-merging"
+            if [[ "$AUTO_MERGE_BY" =~ $APP_LOGIN ]]; then
+              GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --disable-auto
+            fi
+          }
+
+          # No fallback on a failed lookup: a red run is visible, while skipping would silently
+          # leave an earlier auto-merge enabled.
+          PERMISSION=$(gh api "repos/$GH_REPO/collaborators/$AUTHOR/permission" --jq .permission)
+          if [[ "$PERMISSION" != admin && "$PERMISSION" != write ]]; then
+            not_auto_merging "$AUTHOR has '$PERMISSION' access"
+            exit 0
+          fi
+
+          REVIEWS=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR/reviews" | jq -c 'add // []')
+
+          HEAD_REVIEWS=$(jq -c --arg sha "$HEAD_SHA" '[.[]
+            | select(.user.login == "copilot-pull-request-reviewer[bot]" and .commit_id == $sha and .state != "DISMISSED")]' <<<"$REVIEWS")
+          VERDICT=$(jq -r 'last | [(.body // "") | splits("\n") | select(startswith("### "))][0] // ""' <<<"$HEAD_REVIEWS")
+          echo "Copilot verdict on ${HEAD_SHA:0:7}: ${VERDICT:-none}"
+
+          KNOWN_VERDICTS=$'### 🟢 Approval recommended\n### 🟡 Changes recommended\n### 🔵 Needs a closer look'
+          if [[ "$HEAD_REVIEWS" != "[]" ]] && ! grep -qxF -- "$VERDICT" <<<"$KNOWN_VERDICTS"; then
+            echo "::warning::Unrecognised Copilot verdict '$VERDICT'. If Copilot changed its review format, update this workflow; until then nothing auto-merges."
+          fi
+
+          # Dismissing the bot approval is how a person vetoes auto-merge. If "Dismiss stale
+          # approvals" is ever turned on, a push would also count as a veto.
+          BOT_APPROVAL=$(jq -r '
+            [.[] | select(.user.login == "github-actions[bot]") | .state]
+            | if index("DISMISSED") then "dismissed" elif index("APPROVED") then "approved" else "none" end' <<<"$REVIEWS")
+
+          if [[ "$BOT_APPROVAL" == dismissed ]]; then
+            not_auto_merging "The auto-approval was dismissed"
+            exit 0
+          fi
+          if [[ "$VERDICT" != "### 🟢 Approval recommended" ]]; then
+            not_auto_merging "Copilot has not recommended approval of ${HEAD_SHA:0:7}"
+            exit 0
+          fi
+
+          if [[ "$BOT_APPROVAL" == none ]]; then
+            gh pr review "$PR" --approve --body "Auto-approved: branch in this repo by a writer, Copilot recommends approval."
+          fi
+          if [[ -n "$AUTO_MERGE_BY" ]]; then
+            echo "Auto-merge is already enabled by $AUTO_MERGE_BY"
+            exit 0
+          fi
+          # The mutation is called directly rather than through `gh pr merge --auto`, which may
+          # merge at once when it judges the PR mergeable, and the app can bypass the main ruleset.
+          if ENABLE_OUTPUT=$(GH_TOKEN="$APP_TOKEN" gh api graphql \
+            -f query='mutation($id: ID!, $sha: GitObjectID!) {
+              enablePullRequestAutoMerge(input: {pullRequestId: $id, mergeMethod: SQUASH, expectedHeadOid: $sha}) { clientMutationId }
+            }' -f id="$PR_ID" -f sha="$HEAD_SHA" 2>&1); then
+            exit 0
+          fi
+          if ! grep -q 'is in clean status' <<<"$ENABLE_OUTPUT"; then
+            echo "$ENABLE_OUTPUT" >&2
+            exit 1
+          fi
+
+          # GitHub refuses auto-merge on a PR it already considers mergeable, the usual case when CI
+          # finishes before Copilot's review. The app's view of that cannot be trusted because the
+          # app bypasses the main ruleset, so merge only when the PR is also CLEAN for this job's own
+          # token, which cannot bypass it. UNKNOWN means GitHub is still computing the state.
+          for _ in 1 2 3 4 5 6; do
+            MERGE_STATE=$(gh pr view "$PR" --json mergeStateStatus --jq .mergeStateStatus)
+            if [[ "$MERGE_STATE" != UNKNOWN ]]; then
+              break
+            fi
+            sleep 5
+          done
+          if [[ "$MERGE_STATE" != CLEAN ]]; then
+            echo "::error::GitHub refused auto-merge as already mergeable, but without bypass the PR is $MERGE_STATE; not merging"
+            exit 1
+          fi
+          echo "The PR is already mergeable, merging it now"
+          GH_TOKEN="$APP_TOKEN" gh pr merge "$PR" --squash --match-head-commit "$HEAD_SHA"
