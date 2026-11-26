@@ -1,4 +1,6 @@
 import { createRef } from 'react'
+import { undo } from '@codemirror/commands'
+import { EditorView } from '@codemirror/view'
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -384,6 +386,224 @@ describe('JsonEditor - text language', () => {
     expect(container.querySelector(`.${TOKEN_CLASS}`)?.textContent).toBe(
       '{{cluster}}'
     )
+  })
+})
+
+describe('JsonEditor - input limits', () => {
+  function renderLimited(props: {
+    value: string
+    maxLength?: number
+    singleLine?: boolean
+  }) {
+    const onChange = vi.fn()
+    const ref = createRef<JsonEditorHandle>()
+    const view = render(
+      <JsonEditor
+        ref={ref}
+        language='text'
+        onChange={onChange}
+        {...props}
+      />
+    )
+    return { ...view, onChange, ref }
+  }
+
+  it('stops typing at maxLength', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'abcd',
+      maxLength: 5
+    })
+    ref.current?.insert('e')
+    ref.current?.insert('f')
+    expect(getContentText(container)).toBe('eabcd')
+    expect(onChange).toHaveBeenCalledTimes(1)
+  })
+
+  it('cuts an insertion to the room left under maxLength', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab', maxLength: 6 })
+    ref.current?.insert(SEVERITY_TOKEN)
+    expect(onChange).toHaveBeenLastCalledWith('{{seab')
+  })
+
+  it('counts an emoji as one character', () => {
+    const { onChange, ref } = renderLimited({ value: '🔥🔥', maxLength: 3 })
+    ref.current?.insert('ab')
+    expect(onChange).toHaveBeenLastCalledWith('a🔥🔥')
+  })
+
+  it('loads a value prop longer than maxLength whole', () => {
+    const { container, rerender } = renderLimited({
+      value: 'ab',
+      maxLength: 3
+    })
+    rerender(
+      <JsonEditor
+        language='text'
+        maxLength={3}
+        value='abcdef'
+      />
+    )
+    expect(getContentText(container)).toBe('abcdef')
+  })
+
+  function pressEnter(
+    container: HTMLElement,
+    modifiers: { shiftKey?: boolean; ctrlKey?: boolean } = {}
+  ) {
+    const content = container.querySelector(CONTENT_SELECTOR)
+    if (content) {
+      fireEvent.keyDown(content, {
+        key: 'Enter',
+        code: 'Enter',
+        keyCode: 13,
+        ...modifiers
+      })
+    }
+  }
+
+  function viewOf(container: HTMLElement): EditorView | null {
+    const editor = container.querySelector<HTMLElement>('.cm-editor')
+    return editor ? EditorView.findFromDOM(editor) : null
+  }
+
+  /** Selects existing text, as a user's drag would. */
+  function selectRange(container: HTMLElement, range: [number, number]) {
+    viewOf(container)?.dispatch({
+      selection: { anchor: range[0], head: range[1] }
+    })
+  }
+
+  const ABCD = 'abcd'
+  /** "bc" in "abcd". */
+  const MIDDLE_TWO: [number, number] = [ABCD.indexOf('b'), ABCD.indexOf('d')]
+  /** Shorter than the values below, so they start over the limit. */
+  const SHORT_LIMIT = 3
+
+  it('ignores Enter in a single-line editor', () => {
+    const { container, onChange } = renderLimited({
+      value: 'ab',
+      singleLine: true
+    })
+    pressEnter(container)
+    expect(getContentText(container)).toBe('ab')
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('keeps the selected text when Enter is pressed in a single-line editor', () => {
+    const { container, onChange } = renderLimited({
+      value: 'abcd',
+      singleLine: true
+    })
+    selectRange(container, MIDDLE_TWO)
+    pressEnter(container)
+    expect(getContentText(container)).toBe('abcd')
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['Shift', { shiftKey: true }],
+    ['Ctrl', { ctrlKey: true }]
+  ])('ignores %s+Enter on a selection in a single-line editor', (_, mods) => {
+    const { container, onChange } = renderLimited({
+      value: ABCD,
+      singleLine: true
+    })
+    selectRange(container, MIDDLE_TWO)
+    pressEnter(container, mods)
+    expect(getContentText(container)).toBe(ABCD)
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('undoes a cut paste on its own, keeping the typing before it', () => {
+    const { container } = renderLimited({ value: EMPTY_STRING, maxLength: 4 })
+    const view = viewOf(container)
+    view?.dispatch({
+      changes: { from: 0, insert: 'a' },
+      selection: { anchor: 1 },
+      userEvent: 'input.type'
+    })
+    view?.dispatch({
+      changes: { from: 1, insert: 'WXYZ' },
+      selection: { anchor: 5 },
+      userEvent: 'input.paste'
+    })
+    expect(getContentText(container)).toBe('aWXY')
+    if (view) {
+      undo(view)
+    }
+    expect(getContentText(container)).toBe('a')
+  })
+
+  it('lets Undo bring back text deleted from a value over the limit', () => {
+    const { container } = renderLimited({
+      value: 'abcdef',
+      maxLength: SHORT_LIMIT
+    })
+    const view = viewOf(container)
+    view?.dispatch({
+      changes: { from: 0, to: 2 },
+      userEvent: 'delete.backward'
+    })
+    expect(getContentText(container)).toBe('cdef')
+    if (view) {
+      undo(view)
+    }
+    expect(getContentText(container)).toBe('abcdef')
+  })
+
+  it('turns a pasted lone line break into a space in a single-line editor', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab', singleLine: true })
+    ref.current?.insert('\n')
+    expect(onChange).toHaveBeenLastCalledWith(' ab')
+  })
+
+  it('leaves the caret after a cut insertion that replaced a selection', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'abcd',
+      maxLength: 5
+    })
+    selectRange(container, MIDDLE_TWO)
+    ref.current?.insert('WXYZ')
+    expect(onChange).toHaveBeenLastCalledWith('aWXYd')
+    expect(ref.current?.getSelection().text).toBe(EMPTY_STRING)
+  })
+
+  it('keeps the selection insert() asks for inside the text that remains', () => {
+    const { ref } = renderLimited({ value: 'a', maxLength: SHORT_LIMIT })
+    ref.current?.insert('WXYZ', { select: { from: 0, to: 1 } })
+    expect(ref.current?.getSelection().text).toBe('W')
+  })
+
+  it('lets an edit replace text in a value already over the limit', () => {
+    const { container, onChange, ref } = renderLimited({
+      value: 'abcdef',
+      maxLength: SHORT_LIMIT
+    })
+    selectRange(container, [0, 2])
+    ref.current?.insert('XYZ')
+    expect(onChange).toHaveBeenLastCalledWith('XYcdef')
+  })
+
+  it('turns pasted line breaks into spaces in a single-line editor', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab', singleLine: true })
+    ref.current?.insert('c\nd ')
+    expect(onChange).toHaveBeenLastCalledWith('c d ab')
+    expect(ref.current?.getSelection().atLineStart).toBe(false)
+  })
+
+  it('keeps a single line unwrapped, so it scrolls sideways', () => {
+    const { container } = renderLimited({ value: 'ab', singleLine: true })
+    expect(
+      container
+        .querySelector(CONTENT_SELECTOR)
+        ?.classList.contains('cm-lineWrapping')
+    ).toBe(false)
+  })
+
+  it('lets line breaks through without singleLine', () => {
+    const { onChange, ref } = renderLimited({ value: 'ab' })
+    ref.current?.insert('c\n')
+    expect(onChange).toHaveBeenLastCalledWith('c\nab')
   })
 })
 

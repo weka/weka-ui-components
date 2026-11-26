@@ -18,7 +18,15 @@ import {
 } from '@codemirror/language'
 import { linter } from '@codemirror/lint'
 import { highlightSelectionMatches, searchKeymap } from '@codemirror/search'
-import { RangeSetBuilder } from '@codemirror/state'
+import {
+  Annotation,
+  ChangeSet,
+  type ChangeSpec,
+  EditorState,
+  RangeSetBuilder,
+  type Transaction,
+  type TransactionSpec
+} from '@codemirror/state'
 import {
   Decoration,
   type DecorationSet,
@@ -33,6 +41,8 @@ import {
   type ViewUpdate
 } from '@codemirror/view'
 import { tags } from '@lezer/highlight'
+
+import { EMPTY_STRING } from '#v2/utils/consts'
 
 import {
   JSON_EDITOR_LANGUAGES,
@@ -335,6 +345,8 @@ function foldMarkerDOM(open: boolean): HTMLElement {
 
 export interface JsonEditorStaticConfig {
   language: JsonEditorLanguage
+  maxLength?: number
+  singleLine: boolean
   getCompletionSource: () => JsonEditorCompletionSource | undefined
   getCursorHandler: () =>
     ((context: JsonEditorCursorContext) => void) | undefined
@@ -370,9 +382,113 @@ function jsonValidationLinter(
   )
 }
 
+/**
+ * Marks the document change made when the controlled `value` prop is synced in.
+ * The change listener skips it, and so do the input limits: a saved value that
+ * is longer than the limit still loads whole.
+ */
+export const VALUE_SYNC = Annotation.define<boolean>()
+
+/** Counts characters as the backend does, so an emoji counts once. */
+function countChars(text: string): number {
+  return [...text].length
+}
+
+/** UTF-16 length of the first `count` characters of `text`. */
+function prefixLength(text: string, count: number): number {
+  return [...text].slice(0, count).join(EMPTY_STRING).length
+}
+
+/**
+ * The fixes, in the edited document, that bring an edit inside the limits: a
+ * space for each pasted line break, and the cut-off tail of each insertion
+ * past the room left. An edit never grows a document already over the limit,
+ * but it may replace text with up to as much new text.
+ */
+function limitFixes(
+  tr: Transaction,
+  config: JsonEditorStaticConfig
+): ChangeSpec[] {
+  const { maxLength, singleLine } = config
+  const ranges: { from: number; to: number; fromB: number; toB: number }[] = []
+  tr.changes.iterChangedRanges((from, to, fromB, toB) => {
+    ranges.push({ from, to, fromB, toB })
+  })
+  const start = tr.startState.doc
+  const removed = ranges.reduce(
+    (sum, range) => sum + countChars(start.sliceString(range.from, range.to)),
+    0
+  )
+  let room =
+    maxLength === undefined
+      ? Infinity
+      : Math.max(maxLength - countChars(start.toString()) + removed, removed)
+  const fixes: ChangeSpec[] = []
+  for (const { fromB, toB } of ranges) {
+    const inserted = tr.newDoc.sliceString(fromB, toB)
+    const kept = Math.min(countChars(inserted), room)
+    room -= kept
+    const keptEnd = fromB + prefixLength(inserted, kept)
+    if (singleLine) {
+      // Each line that ends inside the kept insertion ends at a pasted break.
+      const doc = tr.newDoc
+      for (
+        let line = doc.lineAt(fromB);
+        line.to < keptEnd;
+        line = doc.line(line.number + 1)
+      ) {
+        fixes.push({ from: line.to, to: line.to + 1, insert: ' ' })
+      }
+    }
+    if (keptEnd < toB) {
+      fixes.push({ from: keptEnd, to: toB })
+    }
+  }
+  return fixes
+}
+
+/**
+ * Keeps typed, pasted and inserted text inside the editor's limits. A
+ * single-line editor ignores Enter and turns pasted line breaks into spaces; a
+ * length limit cuts an insertion to the room left, so typing stops at the
+ * limit. The edit's own selection is kept, moved into the text that remains.
+ */
+function inputLimits(config: JsonEditorStaticConfig): Extension[] {
+  const { maxLength, singleLine } = config
+  if (maxLength === undefined && !singleLine) {
+    return []
+  }
+  const filter = EditorState.transactionFilter.of(
+    (tr): readonly TransactionSpec[] => {
+      if (!tr.docChanged || tr.annotation(VALUE_SYNC)) {
+        return [tr]
+      }
+      const fixes = limitFixes(tr, config)
+      if (fixes.length === 0) {
+        return [tr]
+      }
+      const fix = ChangeSet.of(fixes, tr.newDoc.length)
+      if (tr.changes.compose(fix).empty) {
+        return []
+      }
+      // The edit stays as it is, with its annotations (paste, typing) and
+      // selection; the fix runs after it and moves its selection along.
+      return [tr, { changes: fix, sequential: true }]
+    }
+  )
+  // Ahead of the default keymap, so no Enter shortcut starts an edit; an
+  // open completion list still takes Enter first.
+  const swallow = () => true
+  const enter = keymap.of(
+    ['Enter', 'Shift-Enter', 'Mod-Enter'].map((key) => ({ key, run: swallow }))
+  )
+  return singleLine ? [filter, enter] : [filter]
+}
+
 function languageExtensions(config: JsonEditorStaticConfig): Extension[] {
   if (config.language === JSON_EDITOR_LANGUAGES.TEXT) {
-    return [EditorView.lineWrapping]
+    // A single line scrolls sideways instead: wrapped, it would look like two.
+    return config.singleLine ? [] : [EditorView.lineWrapping]
   }
   return [
     json(),
@@ -398,6 +514,7 @@ export function buildStaticExtensions(
     bracketMatching(),
     highlightSelectionMatches(),
     ...languageExtensions(config),
+    inputLimits(config),
     completionAdapter(config.getCompletionSource),
     cursorActivityPlugin(config.getCursorHandler),
     blockTextSubstitution,
