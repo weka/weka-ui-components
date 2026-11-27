@@ -536,3 +536,14 @@ thead.tableHeader {
   display: flex;
   flex-direction: column;
 }
+
+.movableHeader,
+.movableHeader .sortableHeader {
+  cursor: grab;
+}
+
+.columnDragging,
+.columnDragging * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}

@@ -1,4 +1,5 @@
 import type { ActiveFilter } from '../filterUtils'
+import type { ColumnReorderConfig } from './columnOrder'
 import type { RowAction } from './rowActions'
 import type { Meta, StoryObj } from '@storybook/react'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -91,6 +92,27 @@ export const PersistedCustomizations: Story = {
       <PersistedCustomizationsDemo
         columns={COLUMNS}
         data={DATA}
+      />
+    </div>
+  )
+}
+
+const REORDER_COLUMNS: ColumnDef<Cluster>[] = [
+  ...COLUMNS,
+  { accessorKey: 'id', header: 'ID' }
+]
+
+const LOCK_NAME_AND_ID: ColumnReorderConfig = { lockedStart: 1, lockedEnd: 1 }
+
+/** Drag Region or Status by its header; Name and ID are locked in place. */
+export const ReorderableColumns: Story = {
+  render: () => (
+    <div style={CONTAINER_STYLE}>
+      <Table
+        columnReorder={LOCK_NAME_AND_ID}
+        columns={REORDER_COLUMNS}
+        data={DATA}
+        title='Reorderable columns'
       />
     </div>
   )

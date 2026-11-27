@@ -1,10 +1,12 @@
 import type { CustomFilters } from '../FilterPopover'
 import type { ActiveFilter } from '../filterUtils'
 import type { TableHeaderLabels } from '../TableHeader'
+import type { ColumnReorderConfig } from './columnOrder'
 import type { RowAction } from './rowActions'
 import type {
   ColumnDef,
   ColumnFiltersState,
+  ColumnOrderState,
   ColumnResizeMode,
   ColumnSizingState,
   SortingState,
@@ -25,6 +27,7 @@ import { Spinner } from '../../Spinner'
 import { Pagination } from '../Pagination'
 import { RowActionsCell } from '../RowActionsCell'
 import { buildTableColumns } from '../tableUtils'
+import { useColumnReorder } from './hooks/useColumnReorder'
 import { useColumnSizingPersistence } from './hooks/useColumnSizingPersistence'
 import { useColumnVisibility } from './hooks/useColumnVisibility'
 import { useEndlessScroll } from './hooks/useEndlessScroll'
@@ -91,8 +94,18 @@ export interface TableProps<TData = unknown> {
   /** Called once when a column resize gesture ends, with the resulting widths. */
   onColumnSizingChange?: (sizing: ColumnSizingState) => void
   /**
-   * Turns the settings menu's reset item into "Reset to defaults": widths go
-   * back to the column definitions' sizes, visibility to `defaultColumnVisibility`
+   * Lets users reorder columns by dragging their headers; off when omitted.
+   * Pass `{}` to make every column movable, or lock a number of leading and
+   * trailing columns. `pinFirstColumn` always locks the first column.
+   */
+  columnReorder?: ColumnReorderConfig
+  /** Column ids order to render on first paint, e.g. restored from storage. Ignored unless `columnReorder` is set. */
+  initialColumnOrder?: ColumnOrderState
+  /** Called once per dropped column drag with the full order of `columns` ids. */
+  onColumnOrderChange?: (order: ColumnOrderState) => void
+  /**
+   * Turns the settings menu's reset item into "Reset to defaults": widths
+   * and column order go back to the column definitions', visibility to `defaultColumnVisibility`
    * (or the `meta.defaultHidden` derivation) and sorting to the default sort,
    * firing `onColumnVisibilityChange` and `onExternalSortingChange` as usual,
    * then this callback runs.
@@ -210,6 +223,9 @@ export function Table<TData = unknown>({
   defaultColumnVisibility,
   initialColumnSizing,
   onColumnSizingChange,
+  columnReorder,
+  initialColumnOrder,
+  onColumnOrderChange,
   labels,
   onGlobalSearch,
   searchExcludedFields = EMPTY_EXCLUDED_FIELDS,
@@ -355,6 +371,20 @@ export function Table<TData = unknown>({
     return [...builtColumns, rowActionsColumn]
   }, [columns, hasResizableColumns, rowActions, rowActionsWidth])
 
+  const {
+    columnOrder,
+    handleColumnOrderChange,
+    isColumnMovable,
+    startColumnDrag
+  } = useColumnReorder({
+    columns,
+    columnReorder,
+    pinFirstColumn,
+    initialColumnOrder,
+    onColumnOrderChange,
+    scrollContainerRef: bodyRef
+  })
+
   const tableOptions = useTableOptions({
     displayData,
     tableColumns,
@@ -375,7 +405,9 @@ export function Table<TData = unknown>({
     expanded,
     setExpanded,
     endless,
-    initialColumnSizing
+    initialColumnSizing,
+    columnOrder,
+    handleColumnOrderChange
   })
 
   const table = useReactTable(tableOptions as TableOptions<TData>)
@@ -597,6 +629,8 @@ export function Table<TData = unknown>({
                   customFilters={customFilters}
                   firstDataColumnId={firstDataColumnId}
                   hasResizableColumns={hasResizableColumns}
+                  isColumnMovable={isColumnMovable}
+                  onColumnDragStart={startColumnDrag}
                   onFilterChange={setActiveFilters}
                   table={table}
                 />

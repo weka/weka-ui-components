@@ -473,6 +473,7 @@ export {
   WORKING_STATUSES
 } from './Table/StatusCell'
 export type {
+  ColumnReorderConfig,
   PaginationState,
   RowAction,
   SortDirection,

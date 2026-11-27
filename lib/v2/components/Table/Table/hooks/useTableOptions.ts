@@ -1,6 +1,7 @@
 import type {
   ColumnDef,
   ColumnFiltersState,
+  ColumnOrderState,
   ColumnResizeMode,
   ColumnSizingState,
   ExpandedState,
@@ -50,6 +51,8 @@ interface UseTableOptionsParams<TData> {
   setExpanded: OnChangeFn<ExpandedState>
   endless: boolean
   initialColumnSizing?: ColumnSizingState
+  columnOrder: ColumnOrderState
+  handleColumnOrderChange: OnChangeFn<ColumnOrderState>
 }
 
 /**
@@ -77,7 +80,9 @@ export function useTableOptions<TData>({
   expanded,
   setExpanded,
   endless,
-  initialColumnSizing
+  initialColumnSizing,
+  columnOrder,
+  handleColumnOrderChange
 }: UseTableOptionsParams<TData>) {
   return useMemo(() => {
     const isGrouped = grouping.length > 0
@@ -93,6 +98,7 @@ export function useTableOptions<TData>({
         sorting,
         columnFilters,
         columnVisibility,
+        columnOrder,
         pagination: {
           pageIndex: currentPage - FIRST_PAGE,
           pageSize: effectivePageSize
@@ -102,6 +108,7 @@ export function useTableOptions<TData>({
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,
       onColumnVisibilityChange: handleColumnVisibilityChange,
+      onColumnOrderChange: handleColumnOrderChange,
       defaultColumn: {
         size: DEFAULT_COLUMN_SIZE,
         minSize: MIN_COLUMN_SIZE,
@@ -157,6 +164,8 @@ export function useTableOptions<TData>({
     expanded,
     setExpanded,
     endless,
-    initialColumnSizing
+    initialColumnSizing,
+    columnOrder,
+    handleColumnOrderChange
   ])
 }

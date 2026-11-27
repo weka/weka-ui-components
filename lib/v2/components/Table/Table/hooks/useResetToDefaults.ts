@@ -17,8 +17,8 @@ interface UseResetToDefaultsParams<TData> {
 
 /**
  * Builds the settings menu's "Reset to defaults" handler, or `undefined` when
- * the consumer did not opt in. Widths return to the column definitions' sizes
- * (not `initialColumnSizing`); visibility and sorting are set through the
+ * the consumer did not opt in. Widths and column order return to the column
+ * definitions' (not `initialColumnSizing` / `initialColumnOrder`); visibility and sorting are set through the
  * table so `onColumnVisibilityChange` and `onExternalSortingChange` fire like
  * for any other change.
  *
@@ -52,6 +52,7 @@ export function useResetToDefaults<TData>({
 
   return () => {
     table.resetColumnSizing(true)
+    table.resetColumnOrder(true)
     table.setColumnVisibility(
       defaultColumnVisibility ?? deriveDefaultVisibility(columns)
     )

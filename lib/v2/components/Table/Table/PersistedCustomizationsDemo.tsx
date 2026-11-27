@@ -1,5 +1,7 @@
+import type { ColumnReorderConfig } from './columnOrder'
 import type {
   ColumnDef,
+  ColumnOrderState,
   ColumnSizingState,
   VisibilityState
 } from '@tanstack/react-table'
@@ -10,10 +12,12 @@ import { Table } from './Table'
 
 const STORAGE_KEY = 'storybook-table-persisted-customizations'
 const DEFAULT_VISIBILITY: VisibilityState = { status: false }
+const COLUMN_REORDER: ColumnReorderConfig = { lockedStart: 1 }
 
 interface Persisted {
   visibility?: VisibilityState
   sizing?: ColumnSizingState
+  order?: ColumnOrderState
 }
 
 interface PersistedCustomizationsDemoProps<TData> {
@@ -44,11 +48,14 @@ export function PersistedCustomizationsDemo<TData>({
 
   return (
     <Table
+      columnReorder={COLUMN_REORDER}
       columns={columns}
       data={data}
       defaultColumnVisibility={DEFAULT_VISIBILITY}
+      initialColumnOrder={persisted.order}
       initialColumnSizing={persisted.sizing}
       initialColumnVisibility={persisted.visibility ?? DEFAULT_VISIBILITY}
+      onColumnOrderChange={(order) => persist({ order })}
       onColumnSizingChange={(sizing) => persist({ sizing })}
       onColumnVisibilityChange={(visibility) => persist({ visibility })}
       onResetToDefaults={() => localStorage.removeItem(STORAGE_KEY)}
