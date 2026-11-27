@@ -5,12 +5,14 @@ import type {
   Header,
   Table as TanstackTable
 } from '@tanstack/react-table'
+import type { MouseEvent } from 'react'
 
 import clsx from 'clsx'
 
 import { TableFilter } from '../TableFilter'
 import { getCanShowFilter } from '../tableUtils'
 import { HeaderLabel } from './HeaderLabel'
+import { COLUMN_ID_ATTR } from './hooks/useColumnReorder'
 import { ROW_ACTIONS_COLUMN_ID } from './tableConsts'
 
 import styles from './table.module.scss'
@@ -23,6 +25,11 @@ interface TableHeadRowProps<TData> {
   readonly onFilterChange: (filters: ActiveFilter[]) => void
   readonly hasResizableColumns: boolean
   readonly firstDataColumnId?: string
+  readonly isColumnMovable?: (columnId: string) => boolean
+  readonly onColumnDragStart?: (
+    columnId: string,
+    event: MouseEvent<HTMLElement>
+  ) => void
 }
 
 /** Renders the sticky `<thead>`: header labels, sort/filter controls, resizers. */
@@ -33,22 +40,32 @@ export function TableHeadRow<TData>({
   customFilters,
   onFilterChange,
   hasResizableColumns,
-  firstDataColumnId
+  firstDataColumnId,
+  isColumnMovable,
+  onColumnDragStart
 }: Readonly<TableHeadRowProps<TData>>) {
   const renderHeaderCell = (header: Header<TData, unknown>) => {
     const columnId = header.column.id || header.id
     const canFilter = getCanShowFilter(header)
     const canSort = header.column.getCanSort()
+    const isMovable = isColumnMovable?.(header.column.id) ?? false
 
     return (
       <th
         key={header.id}
+        {...{ [COLUMN_ID_ATTR]: header.column.id }}
         data-testid={`column-header-${columnId}`}
         style={{ width: header.getSize() }}
         className={clsx(styles.headerCell, {
           [styles.stickyActions]: header.column.id === ROW_ACTIONS_COLUMN_ID,
-          [styles.stickyFirst]: header.column.id === firstDataColumnId
+          [styles.stickyFirst]: header.column.id === firstDataColumnId,
+          [styles.movableHeader]: isMovable
         })}
+        onMouseDown={
+          isMovable
+            ? (event) => onColumnDragStart?.(header.column.id, event)
+            : undefined
+        }
       >
         <div className={styles.headerContent}>
           <div className={styles.headerMain}>

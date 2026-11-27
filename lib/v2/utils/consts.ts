@@ -71,6 +71,7 @@ export const KEYBOARD_KEYS = {
 } as const
 
 export const DOM_EVENTS = {
+  CLICK: 'click',
   COPY: 'copy',
   KEYDOWN: 'keydown',
   MOUSEDOWN: 'mousedown',
